@@ -249,7 +249,7 @@ const App = () => {
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-emerald-600"></div>
               
               <div className="flex flex-col gap-6 justify-center items-center">
-                 <a href="https://wa.me/972500000000" target="_blank" rel="noopener noreferrer" className="w-full md:w-auto flex items-center justify-center gap-3 bg-green-600 hover:bg-green-500 text-black font-bold py-4 px-12 rounded text-lg transition-all transform hover:scale-105">
+                 <a href="https://wa.me/972534673151?text=היי%20שמואל,%20אשמח%20לשמוע%20פרטים%20על%20הפיצוח%20האסטרטגי" target="_blank" rel="noopener noreferrer" className="w-full md:w-auto flex items-center justify-center gap-3 bg-green-600 hover:bg-green-500 text-black font-bold py-4 px-12 rounded text-lg transition-all transform hover:scale-105">
                     <MessageCircle size={24} />
                     שלח לי הודעה בוואטסאפ
                  </a>
