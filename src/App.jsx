@@ -16,6 +16,13 @@ const App = () => {
     'https://wa.me/972534673151?text=' +
     encodeURIComponent('היי שמואל, אשמח לשמוע פרטים על הפיצוח האסטרטגי');
 
+  // Meta Pixel — track WhatsApp click as Lead conversion
+  const trackLead = () => {
+    if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+      window.fbq('track', 'Lead', { content_name: 'WhatsApp Click' });
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener('scroll', handleScroll);
@@ -236,6 +243,7 @@ const App = () => {
               <div className="flex flex-col sm:flex-row gap-4 fade-up" style={{ animationDelay: '0.3s' }}>
                 <a
                   href={whatsappLink}
+                  onClick={trackLead}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-green-500 hover:bg-green-400 text-black rounded-full font-bold text-base transition-all shadow-[0_0_30px_rgba(34,197,94,0.4)] hover:shadow-[0_0_50px_rgba(34,197,94,0.7)] hover:-translate-y-0.5"
@@ -576,6 +584,7 @@ const App = () => {
             <div className="flex flex-col gap-4 items-center">
               <a
                 href={whatsappLink}
+                onClick={trackLead}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group w-full md:w-auto inline-flex items-center justify-center gap-3 bg-green-500 hover:bg-green-400 text-black font-bold py-5 px-12 rounded-full text-lg transition-all shadow-[0_0_40px_rgba(34,197,94,0.4)] hover:shadow-[0_0_60px_rgba(34,197,94,0.7)] hover:-translate-y-0.5"
@@ -605,6 +614,7 @@ const App = () => {
             <div className="flex items-center gap-3">
               <a
                 href={whatsappLink}
+                onClick={trackLead}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp"
