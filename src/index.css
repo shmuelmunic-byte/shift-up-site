@@ -1,25 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-
-@theme {
-  --font-sans: 'Heebo', system-ui, sans-serif;
-  --font-display: 'Space Grotesk', 'Heebo', sans-serif;
-
-  --color-ink-950: #07080a;
-  --color-ink-900: #0c0e12;
-  --color-ink-800: #14171c;
-
-  --color-lime-400: #c4f542;
-  --color-lime-500: #a8e500;
-
-  --color-magenta-500: #ff2bd6;
-  --color-magenta-600: #e000b8;
-
-  --color-violet-500: #7c3aed;
-  --color-violet-600: #6d28d9;
-
-  --color-cyan-400: #22d3ee;
-}
 
 html {
   scroll-behavior: smooth;
@@ -35,17 +14,16 @@ body {
 }
 
 ::selection {
-  background: #c4f542;
+  background: #22c55e;
   color: #07080a;
 }
 
-/* Mesh gradient background */
+/* Mesh gradient background — green dominant + violet hint */
 .mesh-bg {
   background:
-    radial-gradient(60% 50% at 15% 10%, rgba(196, 245, 66, 0.18), transparent 60%),
-    radial-gradient(50% 50% at 90% 20%, rgba(255, 43, 214, 0.18), transparent 60%),
-    radial-gradient(60% 60% at 50% 100%, rgba(124, 58, 237, 0.20), transparent 60%),
-    radial-gradient(40% 40% at 80% 80%, rgba(34, 211, 238, 0.10), transparent 70%);
+    radial-gradient(60% 50% at 15% 10%, rgba(34, 197, 94, 0.20), transparent 60%),
+    radial-gradient(50% 50% at 90% 20%, rgba(74, 222, 128, 0.15), transparent 60%),
+    radial-gradient(60% 60% at 50% 100%, rgba(124, 58, 237, 0.15), transparent 60%);
 }
 
 /* Animated gradient blob */
@@ -58,41 +36,22 @@ body {
 .animation-delay-2000 { animation-delay: 2s; }
 .animation-delay-4000 { animation-delay: 4s; }
 
-/* Gradient text */
-.text-gradient-lime {
-  background: linear-gradient(120deg, #c4f542 0%, #a8e500 50%, #22d3ee 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.text-gradient-magenta {
-  background: linear-gradient(120deg, #ff2bd6 0%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.text-gradient-mix {
-  background: linear-gradient(120deg, #c4f542 0%, #ff2bd6 50%, #7c3aed 100%);
+/* Brand gradient text — green to violet */
+.text-gradient-brand {
+  background: linear-gradient(120deg, #4ade80 0%, #22c55e 45%, #8b5cf6 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* Marquee */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+/* Marquee — RTL direction (content moves right-to-left visually = scrolls left) */
+@keyframes marquee-rtl {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
 }
-.animate-marquee {
-  animation: marquee 32s linear infinite;
+.animate-marquee-rtl {
+  animation: marquee-rtl 32s linear infinite;
 }
-
-/* Pulse dot */
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.4); }
-}
-.pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
 
 /* Reveal on scroll */
 @keyframes fade-up {
@@ -119,8 +78,9 @@ body {
   position: absolute; inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(196, 245, 66, 0.4), rgba(255, 43, 214, 0.4), rgba(124, 58, 237, 0.4));
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.45), rgba(124, 58, 237, 0.30));
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
           mask-composite: exclude;
   pointer-events: none;
@@ -142,4 +102,4 @@ body {
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: #07080a; }
-::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #c4f542, #ff2bd6); border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #22c55e, #8b5cf6); border-radius: 10px; }
