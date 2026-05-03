@@ -74,7 +74,7 @@ const App = () => {
 
   const stats = [
     { num: '100%', label: 'מותאם אישית', icon: Target },
-    { num: '24h', label: 'זמן תגובה', icon: Zap },
+    { num: 'שעות ספורות', label: 'זמן תגובה', icon: Zap },
     { num: 'AI', label: 'כלים מתקדמים', icon: Brain },
     { num: 'ROI', label: 'הפוקוס היחיד', icon: TrendingUp },
   ];
@@ -333,7 +333,7 @@ const App = () => {
                 <div className="text-green-400 mb-3 flex justify-end">
                   <Icon size={28} strokeWidth={1.5} />
                 </div>
-                <div className="text-4xl md:text-5xl font-black tracking-tight mb-1">
+                <div className="text-3xl md:text-5xl font-black tracking-tight mb-1 leading-tight">
                   {s.num}
                 </div>
                 <div className="text-zinc-500 text-sm font-medium">{s.label}</div>
@@ -506,7 +506,7 @@ const App = () => {
               שאלות שמרבים לשאול
             </h2>
             <p className="text-zinc-400">
-              עוד שאלה שלא מופיעה? שלח לי הודעה ואחזור אליך תוך 24 שעות.
+              עוד שאלה שלא מופיעה? שלח לי הודעה ואחזור אליך מהר.
             </p>
           </div>
 
