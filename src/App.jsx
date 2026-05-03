@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Menu, X, Brain, Lightbulb, Rocket, Target,
-  MessageCircle, Sparkles, Zap, TrendingUp, Search, Users,
+  MessageCircle, Zap, TrendingUp, Search, Users,
   ChevronDown, Mail, Linkedin
 } from 'lucide-react';
 
@@ -14,7 +14,7 @@ const App = () => {
   const profileSrc = '/1000900908.jpg';
   const whatsappLink =
     'https://wa.me/972534673151?text=' +
-    encodeURIComponent('היי שמואל, אשמח לשמוע פרטים על הפיצוח האסטרטגי');
+    encodeURIComponent('היי שמואל, אשמח לשמוע פרטים על השירות');
 
   // Meta Pixel — track WhatsApp click as Lead conversion
   const trackLead = () => {
@@ -37,9 +37,9 @@ const App = () => {
   };
 
   const marqueeWords = [
-    'אסטרטגיה', '↑', 'קריאייטיב', '↑', 'AI שיווקי', '↑',
-    'לידים איכותיים', '↑', 'מסר מדויק', '↑', 'ROI', '↑',
-    'מיצוב', '↑', 'תוכן שמניע לפעולה', '↑',
+    'אסטרטגיה שיווקית', '↑', 'Meta Ads', '↑', 'Google Ads', '↑',
+    'דפי נחיתה', '↑', 'לידים איכותיים', '↑', 'AI שיווקי', '↑',
+    'מסר מדויק', '↑', 'ROI', '↑',
   ];
 
   const steps = [
@@ -49,7 +49,7 @@ const App = () => {
       en: 'The Crack',
       icon: Search,
       desc:
-        'חופרים פנימה. מה ה-DNA של העסק? מי הקהל שבאמת משלם? למה שיבחרו בך ולא במתחרה? מזקקים את הצעת הערך הייחודית שלך — בלי בלבולי מוח.',
+        'אנחנו חופרים פנימה. מי הקהל שבאמת משלם, מה ה-DNA של העסק, ולמה שיבחרו בך ולא במתחרה. מזקקים את הצעת הערך הייחודית שלך, בלי בלבולי מוח.',
       bullets: ['ניתוח מתחרים', 'מיפוי קהל יעד', 'הצעת ערך חדה'],
     },
     {
@@ -58,7 +58,7 @@ const App = () => {
       en: 'The Shift',
       icon: Lightbulb,
       desc:
-        'לוקחים את התובנות ובונים תוכנית פעולה. איזה משפך שיווקי נכון לך? איזה תוכן יניע לפעולה? מפת דרכים ברורה — לא הימור.',
+        'לוקחים את התובנות ובונים תוכנית פעולה ברורה. איזה משפך שיווקי נכון לך, איזה תוכן יניע לפעולה, ובאיזה ערוצים נשים את הכסף. מפת דרכים, לא הימור.',
       bullets: ['בניית משפך שיווקי', 'תוכנית תוכן', 'מסרים לכל ערוץ'],
     },
     {
@@ -67,8 +67,8 @@ const App = () => {
       en: 'The Action',
       icon: Rocket,
       desc:
-        'רק עכשיו ניגשים לכלים. דפי נחיתה, קמפיינים ממומנים, אוטומציות חכמות עם AI. כשהמסר מדויק, הטכנולוגיה עובדת בשבילנו.',
-      bullets: ['קמפיינים ממומנים', 'דפי נחיתה ממירים', 'אוטומציות AI'],
+        'רק עכשיו ניגשים לכלים. אני מקים ומנהל לך את הקמפיינים הממומנים ב-Meta וב-Google, בונה דפי נחיתה ממירים, ומקים אוטומציות AI שחוסכות זמן.',
+      bullets: ['קמפיינים ב-Meta + Google', 'דפי נחיתה ממירים', 'אוטומציות AI'],
     },
   ];
 
@@ -81,19 +81,19 @@ const App = () => {
 
   const reasons = [
     {
-      icon: Sparkles,
+      icon: TrendingUp,
       title: 'גישה יזמית',
       desc: 'אני חושב כמו בעלים של עסק, לא כמו ספק שירות. אני שואל את השאלות הקשות לפני שאני שולח הצעת מחיר.',
     },
     {
       icon: Brain,
       title: 'AI ראשון',
-      desc: 'אני חוקר את כלי ה-AI החדשים יום-יום. מה שלוקח לאחרים שבוע, אני מבצע בכמה שעות — ובאיכות גבוהה יותר.',
+      desc: 'אני חוקר את כלי ה-AI החדשים יום-יום. מה שלוקח לאחרים שבוע, אני מבצע בכמה שעות, ובאיכות גבוהה יותר.',
     },
     {
       icon: Users,
       title: 'מספר לקוחות מצומצם',
-      desc: 'אני לא משרד פרסום שמטפל ב-50 לקוחות במקביל. כל לקוח מקבל ראש שלם — לא חצי תשומת לב.',
+      desc: 'אני לא משרד פרסום שמטפל ב-50 לקוחות במקביל. כל לקוח מקבל ראש שלם, לא חצי תשומת לב.',
     },
     {
       icon: Target,
@@ -105,25 +105,37 @@ const App = () => {
   const faqs = [
     {
       q: 'כמה זמן לוקח לראות תוצאות?',
-      a: 'הפיצוח עצמו — שבועיים. לראות לידים איכותיים זורמים — בין 30 ל-60 יום, תלוי בענף. אני בונה איתך לטווח ארוך, לא הבטחות סרק של "תוצאות בעוד שבוע".',
+      a: 'הפיצוח עצמו לוקח כשבועיים. לראות לידים איכותיים זורמים, בין 30 ל-60 יום, תלוי בענף. אני בונה איתך לטווח ארוך, לא הבטחות סרק של "תוצאות בעוד שבוע".',
     },
     {
       q: 'אני עסק קטן, זה לא יקר לי מדי?',
-      a: 'בדיוק לעסקים קטנים זה הכי קריטי. אתה לא יכול להרשות לעצמך לבזבז תקציב על מסרים לא נכונים. אני מתאים את ההיקף לכיס שלך — ופותחים בשיחה ללא עלות.',
+      a: 'בדיוק לעסקים קטנים זה הכי קריטי. אתה לא יכול להרשות לעצמך לבזבז תקציב על מסרים לא נכונים. אני מתאים את ההיקף לכיס שלך, ופותחים בשיחה ללא עלות.',
     },
     {
       q: 'במה אתה שונה משאר משווקי הדיגיטל?',
-      a: 'רובם מתחילים ב"בוא נריץ קמפיין". אני מתחיל ב"בוא נבין מה אנחנו מוכרים ולמי". בנוסף — אני משלב כלי AI שחוסכים לך זמן וכסף. ואני לוקח מספר מצומצם של לקוחות.',
+      a: 'רובם מתחילים ב"בוא נריץ קמפיין". אני מתחיל ב"בוא נבין מה אנחנו מוכרים ולמי". בנוסף, אני משלב כלי AI שחוסכים לך זמן וכסף, ולוקח מספר מצומצם של לקוחות.',
     },
     {
       q: 'אתה מתאים לכל סוג של עסק?',
-      a: 'אני עובד עם עסקים קטנים ובינוניים — גם B2B וגם B2C. עסקי שירות, מסחר, יזמים, חברות מבוססות. אם אני לא מרגיש שאני יכול להביא ערך אמיתי — אגיד לך את זה כבר בשיחת ההיכרות, בלי בלבולי מוח.',
+      a: 'אני עובד עם עסקים קטנים ובינוניים, גם B2B וגם B2C. עסקי שירות, מסחר, יזמים, חברות מבוססות. אם אני לא מרגיש שאני יכול להביא ערך אמיתי, אגיד לך את זה כבר בשיחת ההיכרות, בלי בלבולי מוח.',
     },
     {
       q: 'מה כולל הפיצוח האסטרטגי?',
       a: 'מסמך אסטרטגי מלא: ניתוח מתחרים, מיפוי קהל יעד, הצעת ערך מדויקת, מסרים מרכזיים, ערוצי שיווק מומלצים, ומפת דרכים יישומית של 90 יום.',
     },
+    {
+      q: 'אתה גם מבצע או רק מייעץ?',
+      a: 'שניהם. אחרי שאנחנו סוגרים אסטרטגיה, אני בונה ומפעיל לך את הקמפיינים הממומנים ב-Meta וב-Google, בונה דפי נחיתה ומטמיע אוטומציות AI. אתה מקבל אסטרטג ומבצע באותו אדם.',
+    },
   ];
+
+  // section-eyebrow: a short label with a leading line, replacing the AI-style pill badge
+  const SectionEyebrow = ({ children }) => (
+    <div className="flex items-center gap-3 mb-5">
+      <span className="h-px w-10 bg-green-400/60" />
+      <span className="text-green-400 text-xs font-bold tracking-[0.2em] uppercase">{children}</span>
+    </div>
+  );
 
   return (
     <div
@@ -144,7 +156,7 @@ const App = () => {
       <nav
         className={`fixed top-0 w-full z-50 transition-all duration-500 ${
           scrolled
-            ? 'bg-[#07080a]/85 backdrop-blur-xl border-b border-white/5 py-2'
+            ? 'bg-[#07080a]/85 backdrop-blur-xl py-2'
             : 'bg-transparent py-4'
         }`}
       >
@@ -188,7 +200,7 @@ const App = () => {
         </div>
 
         {isMenuOpen && (
-          <div className="md:hidden bg-[#0c0e12]/95 backdrop-blur-xl border-b border-white/5 absolute w-full">
+          <div className="md:hidden bg-[#0c0e12]/95 backdrop-blur-xl absolute w-full">
             <div className="flex flex-col p-6 gap-5">
               <button onClick={() => scrollToSection('strategy')} className="text-right text-base text-zinc-300 hover:text-green-400 font-medium">התהליך</button>
               <button onClick={() => scrollToSection('why')} className="text-right text-base text-zinc-300 hover:text-green-400 font-medium">למה אני</button>
@@ -207,7 +219,6 @@ const App = () => {
         id="hero"
         className="relative pt-32 md:pt-40 pb-24 px-6 mesh-bg overflow-hidden"
       >
-        {/* Animated blobs - green only */}
         <div className="absolute top-20 right-10 w-72 h-72 bg-green-500/30 rounded-full blur-[120px] animate-blob" />
         <div className="absolute top-40 left-20 w-96 h-96 bg-green-400/15 rounded-full blur-[140px] animate-blob animation-delay-2000" />
         <div className="absolute bottom-10 right-1/3 w-80 h-80 bg-violet-600/15 rounded-full blur-[120px] animate-blob animation-delay-4000" />
@@ -216,28 +227,29 @@ const App = () => {
         <div className="container mx-auto relative z-10">
           <div className="grid md:grid-cols-12 gap-12 items-center">
             <div className="md:col-span-7 text-right">
-              {/* badge */}
-              <div dir="ltr" className="inline-flex items-center gap-2.5 px-4 py-2 mb-8 rounded-full border border-green-500/30 bg-green-500/5 text-green-300 text-xs font-bold tracking-widest uppercase fade-up">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+              {/* Slogan — typographic, no pill */}
+              <div dir="ltr" className="flex items-center justify-end gap-3 mb-7 fade-up">
+                <span className="text-green-400 text-sm md:text-base font-bold tracking-[0.18em] uppercase">
+                  Smart Strategy. Bold Creativity.
                 </span>
-                Smart Strategy. Bold Creativity.
+                <span className="h-px w-12 bg-green-400/50" />
               </div>
 
-              <h1 className="text-[2.75rem] sm:text-6xl lg:text-7xl xl:text-[5.5rem] font-black leading-[0.95] mb-6 tracking-tight fade-up" style={{ fontFamily: "'Heebo', sans-serif", animationDelay: '0.1s' }}>
+              <h1 className="text-[2.6rem] sm:text-6xl lg:text-7xl xl:text-[5rem] font-black leading-[0.98] mb-7 tracking-tight fade-up" style={{ fontFamily: "'Heebo', sans-serif", animationDelay: '0.1s' }}>
                 להפוך{' '}
                 <span className="text-gradient-brand">רעיונות</span>
                 <br />
                 <span className="text-white">ל</span>
-                <span className="text-gradient-brand">אסטרטגיה</span>
+                <span className="text-gradient-brand">אסטרטגיה שיווקית</span>
                 <span className="text-green-400">.</span>
               </h1>
 
-              <p className="text-lg md:text-xl text-zinc-400 mb-10 max-w-xl leading-relaxed fade-up" style={{ animationDelay: '0.2s' }}>
-                לפני ששורפים תקציב על ממומן, צריך להבין{' '}
-                <span className="text-white font-semibold">מה הסיפור</span>.{' '}
-                אני כאן כדי לפצח את האסטרטגיה שלך — ורק אז לוודא שכולם ישמעו עליה.
+              <p className="text-lg md:text-xl text-zinc-300 mb-4 max-w-xl leading-relaxed fade-up font-medium" style={{ animationDelay: '0.2s' }}>
+                לפני ששורפים תקציב על ממומן, צריך לדעת{' '}
+                <span className="text-white">מה אנחנו מוכרים, ולמי</span>.
+              </p>
+              <p className="text-base md:text-lg text-zinc-400 mb-10 max-w-xl leading-relaxed fade-up" style={{ animationDelay: '0.25s' }}>
+                אני בונה איתך את האסטרטגיה השיווקית, ואז מקים ומפעיל לך את הקמפיינים הממומנים ב-Meta וב-Google. ייעוץ וביצוע, באותו אדם.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 fade-up" style={{ animationDelay: '0.3s' }}>
@@ -253,13 +265,12 @@ const App = () => {
                 </a>
                 <button
                   onClick={() => scrollToSection('strategy')}
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-white/20 hover:border-white/40 hover:bg-white/5 rounded-full font-semibold text-base transition-all"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 hover:bg-white/15 rounded-full font-semibold text-base text-white transition-all backdrop-blur-sm"
                 >
                   איך התהליך עובד?
                 </button>
               </div>
 
-              {/* mini quote */}
               <div className="mt-12 flex items-start gap-4 fade-up" style={{ animationDelay: '0.4s' }}>
                 <div className="w-1 h-16 bg-gradient-to-b from-green-400 to-violet-600 rounded-full" />
                 <div>
@@ -272,19 +283,16 @@ const App = () => {
               </div>
             </div>
 
-            {/* Profile image - smaller, more elegant */}
+            {/* Profile image */}
             <div className="md:col-span-5 flex justify-center md:justify-end fade-up" style={{ animationDelay: '0.2s' }}>
               <div className="relative w-full max-w-[340px] aspect-[4/5]">
-                {/* glow ring */}
                 <div className="absolute -inset-3 bg-gradient-to-br from-green-400/40 to-violet-600/30 rounded-3xl blur-2xl opacity-60" />
-                {/* image */}
-                <div className="relative w-full h-full bg-zinc-900 rounded-2xl overflow-hidden ring-1 ring-white/10">
+                <div className="relative w-full h-full bg-zinc-900 rounded-2xl overflow-hidden">
                   <img src={profileSrc} alt="שמואל מוניץ" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#07080a]/40 via-transparent to-transparent" />
                 </div>
-                {/* floating card */}
-                <div className="absolute -bottom-6 -right-4 md:-right-6 bg-[#0c0e12] py-3 px-4 rounded-2xl border border-green-500/20 shadow-2xl flex items-center gap-3 z-20 backdrop-blur-xl">
-                  <div className="bg-green-500/10 p-2 rounded-xl text-green-400">
+                <div className="absolute -bottom-6 -right-4 md:-right-6 bg-[#0c0e12] py-3 px-4 rounded-2xl shadow-2xl flex items-center gap-3 z-20 backdrop-blur-xl">
+                  <div className="bg-green-500/15 p-2 rounded-xl text-green-400">
                     <Brain size={20} />
                   </div>
                   <div>
@@ -299,13 +307,13 @@ const App = () => {
       </section>
 
       {/* MARQUEE */}
-      <section className="border-y border-white/5 bg-[#0c0e12] py-6 overflow-hidden">
+      <section className="bg-[#0c0e12] py-6 overflow-hidden">
         <div className="flex animate-marquee-rtl whitespace-nowrap" style={{ width: 'max-content' }}>
           {[...marqueeWords, ...marqueeWords, ...marqueeWords].map((w, i) => (
             <span
               key={i}
               className={`mx-6 text-2xl md:text-3xl font-black tracking-tight ${
-                w === '↑' ? 'text-green-400' : 'text-white/60'
+                w === '↑' ? 'text-green-400' : 'text-white/55'
               }`}
               style={{ fontFamily: "'Heebo', sans-serif" }}
             >
@@ -316,7 +324,7 @@ const App = () => {
       </section>
 
       {/* STATS */}
-      <section className="py-16 px-6 border-b border-white/5">
+      <section className="py-16 px-6">
         <div className="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
           {stats.map((s, i) => {
             const Icon = s.icon;
@@ -336,15 +344,13 @@ const App = () => {
       </section>
 
       {/* STRATEGY / PROCESS */}
-      <section id="strategy" className="py-24 md:py-32 px-6 relative overflow-hidden">
+      <section id="strategy" className="py-24 md:py-32 px-6 relative overflow-hidden bg-[#0a0c10]">
         <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-green-500/8 rounded-full blur-[140px]" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-violet-600/10 rounded-full blur-[140px]" />
 
         <div className="container mx-auto relative z-10">
           <div className="text-right max-w-3xl mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-5 rounded-full border border-green-500/30 bg-green-500/5 text-green-300 text-xs font-bold tracking-widest uppercase">
-              The Process
-            </div>
+            <SectionEyebrow>The Process</SectionEyebrow>
             <h2 className="text-4xl md:text-6xl font-black mb-6 leading-tight tracking-tight">
               זה לא ה-PPC,
               <br />
@@ -352,55 +358,48 @@ const App = () => {
             </h2>
             <p className="text-lg text-zinc-400 leading-relaxed">
               רוב העסקים רצים "לעשות קמפיין" לפני שהבינו מה הם מוכרים ולמי. התוצאה? כסף שנשרף.
-              התהליך שלי מתחיל בחדר הניתוח — לא במערכת המודעות.
+              התהליך שלי מתחיל בחדר הניתוח, לא במערכת המודעות.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-5">
             {steps.map((step, i) => {
               const Icon = step.icon;
               return (
                 <div
                   key={i}
-                  className="group relative rounded-2xl p-px overflow-hidden card-tilt"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02))',
-                  }}
+                  className="group relative rounded-2xl bg-[#14171c] hover:bg-[#181b21] p-7 md:p-8 overflow-hidden card-tilt transition-colors"
                 >
-                  <div className="relative bg-[#0c0e12] rounded-2xl p-7 md:p-8 h-full overflow-hidden">
-                    {/* corner gradient */}
-                    <div className="absolute -top-20 -left-20 w-48 h-48 bg-green-500/15 blur-3xl group-hover:bg-green-500/30 transition" />
+                  <div className="absolute -top-20 -left-20 w-48 h-48 bg-green-500/10 blur-3xl group-hover:bg-green-500/20 transition" />
 
-                    <div className="flex items-start justify-between mb-8 relative">
-                      <div className="w-14 h-14 rounded-xl bg-green-500 flex items-center justify-center text-black shadow-lg">
-                        <Icon size={26} strokeWidth={2.2} />
+                  <div className="flex items-start justify-between mb-7 relative">
+                    <div className="w-14 h-14 rounded-xl bg-green-500 flex items-center justify-center text-black">
+                      <Icon size={26} strokeWidth={2.2} />
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Step</div>
+                      <div className="text-4xl font-black text-white/10 leading-none">{step.n}</div>
+                    </div>
+                  </div>
+
+                  <h3 className="text-2xl md:text-3xl font-black mb-1 tracking-tight">
+                    {step.title}
+                  </h3>
+                  <div className="text-xs text-zinc-500 mb-5 tracking-widest uppercase font-bold" dir="ltr">
+                    {step.en}
+                  </div>
+
+                  <p className="text-zinc-400 leading-relaxed mb-6 text-sm md:text-base">
+                    {step.desc}
+                  </p>
+
+                  <div className="space-y-2 pt-5">
+                    {step.bullets.map((b, j) => (
+                      <div key={j} className="flex items-center gap-2 text-sm text-zinc-300">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                        {b}
                       </div>
-                      <div className="text-right">
-                        <div className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Step</div>
-                        <div className="text-4xl font-black text-white/10 leading-none">{step.n}</div>
-                      </div>
-                    </div>
-
-                    <h3 className="text-2xl md:text-3xl font-black mb-1 tracking-tight">
-                      {step.title}
-                    </h3>
-                    <div className="text-xs text-zinc-500 mb-5 tracking-widest uppercase font-bold" dir="ltr">
-                      {step.en}
-                    </div>
-
-                    <p className="text-zinc-400 leading-relaxed mb-6 text-sm md:text-base">
-                      {step.desc}
-                    </p>
-
-                    <div className="space-y-2 pt-5 border-t border-white/5">
-                      {step.bullets.map((b, j) => (
-                        <div key={j} className="flex items-center gap-2 text-sm text-zinc-300">
-                          <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                          {b}
-                        </div>
-                      ))}
-                    </div>
+                    ))}
                   </div>
                 </div>
               );
@@ -410,12 +409,10 @@ const App = () => {
       </section>
 
       {/* WHY ME */}
-      <section id="why" className="py-24 md:py-32 px-6 bg-[#0c0e12] border-y border-white/5 relative overflow-hidden">
+      <section id="why" className="py-24 md:py-32 px-6 bg-[#07080a] relative overflow-hidden">
         <div className="container mx-auto relative z-10">
           <div className="text-right max-w-3xl mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-5 rounded-full border border-green-500/30 bg-green-500/5 text-green-300 text-xs font-bold tracking-widest uppercase">
-              Why Me
-            </div>
+            <SectionEyebrow>Why Me</SectionEyebrow>
             <h2 className="text-4xl md:text-6xl font-black mb-6 leading-tight tracking-tight">
               למה לעבוד דווקא{' '}
               <span className="text-gradient-brand">איתי?</span>
@@ -431,10 +428,10 @@ const App = () => {
               return (
                 <div
                   key={i}
-                  className="glow-border rounded-2xl p-7 md:p-8 card-tilt"
+                  className="bg-[#14171c] hover:bg-[#181b21] rounded-2xl p-7 md:p-8 transition-colors card-tilt"
                 >
                   <div className="flex items-start gap-5">
-                    <div className="shrink-0 w-12 h-12 rounded-xl border border-green-500/30 bg-green-500/10 text-green-400 flex items-center justify-center">
+                    <div className="shrink-0 w-12 h-12 rounded-xl bg-green-500/15 text-green-400 flex items-center justify-center">
                       <Icon size={22} strokeWidth={2} />
                     </div>
                     <div>
@@ -450,17 +447,17 @@ const App = () => {
       </section>
 
       {/* ABOUT */}
-      <section id="about" className="py-24 md:py-32 px-6 relative overflow-hidden">
+      <section id="about" className="py-24 md:py-32 px-6 relative overflow-hidden bg-[#0a0c10]">
         <div className="absolute top-0 right-0 w-96 h-96 bg-violet-600/10 rounded-full blur-[140px]" />
         <div className="container mx-auto max-w-5xl relative z-10">
           <div className="grid md:grid-cols-5 gap-12 items-center">
             <div className="md:col-span-2 order-2 md:order-1">
               <div className="relative max-w-[300px] mx-auto">
                 <div className="absolute -inset-2 bg-gradient-to-br from-green-400/30 to-violet-600/20 rounded-3xl blur-xl" />
-                <div className="relative aspect-[4/5] rounded-2xl overflow-hidden ring-1 ring-white/10">
+                <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
                   <img src={profileSrc} alt="שמואל מוניץ" className="w-full h-full object-cover" />
                 </div>
-                <div className="absolute -top-3 right-4 bg-[#0c0e12] border border-green-500/30 text-white px-3 py-1.5 rounded-full text-xs font-bold tracking-wider flex items-center gap-1.5 backdrop-blur-xl">
+                <div className="absolute -top-3 right-4 bg-[#14171c] text-white px-3 py-1.5 rounded-full text-xs font-bold tracking-wider flex items-center gap-1.5 backdrop-blur-xl">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
                   שמואל מוניץ
                 </div>
@@ -468,9 +465,7 @@ const App = () => {
             </div>
 
             <div className="md:col-span-3 order-1 md:order-2 text-right">
-              <div className="inline-flex items-center gap-2 px-3 py-1 mb-5 rounded-full border border-violet-500/30 bg-violet-500/5 text-violet-300 text-xs font-bold tracking-widest uppercase">
-                About Me
-              </div>
+              <SectionEyebrow>About Me</SectionEyebrow>
               <h2 className="text-4xl md:text-5xl font-black mb-8 tracking-tight leading-tight">
                 מי מאחורי{' '}
                 <span className="text-gradient-brand">Shift Up?</span>
@@ -480,20 +475,15 @@ const App = () => {
                   נעים מאוד, אני <span className="text-white font-bold">שמואל מוניץ</span>.
                 </p>
                 <p>
-                  אני לא אשקר לכם, אני לא מגיע ממשרד פרסום עם ותק של 20 שנה. <br />
-                  וזה בדיוק <span className="text-green-400 font-bold">היתרון</span> שלכם.
+                  אני לא אשקר לכם, אני לא מגיע ממשרד פרסום עם ותק של 20 שנה. וזה בדיוק <span className="text-green-400 font-bold">היתרון</span> שלכם.
                 </p>
                 <p>
-                  בזמן שאחרים נחים על זרי הדפנה, אני חוקר את כלי ה-
-                  <span className="text-green-400 font-bold">AI</span> החדשים ביותר ומוצא
-                  דרכים חדשניות להביא לידים. אני לא עובד על "אוטומט". כל לקוח הוא פרויקט הדגל שלי.
+                  בזמן שאחרים נחים על זרי הדפנה, אני חוקר את כלי ה-<span className="text-green-400 font-bold">AI</span> החדשים ביותר ומוצא דרכים חדשניות להביא לידים. אני לא עובד על "אוטומט". כל לקוח הוא פרויקט הדגל שלי.
                 </p>
                 <p>
-                  אני יזם בנשמה. אני מבין שעסק צריך{' '}
-                  <span className="text-white font-bold">החזר השקעה (ROI)</span>{' '}
-                  ולא רק "לייקים". אני כאן כדי לבנות איתך מערכת שיווקית שעובדת.
+                  אני יזם בנשמה. אני מבין שעסק צריך <span className="text-white font-bold">החזר השקעה (ROI)</span> ולא רק "לייקים". אני כאן כדי לבנות איתך מערכת שיווקית שעובדת, ולהפעיל אותה בפועל.
                 </p>
-                <div className="pt-4 mt-2 border-t border-white/5">
+                <div className="pt-4 mt-2">
                   <p className="text-xl md:text-2xl font-black text-gradient-brand">
                     אנשים זה היעד.
                   </p>
@@ -508,12 +498,10 @@ const App = () => {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-24 md:py-32 px-6 bg-[#0c0e12] border-y border-white/5">
+      <section id="faq" className="py-24 md:py-32 px-6 bg-[#07080a]">
         <div className="container mx-auto max-w-3xl">
           <div className="text-right mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-5 rounded-full border border-green-500/30 bg-green-500/5 text-green-300 text-xs font-bold tracking-widest uppercase">
-              FAQ
-            </div>
+            <SectionEyebrow>FAQ</SectionEyebrow>
             <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tight">
               שאלות שמרבים לשאול
             </h2>
@@ -526,10 +514,10 @@ const App = () => {
             {faqs.map((f, i) => (
               <div
                 key={i}
-                className={`rounded-2xl border transition-all ${
+                className={`rounded-2xl transition-all ${
                   openFaq === i
-                    ? 'bg-[#14171c] border-green-500/30'
-                    : 'bg-[#0c0e12] border-white/5 hover:border-white/10'
+                    ? 'bg-[#181b21]'
+                    : 'bg-[#14171c] hover:bg-[#181b21]'
                 }`}
               >
                 <button
@@ -545,7 +533,7 @@ const App = () => {
                   <span className="font-bold text-base md:text-lg flex-1">{f.q}</span>
                 </button>
                 {openFaq === i && (
-                  <div className="px-5 md:px-6 pb-6 text-zinc-400 leading-relaxed border-t border-white/5 pt-4">
+                  <div className="px-5 md:px-6 pb-6 text-zinc-400 leading-relaxed pt-1">
                     {f.a}
                   </div>
                 )}
@@ -558,7 +546,7 @@ const App = () => {
       {/* CTA */}
       <section
         id="contact"
-        className="py-24 md:py-32 px-6 relative overflow-hidden"
+        className="py-24 md:py-32 px-6 relative overflow-hidden bg-[#0a0c10]"
       >
         <div className="absolute inset-0 mesh-bg opacity-80" />
         <div className="absolute top-10 left-10 w-96 h-96 bg-green-500/25 rounded-full blur-[140px] animate-blob" />
@@ -566,19 +554,20 @@ const App = () => {
         <div className="noise" />
 
         <div className="container mx-auto max-w-3xl text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full border border-green-500/40 bg-green-500/10 text-green-300 text-xs font-bold tracking-widest uppercase">
-            <Sparkles size={12} />
-            Let's Talk
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <span className="h-px w-10 bg-green-400/60" />
+            <span className="text-green-400 text-xs font-bold tracking-[0.2em] uppercase">Let's Talk</span>
+            <span className="h-px w-10 bg-green-400/60" />
           </div>
           <h2 className="text-4xl md:text-7xl font-black mb-6 tracking-tight leading-[1.05]">
             מוכנים לעשות{' '}
             <span className="text-gradient-brand">Shift Up?</span>
           </h2>
           <p className="text-lg md:text-xl text-zinc-300 mb-12 max-w-xl mx-auto">
-            הקפה עליי. הפיצוח עליי. ההחלטה — עליכם.
+            הקפה עליי. הפיצוח עליי. ההחלטה עליכם.
           </p>
 
-          <div className="bg-[#0c0e12]/80 backdrop-blur-xl p-8 md:p-12 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden">
+          <div className="bg-[#0c0e12]/80 backdrop-blur-xl p-8 md:p-12 rounded-3xl shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-violet-600" />
 
             <div className="flex flex-col gap-4 items-center">
@@ -598,7 +587,7 @@ const App = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
                 </span>
-                זמין לשיחת היכרות קצרה — חינם, ללא התחייבות.
+                זמין לשיחת היכרות קצרה. חינם, ללא התחייבות.
               </div>
             </div>
           </div>
@@ -606,7 +595,7 @@ const App = () => {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-[#07080a] py-12 px-6 border-t border-white/5">
+      <footer className="bg-[#07080a] py-12 px-6">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <img src={logoSrc} alt="Shift Up" className="h-10 w-auto object-contain" />
@@ -618,14 +607,14 @@ const App = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp"
-                className="w-10 h-10 rounded-full border border-white/10 hover:border-green-400/50 hover:bg-green-400/5 hover:text-green-400 flex items-center justify-center transition-all"
+                className="w-10 h-10 rounded-full bg-white/5 hover:bg-green-400/15 hover:text-green-400 flex items-center justify-center transition-all"
               >
                 <MessageCircle size={18} />
               </a>
               <a
                 href="mailto:shmuelmunic@gmail.com"
                 aria-label="Email"
-                className="w-10 h-10 rounded-full border border-white/10 hover:border-green-400/50 hover:bg-green-400/5 hover:text-green-400 flex items-center justify-center transition-all"
+                className="w-10 h-10 rounded-full bg-white/5 hover:bg-green-400/15 hover:text-green-400 flex items-center justify-center transition-all"
               >
                 <Mail size={18} />
               </a>
@@ -634,7 +623,7 @@ const App = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
-                className="w-10 h-10 rounded-full border border-white/10 hover:border-green-400/50 hover:bg-green-400/5 hover:text-green-400 flex items-center justify-center transition-all"
+                className="w-10 h-10 rounded-full bg-white/5 hover:bg-green-400/15 hover:text-green-400 flex items-center justify-center transition-all"
               >
                 <Linkedin size={18} />
               </a>
