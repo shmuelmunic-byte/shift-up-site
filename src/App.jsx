@@ -74,7 +74,7 @@ const App = () => {
 
   const stats = [
     { num: '100%', label: 'מותאם אישית', icon: Target },
-    { num: 'שעות ספורות', label: 'זמן תגובה', icon: Zap },
+    { num: 'מענה מיידי', label: 'זמינות לפנייה', icon: Zap },
     { num: 'AI', label: 'כלים מתקדמים', icon: Brain },
     { num: 'ROI', label: 'הפוקוס היחיד', icon: TrendingUp },
   ];
@@ -619,7 +619,7 @@ const App = () => {
                 <Mail size={18} />
               </a>
               <a
-                href="https://www.linkedin.com/"
+                href="https://www.linkedin.com/in/shmuel-munitz-marketing"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
