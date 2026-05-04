@@ -1,0 +1,784 @@
+import { useEffect, useRef, useState } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
+import Cursor from '../components/Cursor';
+
+gsap.registerPlugin(ScrollTrigger);
+gsap.defaults({ ease: 'expo.out', duration: 0.8 });
+
+const WA_LINK =
+  'https://wa.me/972534673151?text=' +
+  encodeURIComponent("Hi Shmuel, I'd like to learn more about your services");
+const profileSrc = '/1000900908.jpg';
+const logoSrc    = '/1000900906.jpg';
+
+/* ─── Shared helpers ─────────────────────────────────────────────────── */
+
+function FluidBlob({ style }) {
+  return <div className="fluid-blob" style={style} />;
+}
+
+function MagneticWrap({ children, href, onClick, style }) {
+  const ref = useRef(null);
+  const onMove = (e) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const dx = e.clientX - (r.left + r.width  / 2);
+    const dy = e.clientY - (r.top  + r.height / 2);
+    if (Math.sqrt(dx*dx + dy*dy) < 90)
+      gsap.to(el, { x: dx * 0.38, y: dy * 0.38, duration: 0.4, ease: 'power2.out' });
+  };
+  const onLeave = () =>
+    gsap.to(ref.current, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1,0.6)' });
+
+  const Tag  = href ? 'a' : 'button';
+  const xtra = href
+    ? { href, target: '_blank', rel: 'noopener noreferrer' }
+    : { onClick };
+
+  return (
+    <div ref={ref} className="magnetic-outer" onMouseMove={onMove} onMouseLeave={onLeave}>
+      <Tag style={style} {...xtra}>{children}</Tag>
+    </div>
+  );
+}
+
+const WA_ICON = (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+);
+
+/* ─── Navbar ─────────────────────────────────────────────────────────── */
+
+function EnNavbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen]         = useState(false);
+
+  useEffect(() => {
+    const h = () => setScrolled(window.scrollY > 30);
+    window.addEventListener('scroll', h, { passive: true });
+    return () => window.removeEventListener('scroll', h);
+  }, []);
+
+  const goto = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    setOpen(false);
+  };
+
+  const navLinks = [
+    { label: 'The Process', id: 'en-strategy' },
+    { label: 'Why Me',      id: 'en-why'      },
+    { label: 'About',       id: 'en-about'    },
+    { label: 'FAQ',         id: 'en-faq'      },
+  ];
+
+  const navStyle = {
+    position: 'fixed', top: 0, width: '100%', zIndex: 900,
+    transition: 'background 0.5s, padding 0.4s',
+    padding: scrolled ? '10px 0' : '18px 0',
+    background: scrolled ? 'oklch(0.08 0.01 240 / 0.88)' : 'transparent',
+    backdropFilter: scrolled ? 'blur(20px) saturate(1.5)' : 'none',
+    WebkitBackdropFilter: scrolled ? 'blur(20px) saturate(1.5)' : 'none',
+    borderBottom: scrolled ? '1px solid oklch(0.18 0.025 240)' : '1px solid transparent',
+  };
+
+  return (
+    <nav style={navStyle}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <button onClick={() => goto('en-hero')} aria-label="Shift Up" style={{ background: 'none', border: 'none', padding: 0 }}>
+          <img src={logoSrc} alt="Shift Up" style={{ height: 44, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite' }} />
+        </button>
+
+        <div className="nav-desktop" style={{ alignItems: 'center', gap: 28 }}>
+          {navLinks.map(l => (
+            <button key={l.id} onClick={() => goto(l.id)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', fontSize: '0.88rem', fontWeight: 600, letterSpacing: '0.02em', fontFamily: "'Heebo', sans-serif", transition: 'color 0.25s' }}
+              onMouseEnter={e => e.target.style.color = 'var(--brand-prime)'}
+              onMouseLeave={e => e.target.style.color = 'var(--text-secondary)'}
+            >{l.label}</button>
+          ))}
+
+          {/* Back to Hebrew */}
+          <a href="/" style={{ background: 'none', border: '1px solid var(--surface-2)', borderRadius: 999, padding: '8px 16px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.1em', textDecoration: 'none', transition: 'border-color 0.25s, color 0.25s' }}
+            onMouseEnter={e => { e.target.style.borderColor='var(--brand-prime)'; e.target.style.color='var(--brand-prime)'; }}
+            onMouseLeave={e => { e.target.style.borderColor='var(--surface-2)'; e.target.style.color='var(--text-muted)'; }}
+          >עב</a>
+
+          <button onClick={() => goto('en-contact')} style={{ background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', border: 'none', borderRadius: 999, padding: '10px 22px', fontWeight: 800, fontSize: '0.88rem', fontFamily: "'Heebo', sans-serif", boxShadow: '0 0 28px oklch(0.78 0.20 145 / 0.35)', transition: 'background 0.25s, box-shadow 0.25s' }}
+            onMouseEnter={e => { e.target.style.background='var(--brand-glow)'; e.target.style.boxShadow='0 0 44px oklch(0.78 0.20 145 / 0.6)'; }}
+            onMouseLeave={e => { e.target.style.background='var(--brand-prime)'; e.target.style.boxShadow='0 0 28px oklch(0.78 0.20 145 / 0.35)'; }}
+          >Let's Talk</button>
+        </div>
+
+        <button className="nav-mobile-btn" onClick={() => setOpen(!open)} aria-label="Menu"
+          style={{ background: 'none', border: 'none', color: 'var(--text-primary)', padding: 4 }}>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+            {open ? <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></> : <><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></>}
+          </svg>
+        </button>
+      </div>
+
+      {open && (
+        <div style={{ position: 'absolute', top: '100%', width: '100%', background: 'oklch(0.11 0.015 240 / 0.97)', backdropFilter: 'blur(24px)', borderBottom: '1px solid var(--surface-2)' }}>
+          <div style={{ padding: '20px 28px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {navLinks.map(l => (
+              <button key={l.id} onClick={() => goto(l.id)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', fontSize: '1rem', fontWeight: 600, textAlign: 'left', fontFamily: "'Heebo', sans-serif", padding: '4px 0' }}>{l.label}</button>
+            ))}
+            <a href="/" style={{ color: 'var(--text-muted)', fontSize: '0.88rem', fontWeight: 700 }}>עברית →</a>
+            <button onClick={() => { goto('en-contact'); setOpen(false); }} style={{ background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', border: 'none', borderRadius: 999, padding: '13px 0', fontWeight: 800, fontSize: '1rem', fontFamily: "'Heebo', sans-serif", marginTop: 8 }}>Let's Talk</button>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+}
+
+/* ─── Hero ───────────────────────────────────────────────────────────── */
+
+function EnHero({ onProcess }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.en-hero-h1',   { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1.0, ease: 'expo.out', delay: 0.1 });
+      gsap.fromTo('.en-hero-sub',  { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', delay: 0.4 });
+      gsap.fromTo('.en-hero-ctas', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 0.55 });
+      gsap.fromTo('.en-hero-img',  { y: 40, opacity: 0, scale: 0.96 }, { y: 0, opacity: 1, scale: 1, duration: 1.1, ease: 'expo.out', delay: 0.3 });
+      gsap.fromTo('.en-hero-quote',{ y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 0.7 });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section id="en-hero" ref={ref} style={{ position: 'relative', paddingTop: 'clamp(100px, 18vw, 140px)', paddingBottom: 'clamp(60px, 10vw, 100px)', overflow: 'hidden', minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
+      {/* Background */}
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
+        <FluidBlob style={{ width: 600, height: 600, top: '-10%', left: '-5%', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.22), transparent 70%)', '--dur': '20s' }} />
+        <FluidBlob style={{ width: 500, height: 500, top: '30%', right: '-8%', background: 'radial-gradient(circle, oklch(0.65 0.22 145 / 0.15), transparent 70%)', '--dur': '24s', '--delay': '-5s' }} />
+        <FluidBlob style={{ width: 400, height: 400, bottom: 0, left: '30%', background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.18), transparent 70%)', '--dur': '28s', '--delay': '-10s' }} />
+      </div>
+      <div className="grid-bg" style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none' }} />
+
+      <div className="hero-layout" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 28px', position: 'relative', zIndex: 2, width: '100%' }}>
+
+        {/* Copy */}
+        <div style={{ textAlign: 'left' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
+            <span style={{ height: 1, width: 36, background: 'var(--brand-prime)', opacity: 0.6, display: 'block' }} />
+            <span style={{ color: 'var(--brand-prime)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Smart Strategy. Bold Creativity.</span>
+          </div>
+
+          <h1 className="en-hero-h1" style={{ fontSize: 'clamp(1.9rem, 7vw, 5.2rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 28, fontFamily: "'Heebo', sans-serif", opacity: 0 }}>
+            <span style={{ color: 'var(--text-primary)' }}>Turning </span>
+            <span className="text-gradient">Ideas</span>
+            <br />
+            <span style={{ color: 'var(--text-primary)' }}>into a </span>
+            <span className="text-gradient">Winning Strategy</span>
+            <span style={{ color: 'var(--brand-prime)' }}>.</span>
+          </h1>
+
+          <p className="en-hero-sub" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.18rem)', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 520, marginBottom: 8, opacity: 0 }}>
+            Before burning budget on paid ads, you need to know{' '}
+            <strong style={{ color: 'var(--text-primary)' }}>what you're selling — and to whom</strong>.
+            <br />
+            I build the strategy and execute it.
+          </p>
+
+          <div className="en-hero-ctas hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 36, marginBottom: 48, opacity: 0 }}>
+            <MagneticWrap href={WA_LINK} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 32px', background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', borderRadius: 999, fontWeight: 800, fontSize: '1rem', fontFamily: "'Heebo', sans-serif", textDecoration: 'none', border: 'none', boxShadow: '0 0 40px oklch(0.78 0.20 145 / 0.42)', transition: 'background 0.25s, box-shadow 0.25s' }}>
+              {WA_ICON} Let's Talk
+            </MagneticWrap>
+            <MagneticWrap onClick={onProcess} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', background: 'oklch(0.14 0.02 240 / 0.7)', color: 'var(--text-primary)', borderRadius: 999, fontWeight: 600, fontSize: '1rem', fontFamily: "'Heebo', sans-serif", border: '1px solid oklch(0.25 0.02 240)', backdropFilter: 'blur(12px)', transition: 'background 0.25s, border-color 0.25s' }}>
+              How It Works
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </MagneticWrap>
+          </div>
+
+          <div className="en-hero-quote" style={{ display: 'flex', alignItems: 'flex-start', gap: 14, opacity: 0 }}>
+            <div style={{ width: 3, height: 56, background: 'linear-gradient(to bottom, var(--brand-prime), var(--accent-void))', borderRadius: 999, flexShrink: 0 }} />
+            <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', fontWeight: 500, lineHeight: 1.65 }}>
+              "Ideas are my fuel.
+              <br />
+              <strong style={{ color: 'var(--text-primary)', fontWeight: 800 }}>People are the goal."</strong>
+            </p>
+          </div>
+        </div>
+
+        {/* Image */}
+        <div className="en-hero-img" style={{ display: 'flex', justifyContent: 'center', opacity: 0 }}>
+          <div style={{ position: 'relative', width: '100%', maxWidth: 340 }}>
+            <div style={{ position: 'absolute', inset: -16, background: 'radial-gradient(circle at 40% 40%, oklch(0.78 0.20 145 / 0.25), oklch(0.50 0.20 285 / 0.18) 60%, transparent 80%)', borderRadius: 28, filter: 'blur(30px)' }} />
+            <div className="glow-border living-border" style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', aspectRatio: '4/5' }}>
+              <img src={profileSrc} alt="Shmuel Munitz" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.45), transparent 50%)' }} />
+            </div>
+            <div style={{ position: 'absolute', bottom: -20, right: -12, background: 'var(--surface-1)', backdropFilter: 'blur(16px)', border: '1px solid var(--surface-2)', borderRadius: 14, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 8px 32px oklch(0 0 0 / 0.4)' }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', boxShadow: '0 0 8px var(--brand-prime)', flexShrink: 0, animation: 'pulse-ring 1.8s ease-out infinite' }} />
+              <div>
+                <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>FOCUS</div>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>Winning Strategy</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Stats ──────────────────────────────────────────────────────────── */
+
+function isOnlineNow() {
+  const h = parseInt(new Intl.DateTimeFormat('he-IL', { hour: 'numeric', hour12: false, timeZone: 'Asia/Jerusalem' }).format(new Date()), 10);
+  return h >= 9 && h < 23;
+}
+
+const gradStyle = {
+  background: 'linear-gradient(120deg, var(--brand-glow) 0%, var(--brand-prime) 55%, var(--accent-void) 100%)',
+  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+};
+
+const enStats = [
+  { count: 100, suffix: '%', label: 'Fully Personalized' },
+  { live: true,              label: 'Availability' },
+  { display: 'AI',           label: 'Advanced Tools' },
+  { display: 'ROI',          label: 'The Only Focus' },
+];
+
+function EnStatItem({ stat, index }) {
+  const numRef  = useRef(null);
+  const itemRef = useRef(null);
+  const [online, setOnline] = useState(false);
+
+  useEffect(() => { if (stat.live) setOnline(isOnlineNow()); }, [stat.live]);
+
+  useEffect(() => {
+    const el = itemRef.current;
+    if (!el) return;
+    gsap.fromTo(el, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: index * 0.1, scrollTrigger: { trigger: el, start: 'top 82%', once: true } });
+    if (typeof stat.count === 'number') {
+      const obj = { val: 0 };
+      ScrollTrigger.create({ trigger: el, start: 'top 82%', once: true, onEnter: () => {
+        gsap.to(obj, { val: stat.count, duration: 1.8, ease: 'power2.out', onUpdate: () => {
+          if (numRef.current) numRef.current.textContent = Math.round(obj.val) + (stat.suffix || '');
+        }});
+      }});
+    }
+  }, [stat, index]);
+
+  const showOnline = stat.live && online;
+
+  return (
+    <div ref={itemRef} style={{ textAlign: 'left', opacity: 0, padding: '8px 0' }}>
+      <div style={{ fontSize: 'clamp(2rem, 5vw, 3.2rem)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 10, fontFamily: "'Heebo', sans-serif" }}>
+        {typeof stat.count === 'number' ? (
+          <span ref={numRef} className="counter-num" style={gradStyle}>0{stat.suffix || ''}</span>
+        ) : stat.live ? (
+          <span style={gradStyle}>Instant Response</span>
+        ) : (
+          <span style={gradStyle}>{stat.display}</span>
+        )}
+      </div>
+      {stat.live && (
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: showOnline ? 'oklch(0.78 0.20 145 / 0.1)' : 'var(--surface-1)', border: `1px solid ${showOnline ? 'oklch(0.78 0.20 145 / 0.3)' : 'var(--surface-2)'}`, borderRadius: 999, padding: '3px 10px', marginBottom: 8 }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: showOnline ? 'var(--brand-prime)' : 'oklch(0.4 0.01 240)', display: 'block', flexShrink: 0, boxShadow: showOnline ? '0 0 6px var(--brand-prime)' : 'none', animation: showOnline ? 'pulse-ring 2s ease-out infinite' : 'none' }} />
+          <span style={{ fontSize: '0.7rem', fontWeight: 700, color: showOnline ? 'var(--brand-prime)' : 'var(--text-muted)', letterSpacing: '0.04em' }}>
+            {showOnline ? 'Available now' : 'Usually within 1h'}
+          </span>
+        </div>
+      )}
+      {!stat.live && <div style={{ height: 2, width: 36, background: 'var(--brand-prime)', borderRadius: 999, marginBottom: 10, opacity: 0.45 }} />}
+      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.04em' }}>{stat.label}</div>
+    </div>
+  );
+}
+
+/* ─── Process ────────────────────────────────────────────────────────── */
+
+const enSteps = [
+  {
+    n: '01', title: 'The Crack', sub: 'Discovery',
+    desc: "We dig deep. Who's actually paying, what's the business DNA, and why would they choose you over the competition. We distill your unique value proposition — no fluff.",
+    bullets: ['Competitor analysis', 'Target audience mapping', 'Sharp value proposition'],
+    icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>,
+  },
+  {
+    n: '02', title: 'The Shift', sub: 'Strategy',
+    desc: 'We take the insights and build a clear action plan. Which marketing funnel works for you, what content will drive action, and where to put the money. A roadmap, not a gamble.',
+    bullets: ['Marketing funnel design', 'Content plan', 'Channel-specific messaging'],
+    icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>,
+  },
+  {
+    n: '03', title: 'The Action', sub: 'Execution',
+    desc: 'Only now we go to the tools. I set up and manage your paid campaigns on Meta and Google, build high-converting landing pages, and deploy AI automations that save time.',
+    bullets: ['Meta + Google Campaigns', 'High-converting landing pages', 'AI automations'],
+    icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>,
+  },
+];
+
+function EnProcess() {
+  const ref = useRef(null);
+  const [active, setActive] = useState(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.en-process-header', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: '.en-process-header', start: 'top 80%', once: true } });
+      gsap.fromTo('.en-process-card', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.85, ease: 'expo.out', stagger: 0.12, scrollTrigger: { trigger: '.en-process-grid', start: 'top 78%', once: true } });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section id="en-strategy" ref={ref} style={{ padding: 'clamp(80px, 10vw, 130px) 28px', background: 'var(--surface-0)', position: 'relative', overflow: 'hidden' }}>
+      <FluidBlob style={{ width: 500, height: 500, top: '10%', right: '-5%', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.07), transparent 70%)', '--dur': '22s' }} />
+      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <div className="en-process-header" style={{ textAlign: 'left', maxWidth: 680, marginBottom: 64, opacity: 0 }}>
+          <div className="section-label">The Process</div>
+          <h2 style={{ fontSize: 'clamp(2.2rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 20, fontFamily: "'Heebo', sans-serif" }}>
+            It's not the PPC,
+            <br /><span className="text-gradient">it's the message.</span>
+          </h2>
+          <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 520 }}>
+            Most businesses rush to run campaigns before understanding what they're selling and to whom.
+            My process starts in the operating room — not in the ad platform.
+          </p>
+        </div>
+
+        <div className="en-process-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+          {enSteps.map((step, i) => {
+            const isActive = active === i;
+            return (
+              <div key={i} className="en-process-card glow-border"
+                onMouseEnter={() => setActive(i)} onMouseLeave={() => setActive(null)}
+                style={{ opacity: 0, borderRadius: 20, background: isActive ? 'var(--surface-2)' : 'var(--surface-1)', padding: 'clamp(24px,3vw,36px)', position: 'relative', overflow: 'hidden', transition: 'background 0.35s, transform 0.45s cubic-bezier(0.16,1,0.3,1)', transform: isActive ? 'translateY(-6px)' : 'translateY(0)' }}>
+                <div style={{ position: 'absolute', top: -60, left: -60, width: 200, height: 200, background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.12), transparent 70%)', transition: 'opacity 0.4s', opacity: isActive ? 1 : 0, pointerEvents: 'none' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
+                  <div style={{ width: 52, height: 52, borderRadius: 14, background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{step.icon}</div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-muted)', fontWeight: 700 }}>Step</div>
+                    <div style={{ fontSize: '3.2rem', fontWeight: 900, color: 'oklch(0.22 0.02 240)', lineHeight: 1, fontFamily: "'Heebo', sans-serif" }}>{step.n}</div>
+                  </div>
+                </div>
+                <h3 style={{ fontSize: 'clamp(1.5rem,2.5vw,1.9rem)', fontWeight: 900, letterSpacing: '-0.01em', marginBottom: 4, fontFamily: "'Heebo', sans-serif" }}>{step.title}</h3>
+                <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 18 }}>{step.sub}</div>
+                <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: 24 }}>{step.desc}</p>
+                <div style={{ borderTop: '1px solid var(--surface-2)', paddingTop: 18, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {step.bullets.map((b, j) => (
+                    <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                      <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--brand-prime)', flexShrink: 0 }} />{b}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Why Me ─────────────────────────────────────────────────────────── */
+
+const enReasons = [
+  { title: 'Entrepreneurial Mindset', en: 'Business Owner Thinking', desc: 'I think like a business owner, not a vendor. I ask the hard questions before sending a proposal.', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg> },
+  { title: 'AI-First', en: 'AI-First Mindset', desc: 'I research the newest AI tools daily. What takes others a week, I execute in hours — at higher quality.', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.64"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.64"/></svg> },
+  { title: 'Focused Clientele', en: 'Small, Focused Roster', desc: "I'm not an agency juggling 50 clients. Every client gets my full attention, not half of it.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
+  { title: 'Message Before Budget', en: 'Strategy First', desc: "We don't burn money on campaigns before understanding what we're selling and to whom. Your money only works when the message is precise.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> },
+];
+
+function EnWhyMe() {
+  const ref = useRef(null);
+  const [activeCard, setActiveCard] = useState(0);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.en-whyme-header', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: '.en-whyme-header', start: 'top 80%', once: true } });
+      gsap.fromTo('.en-whyme-card', { y: 50, opacity: 0, scale: 0.97 }, { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'expo.out', stagger: 0.1, scrollTrigger: { trigger: '.en-whyme-cards', start: 'top 78%', once: true } });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section id="en-why" ref={ref} style={{ padding: 'clamp(80px, 10vw, 130px) 28px', background: 'var(--bedrock)', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <div className="en-whyme-header" style={{ textAlign: 'left', maxWidth: 640, marginBottom: 60, opacity: 0 }}>
+          <div className="section-label">Why Me</div>
+          <h2 style={{ fontSize: 'clamp(2.2rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 18, fontFamily: "'Heebo', sans-serif" }}>
+            Why work with <span className="text-gradient">me?</span>
+          </h2>
+          <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
+            There are plenty of digital marketers. Here are 4 real reasons I'll be your smartest decision.
+          </p>
+        </div>
+        <div className="en-whyme-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 18 }}>
+          {enReasons.map((r, i) => {
+            const isActive = activeCard === i;
+            return (
+              <div key={i} className="en-whyme-card" onMouseEnter={() => setActiveCard(i)}
+                style={{ opacity: 0, borderRadius: 20, background: isActive ? 'var(--surface-2)' : 'var(--surface-1)', padding: 'clamp(22px,3vw,32px)', border: `1px solid ${isActive ? 'oklch(0.78 0.20 145 / 0.35)' : 'transparent'}`, transition: 'background 0.35s, border-color 0.35s, transform 0.45s cubic-bezier(0.16,1,0.3,1)', transform: isActive ? 'translateY(-5px)' : 'translateY(0)', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', bottom: 0, left: 0, height: 2, width: isActive ? '100%' : '0%', background: 'var(--brand-prime)', borderRadius: '0 0 20px 20px', transition: 'width 0.5s var(--ease-spring)' }} />
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 18 }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 14, background: isActive ? 'oklch(0.78 0.20 145 / 0.2)' : 'oklch(0.78 0.20 145 / 0.08)', color: 'var(--brand-prime)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.35s' }}>{r.icon}</div>
+                  <div>
+                    <div style={{ fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.16em', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 4 }}>{r.en}</div>
+                    <h3 style={{ fontSize: 'clamp(1.1rem,2vw,1.35rem)', fontWeight: 800, letterSpacing: '-0.01em', marginBottom: 10, fontFamily: "'Heebo', sans-serif", color: isActive ? 'var(--text-primary)' : 'oklch(0.88 0.005 240)', transition: 'color 0.3s' }}>{r.title}</h3>
+                    <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>{r.desc}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Manifesto ──────────────────────────────────────────────────────── */
+
+const enWords = [
+  'Ideas', 'are', 'my', 'fuel.', 'People', 'are', 'the', 'goal.', 'Your', 'businesses', 'are', 'the', 'way', 'there.'
+];
+
+function EnManifesto() {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const section = ref.current;
+    if (!section) return;
+    const wordEls = section.querySelectorAll('.en-manifesto-word');
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ scrollTrigger: { trigger: section, start: 'top 70%', end: 'bottom 30%', scrub: 0.8 } });
+      wordEls.forEach((el, i) => {
+        tl.fromTo(el, { opacity: 0.08, y: 14, filter: 'blur(3px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.4, ease: 'power2.out' }, i * 0.12);
+      });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
+
+  const highlights = ['Ideas', 'fuel.', 'People', 'goal.'];
+
+  return (
+    <section ref={ref} style={{ padding: 'clamp(80px, 12vw, 140px) 28px', background: 'var(--surface-0)', position: 'relative', overflow: 'hidden' }}>
+      <FluidBlob style={{ width: 600, height: 600, top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.06), transparent 70%)', '--dur': '30s' }} />
+      <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative', zIndex: 1, textAlign: 'center' }}>
+        <div className="section-label" style={{ justifyContent: 'center', marginBottom: 32 }}>The Manifesto</div>
+        <p translate="no" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.3em 0.5em', fontSize: 'clamp(2rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.25, letterSpacing: '-0.02em', fontFamily: "'Heebo', sans-serif" }} aria-label={enWords.join(' ')}>
+          {enWords.map((word, i) => (
+            <span key={i} className="en-manifesto-word" style={{ display: 'inline-block', opacity: 0.08, color: highlights.includes(word) ? 'var(--brand-prime)' : 'var(--text-primary)', willChange: 'opacity, transform, filter' }}>{word}</span>
+          ))}
+        </p>
+        <div style={{ marginTop: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, opacity: 0.5 }}>
+          <span style={{ height: 1, width: 24, background: 'var(--brand-prime)', display: 'block' }} />
+          <span style={{ fontSize: '0.75rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600 }}>Shmuel Munitz</span>
+          <span style={{ height: 1, width: 24, background: 'var(--brand-prime)', display: 'block' }} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── About ──────────────────────────────────────────────────────────── */
+
+function EnAbout() {
+  const ref    = useRef(null);
+  const imgRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.en-about-header', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: '.en-about-header', start: 'top 80%', once: true } });
+      gsap.fromTo('.en-about-img',    { y: 60, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 1.0, ease: 'expo.out', scrollTrigger: { trigger: '.en-about-img', start: 'top 80%', once: true } });
+      gsap.utils.toArray('.en-about-para').forEach((el, i) => {
+        gsap.fromTo(el, { x: 20, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: 'expo.out', delay: i * 0.08, scrollTrigger: { trigger: el, start: 'top 85%', once: true } });
+      });
+    }, ref);
+
+    const img = imgRef.current;
+    const onMove = (e) => {
+      if (!img) return;
+      const rect = img.getBoundingClientRect();
+      const dx = (e.clientX - rect.left - rect.width  / 2) / rect.width;
+      const dy = (e.clientY - rect.top  - rect.height / 2) / rect.height;
+      gsap.to(img, { rotateY: dx * 6, rotateX: -dy * 6, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+    };
+    const onLeave = () => gsap.to(img, { rotateY: 0, rotateX: 0, duration: 0.8, ease: 'elastic.out(1,0.6)' });
+    img?.addEventListener('mousemove', onMove);
+    img?.addEventListener('mouseleave', onLeave);
+    return () => { ctx.revert(); img?.removeEventListener('mousemove', onMove); img?.removeEventListener('mouseleave', onLeave); };
+  }, []);
+
+  return (
+    <section id="en-about" ref={ref} style={{ padding: 'clamp(80px, 10vw, 130px) 28px', background: 'var(--surface-0)', position: 'relative', overflow: 'hidden' }}>
+      <FluidBlob style={{ width: 500, height: 500, top: '-5%', left: '-5%', background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.09), transparent 70%)', '--dur': '24s' }} />
+      <div className="about-layout" style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+
+        {/* Image */}
+        <div className="en-about-img" style={{ opacity: 0, maxWidth: 320, margin: '0 auto', width: '100%' }}>
+          <div ref={imgRef} style={{ position: 'relative', transformStyle: 'preserve-3d', perspective: 800 }}>
+            <div style={{ position: 'absolute', inset: -20, background: 'radial-gradient(circle at 50% 50%, oklch(0.78 0.20 145 / 0.2), oklch(0.50 0.20 285 / 0.12) 60%, transparent 80%)', borderRadius: 28, filter: 'blur(24px)', zIndex: 0 }} />
+            <div className="glow-border living-border" style={{ position: 'relative', zIndex: 1, borderRadius: 20, overflow: 'hidden', aspectRatio: '4/5' }}>
+              <img src={profileSrc} alt="Shmuel Munitz" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.4), transparent 55%)' }} />
+            </div>
+            <div style={{ position: 'absolute', top: -14, right: 16, zIndex: 2, background: 'var(--surface-1)', backdropFilter: 'blur(16px)', border: '1px solid var(--surface-2)', borderRadius: 999, padding: '6px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', boxShadow: '0 0 6px var(--brand-prime)' }} />
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>Shmuel Munitz</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Text */}
+        <div className="en-about-header" style={{ textAlign: 'left', opacity: 0 }}>
+          <div className="section-label">About Me</div>
+          <h2 style={{ fontSize: 'clamp(2rem, 4.5vw, 3.5rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 36, fontFamily: "'Heebo', sans-serif" }}>
+            Who's behind <span className="text-gradient">Shift Up?</span>
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            {[
+              <>Nice to meet you — I'm <strong style={{ color: 'var(--text-primary)' }}>Shmuel Munitz</strong>.</>,
+              <>I won't lie — I don't come from a 20-year advertising agency. And that's exactly <strong style={{ color: 'var(--brand-prime)' }}>your advantage</strong>.</>,
+              <>While others rest on their laurels, I research the newest <strong style={{ color: 'var(--brand-prime)' }}>AI</strong> tools and find innovative ways to generate leads. Every client is my flagship project.</>,
+              <>I'm an entrepreneur at heart. I understand a business needs <strong style={{ color: 'var(--text-primary)' }}>real ROI</strong> — not just likes. I'm here to build a marketing system that works and run it in practice.</>,
+            ].map((para, i) => (
+              <div key={i} className="en-about-para" style={{ opacity: 0, display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                <div style={{ width: 2, minHeight: 48, background: i === 0 ? 'var(--brand-prime)' : 'oklch(0.22 0.02 240)', borderRadius: 999, flexShrink: 0, marginTop: 4 }} />
+                <p style={{ fontSize: 'clamp(0.92rem, 1.6vw, 1.05rem)', color: 'var(--text-secondary)', lineHeight: 1.78 }}>{para}</p>
+              </div>
+            ))}
+            <div className="en-about-para" style={{ opacity: 0, marginTop: 10, padding: '20px 24px', background: 'var(--surface-1)', borderRadius: 16, borderLeft: '3px solid var(--brand-prime)' }}>
+              <p className="text-gradient" style={{ fontSize: 'clamp(1.1rem, 2vw, 1.35rem)', fontWeight: 800, fontFamily: "'Heebo', sans-serif", lineHeight: 1.5 }}>People are the goal.</p>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: 4 }}>Your businesses are the way there.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── FAQ ────────────────────────────────────────────────────────────── */
+
+const enFaqs = [
+  { q: 'How long does it take to see results?', a: 'The cracking itself takes about two weeks. To see quality leads flowing — between 30 and 60 days, depending on the industry. I build with you for the long term, not empty promises of "results in a week."' },
+  { q: "I'm a small business — is this too expensive?", a: "That's exactly why it's most critical for small businesses. You can't afford to waste budget on the wrong messages. I tailor the scope to your budget, and we start with a free conversation." },
+  { q: 'How are you different from other digital marketers?', a: 'Most start with "let\'s run a campaign." I start with "let\'s understand what we\'re selling and to whom." I also integrate AI tools that save time and money, and I take a limited number of clients.' },
+  { q: 'Are you suitable for every type of business?', a: 'I work with small and medium businesses — B2B and B2C: service businesses, e-commerce, startups, established companies. If I don\'t feel I can bring real value, I\'ll tell you in the intro call, straight.' },
+  { q: 'What does the strategic cracking include?', a: 'A full strategic document: competitor analysis, target audience mapping, precise value proposition, key messages, recommended marketing channels, and a 90-day actionable roadmap.' },
+  { q: 'Do you also execute or just advise?', a: 'Both. After we close the strategy, I build and run your paid campaigns on Meta and Google, build landing pages, and implement AI automations. Strategist and executor in one person.' },
+];
+
+function EnChatItem({ item, isActive, onOpen }) {
+  const [displayed, setDisplayed] = useState('');
+  const [thinking, setThinking]   = useState(false);
+  const timerRef = useRef(null);
+  const thinkRef = useRef(null);
+
+  useEffect(() => {
+    if (!isActive) { setDisplayed(''); setThinking(false); clearInterval(timerRef.current); clearTimeout(thinkRef.current); return; }
+    setDisplayed(''); setThinking(true);
+    thinkRef.current = setTimeout(() => {
+      setThinking(false); let i = 0;
+      timerRef.current = setInterval(() => {
+        i++; setDisplayed(item.a.slice(0, i));
+        if (i >= item.a.length) clearInterval(timerRef.current);
+      }, 16);
+    }, 450);
+    return () => { clearInterval(timerRef.current); clearTimeout(thinkRef.current); };
+  }, [isActive, item.a]);
+
+  return (
+    <div style={{ marginBottom: 14, opacity: 0 }} className="en-faq-item">
+      <button onClick={onOpen} style={{ width: '100%', textAlign: 'left', background: isActive ? 'var(--surface-2)' : 'var(--surface-1)', border: `1px solid ${isActive ? 'oklch(0.78 0.20 145 / 0.3)' : 'oklch(0.22 0.02 240)'}`, borderRadius: isActive ? '16px 16px 16px 0' : 16, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, transition: 'background 0.3s, border-color 0.3s, border-radius 0.3s', fontFamily: "'Heebo', sans-serif" }} aria-expanded={isActive}>
+        <span style={{ fontSize: 'clamp(0.9rem, 1.5vw, 1rem)', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.5, flex: 1 }}>{item.q}</span>
+        <span style={{ flexShrink: 0, width: 28, height: 28, borderRadius: '50%', background: isActive ? 'oklch(0.78 0.20 145 / 0.2)' : 'oklch(0.18 0.025 240)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.35s var(--ease-spring), background 0.3s', transform: isActive ? 'rotate(45deg)' : 'rotate(0deg)' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </span>
+      </button>
+      {isActive && (
+        <div style={{ background: 'oklch(0.11 0.015 240)', border: '1px solid oklch(0.22 0.02 240)', borderTop: 'none', borderRadius: '0 0 16px 16px', padding: '16px 20px 18px' }}>
+          {thinking ? (
+            <div className="chat-thinking" style={{ display: 'flex', gap: 5, alignItems: 'center', height: 24 }} aria-label="Thinking..."><span /><span /><span /></div>
+          ) : (
+            <p style={{ fontSize: 'clamp(0.88rem, 1.5vw, 0.96rem)', color: 'var(--text-secondary)', lineHeight: 1.78, minHeight: 24 }}>
+              {displayed}
+              {displayed.length < item.a.length && displayed.length > 0 && (
+                <span style={{ display: 'inline-block', width: 2, height: '1em', background: 'var(--brand-prime)', marginLeft: 2, verticalAlign: 'text-bottom', animation: 'breathing 0.8s ease-in-out infinite' }} />
+              )}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function EnFAQ() {
+  const ref = useRef(null);
+  const [activeIdx, setActiveIdx] = useState(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.en-faq-header', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: '.en-faq-header', start: 'top 80%', once: true } });
+      gsap.fromTo('.en-faq-item', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.65, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: '.en-faq-list', start: 'top 78%', once: true } });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section id="en-faq" ref={ref} style={{ padding: 'clamp(80px, 10vw, 130px) 28px', background: 'var(--bedrock)', position: 'relative' }}>
+      <div style={{ maxWidth: 760, margin: '0 auto' }}>
+        <div className="en-faq-header" style={{ textAlign: 'left', marginBottom: 52, opacity: 0 }}>
+          <div className="section-label">FAQ</div>
+          <h2 style={{ fontSize: 'clamp(2rem, 4.5vw, 3.4rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 14, fontFamily: "'Heebo', sans-serif" }}>Frequently Asked Questions</h2>
+        </div>
+        <div className="en-faq-list">
+          {enFaqs.map((item, i) => (
+            <EnChatItem key={i} item={item} isActive={activeIdx === i} onOpen={() => setActiveIdx(prev => prev === i ? null : i)} />
+          ))}
+        </div>
+        <div style={{ marginTop: 32, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+          <span style={{ height: 1, width: 20, background: 'var(--surface-2)', display: 'block' }} />
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+            Have another question?{' '}
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--brand-prime)', fontWeight: 700, textDecoration: 'none' }}>Send a message</a>{' '}
+            and I'll get back to you quickly.
+          </p>
+          <span style={{ height: 1, width: 20, background: 'var(--surface-2)', display: 'block' }} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── CTA ────────────────────────────────────────────────────────────── */
+
+function EnCTA() {
+  const ref = useRef(null);
+  const [hovered, setHovered] = useState(false);
+  const [idlePulse, setIdlePulse] = useState(false);
+  const idleRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.en-cta-content', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 1.0, ease: 'expo.out', scrollTrigger: { trigger: '.en-cta-content', start: 'top 78%', once: true } });
+      ScrollTrigger.create({ trigger: ref.current, start: 'top 60%', once: true, onEnter: () => { idleRef.current = setTimeout(() => setIdlePulse(true), 5000); } });
+    }, ref);
+    return () => { ctx.revert(); clearTimeout(idleRef.current); };
+  }, []);
+
+  useEffect(() => { if (hovered) { setIdlePulse(false); clearTimeout(idleRef.current); } }, [hovered]);
+
+  return (
+    <section id="en-contact" ref={ref} style={{ padding: 'clamp(80px, 12vw, 140px) 28px', background: 'var(--surface-0)', position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
+      <FluidBlob style={{ width: 700, height: 700, top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.10), transparent 65%)', '--dur': '20s' }} />
+      <div className="grid-bg" style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none', opacity: 0.6 }} />
+
+      <div className="en-cta-content" style={{ maxWidth: 700, margin: '0 auto', position: 'relative', zIndex: 1, opacity: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 24 }}>
+          <span style={{ height: 1, width: 24, background: 'var(--brand-prime)', opacity: 0.5, display: 'block' }} />
+          <span style={{ fontSize: '0.7rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--brand-prime)', fontWeight: 700 }}>Let's Talk</span>
+          <span style={{ height: 1, width: 24, background: 'var(--brand-prime)', opacity: 0.5, display: 'block' }} />
+        </div>
+        <h2 style={{ fontSize: 'clamp(2.4rem, 6vw, 5rem)', fontWeight: 900, letterSpacing: '-0.025em', lineHeight: 1.05, marginBottom: 20, fontFamily: "'Heebo', sans-serif" }}>
+          Ready to make a <span className="text-gradient">Shift Up?</span>
+        </h2>
+        <p style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: 'var(--text-secondary)', marginBottom: 52, lineHeight: 1.7 }}>
+          The coffee's on me. The cracking's on me. The decision's on you.
+        </p>
+        <div style={{ background: 'oklch(0.10 0.012 240 / 0.85)', backdropFilter: 'blur(20px)', border: '1px solid var(--surface-2)', borderRadius: 24, padding: 'clamp(32px,4vw,52px)', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(to right, var(--brand-deep), var(--brand-prime), var(--accent-void))' }} />
+          <div style={{ position: 'relative', display: 'inline-flex', justifyContent: 'center', marginBottom: 24 }}>
+            {[1, 2].map(k => (
+              <div key={k} style={{ position: 'absolute', inset: 0, borderRadius: 999, border: `1.5px solid oklch(0.78 0.20 145 / ${hovered || idlePulse ? 0.5 : 0.25})`, animation: (hovered || idlePulse) ? `pulse-ring ${1.4 + k * 0.5}s ease-out ${k * 0.35}s infinite` : 'none', pointerEvents: 'none' }} />
+            ))}
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+              onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 12, padding: '16px 40px', background: hovered ? 'var(--brand-glow)' : 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', borderRadius: 999, fontWeight: 800, fontSize: 'clamp(1rem, 2vw, 1.1rem)', fontFamily: "'Heebo', sans-serif", textDecoration: 'none', boxShadow: hovered || idlePulse ? '0 0 60px oklch(0.78 0.20 145 / 0.65)' : '0 0 40px oklch(0.78 0.20 145 / 0.35)', transform: hovered ? 'translateY(-2px)' : 'translateY(0)', transition: 'background 0.25s, box-shadow 0.35s, transform 0.3s', position: 'relative', zIndex: 1 }}>
+              {WA_ICON} Send a WhatsApp Message
+            </a>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+            <span style={{ position: 'relative', display: 'flex', width: 8, height: 8, flexShrink: 0 }}>
+              <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'var(--brand-prime)', opacity: 0.6, animation: 'pulse-ring 1.8s ease-out infinite' }} />
+              <span style={{ position: 'relative', width: 8, height: 8, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block' }} />
+            </span>
+            Available for a short intro call — free, no commitment.
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────── */
+
+function EnFooter() {
+  const socials = [
+    { label: 'WhatsApp', href: WA_LINK, target: '_blank', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> },
+    { label: 'Email',     href: 'mailto:shmuelmunic@gmail.com',                         icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> },
+    { label: 'LinkedIn',  href: 'https://www.linkedin.com/in/shmuel-munitz-marketing', target: '_blank', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg> },
+  ];
+
+  return (
+    <footer style={{ background: 'var(--bedrock)', borderTop: '1px solid var(--surface-1)', padding: '40px 28px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
+        <img src={logoSrc} alt="Shift Up" style={{ height: 38, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite' }} />
+        <div style={{ display: 'flex', gap: 10 }}>
+          {socials.map(s => (
+            <a key={s.label} href={s.href} aria-label={s.label} target={s.target} rel={s.target === '_blank' ? 'noopener noreferrer' : undefined}
+              style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--surface-1)', border: '1px solid var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', textDecoration: 'none', transition: 'background 0.3s, color 0.3s' }}
+              onMouseEnter={e => { e.currentTarget.style.background='oklch(0.78 0.20 145 / 0.15)'; e.currentTarget.style.color='var(--brand-prime)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background='var(--surface-1)'; e.currentTarget.style.color='var(--text-muted)'; }}
+            >{s.icon}</a>
+          ))}
+        </div>
+        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.6, textAlign: 'center' }}>
+          © {new Date().getFullYear()} Shift Up · Shmuel Munitz
+          <br /><span style={{ color: 'oklch(0.30 0.01 240)', fontSize: '0.72rem' }}>Smart Strategy. Bold Creativity.</span>
+        </p>
+      </div>
+    </footer>
+  );
+}
+
+/* ─── Root ───────────────────────────────────────────────────────────── */
+
+export default function EnglishPage() {
+  const rootRef = useRef(null);
+
+  useEffect(() => {
+    const lenis = new Lenis({ duration: 1.15, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothTouch: false, touchMultiplier: 1.8 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+    return () => { lenis.destroy(); gsap.ticker.remove((time) => lenis.raf(time * 1000)); };
+  }, []);
+
+  const scrollToProcess = () => document.getElementById('en-strategy')?.scrollIntoView({ behavior: 'smooth' });
+
+  return (
+    <div ref={rootRef} dir="ltr" style={{ minHeight: '100vh', background: 'var(--bedrock)', color: 'var(--text-primary)', fontFamily: "'Heebo', sans-serif", overflowX: 'hidden', position: 'relative' }}>
+      <div className="noise-overlay" aria-hidden="true" />
+      <Cursor />
+      <EnNavbar />
+      <main>
+        <EnHero onProcess={scrollToProcess} />
+        <section style={{ padding: '80px 28px', background: 'var(--bedrock)' }}>
+          <div className="stats-layout" style={{ maxWidth: 1200, margin: '0 auto' }}>
+            {enStats.map((s, i) => <EnStatItem key={i} stat={s} index={i} />)}
+          </div>
+        </section>
+        <EnProcess />
+        <EnWhyMe />
+        <EnManifesto />
+        <EnAbout />
+        <EnFAQ />
+        <EnCTA />
+      </main>
+      <EnFooter />
+    </div>
+  );
+}

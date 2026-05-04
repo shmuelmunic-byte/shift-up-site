@@ -77,6 +77,29 @@ export default function Navbar({ onCta }) {
             </button>
           ))}
 
+          {/* English page link */}
+          <a
+            href="/en"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              background: 'none',
+              border: '1px solid var(--surface-2)',
+              borderRadius: 999,
+              padding: '8px 16px',
+              color: 'var(--text-muted)',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              textDecoration: 'none',
+              transition: 'border-color 0.25s, color 0.25s',
+            }}
+            onMouseEnter={e => { e.target.style.borderColor = 'var(--brand-prime)'; e.target.style.color = 'var(--brand-prime)'; }}
+            onMouseLeave={e => { e.target.style.borderColor = 'var(--surface-2)'; e.target.style.color = 'var(--text-muted)'; }}
+          >
+            EN
+          </a>
+
           <button
             onClick={onCta}
             style={{
