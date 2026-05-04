@@ -76,6 +76,7 @@ export default function Manifesto() {
         </div>
 
         <p
+          translate="no"
           style={{
             display: 'flex',
             flexWrap: 'wrap',
