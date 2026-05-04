@@ -112,7 +112,7 @@ export default function Hero({ onProcess }) {
     <section
       id="hero"
       ref={sectionRef}
-      style={{ position: 'relative', paddingTop: 140, paddingBottom: 100, overflow: 'hidden', minHeight: '100vh', display: 'flex', alignItems: 'center' }}
+      style={{ position: 'relative', paddingTop: 'clamp(100px, 18vw, 140px)', paddingBottom: 'clamp(60px, 10vw, 100px)', overflow: 'hidden', minHeight: '100vh', display: 'flex', alignItems: 'center' }}
     >
       <FluidBg />
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none' }} />
@@ -135,7 +135,7 @@ export default function Hero({ onProcess }) {
           {/* headline */}
           <h1
             style={{
-              fontSize: 'clamp(2.6rem, 7vw, 5.2rem)',
+              fontSize: 'clamp(1.9rem, 7vw, 5.2rem)',
               fontWeight: 900,
               lineHeight: 1.05,
               letterSpacing: '-0.02em',
@@ -154,7 +154,7 @@ export default function Hero({ onProcess }) {
           {/* subtext */}
           <p
             className="hero-sub"
-            style={{ fontSize: 'clamp(1rem, 2vw, 1.18rem)', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 520, marginBottom: 8, opacity: 0 }}
+            style={{ fontSize: 'clamp(1rem, 2.5vw, 1.18rem)', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 520, marginBottom: 8, opacity: 0 }}
           >
             לפני ששורפים תקציב על ממומן, צריך לדעת{' '}
             <strong style={{ color: 'var(--text-primary)' }}>מה אנחנו מוכרים, ולמי</strong>.

@@ -348,6 +348,43 @@ body {
   }
 }
 
+/* ── Navbar responsive ── */
+
+.nav-desktop {
+  display: none;
+  align-items: center;
+  gap: 36px;
+}
+
+@media (min-width: 768px) {
+  .nav-desktop { display: flex; }
+}
+
+.nav-mobile-btn {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .nav-mobile-btn { display: none; }
+}
+
+/* ── Hero CTA full-width on small screens ── */
+
+@media (max-width: 520px) {
+  .hero-ctas {
+    flex-direction: column;
+  }
+  .hero-ctas .magnetic-outer {
+    width: 100%;
+  }
+  .hero-ctas .magnetic-outer a,
+  .hero-ctas .magnetic-outer button {
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+}
+
 /* ── Reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {
@@ -355,9 +392,14 @@ body {
   .marquee-track,
   .cursor-dot,
   .cursor-ring,
-  .chat-thinking span {
+  .chat-thinking span,
+  .kword-gradient,
+  .kword-plain {
     animation: none !important;
     transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
   }
   .noise-overlay { display: none; }
 }

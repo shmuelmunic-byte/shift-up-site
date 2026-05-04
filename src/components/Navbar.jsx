@@ -35,9 +35,7 @@ export default function Navbar({ onCta }) {
         zIndex: 900,
         transition: 'background 0.5s ease, padding 0.4s ease',
         padding: scrolled ? '10px 0' : '18px 0',
-        background: scrolled
-          ? 'oklch(0.08 0.01 240 / 0.88)'
-          : 'transparent',
+        background: scrolled ? 'oklch(0.08 0.01 240 / 0.88)' : 'transparent',
         backdropFilter: scrolled ? 'blur(20px) saturate(1.5)' : 'none',
         WebkitBackdropFilter: scrolled ? 'blur(20px) saturate(1.5)' : 'none',
         borderBottom: scrolled ? '1px solid oklch(0.18 0.025 240)' : '1px solid transparent',
@@ -52,17 +50,12 @@ export default function Navbar({ onCta }) {
           <img
             src={logoSrc}
             alt="Shift Up"
-            style={{
-              height: 44,
-              width: 'auto',
-              objectFit: 'contain',
-              animation: 'hue-drift 8s ease-in-out infinite',
-            }}
+            style={{ height: 44, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite' }}
           />
         </button>
 
-        {/* Desktop links */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 36 }} className="hidden md:flex">
+        {/* Desktop links — uses .nav-desktop CSS class (not inline display) to avoid Tailwind conflict */}
+        <div className="nav-desktop">
           {links.map(l => (
             <button
               key={l.id}
@@ -115,7 +108,7 @@ export default function Navbar({ onCta }) {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden"
+          className="nav-mobile-btn"
           onClick={() => setOpen(!open)}
           aria-label="תפריט"
           style={{ background: 'none', border: 'none', color: 'var(--text-primary)', padding: 4 }}
