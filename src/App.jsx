@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -17,11 +17,11 @@ import CTA            from './components/CTA';
 import Footer         from './components/Footer';
 
 gsap.registerPlugin(ScrollTrigger);
-
-// default GSAP config
 gsap.defaults({ ease: 'expo.out', duration: 0.8 });
 
 export default function App() {
+  const rootRef = useRef(null);
+
   // ── Lenis smooth scroll ──────────────────────────────────────────
   useEffect(() => {
     const lenis = new Lenis({
@@ -32,9 +32,7 @@ export default function App() {
       touchMultiplier: 1.8,
     });
 
-    // connect Lenis to GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
-
     gsap.ticker.add((time) => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
 
@@ -42,6 +40,23 @@ export default function App() {
       lenis.destroy();
       gsap.ticker.remove((time) => lenis.raf(time * 1000));
     };
+  }, []);
+
+  // ── Auto direction switch when Google Translate changes html[lang] ──
+  useEffect(() => {
+    const applyDir = () => {
+      const lang = document.documentElement.lang || 'he';
+      const isHebrew = lang === '' || lang.startsWith('he') || lang.startsWith('iw');
+      const dir = isHebrew ? 'rtl' : 'ltr';
+      if (rootRef.current) rootRef.current.dir = dir;
+      document.documentElement.dir = dir;
+    };
+
+    const observer = new MutationObserver(applyDir);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+    applyDir();
+
+    return () => observer.disconnect();
   }, []);
 
   const scrollToContact = () => {
@@ -56,6 +71,7 @@ export default function App() {
 
   return (
     <div
+      ref={rootRef}
       dir="rtl"
       style={{
         minHeight: '100vh',
@@ -66,14 +82,9 @@ export default function App() {
         position: 'relative',
       }}
     >
-      {/* Persistent layers */}
       <div className="noise-overlay" aria-hidden="true" />
       <Cursor />
-
-      {/* Navigation */}
       <Navbar onCta={scrollToContact} />
-
-      {/* Sections */}
       <main>
         <Hero onProcess={scrollToProcess} />
         <MarqueeSection />
@@ -85,7 +96,6 @@ export default function App() {
         <FAQ />
         <CTA />
       </main>
-
       <Footer />
     </div>
   );

@@ -50,7 +50,7 @@ function KineticWords({ text, gradient = false, delay = 0 }) {
   const cls = gradient ? 'kword-gradient' : 'kword-plain';
 
   return (
-    <span style={{ display: 'inline' }} aria-label={text}>
+    <span translate="no" style={{ display: 'inline' }} aria-label={text}>
       {text.split(' ').map((word, i, arr) => (
         <span
           key={i}

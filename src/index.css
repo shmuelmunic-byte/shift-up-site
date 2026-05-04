@@ -408,3 +408,17 @@ body {
   }
   .noise-overlay { display: none; }
 }
+
+/* ── Google Translate: switch to LTR when translated to non-Hebrew ── */
+
+html[lang]:not([lang=""]):not([lang^="he"]):not([lang^="iw"]) {
+  direction: ltr;
+}
+
+html[lang]:not([lang=""]):not([lang^="he"]):not([lang^="iw"]) .section-label {
+  flex-direction: row-reverse;
+}
+
+html[lang]:not([lang=""]):not([lang^="he"]):not([lang^="iw"]) .section-label::before {
+  order: 1;
+}
