@@ -4,6 +4,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const words = [
+  'רעיונות', 'זה', 'הדלק', 'שלי.', 'אנשים', 'זה', 'היעד.', 'העסקים', 'שלכם', 'הם', 'הדרך', 'לשם.'
+];
+
 export default function Manifesto() {
   const sectionRef = useRef(null);
 
@@ -11,20 +15,26 @@ export default function Manifesto() {
     const section = sectionRef.current;
     if (!section) return;
 
+    const wordEls = section.querySelectorAll('.manifesto-word');
+
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.manifesto-text',
-        { opacity: 0, y: 24, filter: 'blur(6px)' },
-        {
-          opacity: 1, y: 0, filter: 'blur(0px)',
-          duration: 1.3, ease: 'power2.out',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 70%',
-            once: true,
-          },
-        }
-      );
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 70%',
+          end: 'bottom 30%',
+          scrub: 0.8,
+        },
+      });
+
+      wordEls.forEach((el, i) => {
+        tl.fromTo(
+          el,
+          { opacity: 0.08, y: 14, filter: 'blur(3px)' },
+          { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.4, ease: 'power2.out' },
+          i * 0.12
+        );
+      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -66,24 +76,37 @@ export default function Manifesto() {
         </div>
 
         <p
-          className="manifesto-text"
+          translate="no"
           style={{
-            opacity: 0,
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '0.3em 0.5em',
             fontSize: 'clamp(2rem, 5vw, 4rem)',
             fontWeight: 900,
-            lineHeight: 1.35,
+            lineHeight: 1.25,
             letterSpacing: '-0.02em',
             fontFamily: "'Heebo', sans-serif",
           }}
+          aria-label={words.join(' ')}
         >
-          <span style={{ color: 'var(--brand-prime)' }}>רעיונות</span>{' '}
-          זה{' '}
-          <span style={{ color: 'var(--brand-prime)' }}>הדלק</span>{' '}
-          שלי.{' '}
-          <span style={{ color: 'var(--brand-prime)' }}>אנשים</span>{' '}
-          זה{' '}
-          <span style={{ color: 'var(--brand-prime)' }}>היעד.</span>{' '}
-          <span style={{ color: 'var(--text-primary)' }}>העסקים שלכם הם הדרך לשם.</span>
+          {words.map((word, i) => {
+            const isHighlight = ['רעיונות', 'הדלק', 'אנשים', 'היעד.'].includes(word);
+            return (
+              <span
+                key={i}
+                className="manifesto-word"
+                style={{
+                  display: 'inline-block',
+                  opacity: 0.08,
+                  color: isHighlight ? 'var(--brand-prime)' : 'var(--text-primary)',
+                  willChange: 'opacity, transform, filter',
+                }}
+              >
+                {word}
+              </span>
+            );
+          })}
         </p>
 
         {/* attribution */}

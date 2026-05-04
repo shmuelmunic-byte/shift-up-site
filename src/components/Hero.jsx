@@ -134,6 +134,7 @@ export default function Hero({ onProcess }) {
 
           {/* headline */}
           <h1
+            translate="no"
             style={{
               fontSize: 'clamp(1.9rem, 7vw, 5.2rem)',
               fontWeight: 900,
