@@ -231,11 +231,8 @@ export default function FAQ() {
               fontFamily: "'Heebo', sans-serif",
             }}
           >
-            שאלות שמרבים לשאול
+            שאלות נפוצות
           </h2>
-          <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-            לוחצים על שאלה — התשובה תופיע כאילו כתובה בזמן אמת.
-          </p>
         </div>
 
         <div className="faq-list">

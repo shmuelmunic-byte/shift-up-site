@@ -44,6 +44,11 @@ body {
   *, *::before, *::after { cursor: none !important; }
 }
 
+@media (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring { display: none; }
+}
+
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: var(--bedrock); }
 ::-webkit-scrollbar-thumb { background: var(--brand-deep); border-radius: 2px; }
