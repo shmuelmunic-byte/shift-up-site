@@ -187,6 +187,26 @@ export default function Navbar({ onCta }) {
             >
               בוא נדבר תכלס
             </button>
+
+            <a
+              href="/en"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'block',
+                textAlign: 'center',
+                border: '1px solid var(--surface-2)',
+                borderRadius: 999,
+                padding: '12px 0',
+                color: 'var(--text-muted)',
+                fontSize: '0.9rem',
+                fontWeight: 700,
+                letterSpacing: '0.12em',
+                textDecoration: 'none',
+              }}
+            >
+              EN — English Version
+            </a>
           </div>
         </div>
       )}
