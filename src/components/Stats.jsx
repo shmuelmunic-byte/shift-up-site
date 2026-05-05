@@ -9,7 +9,7 @@ function isOnlineNow() {
     new Intl.DateTimeFormat('he-IL', { hour: 'numeric', hour12: false, timeZone: 'Asia/Jerusalem' }).format(new Date()),
     10
   );
-  return hour >= 9 && hour < 23;
+  return hour >= 8 && hour < 17;
 }
 
 const gradientStyle = {

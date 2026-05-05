@@ -255,7 +255,7 @@ function EnMarquee() {
 
 function isOnlineNow() {
   const h = parseInt(new Intl.DateTimeFormat('he-IL', { hour: 'numeric', hour12: false, timeZone: 'Asia/Jerusalem' }).format(new Date()), 10);
-  return h >= 9 && h < 23;
+  return h >= 8 && h < 17;
 }
 
 const gradStyle = {
