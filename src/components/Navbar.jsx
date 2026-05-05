@@ -50,7 +50,7 @@ export default function Navbar({ onCta }) {
           <img
             src={logoSrc}
             alt="Shift Up"
-            style={{ height: 44, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite' }}
+            style={{ height: 80, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite' }}
           />
         </button>
 

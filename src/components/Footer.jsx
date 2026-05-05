@@ -152,7 +152,7 @@ export default function Footer() {
           src={logoSrc}
           alt="Shift Up"
           style={{
-            height: 38,
+            height: 70,
             width: 'auto',
             objectFit: 'contain',
             animation: 'hue-drift 8s ease-in-out infinite',

@@ -89,7 +89,7 @@ function EnNavbar() {
     <nav style={navStyle}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <button onClick={() => goto('en-hero')} aria-label="Shift Up" style={{ background: 'none', border: 'none', padding: 0 }}>
-          <img src={logoSrc} alt="Shift Up" style={{ height: 44, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite' }} />
+          <img src={logoSrc} alt="Shift Up" style={{ height: 80, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite' }} />
         </button>
 
         <div className="nav-desktop" style={{ alignItems: 'center', gap: 28 }}>
@@ -758,7 +758,7 @@ function EnFooter() {
   return (
     <footer style={{ background: 'var(--bedrock)', borderTop: '1px solid var(--surface-1)', padding: '40px 28px' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
-        <img src={logoSrc} alt="Shift Up" style={{ height: 38, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite' }} />
+        <img src={logoSrc} alt="Shift Up" style={{ height: 70, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite' }} />
         <div style={{ display: 'flex', gap: 10 }}>
           {socials.map(s => (
             <a key={s.label} href={s.href} aria-label={s.label}
