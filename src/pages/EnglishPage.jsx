@@ -183,7 +183,7 @@ function EnHero({ onProcess }) {
             Before burning budget on paid ads, you need to know{' '}
             <strong style={{ color: 'var(--text-primary)' }}>what you're selling — and to whom</strong>.
             <br />
-            I build the strategy and execute it.
+            I build the strategy — then make it happen.
           </p>
 
           <div className="en-hero-ctas hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 36, marginBottom: 48, opacity: 0 }}>
@@ -406,7 +406,7 @@ function EnProcess() {
 /* ─── Why Me ─────────────────────────────────────────────────────────── */
 
 const enReasons = [
-  { title: 'Entrepreneurial Mindset', en: 'Business Owner Thinking', desc: 'I think like a business owner, not a vendor. I ask the hard questions before sending a proposal.', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg> },
+  { title: 'Entrepreneurial Mindset', en: 'Owner Mindset', desc: 'I think like a business owner, not a vendor. I ask the hard questions before sending a proposal.', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg> },
   { title: 'AI-First', en: 'AI-First Mindset', desc: 'I research the newest AI tools daily. What takes others a week, I execute in hours — at higher quality.', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.64"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.64"/></svg> },
   { title: 'Focused Clientele', en: 'Small, Focused Roster', desc: "I'm not an agency juggling 50 clients. Every client gets my full attention, not half of it.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
   { title: 'Message Before Budget', en: 'Strategy First', desc: "We don't burn money on campaigns before understanding what we're selling and to whom. Your money only works when the message is precise.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> },
@@ -433,7 +433,7 @@ function EnWhyMe() {
             Why work with <span className="text-gradient">me?</span>
           </h2>
           <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
-            There are plenty of digital marketers. Here are 4 real reasons I'll be your smartest decision.
+            There's no shortage of digital marketers. Here are 4 honest reasons why I might be your best one.
           </p>
         </div>
         <div className="en-whyme-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 18 }}>
@@ -564,7 +564,7 @@ function EnAbout() {
               <>Nice to meet you — I'm <strong style={{ color: 'var(--text-primary)' }}>Shmuel Munitz</strong>.</>,
               <>I won't lie — I don't come from a 20-year advertising agency. And that's exactly <strong style={{ color: 'var(--brand-prime)' }}>your advantage</strong>.</>,
               <>While others rest on their laurels, I research the newest <strong style={{ color: 'var(--brand-prime)' }}>AI</strong> tools and find innovative ways to generate leads. Every client is my flagship project.</>,
-              <>I'm an entrepreneur at heart. I understand a business needs <strong style={{ color: 'var(--text-primary)' }}>real ROI</strong> — not just likes. I'm here to build a marketing system that works and run it in practice.</>,
+              <>I'm an entrepreneur at heart. I understand a business needs <strong style={{ color: 'var(--text-primary)' }}>real ROI</strong> — not just likes. I'm here to build a marketing system that works — and actually execute it.</>,
             ].map((para, i) => (
               <div key={i} className="en-about-para" style={{ opacity: 0, display: 'flex', gap: 16, alignItems: 'flex-start' }}>
                 <div style={{ width: 2, minHeight: 48, background: i === 0 ? 'var(--brand-prime)' : 'oklch(0.22 0.02 240)', borderRadius: 999, flexShrink: 0, marginTop: 4 }} />
@@ -585,12 +585,12 @@ function EnAbout() {
 /* ─── FAQ ────────────────────────────────────────────────────────────── */
 
 const enFaqs = [
-  { q: 'How long does it take to see results?', a: 'The cracking itself takes about two weeks. To see quality leads flowing — between 30 and 60 days, depending on the industry. I build with you for the long term, not empty promises of "results in a week."' },
+  { q: 'How long does it take to see results?', a: 'The discovery and strategy phase takes about two weeks. To see quality leads flowing — between 30 and 60 days, depending on the industry. I build for the long term, not empty promises of "results in a week."' },
   { q: "I'm a small business — is this too expensive?", a: "That's exactly why it's most critical for small businesses. You can't afford to waste budget on the wrong messages. I tailor the scope to your budget, and we start with a free conversation." },
   { q: 'How are you different from other digital marketers?', a: 'Most start with "let\'s run a campaign." I start with "let\'s understand what we\'re selling and to whom." I also integrate AI tools that save time and money, and I take a limited number of clients.' },
-  { q: 'Are you suitable for every type of business?', a: 'I work with small and medium businesses — B2B and B2C: service businesses, e-commerce, startups, established companies. If I don\'t feel I can bring real value, I\'ll tell you in the intro call, straight.' },
-  { q: 'What does the strategic cracking include?', a: 'A full strategic document: competitor analysis, target audience mapping, precise value proposition, key messages, recommended marketing channels, and a 90-day actionable roadmap.' },
-  { q: 'Do you also execute or just advise?', a: 'Both. After we close the strategy, I build and run your paid campaigns on Meta and Google, build landing pages, and implement AI automations. Strategist and executor in one person.' },
+  { q: 'Do you work with every type of business?', a: 'I work with small and medium businesses — B2B and B2C: service businesses, e-commerce, startups, established companies. If I don\'t feel I can bring real value, I\'ll tell you upfront in the intro call.' },
+  { q: 'What does the discovery process include?', a: 'A complete strategy document: competitor analysis, target audience mapping, a precise value proposition, core messaging, recommended marketing channels, and a 90-day actionable roadmap.' },
+  { q: 'Do you also execute or just advise?', a: 'Both. Once the strategy is locked in, I build and manage your paid campaigns on Meta and Google, create landing pages, and implement AI automations. Strategist and practitioner — one person.' },
 ];
 
 function EnChatItem({ item, isActive, onOpen }) {
@@ -709,7 +709,7 @@ function EnCTA() {
           Ready to make a <span className="text-gradient">Shift Up?</span>
         </h2>
         <p style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: 'var(--text-secondary)', marginBottom: 52, lineHeight: 1.7 }}>
-          The coffee's on me. The cracking's on me. The decision's on you.
+          The coffee's on me. The strategy session's on me. The decision's yours.
         </p>
         <div style={{ background: 'oklch(0.10 0.012 240 / 0.85)', backdropFilter: 'blur(20px)', border: '1px solid var(--surface-2)', borderRadius: 24, padding: 'clamp(32px,4vw,52px)', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(to right, var(--brand-deep), var(--brand-prime), var(--accent-void))' }} />
