@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { gsap } from 'gsap';
 
-const logoSrc = '/1000900906.jpg';
+const logoSrc = '/logo.png';
 
 const whatsappLink =
   'https://wa.me/972534673151?text=' +

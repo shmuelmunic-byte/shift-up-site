@@ -11,7 +11,7 @@ const WA_LINK =
   'https://wa.me/972534673151?text=' +
   encodeURIComponent("Hi Shmuel, I'd like to learn more about your services");
 const profileSrc = '/1000900908.jpg';
-const logoSrc    = '/1000900906.jpg';
+const logoSrc    = '/logo.png';
 
 /* ─── Shared helpers ─────────────────────────────────────────────────── */
 
