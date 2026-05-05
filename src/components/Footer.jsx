@@ -19,8 +19,8 @@ const socials = [
   },
   {
     label: 'Email',
-    href: 'https://mail.google.com/mail/?view=cm&to=shmuelmunic@gmail.com',
-    target: '_blank',
+    href: 'mailto:shmuelmunic@gmail.com',
+    emailClick: true,
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect width="20" height="16" x="2" y="4" rx="2"/>
@@ -41,7 +41,17 @@ const socials = [
   },
 ];
 
-function MagneticIcon({ children, href, label, target }) {
+const isMobile = () => /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+function handleEmailClick(e) {
+  if (!isMobile()) {
+    e.preventDefault();
+    window.open('https://mail.google.com/mail/?view=cm&to=shmuelmunic@gmail.com', '_blank');
+  }
+  // mobile: let mailto: do its thing naturally
+}
+
+function MagneticIcon({ children, href, label, target, emailClick }) {
   const ref = useRef(null);
 
   const onMove = (e) => {
@@ -64,6 +74,7 @@ function MagneticIcon({ children, href, label, target }) {
         aria-label={label}
         target={target || undefined}
         rel={target ? 'noopener noreferrer' : undefined}
+        onClick={emailClick ? handleEmailClick : undefined}
         style={{
           width: 40, height: 40,
           borderRadius: '50%',
@@ -130,7 +141,7 @@ export default function Footer() {
         {/* Social icons */}
         <div style={{ display: 'flex', gap: 10 }}>
           {socials.map(s => (
-            <MagneticIcon key={s.label} href={s.href} label={s.label} target={s.target}>
+            <MagneticIcon key={s.label} href={s.href} label={s.label} target={s.target} emailClick={s.emailClick}>
               {s.icon}
             </MagneticIcon>
           ))}
