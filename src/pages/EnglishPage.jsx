@@ -322,7 +322,7 @@ function EnStatItem({ stat, index }) {
 
 const enSteps = [
   {
-    n: '01', title: 'The Crack', sub: 'Discovery',
+    n: '01', title: 'The Decode', sub: 'Discovery',
     desc: "We dig deep. Who's actually paying, what's the business DNA, and why would they choose you over the competition. We distill your unique value proposition — no fluff.",
     bullets: ['Competitor analysis', 'Target audience mapping', 'Sharp value proposition'],
     icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>,
