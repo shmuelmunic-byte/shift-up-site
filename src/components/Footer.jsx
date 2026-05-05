@@ -61,8 +61,8 @@ function MagneticIcon({ children, href, label, target }) {
       <a
         href={href}
         aria-label={label}
-        target={target || '_blank'}
-        rel="noopener noreferrer"
+        target={target || undefined}
+        rel={target ? 'noopener noreferrer' : undefined}
         style={{
           width: 40, height: 40,
           borderRadius: '50%',

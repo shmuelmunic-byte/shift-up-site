@@ -752,7 +752,7 @@ function EnFooter() {
         <div style={{ display: 'flex', gap: 10 }}>
           {socials.map(s => (
             <a key={s.label} href={s.href} aria-label={s.label}
-              target="_blank" rel="noopener noreferrer"
+              target={s.target || undefined} rel={s.target ? 'noopener noreferrer' : undefined}
               style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--surface-1)', border: '1px solid var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', textDecoration: 'none', transition: 'background 0.3s, color 0.3s' }}
               onMouseEnter={e => { e.currentTarget.style.background='oklch(0.78 0.20 145 / 0.15)'; e.currentTarget.style.color='var(--brand-prime)'; }}
               onMouseLeave={e => { e.currentTarget.style.background='var(--surface-1)'; e.currentTarget.style.color='var(--text-muted)'; }}
