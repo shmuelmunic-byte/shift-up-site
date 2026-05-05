@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { gsap } from 'gsap';
 
 const logoSrc = '/1000900906.jpg';
@@ -20,6 +20,7 @@ const socials = [
   {
     label: 'Email',
     href: 'mailto:shmuelmunic@gmail.com',
+    copyEmail: true,
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect width="20" height="16" x="2" y="4" rx="2"/>
@@ -40,8 +41,11 @@ const socials = [
   },
 ];
 
-function MagneticIcon({ children, href, label, target }) {
-  const ref = useRef(null);
+const EMAIL = 'shmuelmunic@gmail.com';
+
+function MagneticIcon({ children, href, label, target, copyEmail }) {
+  const ref     = useRef(null);
+  const [copied, setCopied] = useState(false);
 
   const onMove = (e) => {
     const el = ref.current;
@@ -56,40 +60,80 @@ function MagneticIcon({ children, href, label, target }) {
     gsap.to(ref.current, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
   };
 
+  const handleClick = (e) => {
+    if (!copyEmail) return;
+    e.preventDefault();
+    navigator.clipboard.writeText(EMAIL).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const linkStyle = {
+    width: 40, height: 40,
+    borderRadius: '50%',
+    background: copied ? 'oklch(0.78 0.20 145 / 0.2)' : 'var(--surface-1)',
+    border: `1px solid ${copied ? 'oklch(0.78 0.20 145 / 0.5)' : 'var(--surface-2)'}`,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: copied ? 'var(--brand-prime)' : 'var(--text-muted)',
+    transition: 'background 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s',
+    textDecoration: 'none',
+    position: 'relative',
+  };
+
   return (
-    <div ref={ref} onMouseMove={onMove} onMouseLeave={onLeave} style={{ display: 'inline-block' }}>
+    <div ref={ref} onMouseMove={onMove} onMouseLeave={onLeave} style={{ display: 'inline-block', position: 'relative' }}>
       <a
-        href={href}
-        aria-label={label}
+        href={copyEmail ? `mailto:${EMAIL}` : href}
+        aria-label={copied ? 'הועתק!' : label}
         target={target || undefined}
         rel={target === '_blank' ? 'noopener noreferrer' : undefined}
-        style={{
-          width: 40, height: 40,
-          borderRadius: '50%',
-          background: 'var(--surface-1)',
-          border: '1px solid var(--surface-2)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'var(--text-muted)',
-          transition: 'background 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s',
-          textDecoration: 'none',
-        }}
+        style={linkStyle}
+        onClick={handleClick}
         onMouseEnter={e => {
+          if (copied) return;
           e.currentTarget.style.background = 'oklch(0.78 0.20 145 / 0.15)';
           e.currentTarget.style.color = 'var(--brand-prime)';
           e.currentTarget.style.borderColor = 'oklch(0.78 0.20 145 / 0.35)';
           e.currentTarget.style.boxShadow = '0 0 16px oklch(0.78 0.20 145 / 0.2)';
         }}
         onMouseLeave={e => {
+          if (copied) return;
           e.currentTarget.style.background = 'var(--surface-1)';
           e.currentTarget.style.color = 'var(--text-muted)';
           e.currentTarget.style.borderColor = 'var(--surface-2)';
           e.currentTarget.style.boxShadow = 'none';
         }}
       >
-        {children}
+        {copied ? (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        ) : children}
       </a>
+
+      {/* Tooltip */}
+      {copied && (
+        <div style={{
+          position: 'absolute',
+          bottom: '110%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: 'var(--surface-2)',
+          color: 'var(--brand-prime)',
+          fontSize: '0.7rem',
+          fontWeight: 700,
+          padding: '4px 10px',
+          borderRadius: 6,
+          whiteSpace: 'nowrap',
+          pointerEvents: 'none',
+          letterSpacing: '0.04em',
+        }}>
+          הועתק ✓
+        </div>
+      )}
     </div>
   );
 }
@@ -129,7 +173,7 @@ export default function Footer() {
         {/* Social icons */}
         <div style={{ display: 'flex', gap: 10 }}>
           {socials.map(s => (
-            <MagneticIcon key={s.label} href={s.href} label={s.label} target={s.target}>
+            <MagneticIcon key={s.label} href={s.href} label={s.label} target={s.target} copyEmail={s.copyEmail}>
               {s.icon}
             </MagneticIcon>
           ))}
