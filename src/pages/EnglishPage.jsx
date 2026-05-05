@@ -89,7 +89,7 @@ function EnNavbar() {
     <nav style={navStyle}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <button onClick={() => goto('en-hero')} aria-label="Shift Up" style={{ background: 'none', border: 'none', padding: 0 }}>
-          <img src={logoSrc} alt="Shift Up" style={{ height: 120, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite' }} />
+          <img src={logoSrc} alt="Shift Up" style={{ height: 'clamp(64px, 14vw, 120px)', width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite' }} />
         </button>
 
         <div className="nav-desktop" style={{ alignItems: 'center', gap: 28 }}>
