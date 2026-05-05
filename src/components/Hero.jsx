@@ -223,7 +223,7 @@ export default function Hero({ onProcess }) {
 
             {/* image */}
             <div className="glow-border living-border" style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', aspectRatio: '4/5' }}>
-              <img src={profileSrc} alt="שמואל מוניץ" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <img src={profileSrc} alt="שמואל מוניץ - מומחה שיווק דיגיטלי ואסטרטגיה מבוססת AI" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.45), transparent 50%)' }} />
             </div>
 

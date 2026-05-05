@@ -151,7 +151,7 @@ export default function About() {
             >
               <img
                 src={profileSrc}
-                alt="שמואל מוניץ"
+                alt="שמואל מוניץ - אסטרטג שיווק דיגיטלי ומומחה AI"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               />
               <div
