@@ -228,6 +228,29 @@ function EnHero({ onProcess }) {
   );
 }
 
+/* ─── Marquee ────────────────────────────────────────────────────────── */
+
+const marqueeWords = [
+  'Marketing Strategy', '↑', 'Meta Ads', '↑', 'Google Ads', '↑',
+  'Landing Pages', '↑', 'Quality Leads', '↑', 'AI Marketing', '↑',
+  'Sharp Messaging', '↑', 'ROI', '↑',
+];
+const marqueeTripled = [...marqueeWords, ...marqueeWords, ...marqueeWords];
+
+function EnMarquee() {
+  return (
+    <div style={{ background: 'var(--surface-0)', borderTop: '1px solid var(--surface-1)', borderBottom: '1px solid var(--surface-1)', padding: '18px 0', overflow: 'hidden' }} aria-hidden="true">
+      <div className="marquee-track">
+        {marqueeTripled.map((word, i) => (
+          <span key={i} style={{ margin: '0 24px', fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 900, letterSpacing: '-0.01em', color: word === '↑' ? 'var(--brand-prime)' : 'oklch(0.55 0.01 240)', fontFamily: "'Heebo', sans-serif", whiteSpace: 'nowrap' }}>
+            {word}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Stats ──────────────────────────────────────────────────────────── */
 
 function isOnlineNow() {
@@ -766,6 +789,7 @@ export default function EnglishPage() {
       <EnNavbar />
       <main>
         <EnHero onProcess={scrollToProcess} />
+        <EnMarquee />
         <section style={{ padding: '80px 28px', background: 'var(--bedrock)' }}>
           <div className="stats-layout" style={{ maxWidth: 1200, margin: '0 auto' }}>
             {enStats.map((s, i) => <EnStatItem key={i} stat={s} index={i} />)}
