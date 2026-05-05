@@ -79,8 +79,13 @@ body {
 }
 
 @keyframes marquee-rtl {
-  from { transform: translateX(0);   }
-  to   { transform: translateX(50%); }
+  from { transform: translateX(0);        }
+  to   { transform: translateX(33.333%); }
+}
+
+@keyframes marquee-ltr {
+  from { transform: translateX(0);         }
+  to   { transform: translateX(-33.333%); }
 }
 
 @keyframes breathing {
@@ -253,6 +258,12 @@ body {
   display: flex;
   width: max-content;
   animation: marquee-rtl 26s linear infinite;
+}
+
+.marquee-track-ltr {
+  display: flex;
+  width: max-content;
+  animation: marquee-ltr 26s linear infinite;
 }
 
 /* ── Chat FAQ ── */

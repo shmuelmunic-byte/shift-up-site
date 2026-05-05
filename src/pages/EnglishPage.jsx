@@ -240,7 +240,7 @@ const marqueeTripled = [...marqueeWords, ...marqueeWords, ...marqueeWords];
 function EnMarquee() {
   return (
     <div style={{ background: 'var(--surface-0)', borderTop: '1px solid var(--surface-1)', borderBottom: '1px solid var(--surface-1)', padding: '18px 0', overflow: 'hidden' }} aria-hidden="true">
-      <div className="marquee-track">
+      <div className="marquee-track-ltr">
         {marqueeTripled.map((word, i) => (
           <span key={i} style={{ margin: '0 24px', fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 900, letterSpacing: '-0.01em', color: word === '↑' ? 'var(--brand-prime)' : 'oklch(0.55 0.01 240)', fontFamily: "'Heebo', sans-serif", whiteSpace: 'nowrap' }}>
             {word}
