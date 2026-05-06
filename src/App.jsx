@@ -13,6 +13,7 @@ import WhyMe          from './components/WhyMe';
 import Manifesto      from './components/Manifesto';
 import About          from './components/About';
 import FAQ            from './components/FAQ';
+import WhatsAppGroup  from './components/WhatsAppGroup';
 import CTA            from './components/CTA';
 import Footer         from './components/Footer';
 
@@ -94,6 +95,7 @@ export default function App() {
         <Manifesto />
         <About />
         <FAQ />
+        <WhatsAppGroup />
         <CTA />
       </main>
       <Footer />
