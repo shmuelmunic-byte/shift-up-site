@@ -80,8 +80,6 @@ export default function Navbar({ onCta }) {
           {/* English page link */}
           <a
             href="/en"
-            target="_blank"
-            rel="noopener noreferrer"
             style={{
               background: 'none',
               border: '1px solid var(--surface-2)',
