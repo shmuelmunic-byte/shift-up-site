@@ -200,6 +200,23 @@ export default function Hero({ onProcess }) {
             </MagneticBtn>
           </div>
 
+          {/* scroll hint */}
+          <div
+            className="scroll-hint"
+            onClick={onProcess}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              marginBottom: 32, cursor: 'pointer', color: 'var(--text-muted)',
+              fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+            גלול למטה
+          </div>
+
           {/* quote */}
           <div className="hero-quote" style={{ display: 'flex', alignItems: 'flex-start', gap: 14, opacity: 0 }}>
             <div style={{ width: 3, height: 56, background: 'linear-gradient(to bottom, var(--brand-prime), var(--accent-void))', borderRadius: 999, flexShrink: 0 }} />
@@ -227,7 +244,7 @@ export default function Hero({ onProcess }) {
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.45), transparent 50%)' }} />
             </div>
 
-            {/* badge */}
+            {/* badge — bottom left */}
             <div style={{
               position: 'absolute', bottom: -20, left: -12,
               background: 'var(--surface-1)', backdropFilter: 'blur(16px)',
@@ -240,8 +257,25 @@ export default function Hero({ onProcess }) {
                 boxShadow: '0 0 8px var(--brand-prime)', flexShrink: 0, animation: 'pulse-ring 1.8s ease-out infinite',
               }} />
               <div>
-                <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>פוקוס</div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>אסטרטגיה מנצחת</div>
+                <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>סטטוס</div>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>זמין לפרויקטים</div>
+              </div>
+            </div>
+
+            {/* badge — top right */}
+            <div style={{
+              position: 'absolute', top: -16, right: -12,
+              background: 'var(--surface-1)', backdropFilter: 'blur(16px)',
+              border: '1px solid oklch(0.78 0.20 145 / 0.2)', borderRadius: 14, padding: '10px 16px',
+              display: 'flex', alignItems: 'center', gap: 10,
+              boxShadow: '0 8px 32px oklch(0 0 0 / 0.35)',
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+              </svg>
+              <div>
+                <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>התמחות</div>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>AI + שיווק</div>
               </div>
             </div>
           </div>

@@ -13,11 +13,27 @@ const links = [
 export default function Navbar({ onCta }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [activeId, setActiveId] = useState('');
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 30);
     window.addEventListener('scroll', handler, { passive: true });
     return () => window.removeEventListener('scroll', handler);
+  }, []);
+
+  useEffect(() => {
+    const sectionIds = ['hero', ...links.map(l => l.id), 'contact'];
+    const observers = sectionIds.map(id => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveId(id); },
+        { rootMargin: '-30% 0px -60% 0px' }
+      );
+      obs.observe(el);
+      return obs;
+    });
+    return () => observers.forEach(o => o?.disconnect());
   }, []);
 
   const goto = (id) => {
@@ -56,26 +72,39 @@ export default function Navbar({ onCta }) {
 
         {/* Desktop links — uses .nav-desktop CSS class (not inline display) to avoid Tailwind conflict */}
         <div className="nav-desktop">
-          {links.map(l => (
-            <button
-              key={l.id}
-              onClick={() => goto(l.id)}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--text-secondary)',
-                fontSize: '0.88rem',
-                fontWeight: 600,
-                letterSpacing: '0.02em',
-                fontFamily: "'Heebo', sans-serif",
-                transition: 'color 0.25s',
-              }}
-              onMouseEnter={e => e.target.style.color = 'var(--brand-prime)'}
-              onMouseLeave={e => e.target.style.color = 'var(--text-secondary)'}
-            >
-              {l.label}
-            </button>
-          ))}
+          {links.map(l => {
+            const isActive = activeId === l.id;
+            return (
+              <button
+                key={l.id}
+                onClick={() => goto(l.id)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: isActive ? 'var(--brand-prime)' : 'var(--text-secondary)',
+                  fontSize: '0.88rem',
+                  fontWeight: isActive ? 700 : 600,
+                  letterSpacing: '0.02em',
+                  fontFamily: "'Heebo', sans-serif",
+                  transition: 'color 0.25s',
+                  position: 'relative',
+                  cursor: 'pointer',
+                  padding: '4px 0',
+                }}
+                onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = 'var(--brand-prime)'; }}
+                onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = 'var(--text-secondary)'; }}
+              >
+                {l.label}
+                {isActive && (
+                  <span style={{
+                    position: 'absolute', bottom: -2, right: 0, left: 0,
+                    height: 2, borderRadius: 999,
+                    background: 'var(--brand-prime)',
+                  }} />
+                )}
+              </button>
+            );
+          })}
 
           {/* English page link */}
           <a
@@ -141,6 +170,7 @@ export default function Navbar({ onCta }) {
       {/* Mobile menu */}
       {open && (
         <div
+          className="mobile-menu-enter"
           style={{
             position: 'absolute',
             top: '100%',

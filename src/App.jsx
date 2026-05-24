@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -19,6 +19,24 @@ import Footer         from './components/Footer';
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.defaults({ ease: 'expo.out', duration: 0.8 });
+
+function ScrollProgress() {
+  const barRef = useRef(null);
+
+  useEffect(() => {
+    const update = () => {
+      const docH = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docH > 0 ? (window.scrollY / docH) * 100 : 0;
+      if (barRef.current) {
+        barRef.current.style.setProperty('--scroll-pct', `${pct}%`);
+      }
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    return () => window.removeEventListener('scroll', update);
+  }, []);
+
+  return <div ref={barRef} className="scroll-progress" aria-hidden="true" />;
+}
 
 export default function App() {
   const rootRef = useRef(null);
@@ -83,17 +101,23 @@ export default function App() {
         position: 'relative',
       }}
     >
+      <ScrollProgress />
       <div className="noise-overlay" aria-hidden="true" />
       <Cursor />
       <Navbar onCta={scrollToContact} />
       <main>
         <Hero onProcess={scrollToProcess} />
         <MarqueeSection />
+        <div className="section-divider" />
         <Stats />
+        <div className="section-divider" />
         <Process />
+        <div className="section-divider" />
         <WhyMe />
         <Manifesto />
+        <div className="section-divider" />
         <About />
+        <div className="section-divider" />
         <FAQ />
         <WhatsAppGroup />
         <CTA />

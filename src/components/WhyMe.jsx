@@ -134,8 +134,27 @@ export default function WhyMe() {
                   transform: isActive ? 'translateY(-5px)' : 'translateY(0)',
                   position: 'relative',
                   overflow: 'hidden',
+                  cursor: 'default',
                 }}
               >
+                {/* Background number decorator */}
+                <div style={{
+                  position: 'absolute',
+                  top: -10, left: 12,
+                  fontSize: '6rem',
+                  fontWeight: 900,
+                  lineHeight: 1,
+                  color: isActive ? 'oklch(0.78 0.20 145 / 0.07)' : 'oklch(0.97 0.005 240 / 0.03)',
+                  fontFamily: "'Heebo', sans-serif",
+                  letterSpacing: '-0.04em',
+                  pointerEvents: 'none',
+                  userSelect: 'none',
+                  transition: 'color 0.35s ease',
+                  direction: 'ltr',
+                }}>
+                  0{i + 1}
+                </div>
+
                 {/* Active indicator line */}
                 <div
                   style={{

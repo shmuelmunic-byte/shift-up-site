@@ -186,6 +186,7 @@ export default function CTA() {
           הקפה עליי. הפיצוח עליי. ההחלטה עליכם.
         </p>
 
+
         {/* Card */}
         <div
           style={{
@@ -274,6 +275,36 @@ export default function CTA() {
             </MagneticCTA>
           </div>
 
+          {/* LinkedIn secondary CTA */}
+          <div style={{ marginTop: 20, marginBottom: 4 }}>
+            <a
+              href="https://www.linkedin.com/in/shmuel-munitz-marketing"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '10px 24px',
+                background: 'transparent',
+                border: '1px solid var(--surface-2)',
+                borderRadius: 999,
+                color: 'var(--text-secondary)',
+                fontSize: '0.88rem',
+                fontWeight: 600,
+                fontFamily: "'Heebo', sans-serif",
+                textDecoration: 'none',
+                transition: 'border-color 0.25s, color 0.25s',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'oklch(0.78 0.20 145 / 0.4)'; e.currentTarget.style.color = 'var(--brand-prime)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--surface-2)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/>
+              </svg>
+              עקוב ב-LinkedIn
+            </a>
+          </div>
+
           {/* availability */}
           <div
             style={{
@@ -283,6 +314,7 @@ export default function CTA() {
               gap: 8,
               fontSize: '0.82rem',
               color: 'var(--text-muted)',
+              marginTop: 16,
             }}
           >
             <span style={{ position: 'relative', display: 'flex', width: 8, height: 8, flexShrink: 0 }}>

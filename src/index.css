@@ -420,6 +420,88 @@ body {
   .noise-overlay { display: none; }
 }
 
+/* ── Scroll progress bar ── */
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: var(--scroll-pct, 0%);
+  background: linear-gradient(to right, var(--brand-deep), var(--brand-prime), var(--accent-void));
+  z-index: 99999;
+  pointer-events: none;
+  transform-origin: left center;
+}
+
+/* ── Scroll indicator (hero) ── */
+
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0);   opacity: 0.6; }
+  50%       { transform: translateY(8px); opacity: 1;   }
+}
+
+.scroll-hint {
+  animation: scroll-bounce 2s ease-in-out infinite;
+}
+
+/* ── Hover glow utility ── */
+
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 24px oklch(0.78 0.20 145 / 0.35);
+}
+
+/* ── Section divider ── */
+
+.section-divider {
+  height: 1px;
+  background: linear-gradient(to left, transparent, var(--surface-2) 30%, var(--surface-2) 70%, transparent);
+  opacity: 0.7;
+  margin: 0 clamp(28px, 6vw, 120px);
+}
+
+/* ── Tag/badge chip ── */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  background: oklch(0.78 0.20 145 / 0.12);
+  border: 1px solid oklch(0.78 0.20 145 / 0.25);
+  color: var(--brand-prime);
+}
+
+/* ── Mobile menu animation ── */
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.mobile-menu-enter {
+  animation: slide-down 0.22s var(--ease-spring) both;
+}
+
+/* ── Cursor pointer on coarse devices ── */
+
+@media (pointer: coarse) {
+  a, button, [role="button"] { cursor: pointer; }
+}
+
+/* ── Active nav link ── */
+
+.nav-link-active {
+  color: var(--brand-prime) !important;
+}
+
 /* ── Google Translate: switch to LTR when translated to non-Hebrew ── */
 
 html[lang]:not([lang=""]):not([lang^="he"]):not([lang^="iw"]) {

@@ -127,62 +127,123 @@ function MagneticIcon({ children, href, label, target, emailBtn }) {
   );
 }
 
+const quickLinks = [
+  { label: 'התהליך', id: 'strategy' },
+  { label: 'למה אני', id: 'why' },
+  { label: 'מי אני',  id: 'about' },
+  { label: 'שאלות',  id: 'faq' },
+  { label: 'צור קשר', id: 'contact' },
+];
+
 export default function Footer() {
+  const goto = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <footer
       style={{
         background: 'var(--bedrock)',
         borderTop: '1px solid var(--surface-1)',
-        padding: '40px 28px',
+        paddingTop: '56px',
+        paddingBottom: '32px',
+        paddingRight: '28px',
+        paddingLeft: '28px',
       }}
     >
-      <div
-        style={{
-          maxWidth: 1200,
-          margin: '0 auto',
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 24,
-        }}
-      >
-        {/* Logo */}
-        <img
-          src={logoSrc}
-          alt="Shift Up"
-          style={{
-            height: 110,
-            width: 'auto',
-            objectFit: 'contain',
-            animation: 'hue-drift 8s ease-in-out infinite',
-          }}
-        />
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
-        {/* Social icons */}
-        <div style={{ display: 'flex', gap: 10 }}>
-          {socials.map(s => (
-            <MagneticIcon key={s.label} href={s.href} label={s.label} target={s.target} emailBtn={s.emailBtn}>
-              {s.icon}
-            </MagneticIcon>
-          ))}
+        {/* Top row */}
+        <div style={{
+          display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start',
+          justifyContent: 'space-between', gap: 40, marginBottom: 48,
+        }}>
+          {/* Logo + tagline */}
+          <div>
+            <img
+              src={logoSrc}
+              alt="Shift Up"
+              style={{ height: 90, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite', display: 'block', marginBottom: 12 }}
+            />
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.65, maxWidth: 240 }}>
+              אסטרטגיה חכמה + קריאייטיב נועז.<br />שיווק שמביא תוצאות אמיתיות.
+            </p>
+          </div>
+
+          {/* Quick nav */}
+          <nav aria-label="ניווט מהיר">
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 16 }}>
+              ניווט
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {quickLinks.map(l => (
+                <button
+                  key={l.id}
+                  onClick={() => goto(l.id)}
+                  style={{
+                    background: 'none', border: 'none', textAlign: 'right',
+                    color: 'var(--text-secondary)', fontSize: '0.88rem', fontWeight: 500,
+                    fontFamily: "'Heebo', sans-serif", cursor: 'pointer',
+                    transition: 'color 0.2s', padding: 0,
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
+                >
+                  {l.label}
+                </button>
+              ))}
+            </div>
+          </nav>
+
+          {/* Contact + socials */}
+          <div>
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 16 }}>
+              יצירת קשר
+            </div>
+            <a
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.88rem', textDecoration: 'none', marginBottom: 8, transition: 'color 0.2s', cursor: 'pointer' }}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
+            >
+              +972-53-467-3151
+            </a>
+            <a
+              href="mailto:shmuelmunic@gmail.com"
+              style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.88rem', textDecoration: 'none', marginBottom: 20, transition: 'color 0.2s', cursor: 'pointer' }}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
+            >
+              shmuelmunic@gmail.com
+            </a>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {socials.map(s => (
+                <MagneticIcon key={s.label} href={s.href} label={s.label} target={s.target} emailBtn={s.emailBtn}>
+                  {s.icon}
+                </MagneticIcon>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Copyright */}
-        <p
-          style={{
-            fontSize: '0.8rem',
-            color: 'var(--text-muted)',
-            lineHeight: 1.6,
-            textAlign: 'center',
-          }}
-        >
-          © {new Date().getFullYear()} Shift Up · שמואל מוניץ
-          <br />
-          <span style={{ color: 'oklch(0.30 0.01 240)', fontSize: '0.72rem' }}>
-            אסטרטגיה חכמה. קריאייטיב נועז.
-          </span>
-        </p>
+        {/* Divider */}
+        <div style={{ height: 1, background: 'var(--surface-1)', marginBottom: 24 }} />
+
+        {/* Bottom row */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+          <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+            © {new Date().getFullYear()} Shift Up · שמואל מוניץ. כל הזכויות שמורות.
+          </p>
+          <a href="/en" style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s', cursor: 'pointer' }}
+            onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
+            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+          >
+            English Version →
+          </a>
+        </div>
       </div>
     </footer>
   );
