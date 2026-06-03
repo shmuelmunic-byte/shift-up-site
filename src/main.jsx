@@ -5,11 +5,13 @@ import App from './App.jsx'
 import EnglishPage from './pages/EnglishPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import IgPage from './pages/IgPage.jsx'
+import Analytics from './components/Analytics.jsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
+      <Analytics />
       <Routes>
         <Route path="/"     element={<App />} />
         <Route path="/en"   element={<EnglishPage />} />

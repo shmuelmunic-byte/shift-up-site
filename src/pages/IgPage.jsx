@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 const BUSINESS_LINK =
   'https://wa.me/972534673151?text=' +
   encodeURIComponent('היי שמואל, ראיתי אותך באינסטגרם ואשמח לקבוע שיחת פיצוח לעסק שלי');
@@ -6,12 +8,21 @@ const COMMUNITY_LINK = 'https://chat.whatsapp.com/LyJmliw2l7CL8Kq0ImYVFa';
 
 const INSTAGRAM_URL = 'https://www.instagram.com/shiftup.il';
 
-function trackClick(label) {
+function trackBusiness() {
   if (typeof window.fbq === 'function') {
-    window.fbq('track', 'Lead', { content_name: label });
+    window.fbq('track', 'Lead', { content_name: 'ig_bio_business', content_category: 'ig_bio' });
   }
   if (typeof window.gtag === 'function') {
-    window.gtag('event', 'click', { event_category: 'ig_bio', event_label: label });
+    window.gtag('event', 'generate_lead', { source: 'ig_bio', button: 'business' });
+  }
+}
+
+function trackCommunity() {
+  if (typeof window.fbq === 'function') {
+    window.fbq('track', 'Contact', { content_name: 'ig_bio_community', content_category: 'ig_bio' });
+  }
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', 'join_group', { source: 'ig_bio', button: 'community' });
   }
 }
 
@@ -43,6 +54,18 @@ function PeopleIcon({ size = 20 }) {
 }
 
 export default function IgPage() {
+  useEffect(() => {
+    if (typeof window.fbq === 'function') {
+      window.fbq('track', 'ViewContent', {
+        content_name: 'IG Bio Page',
+        content_category: 'ig_bio',
+      });
+    }
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'view_item', { item_id: 'ig_bio', item_name: 'IG Bio Page' });
+    }
+  }, []);
+
   return (
     <div
       style={{
@@ -229,7 +252,7 @@ export default function IgPage() {
             href={BUSINESS_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => trackClick('ig_bio_business')}
+            onClick={trackBusiness}
             className="ig-btn-primary"
             style={{
               display: 'flex',
@@ -260,7 +283,7 @@ export default function IgPage() {
             href={COMMUNITY_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => trackClick('ig_bio_community')}
+            onClick={trackCommunity}
             className="ig-btn-secondary"
             style={{
               display: 'flex',
