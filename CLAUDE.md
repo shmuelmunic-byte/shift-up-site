@@ -79,7 +79,7 @@ shift-up-site/
 - **LinkedIn:** https://www.linkedin.com/in/shmuel-munitz-marketing
 - **Facebook:** https://www.facebook.com/share/1BZ8HrpBeo/
 - **Instagram:** https://www.instagram.com/shiftup.il
-- **WhatsApp קבוצה שקטה:** https://chat.whatsapp.com/LyJmliw2l7CL8Kq0ImYVFa
+- **WhatsApp קבוצה שקטה:** https://chat.whatsapp.com/BBhSKstQEgg3jZsSo9RvdZ?s=cl&p=a&mlu=3
 - **Meta Pixel ID:** 2151537265681503
 - **Google Analytics:** G-RCGQNYG1V8
 

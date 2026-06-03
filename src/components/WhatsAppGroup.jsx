@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const WA_GROUP = 'https://chat.whatsapp.com/LyJmliw2l7CL8Kq0ImYVFa';
+const WA_GROUP = 'https://chat.whatsapp.com/BBhSKstQEgg3jZsSo9RvdZ?s=cl&p=a&mlu=3';
 
 const perks = [
   {

@@ -4,7 +4,7 @@ const BUSINESS_LINK =
   'https://wa.me/972534673151?text=' +
   encodeURIComponent('היי שמואל, ראיתי אותך באינסטגרם ואשמח לקבוע שיחת פיצוח לעסק שלי');
 
-const COMMUNITY_LINK = 'https://chat.whatsapp.com/LyJmliw2l7CL8Kq0ImYVFa';
+const COMMUNITY_LINK = 'https://chat.whatsapp.com/BBhSKstQEgg3jZsSo9RvdZ?s=cl&p=a&mlu=3';
 
 const INSTAGRAM_URL = 'https://www.instagram.com/shiftup.il';
 
