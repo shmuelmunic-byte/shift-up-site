@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const profileSrc = '/1000900908.jpg';
+const profileSrc = '/shmuel.png';
 
 export default function About() {
   const sectionRef = useRef(null);
@@ -12,7 +12,6 @@ export default function About() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // header
       gsap.fromTo(
         '.about-header',
         { y: 50, opacity: 0 },
@@ -22,7 +21,6 @@ export default function About() {
         }
       );
 
-      // image
       gsap.fromTo(
         '.about-img',
         { y: 60, opacity: 0, scale: 0.95 },
@@ -32,7 +30,6 @@ export default function About() {
         }
       );
 
-      // paragraphs — each gets a left-border draw and fade
       gsap.utils.toArray('.about-para').forEach((el, i) => {
         gsap.fromTo(
           el,
@@ -46,34 +43,34 @@ export default function About() {
       });
     }, sectionRef);
 
-    // parallax tilt on image
-    const img = imgRef.current;
+    // 3D tilt on the image block (not the float wrapper)
+    const el = imgRef.current;
     const onMove = (e) => {
-      if (!img) return;
-      const rect = img.getBoundingClientRect();
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
       const dx = (e.clientX - cx) / rect.width;
       const dy = (e.clientY - cy) / rect.height;
-      gsap.to(img, {
-        rotateY: dx * 6,
-        rotateX: -dy * 6,
+      gsap.to(el, {
+        rotateY: dx * 7,
+        rotateX: -dy * 7,
         duration: 0.6,
         ease: 'power2.out',
         overwrite: 'auto',
       });
     };
     const onLeave = () => {
-      gsap.to(img, { rotateY: 0, rotateX: 0, duration: 0.8, ease: 'elastic.out(1, 0.6)' });
+      gsap.to(el, { rotateY: 0, rotateX: 0, duration: 0.9, ease: 'elastic.out(1, 0.55)' });
     };
 
-    img?.addEventListener('mousemove', onMove);
-    img?.addEventListener('mouseleave', onLeave);
+    el?.addEventListener('mousemove', onMove);
+    el?.addEventListener('mouseleave', onLeave);
 
     return () => {
       ctx.revert();
-      img?.removeEventListener('mousemove', onMove);
-      img?.removeEventListener('mouseleave', onLeave);
+      el?.removeEventListener('mousemove', onMove);
+      el?.removeEventListener('mouseleave', onLeave);
     };
   }, []);
 
@@ -88,7 +85,7 @@ export default function About() {
         overflow: 'hidden',
       }}
     >
-      {/* ambient */}
+      {/* ambient blobs */}
       <div
         className="fluid-blob"
         style={{
@@ -96,6 +93,15 @@ export default function About() {
           top: '-5%', right: '-5%',
           background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.09), transparent 70%)',
           '--dur': '24s',
+        }}
+      />
+      <div
+        className="fluid-blob"
+        style={{
+          width: 350, height: 350,
+          bottom: '0%', left: '-5%',
+          background: 'radial-gradient(circle, oklch(0.65 0.22 200 / 0.07), transparent 70%)',
+          '--dur': '28s', '--delay': '-10s',
         }}
       />
 
@@ -108,95 +114,219 @@ export default function About() {
           zIndex: 1,
         }}
       >
-        {/* Image column */}
+        {/* ── Image column ── */}
         <div
           className="about-img"
-          style={{
-            opacity: 0,
-            maxWidth: 320,
-            margin: '0 auto',
-            width: '100%',
-          }}
+          style={{ opacity: 0, maxWidth: 340, margin: '0 auto', width: '100%' }}
         >
-          <div
-            ref={imgRef}
-            style={{
-              position: 'relative',
-              transformStyle: 'preserve-3d',
-              perspective: 800,
-            }}
-          >
-            {/* glow halo */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: -20,
-                background: 'radial-gradient(circle at 50% 50%, oklch(0.78 0.20 145 / 0.2), oklch(0.50 0.20 285 / 0.12) 60%, transparent 80%)',
-                borderRadius: 28,
-                filter: 'blur(24px)',
-                zIndex: 0,
-              }}
-            />
+          {/* Float wrapper — CSS float animation, separate from tilt target */}
+          <div style={{ animation: 'float 7s ease-in-out infinite', position: 'relative' }}>
 
-            {/* frame */}
+            {/* Tilt target */}
             <div
-              className="glow-border living-border"
+              ref={imgRef}
               style={{
                 position: 'relative',
-                zIndex: 1,
-                borderRadius: 20,
-                overflow: 'hidden',
-                aspectRatio: '4/5',
+                transformStyle: 'preserve-3d',
+                perspective: 900,
               }}
             >
-              <img
-                src={profileSrc}
-                alt="שמואל מוניץ - אסטרטג שיווק דיגיטלי ומומחה AI"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              />
+              {/* Ambient glow matching photo (teal left, purple right) */}
               <div
                 style={{
                   position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.4), transparent 55%)',
+                  inset: -40,
+                  background:
+                    'radial-gradient(ellipse at 25% 50%, oklch(0.65 0.22 200 / 0.35) 0%, transparent 55%),' +
+                    'radial-gradient(ellipse at 75% 40%, oklch(0.50 0.20 285 / 0.30) 0%, transparent 55%)',
+                  filter: 'blur(30px)',
+                  zIndex: 0,
+                  borderRadius: 40,
+                  pointerEvents: 'none',
                 }}
               />
-            </div>
 
-            {/* name badge */}
-            <div
-              style={{
-                position: 'absolute',
-                top: -14,
-                left: 16,
-                zIndex: 2,
-                background: 'var(--surface-1)',
-                backdropFilter: 'blur(16px)',
-                border: '1px solid var(--surface-2)',
-                borderRadius: 999,
-                padding: '6px 14px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-              }}
-            >
-              <span
+              {/* Spinning border ring wrapper */}
+              <div
                 style={{
-                  width: 7, height: 7,
-                  borderRadius: '50%',
-                  background: 'var(--brand-prime)',
-                  display: 'block',
-                  boxShadow: '0 0 6px var(--brand-prime)',
+                  position: 'relative',
+                  zIndex: 1,
+                  borderRadius: 24,
+                  padding: 2,
+                  overflow: 'hidden',
+                  aspectRatio: '1 / 1',
                 }}
-              />
-              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                שמואל מוניץ
-              </span>
+              >
+                {/* Rotating conic gradient ring */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    borderRadius: 'inherit',
+                    background:
+                      'conic-gradient(from 0deg, oklch(0.65 0.22 200 / 0.9), oklch(0.78 0.20 145), oklch(0.50 0.20 285 / 0.85), oklch(0.65 0.22 200 / 0.9))',
+                    animation: 'ring-spin 6s linear infinite',
+                  }}
+                />
+
+                {/* Image frame */}
+                <div
+                  style={{
+                    position: 'relative',
+                    zIndex: 1,
+                    borderRadius: 22,
+                    overflow: 'hidden',
+                    height: '100%',
+                    background: 'var(--surface-0)',
+                  }}
+                >
+                  <img
+                    src={profileSrc}
+                    alt="שמואל מוניץ - אסטרטג שיווק דיגיטלי ומומחה AI"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      objectPosition: 'center top',
+                      display: 'block',
+                    }}
+                  />
+
+                  {/* Bottom vignette */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.3), transparent 50%)',
+                      pointerEvents: 'none',
+                    }}
+                  />
+
+                  {/* Scan line sweep */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      left: 0, right: 0,
+                      top: 0,
+                      height: 90,
+                      background:
+                        'linear-gradient(to bottom, transparent, oklch(0.78 0.20 145 / 0.07) 50%, transparent)',
+                      animation: 'scan-sweep 5s ease-in-out 3.5s infinite',
+                      pointerEvents: 'none',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Name badge — top */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: -16,
+                  left: 14,
+                  zIndex: 2,
+                  background: 'oklch(0.14 0.02 240 / 0.92)',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid oklch(0.28 0.03 240)',
+                  borderRadius: 999,
+                  padding: '6px 14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                <span
+                  style={{
+                    width: 7, height: 7,
+                    borderRadius: '50%',
+                    background: 'var(--brand-prime)',
+                    display: 'block',
+                    boxShadow: '0 0 8px var(--brand-prime)',
+                    animation: 'breathing 2s ease-in-out infinite',
+                  }}
+                />
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: "'Heebo', sans-serif" }}>
+                  שמואל מוניץ
+                </span>
+              </div>
+
+              {/* Available badge — bottom */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: -16,
+                  right: 14,
+                  zIndex: 2,
+                  background: 'oklch(0.14 0.02 240 / 0.92)',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid oklch(0.78 0.20 145 / 0.3)',
+                  borderRadius: 999,
+                  padding: '6px 14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                <span
+                  style={{
+                    position: 'relative',
+                    display: 'flex',
+                    width: 8, height: 8, flexShrink: 0,
+                  }}
+                >
+                  <span
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      borderRadius: '50%',
+                      background: 'var(--brand-prime)',
+                      opacity: 0.6,
+                      animation: 'pulse-ring 1.8s ease-out infinite',
+                    }}
+                  />
+                  <span
+                    style={{
+                      position: 'relative',
+                      width: 8, height: 8,
+                      borderRadius: '50%',
+                      background: 'var(--brand-prime)',
+                      display: 'block',
+                    }}
+                  />
+                </span>
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--brand-prime)', fontFamily: "'Heebo', sans-serif" }}>
+                  זמין לפרויקטים
+                </span>
+              </div>
+
+              {/* Floating "Shift Up" tag */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '35%',
+                  right: -22,
+                  zIndex: 2,
+                  background: 'oklch(0.13 0.02 240 / 0.88)',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid oklch(0.78 0.20 145 / 0.2)',
+                  borderRadius: 10,
+                  padding: '7px 11px',
+                  transform: 'rotate(3deg)',
+                  animation: 'float 9s 2s ease-in-out infinite',
+                }}
+              >
+                <span
+                  className="text-gradient"
+                  style={{ fontSize: '0.76rem', fontWeight: 900, fontFamily: "'Heebo', sans-serif" }}
+                >
+                  Shift Up ↑
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Text column */}
+        {/* ── Text column ── */}
         <div
           className="about-header"
           style={{ textAlign: 'right', opacity: 0 }}
@@ -237,9 +367,7 @@ export default function About() {
                   style={{
                     width: 2,
                     minHeight: 48,
-                    background: i === 0
-                      ? 'var(--brand-prime)'
-                      : 'oklch(0.22 0.02 240)',
+                    background: i === 0 ? 'var(--brand-prime)' : 'oklch(0.22 0.02 240)',
                     borderRadius: 999,
                     flexShrink: 0,
                     marginTop: 4,

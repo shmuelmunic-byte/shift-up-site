@@ -5,7 +5,7 @@ const whatsappLink =
   'https://wa.me/972534673151?text=' +
   encodeURIComponent('היי שמואל, אשמח לשמוע פרטים על השירות');
 
-const profileSrc = '/1000900908.jpg';
+const profileSrc = '/shmuel.png';
 
 /* ── Fluid animated background ── */
 function FluidBg() {
