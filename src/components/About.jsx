@@ -157,17 +157,8 @@ export default function About() {
                   aspectRatio: '1 / 1',
                 }}
               >
-                {/* Rotating conic gradient ring */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    borderRadius: 'inherit',
-                    background:
-                      'conic-gradient(from 0deg, oklch(0.65 0.22 200 / 0.9), oklch(0.78 0.20 145), oklch(0.50 0.20 285 / 0.85), oklch(0.65 0.22 200 / 0.9))',
-                    animation: 'ring-spin 6s linear infinite',
-                  }}
-                />
+                {/* Rotating conic gradient ring — angle-only animation, no transform */}
+                <div className="photo-ring" />
 
                 {/* Image frame */}
                 <div

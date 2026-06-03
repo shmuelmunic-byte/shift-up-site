@@ -154,17 +154,8 @@ export default function IgPage() {
 
           {/* Ring + photo container */}
           <div style={{ position: 'relative', width: 114, height: 114 }}>
-            {/* Spinning conic gradient ring */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                borderRadius: '50%',
-                background:
-                  'conic-gradient(from 0deg, oklch(0.65 0.22 200 / 0.95), oklch(0.78 0.20 145), oklch(0.50 0.20 285 / 0.9), oklch(0.65 0.22 200 / 0.95))',
-                animation: 'ring-spin 3.5s linear infinite',
-              }}
-            />
+            {/* Rotating conic gradient ring — angle-only animation, no transform */}
+            <div className="photo-ring" style={{ borderRadius: '50%' }} />
             {/* Photo */}
             <img
               src="/shmuel.png"

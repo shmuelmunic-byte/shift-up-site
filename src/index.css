@@ -401,10 +401,30 @@ body {
   }
 }
 
-/* ── Photo ring spin ── */
+/* ── Photo ring spin — animates gradient angle only, zero DOM transform ── */
+
+@property --ring-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
 
 @keyframes ring-spin {
-  to { transform: rotate(360deg); }
+  to { --ring-angle: 360deg; }
+}
+
+.photo-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--ring-angle),
+    oklch(0.65 0.22 200 / 0.85),
+    oklch(0.78 0.20 145 / 0.9),
+    oklch(0.50 0.20 285 / 0.8),
+    oklch(0.65 0.22 200 / 0.85)
+  );
+  animation: ring-spin 7s linear infinite;
 }
 
 @keyframes scan-sweep {
