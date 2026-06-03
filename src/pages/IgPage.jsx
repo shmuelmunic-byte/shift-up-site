@@ -6,6 +6,15 @@ const COMMUNITY_LINK = 'https://chat.whatsapp.com/LyJmliw2l7CL8Kq0ImYVFa';
 
 const INSTAGRAM_URL = 'https://www.instagram.com/shiftup.il';
 
+function trackClick(label) {
+  if (typeof window.fbq === 'function') {
+    window.fbq('track', 'Lead', { content_name: label });
+  }
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', 'click', { event_category: 'ig_bio', event_label: label });
+  }
+}
+
 function IgIcon({ size = 18 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -220,6 +229,7 @@ export default function IgPage() {
             href={BUSINESS_LINK}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackClick('ig_bio_business')}
             className="ig-btn-primary"
             style={{
               display: 'flex',
@@ -250,6 +260,7 @@ export default function IgPage() {
             href={COMMUNITY_LINK}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackClick('ig_bio_community')}
             className="ig-btn-secondary"
             style={{
               display: 'flex',
