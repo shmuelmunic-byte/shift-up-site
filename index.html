@@ -183,10 +183,10 @@
       fbq('init', '2151537265681503');
       fbq('track', 'PageView');
     </script>
-    <noscript><img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=2151537265681503&ev=PageView&noscript=1"
-    /></noscript>
     <!-- End Meta Pixel Code -->
+    <!-- NOTE: The Meta Pixel <noscript><img> fallback was removed: Vite's HTML
+         parser hangs (infinite loop) on an inline <img> with an external tracking
+         URL. The JS pixel above covers all users with JavaScript enabled. -->
   </head>
   <body>
     <div id="root"></div>

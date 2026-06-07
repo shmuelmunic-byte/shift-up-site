@@ -53,6 +53,13 @@ const WA_ICON = (
 
 /* ─── Navbar ─────────────────────────────────────────────────────────── */
 
+const navLinks = [
+  { label: 'The Process', id: 'en-strategy' },
+  { label: 'Why Me',      id: 'en-why'      },
+  { label: 'About',       id: 'en-about'    },
+  { label: 'FAQ',         id: 'en-faq'      },
+];
+
 function EnNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen]         = useState(false);
@@ -63,13 +70,6 @@ function EnNavbar() {
     window.addEventListener('scroll', h, { passive: true });
     return () => window.removeEventListener('scroll', h);
   }, []);
-
-  const navLinks = [
-    { label: 'The Process', id: 'en-strategy' },
-    { label: 'Why Me',      id: 'en-why'      },
-    { label: 'About',       id: 'en-about'    },
-    { label: 'FAQ',         id: 'en-faq'      },
-  ];
 
   useEffect(() => {
     const ids = ['en-hero', ...navLinks.map(l => l.id), 'en-contact'];
@@ -321,9 +321,13 @@ const enStats = [
 function EnStatItem({ stat, index }) {
   const numRef  = useRef(null);
   const itemRef = useRef(null);
-  const [online, setOnline] = useState(false);
+  const [online, setOnline] = useState(() => (stat.live ? isOnlineNow() : false));
 
-  useEffect(() => { if (stat.live) setOnline(isOnlineNow()); }, [stat.live]);
+  useEffect(() => {
+    if (!stat.live) return undefined;
+    const id = setInterval(() => setOnline(isOnlineNow()), 60000);
+    return () => clearInterval(id);
+  }, [stat.live]);
 
   useEffect(() => {
     const el = itemRef.current;
@@ -840,7 +844,7 @@ function EnCTA() {
     return () => { ctx.revert(); clearTimeout(idleRef.current); };
   }, []);
 
-  useEffect(() => { if (hovered) { setIdlePulse(false); clearTimeout(idleRef.current); } }, [hovered]);
+  const handleEnter = () => { setHovered(true); setIdlePulse(false); clearTimeout(idleRef.current); };
 
   return (
     <section id="en-contact" ref={ref} className="cta-bg" style={{ padding: 'clamp(80px, 12vw, 140px) 28px', position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
@@ -866,7 +870,7 @@ function EnCTA() {
               <div key={k} style={{ position: 'absolute', inset: 0, borderRadius: 999, border: `1.5px solid oklch(0.78 0.20 145 / ${hovered || idlePulse ? 0.5 : 0.25})`, animation: (hovered || idlePulse) ? `pulse-ring ${1.4 + k * 0.5}s ease-out ${k * 0.35}s infinite` : 'none', pointerEvents: 'none' }} />
             ))}
             <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
-              onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+              onMouseEnter={handleEnter} onMouseLeave={() => setHovered(false)}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 12, padding: '16px 40px', background: hovered ? 'var(--brand-glow)' : 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', borderRadius: 999, fontWeight: 800, fontSize: 'clamp(1rem, 2vw, 1.1rem)', fontFamily: "'Heebo', sans-serif", textDecoration: 'none', boxShadow: hovered || idlePulse ? '0 0 60px oklch(0.78 0.20 145 / 0.65)' : '0 0 40px oklch(0.78 0.20 145 / 0.35)', transform: hovered ? 'translateY(-2px)' : 'translateY(0)', transition: 'background 0.25s, box-shadow 0.35s, transform 0.3s', position: 'relative', zIndex: 1 }}>
               {WA_ICON} Send a WhatsApp Message
             </a>

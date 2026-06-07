@@ -79,13 +79,12 @@ export default function CTA() {
     };
   }, []);
 
-  // stop idle pulse on hover
-  useEffect(() => {
-    if (hovered) {
-      setIdlePulse(false);
-      clearTimeout(idleTimerRef.current);
-    }
-  }, [hovered]);
+  // stop idle pulse the moment the user engages with the button
+  const handleEnter = () => {
+    setHovered(true);
+    setIdlePulse(false);
+    clearTimeout(idleTimerRef.current);
+  };
 
   return (
     <section
@@ -239,7 +238,7 @@ export default function CTA() {
                 onClick={trackLead}
                 target="_blank"
                 rel="noopener noreferrer"
-                onMouseEnter={() => setHovered(true)}
+                onMouseEnter={handleEnter}
                 onMouseLeave={() => setHovered(false)}
                 style={{
                   display: 'inline-flex',

@@ -31,7 +31,7 @@ const faqs = [
   },
 ];
 
-function ChatItem({ item, index, isActive, onOpen }) {
+function ChatItem({ item, isActive, onOpen }) {
   const [displayed, setDisplayed] = useState('');
   const [thinking,  setThinking]  = useState(false);
   const timerRef  = useRef(null);
@@ -240,7 +240,6 @@ export default function FAQ() {
             <ChatItem
               key={i}
               item={item}
-              index={i}
               isActive={activeIdx === i}
               onOpen={() => handleOpen(i)}
             />

@@ -22,10 +22,13 @@ const gradientStyle = {
 function StatCard({ stat, index }) {
   const numRef  = useRef(null);
   const cardRef = useRef(null);
-  const [online, setOnline] = useState(false);
+  const [online, setOnline] = useState(() => (stat.live ? isOnlineNow() : false));
 
   useEffect(() => {
-    if (stat.live) setOnline(isOnlineNow());
+    if (!stat.live) return undefined;
+    // keep the availability badge fresh if the page stays open across 08:00/17:00
+    const id = setInterval(() => setOnline(isOnlineNow()), 60000);
+    return () => clearInterval(id);
   }, [stat.live]);
 
   useEffect(() => {
