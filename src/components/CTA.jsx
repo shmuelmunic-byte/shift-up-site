@@ -91,9 +91,9 @@ export default function CTA() {
     <section
       id="contact"
       ref={sectionRef}
+      className="cta-bg"
       style={{
         padding: 'clamp(80px, 12vw, 140px) 28px',
-        background: 'var(--surface-0)',
         position: 'relative',
         overflow: 'hidden',
         textAlign: 'center',
@@ -189,11 +189,8 @@ export default function CTA() {
 
         {/* Card */}
         <div
+          className="animated-border glass-panel"
           style={{
-            background: 'oklch(0.10 0.012 240 / 0.85)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid var(--surface-2)',
-            borderRadius: 24,
             padding: 'clamp(32px, 4vw, 52px)',
             position: 'relative',
             overflow: 'hidden',

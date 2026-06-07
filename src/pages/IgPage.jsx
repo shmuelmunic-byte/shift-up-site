@@ -67,69 +67,59 @@ export default function IgPage() {
   }, []);
 
   return (
-    <div
-      style={{
-        minHeight: '100dvh',
-        background: 'var(--bedrock)',
+    <div style={{
+      minHeight: '100dvh',
+      background: 'var(--bedrock)',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '48px 24px 72px',
+      position: 'relative',
+      overflow: 'hidden',
+      fontFamily: "'Heebo', sans-serif",
+    }}>
+      {/* Aurora blobs */}
+      <div className="aurora-orb" style={{
+        width: 400, height: 400,
+        top: '-8%', left: '50%',
+        transform: 'translateX(-50%)',
+        background: 'radial-gradient(circle, oklch(0.65 0.22 200 / 0.15), transparent 70%)',
+        '--dur': '22s',
+      }} />
+      <div className="aurora-orb" style={{
+        width: 320, height: 320,
+        bottom: '3%', right: '-8%',
+        background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.14), transparent 70%)',
+        '--dur': '28s', '--delay': '-9s',
+      }} />
+      <div className="aurora-orb" style={{
+        width: 240, height: 240,
+        bottom: '8%', left: '-8%',
+        background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.09), transparent 70%)',
+        '--dur': '20s', '--delay': '-5s',
+      }} />
+
+      {/* Subtle grid overlay */}
+      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: 0.4, pointerEvents: 'none' }} />
+
+      {/* Main content */}
+      <div style={{
+        position: 'relative',
+        zIndex: 1,
+        width: '100%',
+        maxWidth: 380,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        padding: '48px 24px 72px',
-        position: 'relative',
-        overflow: 'hidden',
-        fontFamily: "'Heebo', sans-serif",
-      }}
-    >
-      {/* Ambient blobs */}
-      <div
-        className="fluid-blob"
-        style={{
-          width: 320, height: 320,
-          top: '-5%', left: '50%',
-          transform: 'translateX(-50%)',
-          background: 'radial-gradient(circle, oklch(0.65 0.22 200 / 0.18), transparent 70%)',
-          '--dur': '22s',
-        }}
-      />
-      <div
-        className="fluid-blob"
-        style={{
-          width: 260, height: 260,
-          bottom: '5%', right: '-5%',
-          background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.18), transparent 70%)',
-          '--dur': '26s', '--delay': '-9s',
-        }}
-      />
-      <div
-        className="fluid-blob"
-        style={{
-          width: 200, height: 200,
-          bottom: '10%', left: '-5%',
-          background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.10), transparent 70%)',
-          '--dur': '19s', '--delay': '-5s',
-        }}
-      />
-
-      {/* Main content */}
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 1,
-          width: '100%',
-          maxWidth: 360,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          animation: 'ig-fade-up 0.65s ease-out both',
-        }}
-      >
+        animation: 'ig-fade-up 0.65s ease-out both',
+      }}>
         {/* Logo */}
         <img
-          src="/logo.png"
+          src="/logo.svg"
           alt="Shift Up"
           style={{
-            height: 52,
+            height: 56,
             width: 'auto',
             marginBottom: 32,
             animation: 'hue-drift 8s ease-in-out infinite',
@@ -138,32 +128,27 @@ export default function IgPage() {
 
         {/* Profile photo with spinning ring */}
         <div style={{ position: 'relative', marginBottom: 22 }}>
-          {/* Ambient glow behind photo */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: -18,
-              borderRadius: '50%',
-              background:
-                'radial-gradient(circle at 35% 50%, oklch(0.65 0.22 200 / 0.4), transparent 60%),' +
-                'radial-gradient(circle at 65% 40%, oklch(0.50 0.20 285 / 0.35), transparent 60%)',
-              filter: 'blur(16px)',
-              zIndex: 0,
-            }}
-          />
+          {/* Ambient glow */}
+          <div style={{
+            position: 'absolute',
+            inset: -22,
+            borderRadius: '50%',
+            background:
+              'radial-gradient(circle at 35% 50%, oklch(0.65 0.22 200 / 0.35), transparent 55%),' +
+              'radial-gradient(circle at 65% 40%, oklch(0.50 0.20 285 / 0.3), transparent 55%)',
+            filter: 'blur(18px)',
+            zIndex: 0,
+          }} />
 
           {/* Ring + photo container */}
-          <div style={{ position: 'relative', width: 114, height: 114 }}>
-            {/* Rotating conic gradient ring — angle-only animation, no transform */}
+          <div style={{ position: 'relative', width: 118, height: 118 }}>
             <div className="photo-ring" style={{ borderRadius: '50%' }} />
-            {/* Photo */}
             <img
               src="/shmuel.png"
               alt="שמואל מוניץ"
               style={{
                 position: 'absolute',
-                top: 3,
-                left: 3,
+                top: 3, left: 3,
                 width: 'calc(100% - 6px)',
                 height: 'calc(100% - 6px)',
                 borderRadius: '50%',
@@ -176,75 +161,54 @@ export default function IgPage() {
         </div>
 
         {/* Name */}
-        <h1
-          style={{
-            fontSize: '1.65rem',
-            fontWeight: 900,
-            letterSpacing: '-0.025em',
-            color: 'var(--text-primary)',
-            marginBottom: 6,
-            textAlign: 'center',
-          }}
-        >
+        <h1 style={{
+          fontSize: '1.7rem',
+          fontWeight: 900,
+          letterSpacing: '-0.025em',
+          color: 'var(--text-primary)',
+          marginBottom: 6,
+          textAlign: 'center',
+        }}>
           שמואל מוניץ
         </h1>
 
         {/* Title */}
-        <p
-          style={{
-            fontSize: '0.88rem',
-            color: 'var(--text-secondary)',
-            textAlign: 'center',
-            marginBottom: 12,
-            lineHeight: 1.5,
-          }}
-        >
+        <p style={{
+          fontSize: '0.9rem',
+          color: 'var(--text-secondary)',
+          textAlign: 'center',
+          marginBottom: 14,
+          lineHeight: 1.5,
+        }}>
           אסטרטג שיווק דיגיטלי ומומחה AI
         </p>
 
         {/* Brand chip */}
-        <div
-          className="chip"
-          style={{ marginBottom: 40 }}
-        >
-          <span
-            style={{
-              width: 5, height: 5,
-              borderRadius: '50%',
-              background: 'var(--brand-prime)',
-              display: 'block',
-              animation: 'breathing 2s ease-in-out infinite',
-            }}
-          />
-          Shift Up
+        <div className="chip" style={{ marginBottom: 36 }}>
+          <span style={{
+            width: 5, height: 5,
+            borderRadius: '50%',
+            background: 'var(--brand-prime)',
+            display: 'block',
+            animation: 'breathing 2s ease-in-out infinite',
+            boxShadow: '0 0 6px var(--brand-prime)',
+          }} />
+          Shift Up · Marketing Strategy
         </div>
 
         {/* Divider */}
-        <div
-          style={{
-            width: '100%',
-            height: 1,
-            background: 'linear-gradient(to left, transparent, oklch(0.28 0.03 240), transparent)',
-            marginBottom: 32,
-          }}
-        />
+        <div className="glow-divider" style={{ width: '100%', marginBottom: 28 }} />
 
-        {/* ── CTA Buttons ── */}
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 14,
-          }}
-        >
+        {/* CTA Buttons */}
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
+
           {/* Primary — Business CTA */}
           <a
             href={BUSINESS_LINK}
             target="_blank"
             rel="noopener noreferrer"
             onClick={trackBusiness}
-            className="ig-btn-primary"
+            className="ig-btn-primary animated-border"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -275,7 +239,7 @@ export default function IgPage() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={trackCommunity}
-            className="ig-btn-secondary"
+            className="ig-btn-secondary glass-panel"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -283,19 +247,37 @@ export default function IgPage() {
               gap: 10,
               padding: '0 24px',
               minHeight: 64,
-              background: 'transparent',
-              border: '1.5px solid oklch(0.78 0.20 145 / 0.28)',
               color: 'var(--text-primary)',
               borderRadius: 18,
               fontWeight: 700,
               fontSize: '1.05rem',
               fontFamily: "'Heebo', sans-serif",
               textDecoration: 'none',
+              border: '1.5px solid oklch(0.78 0.20 145 / 0.2)',
             }}
           >
             <PeopleIcon size={20} />
             להצטרף לקהילת Shift Up
           </a>
+        </div>
+
+        {/* Trust line */}
+        <div style={{
+          marginTop: 28,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          fontSize: '0.78rem',
+          color: 'var(--text-muted)',
+        }}>
+          <span style={{
+            width: 6, height: 6, borderRadius: '50%',
+            background: 'var(--brand-prime)',
+            boxShadow: '0 0 6px var(--brand-prime)',
+            animation: 'pulse-ring 2s ease-out infinite',
+            display: 'block', flexShrink: 0,
+          }} />
+          זמין לשיחת היכרות — חינם, ללא התחייבות
         </div>
 
         {/* Footer — Instagram link */}
@@ -304,7 +286,7 @@ export default function IgPage() {
           target="_blank"
           rel="noopener noreferrer"
           style={{
-            marginTop: 52,
+            marginTop: 40,
             display: 'flex',
             alignItems: 'center',
             gap: 7,

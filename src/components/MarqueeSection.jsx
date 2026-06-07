@@ -10,14 +10,18 @@ export default function MarqueeSection() {
   return (
     <div
       style={{
-        background: 'var(--surface-0)',
-        borderTop:    '1px solid var(--surface-1)',
-        borderBottom: '1px solid var(--surface-1)',
-        padding: '18px 0',
+        background: 'oklch(0.105 0.012 240)',
+        borderTop:    '1px solid oklch(0.22 0.02 240 / 0.5)',
+        borderBottom: '1px solid oklch(0.22 0.02 240 / 0.5)',
+        padding: '20px 0',
         overflow: 'hidden',
+        position: 'relative',
       }}
       aria-hidden="true"
     >
+      {/* subtle gradient fade on edges */}
+      <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: 80, background: 'linear-gradient(to right, oklch(0.105 0.012 240), transparent)', zIndex: 2, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: 0, bottom: 0, right: 0, width: 80, background: 'linear-gradient(to left, oklch(0.105 0.012 240), transparent)', zIndex: 2, pointerEvents: 'none' }} />
       <div className="marquee-track">
         {tripled.map((word, i) => (
           <span

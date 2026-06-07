@@ -31,14 +31,18 @@ function FluidBg() {
 
   return (
     <div ref={containerRef} style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
-      <div className="fluid-blob" style={{ width: 600, height: 600, top: '-10%', right: '-5%',
-        background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.22), transparent 70%)', '--dur': '20s' }} />
-      <div className="fluid-blob" style={{ width: 500, height: 500, top: '30%', left: '-8%',
-        background: 'radial-gradient(circle, oklch(0.65 0.22 145 / 0.15), transparent 70%)', '--dur': '24s', '--delay': '-5s' }} />
-      <div className="fluid-blob" style={{ width: 400, height: 400, bottom: '0', right: '30%',
-        background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.18), transparent 70%)', '--dur': '28s', '--delay': '-10s' }} />
-      <div className="fluid-blob" style={{ width: 300, height: 300, top: '15%', right: '25%',
-        background: 'radial-gradient(circle, oklch(0.92 0.18 140 / 0.10), transparent 70%)', '--dur': '16s', '--delay': '-3s' }} />
+      {/* Primary aurora — large green */}
+      <div className="aurora-orb" style={{ width: 700, height: 700, top: '-15%', right: '-8%',
+        background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.20), transparent 65%)', '--dur': '20s' }} />
+      {/* Secondary — green left */}
+      <div className="aurora-orb" style={{ width: 550, height: 550, top: '25%', left: '-10%',
+        background: 'radial-gradient(circle, oklch(0.65 0.22 145 / 0.13), transparent 70%)', '--dur': '26s', '--delay': '-6s' }} />
+      {/* Accent — violet bottom */}
+      <div className="aurora-orb" style={{ width: 450, height: 450, bottom: '-5%', right: '28%',
+        background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.15), transparent 70%)', '--dur': '30s', '--delay': '-11s' }} />
+      {/* Small highlight */}
+      <div className="aurora-orb" style={{ width: 280, height: 280, top: '12%', right: '22%',
+        background: 'radial-gradient(circle, oklch(0.92 0.18 140 / 0.09), transparent 70%)', '--dur': '16s', '--delay': '-4s' }} />
     </div>
   );
 }
@@ -245,36 +249,33 @@ export default function Hero({ onProcess }) {
             </div>
 
             {/* badge — bottom left */}
-            <div style={{
-              position: 'absolute', bottom: -20, left: -12,
-              background: 'var(--surface-1)', backdropFilter: 'blur(16px)',
-              border: '1px solid var(--surface-2)', borderRadius: 14, padding: '10px 16px',
+            <div className="float-badge" style={{
+              position: 'absolute', bottom: -24, left: -16,
+              padding: '10px 16px',
               display: 'flex', alignItems: 'center', gap: 10,
-              boxShadow: '0 8px 32px oklch(0 0 0 / 0.4)',
             }}>
               <span style={{
                 width: 8, height: 8, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block',
-                boxShadow: '0 0 8px var(--brand-prime)', flexShrink: 0, animation: 'pulse-ring 1.8s ease-out infinite',
+                boxShadow: '0 0 10px var(--brand-prime)', flexShrink: 0, animation: 'pulse-ring 1.8s ease-out infinite',
               }} />
               <div>
-                <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>סטטוס</div>
+                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>סטטוס</div>
                 <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>זמין לפרויקטים</div>
               </div>
             </div>
 
             {/* badge — top right */}
-            <div style={{
-              position: 'absolute', top: -16, right: -12,
-              background: 'var(--surface-1)', backdropFilter: 'blur(16px)',
-              border: '1px solid oklch(0.78 0.20 145 / 0.2)', borderRadius: 14, padding: '10px 16px',
+            <div className="float-badge float-badge-alt" style={{
+              position: 'absolute', top: -20, right: -16,
+              border: '1px solid oklch(0.78 0.20 145 / 0.25)',
+              padding: '10px 16px',
               display: 'flex', alignItems: 'center', gap: 10,
-              boxShadow: '0 8px 32px oklch(0 0 0 / 0.35)',
             }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
               </svg>
               <div>
-                <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>התמחות</div>
+                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>התמחות</div>
                 <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>AI + שיווק</div>
               </div>
             </div>

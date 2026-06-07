@@ -576,3 +576,380 @@ html[lang]:not([lang=""]):not([lang^="he"]):not([lang^="iw"]) .section-label {
 html[lang]:not([lang=""]):not([lang^="he"]):not([lang^="iw"]) .section-label::before {
   order: 1;
 }
+
+/* ════════════════════════════════════════════════
+   INTERNATIONAL PREMIUM LAYER — v2
+   ════════════════════════════════════════════════ */
+
+/* ── Aurora background ── */
+
+@property --aurora-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes aurora-spin {
+  to { --aurora-angle: 360deg; }
+}
+
+@keyframes aurora-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1);    }
+  50%       { opacity: 0.80; transform: scale(1.06); }
+}
+
+.aurora-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(88px);
+  will-change: transform, opacity;
+  animation: aurora-pulse var(--dur, 14s) var(--delay, 0s) ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ── Bento grid ── */
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 600px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .bento-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .bento-grid .bento-wide {
+    grid-column: span 2;
+  }
+}
+
+.bento-card {
+  position: relative;
+  border-radius: 20px;
+  padding: 28px;
+  background: oklch(0.11 0.015 240 / 0.7);
+  border: 1px solid oklch(0.22 0.02 240 / 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
+  transition: border-color 0.35s ease, transform 0.35s var(--ease-spring), box-shadow 0.35s ease;
+  cursor: default;
+}
+
+.bento-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%),
+    oklch(0.78 0.20 145 / 0.08) 0%,
+    transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.bento-card:hover::before { opacity: 1; }
+
+.bento-card:hover {
+  border-color: oklch(0.78 0.20 145 / 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px oklch(0 0 0 / 0.35), 0 0 0 1px oklch(0.78 0.20 145 / 0.08);
+}
+
+/* ── Shimmer / spotlight on card ── */
+
+.shimmer-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    oklch(0.78 0.20 145 / 0.08) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  background-position: -200% 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.shimmer-card:hover::after {
+  opacity: 1;
+  animation: shimmer-sweep 0.7s ease forwards;
+}
+
+@keyframes shimmer-sweep {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0;  }
+}
+
+/* ── Premium glass panel ── */
+
+.glass-panel {
+  background: oklch(0.12 0.015 240 / 0.65);
+  border: 1px solid oklch(0.25 0.02 240 / 0.5);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px oklch(0 0 0 / 0.3), inset 0 1px 0 oklch(1 0 0 / 0.06);
+}
+
+/* ── Animated gradient border ── */
+
+@property --grad-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes border-rotate {
+  to { --grad-angle: 360deg; }
+}
+
+.animated-border {
+  position: relative;
+  border-radius: 20px;
+}
+
+.animated-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--grad-angle),
+    var(--brand-deep),
+    var(--accent-void),
+    var(--brand-prime),
+    var(--brand-deep)
+  );
+  animation: border-rotate 5s linear infinite;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ── Stat counter card ── */
+
+.stat-card {
+  position: relative;
+  padding: 28px 24px;
+  border-radius: 18px;
+  background: oklch(0.11 0.015 240 / 0.8);
+  border: 1px solid oklch(0.20 0.02 240 / 0.7);
+  overflow: hidden;
+  transition: transform 0.3s var(--ease-spring), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--brand-prime), transparent);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: oklch(0.78 0.20 145 / 0.25);
+  box-shadow: 0 12px 40px oklch(0 0 0 / 0.3);
+}
+
+.stat-card:hover::before { opacity: 1; }
+
+/* ── Process timeline premium ── */
+
+.process-card {
+  position: relative;
+  padding: 32px;
+  border-radius: 20px;
+  background: oklch(0.11 0.015 240 / 0.75);
+  border: 1px solid oklch(0.20 0.02 240 / 0.6);
+  overflow: hidden;
+  transition:
+    transform    0.4s var(--ease-spring),
+    border-color 0.35s ease,
+    box-shadow   0.35s ease;
+}
+
+.process-card.is-active,
+.process-card:hover {
+  border-color: oklch(0.78 0.20 145 / 0.35);
+  box-shadow:
+    0 0 0 1px oklch(0.78 0.20 145 / 0.08),
+    0 20px 60px oklch(0 0 0 / 0.35);
+  transform: translateY(-4px);
+}
+
+.process-card .accent-bar {
+  position: absolute;
+  top: 0; right: 0;
+  width: 3px;
+  height: 0;
+  background: linear-gradient(to bottom, var(--brand-prime), var(--accent-void));
+  border-radius: 0 20px 20px 0;
+  transition: height 0.5s var(--ease-spring);
+}
+
+.process-card.is-active .accent-bar,
+.process-card:hover .accent-bar {
+  height: 100%;
+}
+
+/* ── Number ticker animation ── */
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.number-reveal {
+  animation: count-up 0.6s var(--ease-spring) both;
+  animation-delay: var(--delay, 0s);
+}
+
+/* ── Floating label badge (hero) ── */
+
+.float-badge {
+  background: oklch(0.13 0.018 240 / 0.92);
+  border: 1px solid oklch(0.22 0.022 240 / 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 14px;
+  box-shadow: 0 8px 32px oklch(0 0 0 / 0.4), 0 1px 0 oklch(1 0 0 / 0.06) inset;
+  animation: float 4s ease-in-out infinite;
+}
+
+.float-badge-alt {
+  animation: float 4s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+/* ── Divider glow line ── */
+
+.glow-divider {
+  height: 1px;
+  background: linear-gradient(
+    to left,
+    transparent 0%,
+    var(--brand-deep) 25%,
+    oklch(0.78 0.20 145 / 0.4) 50%,
+    var(--brand-deep) 75%,
+    transparent 100%
+  );
+  margin: 0;
+}
+
+/* ── Tag row ── */
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background: oklch(0.14 0.02 240);
+  border: 1px solid oklch(0.22 0.022 240);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* ── Accent number (process) ── */
+
+.accent-number {
+  font-size: clamp(4rem, 10vw, 7rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  background: linear-gradient(135deg, oklch(0.78 0.20 145 / 0.14), oklch(0.50 0.20 285 / 0.10));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ── CTA section premium ── */
+
+.cta-bg {
+  position: relative;
+  overflow: hidden;
+  background: oklch(0.10 0.012 240);
+  border-top: 1px solid oklch(0.20 0.02 240 / 0.5);
+  border-bottom: 1px solid oklch(0.20 0.02 240 / 0.5);
+}
+
+.cta-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.78 0.20 145 / 0.07), transparent 70%),
+    radial-gradient(ellipse 60% 80% at 80% 100%, oklch(0.50 0.20 285 / 0.06), transparent 70%);
+  pointer-events: none;
+}
+
+/* ── Scroll-in reveal base ── */
+
+.reveal-up {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.reveal-up.in-view {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s var(--ease-spring), transform 0.7s var(--ease-spring);
+  transition-delay: var(--delay, 0s);
+}
+
+/* ── Reduced motion — extend to new classes ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-orb,
+  .float-badge,
+  .float-badge-alt,
+  .animated-border::before,
+  .photo-ring {
+    animation: none !important;
+  }
+  .reveal-up {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

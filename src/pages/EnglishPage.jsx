@@ -11,7 +11,7 @@ const WA_LINK =
   'https://wa.me/972534673151?text=' +
   encodeURIComponent("Hi Shmuel, I'd like to learn more about your services");
 const profileSrc = '/shmuel.png';
-const logoSrc    = '/logo.png';
+const logoSrc    = '/logo.svg';
 
 /* ─── Shared helpers ─────────────────────────────────────────────────── */
 
@@ -178,9 +178,10 @@ function EnHero({ onProcess }) {
     <section id="en-hero" ref={ref} style={{ position: 'relative', paddingTop: 'clamp(100px, 18vw, 140px)', paddingBottom: 'clamp(60px, 10vw, 100px)', overflow: 'hidden', minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
       {/* Background */}
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
-        <FluidBlob style={{ width: 600, height: 600, top: '-10%', left: '-5%', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.22), transparent 70%)', '--dur': '20s' }} />
-        <FluidBlob style={{ width: 500, height: 500, top: '30%', right: '-8%', background: 'radial-gradient(circle, oklch(0.65 0.22 145 / 0.15), transparent 70%)', '--dur': '24s', '--delay': '-5s' }} />
-        <FluidBlob style={{ width: 400, height: 400, bottom: 0, left: '30%', background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.18), transparent 70%)', '--dur': '28s', '--delay': '-10s' }} />
+        <FluidBlob style={{ width: 700, height: 700, top: '-15%', left: '-8%', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.20), transparent 65%)', '--dur': '20s' }} />
+        <FluidBlob style={{ width: 550, height: 550, top: '25%', right: '-10%', background: 'radial-gradient(circle, oklch(0.65 0.22 145 / 0.13), transparent 70%)', '--dur': '26s', '--delay': '-6s' }} />
+        <FluidBlob style={{ width: 450, height: 450, bottom: '-5%', left: '28%', background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.15), transparent 70%)', '--dur': '30s', '--delay': '-11s' }} />
+        <FluidBlob style={{ width: 280, height: 280, top: '12%', left: '22%', background: 'radial-gradient(circle, oklch(0.92 0.18 140 / 0.09), transparent 70%)', '--dur': '16s', '--delay': '-4s' }} />
       </div>
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none' }} />
 

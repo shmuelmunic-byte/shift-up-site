@@ -146,115 +146,95 @@ export default function Process() {
             return (
               <div
                 key={i}
-                className="process-card glow-border"
+                className={`process-card shimmer-card${isActive ? ' is-active' : ''}`}
                 onMouseEnter={() => setActive(i)}
                 onMouseLeave={() => setActive(null)}
-                style={{
-                  opacity: 0,
-                  borderRadius: 20,
-                  background: isActive
-                    ? 'var(--surface-2)'
-                    : 'var(--surface-1)',
-                  padding: 'clamp(24px, 3vw, 36px)',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  transition: 'background 0.35s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
-                  transform: isActive ? 'translateY(-6px)' : 'translateY(0)',
-                }}
+                style={{ opacity: 0, padding: 'clamp(24px, 3vw, 36px)' }}
               >
-                {/* ambient glow on hover */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: -60, left: -60,
-                    width: 200, height: 200,
-                    background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.12), transparent 70%)',
-                    transition: 'opacity 0.4s',
-                    opacity: isActive ? 1 : 0,
-                    pointerEvents: 'none',
-                  }}
-                />
+                {/* animated accent bar */}
+                <div className="accent-bar" />
+
+                {/* ambient glow */}
+                <div style={{
+                  position: 'absolute',
+                  top: -40, left: -40,
+                  width: 220, height: 220,
+                  background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.10), transparent 70%)',
+                  transition: 'opacity 0.4s',
+                  opacity: isActive ? 1 : 0,
+                  pointerEvents: 'none',
+                }} />
 
                 {/* Header row */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
-                  <div
-                    style={{
-                      width: 52, height: 52,
-                      borderRadius: 14,
-                      background: 'var(--brand-prime)',
-                      color: 'oklch(0.08 0.01 240)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                    }}
-                  >
+                  <div style={{
+                    width: 52, height: 52,
+                    borderRadius: 14,
+                    background: isActive ? 'var(--brand-prime)' : 'oklch(0.78 0.20 145 / 0.12)',
+                    border: `1px solid ${isActive ? 'transparent' : 'oklch(0.78 0.20 145 / 0.2)'}`,
+                    color: isActive ? 'oklch(0.08 0.01 240)' : 'var(--brand-prime)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0,
+                    transition: 'background 0.35s ease, color 0.35s ease',
+                  }}>
                     {step.icon}
                   </div>
 
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-muted)', fontWeight: 700 }}>Step</div>
-                    <div style={{ fontSize: '3.2rem', fontWeight: 900, color: 'oklch(0.22 0.02 240)', lineHeight: 1, fontFamily: "'Heebo', sans-serif" }}>{step.n}</div>
+                    <div style={{ fontSize: '0.58rem', textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-muted)', fontWeight: 700 }}>Step</div>
+                    <div style={{
+                      fontSize: '3.4rem', fontWeight: 900, lineHeight: 1,
+                      fontFamily: "'Heebo', sans-serif",
+                      background: 'linear-gradient(135deg, oklch(0.78 0.20 145 / 0.22), oklch(0.50 0.20 285 / 0.15))',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                      transition: 'opacity 0.3s',
+                      direction: 'ltr',
+                    }}>
+                      {step.n}
+                    </div>
                   </div>
                 </div>
 
-                <h3
-                  style={{
-                    fontSize: 'clamp(1.5rem, 2.5vw, 1.9rem)',
-                    fontWeight: 900,
-                    letterSpacing: '-0.01em',
-                    marginBottom: 4,
-                    fontFamily: "'Heebo', sans-serif",
-                  }}
-                >
+                <h3 style={{
+                  fontSize: 'clamp(1.5rem, 2.5vw, 1.9rem)',
+                  fontWeight: 900,
+                  letterSpacing: '-0.01em',
+                  marginBottom: 4,
+                  fontFamily: "'Heebo', sans-serif",
+                  color: isActive ? 'var(--text-primary)' : 'oklch(0.90 0.005 240)',
+                  transition: 'color 0.3s',
+                }}>
                   {step.title}
                 </h3>
 
-                <div
-                  dir="ltr"
-                  style={{
-                    fontSize: '0.68rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.18em',
-                    color: 'var(--text-muted)',
-                    fontWeight: 700,
-                    marginBottom: 18,
-                  }}
-                >
+                <div dir="ltr" style={{
+                  fontSize: '0.65rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.18em',
+                  color: isActive ? 'var(--brand-prime)' : 'var(--text-muted)',
+                  fontWeight: 700,
+                  marginBottom: 18,
+                  transition: 'color 0.3s',
+                }}>
                   {step.en}
                 </div>
 
-                <p
-                  style={{
-                    fontSize: '0.92rem',
-                    color: 'var(--text-secondary)',
-                    lineHeight: 1.75,
-                    marginBottom: 24,
-                  }}
-                >
+                <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: 24 }}>
                   {step.desc}
                 </p>
 
                 {/* Bullets */}
-                <div
-                  style={{
-                    borderTop: '1px solid var(--surface-2)',
-                    paddingTop: 18,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 8,
-                  }}
-                >
+                <div style={{ borderTop: '1px solid oklch(0.22 0.02 240 / 0.5)', paddingTop: 18, display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {step.bullets.map((b, j) => (
                     <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      <span
-                        style={{
-                          width: 5, height: 5,
-                          borderRadius: '50%',
-                          background: 'var(--brand-prime)',
-                          flexShrink: 0,
-                        }}
-                      />
+                      <span style={{
+                        width: 5, height: 5, borderRadius: '50%',
+                        background: 'var(--brand-prime)', flexShrink: 0,
+                        boxShadow: isActive ? '0 0 6px var(--brand-prime)' : 'none',
+                        transition: 'box-shadow 0.3s',
+                      }} />
                       {b}
                     </div>
                   ))}

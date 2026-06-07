@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 
-const logoSrc = '/logo.png';
+const logoSrc = '/logo.svg';
 
 const links = [
   { label: 'התהליך', id: 'strategy' },
@@ -51,10 +51,11 @@ export default function Navbar({ onCta }) {
         zIndex: 900,
         transition: 'background 0.5s ease, padding 0.4s ease',
         padding: scrolled ? '10px 0' : '18px 0',
-        background: scrolled ? 'oklch(0.08 0.01 240 / 0.88)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(20px) saturate(1.5)' : 'none',
-        WebkitBackdropFilter: scrolled ? 'blur(20px) saturate(1.5)' : 'none',
-        borderBottom: scrolled ? '1px solid oklch(0.18 0.025 240)' : '1px solid transparent',
+        background: scrolled ? 'oklch(0.09 0.012 240 / 0.92)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(24px) saturate(1.8)' : 'none',
+        WebkitBackdropFilter: scrolled ? 'blur(24px) saturate(1.8)' : 'none',
+        borderBottom: scrolled ? '1px solid oklch(0.22 0.025 240 / 0.6)' : '1px solid transparent',
+        boxShadow: scrolled ? '0 1px 40px oklch(0 0 0 / 0.25)' : 'none',
       }}
     >
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

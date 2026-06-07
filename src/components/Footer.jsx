@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { gsap } from 'gsap';
 
-const logoSrc = '/logo.png';
+const logoSrc = '/logo.svg';
 
 const whatsappLink =
   'https://wa.me/972534673151?text=' +
@@ -144,14 +144,20 @@ export default function Footer() {
   return (
     <footer
       style={{
-        background: 'var(--bedrock)',
-        borderTop: '1px solid var(--surface-1)',
+        background: 'oklch(0.09 0.012 240)',
+        borderTop: 'none',
         paddingTop: '56px',
         paddingBottom: '32px',
         paddingRight: '28px',
         paddingLeft: '28px',
+        position: 'relative',
       }}
     >
+      {/* Gradient top border */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: 1,
+        background: 'linear-gradient(to left, transparent, var(--brand-deep) 25%, oklch(0.78 0.20 145 / 0.35) 50%, var(--brand-deep) 75%, transparent)',
+      }} />
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
         {/* Top row */}
@@ -164,7 +170,7 @@ export default function Footer() {
             <img
               src={logoSrc}
               alt="Shift Up"
-              style={{ height: 90, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite', display: 'block', marginBottom: 12 }}
+              style={{ height: 80, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite', display: 'block', marginBottom: 14 }}
             />
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.65, maxWidth: 240 }}>
               אסטרטגיה חכמה + קריאייטיב נועז.<br />שיווק שמביא תוצאות אמיתיות.
