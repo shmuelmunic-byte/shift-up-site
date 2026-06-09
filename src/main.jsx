@@ -10,6 +10,7 @@ import './index.css'
 const EnglishPage = lazy(() => import('./pages/EnglishPage.jsx'))
 const LoginPage   = lazy(() => import('./pages/LoginPage.jsx'))
 const IgPage      = lazy(() => import('./pages/IgPage.jsx'))
+const FreePage    = lazy(() => import('./pages/FreePage.jsx'))
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -21,7 +22,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/"      element={<App />} />
           <Route path="/en"    element={<EnglishPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/ig"    element={<IgPage />} />
+          <Route path="/ig"       element={<IgPage />} />
+          <Route path="/freebies" element={<FreePage />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

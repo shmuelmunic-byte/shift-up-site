@@ -37,7 +37,8 @@ shift-up-site/
     ├── index.css           ← Design system + animations
     ├── pages/
     │   ├── EnglishPage.jsx ← דף אנגלי מלא (self-contained)
-    │   └── IgPage.jsx      ← Link in Bio (/ig) — מינימליסטי, מובייל-פירסט
+    │   ├── IgPage.jsx      ← Link in Bio (/ig) — מינימליסטי, מובייל-פירסט
+    │   └── FreePage.jsx    ← ספריית פרומפטים חינמיים (/freebies) — סושיאל traffic
     └── components/
         ├── Analytics.jsx   ← SPA route tracker (Meta PageView + GA4 page_view)
         ├── Navbar.jsx      ← ניווט עברי + כפתור EN
@@ -56,10 +57,11 @@ shift-up-site/
 
 ## ניתוב (Routes)
 ```jsx
-/      → App.jsx (עברית, RTL)
-/en    → EnglishPage.jsx (אנגלית, LTR)
-/ig    → IgPage.jsx (Link in Bio — נסתר, מובייל-פירסט)
-/login → LoginPage.jsx
+/          → App.jsx (עברית, RTL)
+/en        → EnglishPage.jsx (אנגלית, LTR)
+/ig        → IgPage.jsx (Link in Bio — נסתר, מובייל-פירסט)
+/freebies  → FreePage.jsx (ספריית פרומפטים — נסתר, סושיאל traffic)
+/login     → LoginPage.jsx
 ```
 כל הדפים נפתחים באותו טאב (לא `target="_blank"`).
 
@@ -138,6 +140,19 @@ shift-up-site/
 | כפתור "לעשות Shift Up לעסק" | `Lead` | `generate_lead` |
 | כפתור "להצטרף לקהילת Shift Up" | `Contact` | `join_group` |
 | כפתור WhatsApp (CTA.jsx) | `Lead` | — |
+
+## עמוד /freebies — ספריית פרומפטים חינמיים
+- **מטרה:** עמוד נסתר לטראפיק מפוסטים ברשתות חברתיות — ספרייה של כלי AI חינמיים
+- **עיצוב:** מינימליסטי, מובייל-פירסט, ללא navbar, ללא GSAP (מהירות)
+- **ספריית פרומפטים:** מערך `PROMPTS` ב-`FreePage.jsx` — להוסיף אובייקט חדש לספרייה
+- **כרטיסי פרומפטים:** copy-to-clipboard עם `navigator.clipboard` + fallback ל-iOS
+- **Pixel Events:**
+  - `ViewContent` + `view_item` — כניסה לדף
+  - `Lead` + `generate_lead` — לחיצה על WhatsApp
+  - `CompleteRegistration` + `copy_prompt` — לחיצה "העתק פרומפט"
+- **UTM חובה:** כל קישור לדף מפוסטים חייב לכלול:
+  `?utm_source=instagram&utm_medium=social&utm_campaign=freebies`
+  בלי זה GA4 רואה את הכל כ-"direct"
 
 ## עמוד /ig — Link in Bio
 - **מטרה:** עמוד נסתר לביו של אינסטגרם — צומת-טי קצרה ואפקטיבית
