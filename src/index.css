@@ -313,6 +313,28 @@ body {
   background-size: 72px 72px;
 }
 
+/* Global fixed grid — stays in place while content scrolls over it */
+.grid-bg-fixed {
+  position: fixed;
+  inset: 0;
+  z-index: 9996;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 72px 72px;
+  animation: grid-drift 24s linear infinite;
+}
+
+@keyframes grid-drift {
+  0%   { background-position: 0 0; }
+  100% { background-position: 72px 72px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-bg-fixed { animation: none; }
+}
+
 /* ── Gradient text ── */
 
 .text-gradient {

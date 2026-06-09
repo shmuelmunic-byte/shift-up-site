@@ -183,8 +183,6 @@ function EnHero({ onProcess }) {
         <FluidBlob style={{ width: 450, height: 450, bottom: '-5%', left: '28%', background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.15), transparent 70%)', '--dur': '30s', '--delay': '-11s' }} />
         <FluidBlob style={{ width: 280, height: 280, top: '12%', left: '22%', background: 'radial-gradient(circle, oklch(0.92 0.18 140 / 0.09), transparent 70%)', '--dur': '16s', '--delay': '-4s' }} />
       </div>
-      <div className="grid-bg" style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none' }} />
-
       <div className="hero-layout" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 28px', position: 'relative', zIndex: 2, width: '100%' }}>
 
         {/* Copy */}
@@ -849,8 +847,6 @@ function EnCTA() {
   return (
     <section id="en-contact" ref={ref} className="cta-bg" style={{ padding: 'clamp(80px, 12vw, 140px) 28px', position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
       <FluidBlob style={{ width: 700, height: 700, top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.10), transparent 65%)', '--dur': '20s' }} />
-      <div className="grid-bg" style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none', opacity: 0.6 }} />
-
       <div className="en-cta-content" style={{ maxWidth: 700, margin: '0 auto', position: 'relative', zIndex: 1, opacity: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 24 }}>
           <span style={{ height: 1, width: 24, background: 'var(--brand-prime)', opacity: 0.5, display: 'block' }} />

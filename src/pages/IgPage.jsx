@@ -100,9 +100,6 @@ export default function IgPage() {
         '--dur': '20s', '--delay': '-5s',
       }} />
 
-      {/* Subtle grid overlay */}
-      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: 0.4, pointerEvents: 'none' }} />
-
       {/* Main content */}
       <div style={{
         position: 'relative',

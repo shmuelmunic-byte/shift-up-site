@@ -15,6 +15,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <Analytics />
+      <div className="grid-bg-fixed" aria-hidden="true" />
       <Suspense fallback={<div style={{ minHeight: '100vh', background: 'var(--bedrock)' }} aria-hidden="true" />}>
         <Routes>
           <Route path="/"      element={<App />} />

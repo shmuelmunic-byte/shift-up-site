@@ -20,16 +20,6 @@ export default function LoginPage() {
       <Cursor />
 
       <div
-        className="grid-bg"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          opacity: 0.7,
-          pointerEvents: 'none',
-        }}
-      />
-
-      <div
         className="fluid-blob"
         style={{
           width: 560,
