@@ -1,31 +1,23 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Cursor from '../components/Cursor';
+import { supabase } from '../lib/supabase';
 
-const BUSINESS_LINK =
-  'https://wa.me/972534673151?text=' +
-  encodeURIComponent('היי שמואל, ראיתי אותך באינסטגרם ואשמח לקבוע שיחת פיצוח לעסק שלי');
-
-const COMMUNITY_LINK = 'https://chat.whatsapp.com/BBhSKstQEgg3jZsSo9RvdZ?s=cl&p=a&mlu=3';
+const FALLBACK_LINKS = [
+  {
+    id: 'business',
+    label: 'לעשות Shift Up לעסק',
+    href: 'https://wa.me/972534673151?text=' + encodeURIComponent('היי שמואל, ראיתי אותך באינסטגרם ואשמח לקבוע שיחת פיצוח לעסק שלי'),
+    style: 'primary',
+  },
+  {
+    id: 'community',
+    label: 'להצטרף לקהילת Shift Up',
+    href: 'https://chat.whatsapp.com/BBhSKstQEgg3jZsSo9RvdZ?s=cl&p=a&mlu=3',
+    style: 'secondary',
+  },
+];
 
 const INSTAGRAM_URL = 'https://www.instagram.com/shiftup.il';
-
-function trackBusiness() {
-  if (typeof window.fbq === 'function') {
-    window.fbq('track', 'Lead', { content_name: 'ig_bio_business', content_category: 'ig_bio' });
-  }
-  if (typeof window.gtag === 'function') {
-    window.gtag('event', 'generate_lead', { source: 'ig_bio', button: 'business' });
-  }
-}
-
-function trackCommunity() {
-  if (typeof window.fbq === 'function') {
-    window.fbq('track', 'Contact', { content_name: 'ig_bio_community', content_category: 'ig_bio' });
-  }
-  if (typeof window.gtag === 'function') {
-    window.gtag('event', 'join_group', { source: 'ig_bio', button: 'community' });
-  }
-}
 
 function IgIcon({ size = 18 }) {
   return (
@@ -55,17 +47,31 @@ function PeopleIcon({ size = 20 }) {
 }
 
 export default function IgPage() {
+  const [links, setLinks] = useState(FALLBACK_LINKS);
+
+  useEffect(() => {
+    supabase.from('ig_links').select('*').order('position').then(({ data, error }) => {
+      if (!error && data && data.length > 0) setLinks(data);
+    });
+  }, []);
+
   useEffect(() => {
     if (typeof window.fbq === 'function') {
-      window.fbq('track', 'ViewContent', {
-        content_name: 'IG Bio Page',
-        content_category: 'ig_bio',
-      });
+      window.fbq('track', 'ViewContent', { content_name: 'IG Bio Page', content_category: 'ig_bio' });
     }
     if (typeof window.gtag === 'function') {
       window.gtag('event', 'view_item', { item_id: 'ig_bio', item_name: 'IG Bio Page' });
     }
   }, []);
+
+  const trackClick = (linkStyle) => {
+    if (typeof window.fbq === 'function') {
+      window.fbq('track', linkStyle === 'primary' ? 'Lead' : 'Contact', { content_category: 'ig_bio' });
+    }
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', linkStyle === 'primary' ? 'generate_lead' : 'join_group', { source: 'ig_bio' });
+    }
+  };
 
   return (
     <div style={{
@@ -82,219 +88,95 @@ export default function IgPage() {
     }}>
       <Cursor />
       {/* Aurora blobs */}
-      <div className="aurora-orb" style={{
-        width: 400, height: 400,
-        top: '-8%', left: '50%',
-        transform: 'translateX(-50%)',
-        background: 'radial-gradient(circle, oklch(0.65 0.22 200 / 0.15), transparent 70%)',
-        '--dur': '22s',
-      }} />
-      <div className="aurora-orb" style={{
-        width: 320, height: 320,
-        bottom: '3%', right: '-8%',
-        background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.14), transparent 70%)',
-        '--dur': '28s', '--delay': '-9s',
-      }} />
-      <div className="aurora-orb" style={{
-        width: 240, height: 240,
-        bottom: '8%', left: '-8%',
-        background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.09), transparent 70%)',
-        '--dur': '20s', '--delay': '-5s',
-      }} />
+      <div className="aurora-orb" style={{ width: 400, height: 400, top: '-8%', left: '50%', transform: 'translateX(-50%)', background: 'radial-gradient(circle, oklch(0.65 0.22 200 / 0.15), transparent 70%)', '--dur': '22s' }} />
+      <div className="aurora-orb" style={{ width: 320, height: 320, bottom: '3%', right: '-8%', background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.14), transparent 70%)', '--dur': '28s', '--delay': '-9s' }} />
+      <div className="aurora-orb" style={{ width: 240, height: 240, bottom: '8%', left: '-8%', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.09), transparent 70%)', '--dur': '20s', '--delay': '-5s' }} />
 
       {/* Main content */}
-      <div style={{
-        position: 'relative',
-        zIndex: 1,
-        width: '100%',
-        maxWidth: 380,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        animation: 'ig-fade-up 0.65s ease-out both',
-      }}>
+      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: 380, display: 'flex', flexDirection: 'column', alignItems: 'center', animation: 'ig-fade-up 0.65s ease-out both' }}>
+
         {/* Logo */}
-        <img
-          src="/logo.svg"
-          alt="Shift Up"
-          style={{
-            height: 56,
-            width: 'auto',
-            marginBottom: 32,
-            animation: 'hue-drift 8s ease-in-out infinite',
-          }}
-        />
+        <img src="/logo.svg" alt="Shift Up" style={{ height: 56, width: 'auto', marginBottom: 32, animation: 'hue-drift 8s ease-in-out infinite' }} />
 
         {/* Profile photo with spinning ring */}
         <div style={{ position: 'relative', marginBottom: 22 }}>
-          {/* Ambient glow */}
-          <div style={{
-            position: 'absolute',
-            inset: -22,
-            borderRadius: '50%',
-            background:
-              'radial-gradient(circle at 35% 50%, oklch(0.65 0.22 200 / 0.35), transparent 55%),' +
-              'radial-gradient(circle at 65% 40%, oklch(0.50 0.20 285 / 0.3), transparent 55%)',
-            filter: 'blur(18px)',
-            zIndex: 0,
-          }} />
-
-          {/* Ring + photo container */}
+          <div style={{ position: 'absolute', inset: -22, borderRadius: '50%', background: 'radial-gradient(circle at 35% 50%, oklch(0.65 0.22 200 / 0.35), transparent 55%), radial-gradient(circle at 65% 40%, oklch(0.50 0.20 285 / 0.3), transparent 55%)', filter: 'blur(18px)', zIndex: 0 }} />
           <div style={{ position: 'relative', width: 118, height: 118 }}>
             <div className="photo-ring" style={{ borderRadius: '50%' }} />
-            <img
-              src="/shmuel.png"
-              alt="שמואל מוניץ"
-              style={{
-                position: 'absolute',
-                top: 3, left: 3,
-                width: 'calc(100% - 6px)',
-                height: 'calc(100% - 6px)',
-                borderRadius: '50%',
-                objectFit: 'cover',
-                objectPosition: 'center top',
-                zIndex: 1,
-              }}
-            />
+            <img src="/shmuel.png" alt="שמואל מוניץ" style={{ position: 'absolute', top: 3, left: 3, width: 'calc(100% - 6px)', height: 'calc(100% - 6px)', borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', zIndex: 1 }} />
           </div>
         </div>
 
         {/* Name */}
-        <h1 style={{
-          fontSize: '1.7rem',
-          fontWeight: 900,
-          letterSpacing: '-0.025em',
-          color: 'var(--text-primary)',
-          marginBottom: 6,
-          textAlign: 'center',
-        }}>
+        <h1 style={{ fontSize: '1.7rem', fontWeight: 900, letterSpacing: '-0.025em', color: 'var(--text-primary)', marginBottom: 6, textAlign: 'center' }}>
           שמואל מוניץ
         </h1>
 
         {/* Title */}
-        <p style={{
-          fontSize: '0.9rem',
-          color: 'var(--text-secondary)',
-          textAlign: 'center',
-          marginBottom: 14,
-          lineHeight: 1.5,
-        }}>
+        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', textAlign: 'center', marginBottom: 14, lineHeight: 1.5 }}>
           אסטרטג שיווק דיגיטלי ומומחה AI
         </p>
 
         {/* Brand chip */}
         <div className="chip" style={{ marginBottom: 36 }}>
-          <span style={{
-            width: 5, height: 5,
-            borderRadius: '50%',
-            background: 'var(--brand-prime)',
-            display: 'block',
-            animation: 'breathing 2s ease-in-out infinite',
-            boxShadow: '0 0 6px var(--brand-prime)',
-          }} />
+          <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', animation: 'breathing 2s ease-in-out infinite', boxShadow: '0 0 6px var(--brand-prime)' }} />
           Shift Up · Marketing Strategy
         </div>
 
-        {/* Divider */}
         <div className="glow-divider" style={{ width: '100%', marginBottom: 28 }} />
 
-        {/* CTA Buttons */}
+        {/* Dynamic CTA Buttons */}
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
-
-          {/* Primary — Business CTA */}
-          <a
-            href={BUSINESS_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={trackBusiness}
-            className="ig-btn-primary animated-border"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 10,
-              padding: '0 24px',
-              minHeight: 64,
-              background: 'var(--brand-prime)',
-              color: 'oklch(0.08 0.01 240)',
-              borderRadius: 18,
-              fontWeight: 800,
-              fontSize: '1.05rem',
-              fontFamily: "'Heebo', sans-serif",
-              textDecoration: 'none',
-              boxShadow:
-                '0 4px 40px oklch(0.78 0.20 145 / 0.45), 0 1px 0 oklch(0.92 0.18 140 / 0.3) inset',
-              position: 'relative',
-              overflow: 'hidden',
-            }}
-          >
-            <WhatsAppIcon size={20} />
-            לעשות Shift Up לעסק
-          </a>
-
-          {/* Secondary — Community CTA */}
-          <a
-            href={COMMUNITY_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={trackCommunity}
-            className="ig-btn-secondary glass-panel"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 10,
-              padding: '0 24px',
-              minHeight: 64,
-              color: 'var(--text-primary)',
-              borderRadius: 18,
-              fontWeight: 700,
-              fontSize: '1.05rem',
-              fontFamily: "'Heebo', sans-serif",
-              textDecoration: 'none',
-              border: '1.5px solid oklch(0.78 0.20 145 / 0.2)',
-            }}
-          >
-            <PeopleIcon size={20} />
-            להצטרף לקהילת Shift Up
-          </a>
+          {links.map((link) => (
+            <a
+              key={link.id}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackClick(link.style)}
+              className={link.style === 'primary' ? 'ig-btn-primary animated-border' : 'ig-btn-secondary glass-panel'}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 10,
+                padding: '0 24px',
+                minHeight: 64,
+                borderRadius: 18,
+                fontWeight: link.style === 'primary' ? 800 : 700,
+                fontSize: '1.05rem',
+                fontFamily: "'Heebo', sans-serif",
+                textDecoration: 'none',
+                position: 'relative',
+                overflow: 'hidden',
+                ...(link.style === 'primary' ? {
+                  background: 'var(--brand-prime)',
+                  color: 'oklch(0.08 0.01 240)',
+                  boxShadow: '0 4px 40px oklch(0.78 0.20 145 / 0.45), 0 1px 0 oklch(0.92 0.18 140 / 0.3) inset',
+                } : {
+                  color: 'var(--text-primary)',
+                  border: '1.5px solid oklch(0.78 0.20 145 / 0.2)',
+                }),
+              }}
+            >
+              {link.style === 'primary' ? <WhatsAppIcon size={20} /> : <PeopleIcon size={20} />}
+              {link.label}
+            </a>
+          ))}
         </div>
 
         {/* Trust line */}
-        <div style={{
-          marginTop: 28,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 6,
-          fontSize: '0.78rem',
-          color: 'var(--text-muted)',
-        }}>
-          <span style={{
-            width: 6, height: 6, borderRadius: '50%',
-            background: 'var(--brand-prime)',
-            boxShadow: '0 0 6px var(--brand-prime)',
-            animation: 'pulse-ring 2s ease-out infinite',
-            display: 'block', flexShrink: 0,
-          }} />
+        <div style={{ marginTop: 28, display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--brand-prime)', boxShadow: '0 0 6px var(--brand-prime)', animation: 'pulse-ring 2s ease-out infinite', display: 'block', flexShrink: 0 }} />
           זמין לשיחת היכרות — חינם, ללא התחייבות
         </div>
 
-        {/* Footer — Instagram link */}
+        {/* Footer */}
         <a
           href={INSTAGRAM_URL}
           target="_blank"
           rel="noopener noreferrer"
-          style={{
-            marginTop: 40,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 7,
-            color: 'var(--text-muted)',
-            textDecoration: 'none',
-            fontSize: '0.82rem',
-            opacity: 0.55,
-            transition: 'opacity 0.2s',
-          }}
+          style={{ marginTop: 40, display: 'flex', alignItems: 'center', gap: 7, color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.82rem', opacity: 0.55, transition: 'opacity 0.2s' }}
           onMouseEnter={e => { e.currentTarget.style.opacity = '0.9'; }}
           onMouseLeave={e => { e.currentTarget.style.opacity = '0.55'; }}
         >

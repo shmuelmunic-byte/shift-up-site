@@ -1,17 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import Cursor from '../components/Cursor';
-
-// ─── CONFIGURATION ──────────────────────────────────────────────────────────
-//
-// 📌 UTM — When sharing from social posts, add to the URL:
-//    ?utm_source=instagram&utm_medium=social&utm_campaign=freebies
-//    Without UTM, all traffic appears as "direct" in GA4.
-//
-// ➕ ADD A PROMPT — push a new object to the PROMPTS array below.
-//    Fields: id (unique), title, subtitle, tag, text
-//
-// ────────────────────────────────────────────────────────────────────────────
+import { supabase } from '../lib/supabase';
 
 const WA_LINK =
   'https://wa.me/972534673151?text=' +
@@ -55,58 +45,22 @@ const SOCIAL = [
   },
 ];
 
-const PROMPTS = [
+// Fallback prompts shown if Supabase is unavailable
+const FALLBACK_PROMPTS = [
   {
-    id: 'brand-hijack',
-    num: '02',
+    id: 'brand-hijack', num: '02',
     title: 'חטיפת מותג — Trigger Marketing',
     subtitle: 'השתלטות על הרגלי הקהל שלך — בחינם',
     tag: 'שיווק פסיכולוגי',
-    text: `אתה פועל כפסיכולוג התנהגותי ואסטרטג שיווקי מוביל.
-
-העסק שלי: [תאר את העסק שלך — מה אתה עושה ולמי]
-קהל היעד שלי: [תאר בפירוט — גיל, עיסוק, כאב עיקרי, חלום עיקרי]
-
-שלב 1 — מיפוי טריגרים:
-זהה 5 דברים ספציפיים שהקהל שלי נתקל בהם כל יום — הרגלים, חפצים, מקומות, מילים או חוויות שחוזרים ברמה יומיומית. חשוב: הדברים צריכים להיות קונקרטיים וספציפיים לקהל הזה, לא גנריים.
-
-שלב 2 — השתלטות יצירתית:
-לכל טריגר, הצע שיטה חינמית, מעשית ויצירתית שבה אוכל לקשר אותו למותג שלי — כך שבכל פעם שהם נתקלים בו, הם חושבים עליי אוטומטית.
-
-הגבלות: ללא פרסום בתשלום. ללא כלים יקרים. רק יצירתיות, נוכחות וחיבור רגשי.
-
-פורמט הפלט:
-לכל טריגר (1–5):
-🎯 הטריגר: [שם ותיאור קצר]
-💡 ההשתלטות: [הפעולה הספציפית שתעשה]
-🔗 הקשר למותג: [למה זה ייצור אסוציאציה חזקה]
-⚡ קשיי יישום: [מה הכי חשוב לשים לב אליו]
-
-בסוף — כתוב 1-2 משפטים על למה הטריגר החזק ביותר הוא _________ עבור הקהל הספציפי הזה.`,
+    text: `אתה פועל כפסיכולוג התנהגותי ואסטרטג שיווקי מוביל.\n\nהעסק שלי: [תאר את העסק שלך — מה אתה עושה ולמי]\nקהל היעד שלי: [תאר בפירוט — גיל, עיסוק, כאב עיקרי, חלום עיקרי]\n\nשלב 1 — מיפוי טריגרים:\nזהה 5 דברים ספציפיים שהקהל שלי נתקל בהם כל יום — הרגלים, חפצים, מקומות, מילים או חוויות שחוזרים ברמה יומיומית.\n\nשלב 2 — השתלטות יצירתית:\nלכל טריגר, הצע שיטה חינמית, מעשית ויצירתית שבה אוכל לקשר אותו למותג שלי.\n\nפורמט הפלט:\nלכל טריגר (1–5):\n🎯 הטריגר: [שם ותיאור קצר]\n💡 ההשתלטות: [הפעולה הספציפית שתעשה]\n🔗 הקשר למותג: [למה זה ייצור אסוציאציה חזקה]\n⚡ קשיי יישום: [מה הכי חשוב לשים לב אליו]`,
   },
   {
-    id: 'content-multiplier',
-    num: '01',
+    id: 'content-multiplier', num: '01',
     title: 'מכפיל התוכן',
     subtitle: '5 פוסטים מרעיון אחד',
     tag: 'תוכן ורשתות חברתיות',
-    text: `אתה קופירייטר ויוצר תוכן מקצועי.
-אני בעל עסק בתחום [התחום שלך] וכתבתי בעבר פוסט/נתתי תשובה ללקוח על הנושא הבא:
-[העתיקו כאן את הפוסט המקורי שלכם / תארו את הנושא במשפט]
-
-אני רוצה שתציע לי 5 זוויות תוכן שונות לגמרי על אותו נושא בדיוק.
-כל זווית צריכה להרגיש כמו פוסט חדש לחלוטין, אבל לשבת על אותה תובנה מרכזית.
-
-הזוויות האפשריות:
-1. סיפור אישי – מקרה שקרה לי שממחיש את הנקודה
-2. טעות נפוצה – מה אנשים עושים לא נכון בנושא הזה
-3. שאלה שלקוח שאל – איך לגשת לנושא דרך שאלה אמיתית
-4. השוואה – שתי גישות שונות לאותו נושא, מה עובד יותר
-5. מה למדתי בדרך הקשה – תובנה שהבנתי רק אחרי שטעיתי
-
-הצג את הזוויות כרשימה ממוספרת, עם משפט הסבר קצר לכל אחת`,
+    text: `אתה קופירייטר ויוצר תוכן מקצועי.\nאני בעל עסק בתחום [התחום שלך] וכתבתי בעבר פוסט על הנושא הבא:\n[העתיקו כאן את הפוסט המקורי שלכם / תארו את הנושא במשפט]\n\nאני רוצה שתציע לי 5 זוויות תוכן שונות לגמרי על אותו נושא בדיוק.\n\nהזוויות האפשריות:\n1. סיפור אישי\n2. טעות נפוצה\n3. שאלה שלקוח שאל\n4. השוואה\n5. מה למדתי בדרך הקשה`,
   },
-  // ← הוסיפו פרומפטים נוספים כאן
 ];
 
 // ─── ICONS ──────────────────────────────────────────────────────────────────
@@ -449,6 +403,33 @@ function PromptCard({ prompt }) {
             : <><IconCopy size={17} /> העתק פרומפט</>
           }
         </button>
+
+        {/* Resource button — file / video / link */}
+        {prompt.resource_url && prompt.resource_type && (
+          <a
+            href={prompt.resource_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              marginTop: 8,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+              width: '100%', minHeight: 44,
+              borderRadius: 12, textDecoration: 'none',
+              border: '1.5px solid oklch(0.50 0.20 285 / 0.3)',
+              background: 'oklch(0.50 0.20 285 / 0.07)',
+              color: 'oklch(0.80 0.18 285)',
+              fontFamily: "'Heebo', sans-serif", fontWeight: 700, fontSize: '0.88rem',
+              transition: 'all 0.18s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'oklch(0.50 0.20 285 / 0.14)'; e.currentTarget.style.borderColor = 'oklch(0.50 0.20 285 / 0.5)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'oklch(0.50 0.20 285 / 0.07)'; e.currentTarget.style.borderColor = 'oklch(0.50 0.20 285 / 0.3)'; }}
+          >
+            {prompt.resource_type === 'file'  && '⬇ '}
+            {prompt.resource_type === 'video' && '▶ '}
+            {prompt.resource_type === 'link'  && '↗ '}
+            {prompt.resource_label || (prompt.resource_type === 'file' ? 'הורד קובץ' : prompt.resource_type === 'video' ? 'צפה בסרטון' : 'פתח לינק')}
+          </a>
+        )}
       </div>
     </article>
   );
@@ -540,7 +521,46 @@ function SocialCard({ label, handle, href, hoverColor, Icon }) {
 
 // ─── PAGE ────────────────────────────────────────────────────────────────────
 
+function SkeletonCard() {
+  return (
+    <div style={{ width: '100%', borderRadius: 22, background: 'oklch(0.11 0.015 240)', border: '1.5px solid oklch(0.97 0.005 240 / 0.08)', overflow: 'hidden', height: 220, animation: 'breathing 1.5s ease-in-out infinite' }}>
+      <div style={{ height: 3, background: 'oklch(0.78 0.20 145 / 0.2)' }} />
+      <div style={{ padding: '22px 22px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ height: 14, width: '40%', borderRadius: 7, background: 'oklch(0.97 0.005 240 / 0.06)' }} />
+        <div style={{ height: 22, width: '70%', borderRadius: 7, background: 'oklch(0.97 0.005 240 / 0.09)' }} />
+        <div style={{ height: 14, width: '50%', borderRadius: 7, background: 'oklch(0.78 0.20 145 / 0.08)' }} />
+        <div style={{ flex: 1, borderRadius: 10, background: 'oklch(0.07 0.008 240)' }} />
+      </div>
+    </div>
+  );
+}
+
 export default function FreePage() {
+  const [prompts, setPrompts] = useState([]);
+  const [loadingPrompts, setLoadingPrompts] = useState(true);
+
+  useEffect(() => {
+    supabase.from('prompts').select('*').order('position')
+      .then(({ data, error }) => {
+        if (error || !data || data.length === 0) {
+          setPrompts(FALLBACK_PROMPTS);
+        } else {
+          setPrompts(data.map((p, i) => ({
+            id: p.slug,
+            num: String(i + 1).padStart(2, '0'),
+            title: p.title,
+            subtitle: p.subtitle,
+            tag: p.tag,
+            text: p.body,
+            resource_url: p.resource_url,
+            resource_type: p.resource_type,
+            resource_label: p.resource_label,
+          })));
+        }
+        setLoadingPrompts(false);
+      });
+  }, []);
+
   // Page-level pixel events
   useEffect(() => {
     if (typeof window.fbq === 'function') {
@@ -721,7 +741,7 @@ export default function FreePage() {
               textTransform: 'uppercase',
               whiteSpace: 'nowrap',
             }}>
-              <span>{PROMPTS.length} כלי{PROMPTS.length !== 1 ? ' זמינים' : ' זמין'}</span>
+              <span>{loadingPrompts ? '...' : `${prompts.length} כלי${prompts.length !== 1 ? ' זמינים' : ' זמין'}`}</span>
             </div>
             <div className="glow-divider" style={{ flex: 1 }} />
           </div>
@@ -734,7 +754,10 @@ export default function FreePage() {
             gap: 14,
             marginBottom: 36,
           }}>
-            {PROMPTS.map(p => <PromptCard key={p.id} prompt={p} />)}
+            {loadingPrompts
+              ? [1, 2, 3].map(i => <SkeletonCard key={i} />)
+              : prompts.map(p => <PromptCard key={p.id} prompt={p} />)
+            }
           </div>
 
           {/* ── SEPARATOR ── */}

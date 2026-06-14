@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App.jsx'
 import Analytics from './components/Analytics.jsx'
+import RequireAuth from './components/RequireAuth.jsx'
 import './index.css'
 
 // Secondary routes are code-split so the primary Hebrew homepage ("/")
@@ -11,6 +12,7 @@ const EnglishPage = lazy(() => import('./pages/EnglishPage.jsx'))
 const LoginPage   = lazy(() => import('./pages/LoginPage.jsx'))
 const IgPage      = lazy(() => import('./pages/IgPage.jsx'))
 const FreePage    = lazy(() => import('./pages/FreePage.jsx'))
+const AdminPage   = lazy(() => import('./pages/AdminPage.jsx'))
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -24,6 +26,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/login" element={<LoginPage />} />
           <Route path="/ig"       element={<IgPage />} />
           <Route path="/freebies" element={<FreePage />} />
+          <Route path="/admin"    element={<RequireAuth><AdminPage /></RequireAuth>} />
         </Routes>
       </Suspense>
     </BrowserRouter>
