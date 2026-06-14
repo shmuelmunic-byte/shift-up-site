@@ -3,13 +3,12 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import Cursor from '../components/Cursor';
+import { useSiteLinks } from '../lib/useSiteLinks';
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.defaults({ ease: 'expo.out', duration: 0.8 });
 
-const WA_LINK =
-  'https://wa.me/972534673151?text=' +
-  encodeURIComponent("Hi Shmuel, I'd like to learn more about your services");
+const WA_TEXT = encodeURIComponent("Hi Shmuel, I'd like to learn more about your services");
 const profileSrc = '/shmuel.png';
 const logoSrc    = '/logo.svg';
 
@@ -162,6 +161,8 @@ function EnNavbar() {
 
 function EnHero({ onProcess }) {
   const ref = useRef(null);
+  const links = useSiteLinks();
+  const WA_LINK = links.whatsapp_url.split('?')[0] + '?text=' + WA_TEXT;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -704,6 +705,8 @@ function EnChatItem({ item, isActive, onOpen }) {
 function EnFAQ() {
   const ref = useRef(null);
   const [activeIdx, setActiveIdx] = useState(null);
+  const links = useSiteLinks();
+  const WA_LINK = links.whatsapp_url.split('?')[0] + '?text=' + WA_TEXT;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -741,8 +744,6 @@ function EnFAQ() {
 
 /* ─── WhatsApp Community ─────────────────────────────────────────────── */
 
-const WA_GROUP = 'https://chat.whatsapp.com/BBhSKstQEgg3jZsSo9RvdZ?s=cl&p=a&mlu=3';
-
 const enPerks = [
   { emoji: '🧠', title: 'Strategy', desc: 'Why customers buy — and how to make them choose you.' },
   { emoji: '🤖', title: 'AI Tools', desc: 'Prompts and methods to save time and money.' },
@@ -751,6 +752,7 @@ const enPerks = [
 
 function EnWhatsAppGroup() {
   const ref = useRef(null);
+  const { whatsapp_group: WA_GROUP } = useSiteLinks();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -833,6 +835,8 @@ function EnCTA() {
   const [hovered, setHovered] = useState(false);
   const [idlePulse, setIdlePulse] = useState(false);
   const idleRef = useRef(null);
+  const links = useSiteLinks();
+  const WA_LINK = links.whatsapp_url.split('?')[0] + '?text=' + WA_TEXT;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -874,7 +878,7 @@ function EnCTA() {
 
           {/* LinkedIn secondary CTA */}
           <div style={{ marginTop: 20, marginBottom: 4 }}>
-            <a href="https://www.linkedin.com/in/shmuel-munitz-marketing" target="_blank" rel="noopener noreferrer"
+            <a href={links.linkedin} target="_blank" rel="noopener noreferrer"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 24px', background: 'transparent', border: '1px solid var(--surface-2)', borderRadius: 999, color: 'var(--text-secondary)', fontSize: '0.88rem', fontWeight: 600, fontFamily: "'Heebo', sans-serif", textDecoration: 'none', transition: 'border-color 0.25s, color 0.25s', cursor: 'pointer' }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = 'oklch(0.78 0.20 145 / 0.4)'; e.currentTarget.style.color = 'var(--brand-prime)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--surface-2)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
@@ -907,13 +911,13 @@ function onEmailClick(e) {
   }
 }
 
-const enSocials = [
-  { label: 'WhatsApp', href: WA_LINK, target: '_blank', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> },
-  { label: 'Email',     href: 'mailto:shmuelmunic@gmail.com', emailBtn: true, icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> },
-  { label: 'LinkedIn',  href: 'https://www.linkedin.com/in/shmuel-munitz-marketing', target: '_blank', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg> },
-  { label: 'Facebook',  href: 'https://www.facebook.com/share/1BZ8HrpBeo/', target: '_blank', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg> },
-  { label: 'Instagram', href: 'https://www.instagram.com/shiftup.il?igsh=MTZod2E3NTk4dXI5Zg==', target: '_blank', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg> },
-];
+const EN_SOCIAL_ICONS = {
+  WhatsApp:  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>,
+  Email:     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>,
+  LinkedIn:  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>,
+  Facebook:  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
+  Instagram: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>,
+};
 
 const enNavLinks = [
   { label: 'The Process', id: 'en-strategy' },
@@ -925,6 +929,15 @@ const enNavLinks = [
 
 function EnFooter() {
   const goto = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  const links = useSiteLinks();
+  const WA_LINK = links.whatsapp_url.split('?')[0] + '?text=' + WA_TEXT;
+  const enSocials = [
+    { label: 'WhatsApp',  href: WA_LINK,                       target: '_blank' },
+    { label: 'Email',     href: `mailto:${links.email}`,       emailBtn: true },
+    { label: 'LinkedIn',  href: links.linkedin,                target: '_blank' },
+    { label: 'Facebook',  href: links.facebook,                target: '_blank' },
+    { label: 'Instagram', href: links.instagram,               target: '_blank' },
+  ];
 
   return (
     <footer style={{ background: 'oklch(0.09 0.012 240)', borderTop: 'none', paddingTop: '56px', paddingBottom: '32px', paddingLeft: '28px', paddingRight: '28px', position: 'relative' }}>
@@ -962,13 +975,13 @@ function EnFooter() {
               style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.88rem', textDecoration: 'none', marginBottom: 8, transition: 'color 0.2s', cursor: 'pointer' }}
               onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
               onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
-            >+972-53-467-3151</a>
-            <a href="mailto:shmuelmunic@gmail.com"
+            >{links.phone}</a>
+            <a href={`mailto:${links.email}`}
               onClick={onEmailClick}
               style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.88rem', textDecoration: 'none', marginBottom: 20, transition: 'color 0.2s', cursor: 'pointer' }}
               onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
               onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
-            >shmuelmunic@gmail.com</a>
+            >{links.email}</a>
             <div style={{ display: 'flex', gap: 8 }}>
               {enSocials.map(s => (
                 <a key={s.label} href={s.href} aria-label={s.label}
@@ -977,7 +990,7 @@ function EnFooter() {
                   style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--surface-1)', border: '1px solid var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', textDecoration: 'none', transition: 'background 0.3s, color 0.3s, border-color 0.3s' }}
                   onMouseEnter={e => { e.currentTarget.style.background='oklch(0.78 0.20 145 / 0.15)'; e.currentTarget.style.color='var(--brand-prime)'; e.currentTarget.style.borderColor='oklch(0.78 0.20 145 / 0.35)'; }}
                   onMouseLeave={e => { e.currentTarget.style.background='var(--surface-1)'; e.currentTarget.style.color='var(--text-muted)'; e.currentTarget.style.borderColor='var(--surface-2)'; }}
-                >{s.icon}</a>
+                >{EN_SOCIAL_ICONS[s.label]}</a>
               ))}
             </div>
           </div>

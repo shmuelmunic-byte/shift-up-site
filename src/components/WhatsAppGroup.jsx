@@ -1,10 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useSiteLinks } from '../lib/useSiteLinks';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const WA_GROUP = 'https://chat.whatsapp.com/BBhSKstQEgg3jZsSo9RvdZ?s=cl&p=a&mlu=3';
 
 const perks = [
   {
@@ -26,6 +25,7 @@ const perks = [
 
 export default function WhatsAppGroup() {
   const sectionRef = useRef(null);
+  const { whatsapp_group: WA_GROUP } = useSiteLinks();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
