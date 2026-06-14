@@ -17,6 +17,7 @@
 - react-router-dom v7 (ניתוב)
 - Tailwind CSS (כלי עזר)
 - Heebo font (Google Fonts) — RTL עברי
+- **Supabase** (@supabase/supabase-js v2) — backend ל-CMS (PostgreSQL + RLS + Auth)
 
 ## מבנה הפרויקט
 
@@ -35,35 +36,47 @@ shift-up-site/
     ├── main.jsx            ← BrowserRouter + Routes + Analytics component
     ├── App.jsx             ← דף עברי ראשי
     ├── index.css           ← Design system + animations
+    ├── lib/
+    │   ├── supabase.js     ← Supabase client (createClient עם VITE env vars)
+    │   └── useSiteLinks.js ← Hook משותף לכל הקישורים (עברית+אנגלית — מקור אמת אחד)
     ├── pages/
-    │   ├── EnglishPage.jsx ← דף אנגלי מלא (self-contained)
-    │   ├── IgPage.jsx      ← Link in Bio (/ig) — מינימליסטי, מובייל-פירסט
-    │   └── FreePage.jsx    ← ספריית פרומפטים חינמיים (/freebies) — סושיאל traffic
+    │   ├── EnglishPage.jsx      ← דף אנגלי מלא (self-contained) — קישורים מ-useSiteLinks
+    │   ├── IgPage.jsx           ← Link in Bio (/ig) — דינמי מטבלת ig_links
+    │   ├── FreePage.jsx         ← ספריית פרומפטים (/freebies) — דינמי מטבלת prompts
+    │   ├── TestimonialsPage.jsx ← עמוד עדויות (/testimonials) — מטבלת testimonials
+    │   ├── LoginPage.jsx        ← התחברות admin (supabase.auth)
+    │   └── AdminPage.jsx        ← ממשק ניהול /admin — 8 טאבים (CRUD מלא)
     └── components/
-        ├── Analytics.jsx   ← SPA route tracker (Meta PageView + GA4 page_view)
-        ├── Navbar.jsx      ← ניווט עברי + כפתור EN
-        ├── Hero.jsx        ← Hero section
+        ├── Analytics.jsx        ← SPA route tracker (Meta PageView + GA4 page_view)
+        ├── RequireAuth.jsx      ← הגנת route ל-/admin (session-based)
+        ├── Navbar.jsx           ← ניווט עברי + כפתור EN
+        ├── Hero.jsx             ← Hero — subtitle + WhatsApp מ-site_content
         ├── MarqueeSection.jsx
-        ├── Stats.jsx       ← סטטיסטיקות + badge זמינות
-        ├── Process.jsx     ← 3 שלבים: הפיצוח / האסטרטגיה / הביצוע
-        ├── WhyMe.jsx       ← 4 כרטיסים
+        ├── Stats.jsx            ← סטטיסטיקות — דינמי מטבלת stats
+        ├── Process.jsx          ← 3 שלבים — דינמי מטבלת process_steps
+        ├── WhyMe.jsx            ← כרטיסים — דינמי מטבלת why_me_reasons
         ├── Manifesto.jsx
-        ├── About.jsx       ← תמונת פרופיל + טקסט (טבעת מסתובבת + אנימציות)
-        ├── FAQ.jsx         ← 6 שאלות עם typewriter effect
-        ├── CTA.jsx
-        ├── Footer.jsx      ← 5 אייקוני סושיאל
-        └── Cursor.jsx      ← Custom cursor
+        ├── About.jsx            ← תמונת פרופיל + טקסט (hardcoded — markup מורכב)
+        ├── FAQ.jsx              ← שאלות — דינמי מטבלת faqs (typewriter effect)
+        ├── TestimonialsPreview.jsx ← הצצה לעדויות בדף הבית (featured=true בלבד)
+        ├── WhatsAppGroup.jsx    ← קבוצת WhatsApp — קישור מ-useSiteLinks
+        ├── CTA.jsx              ← CTA — subtext + קישורים מ-site_content
+        ├── Footer.jsx           ← פרטי קשר + 5 סושיאל מ-site_content
+        └── Cursor.jsx           ← Custom cursor
 ```
 
 ## ניתוב (Routes)
 ```jsx
-/          → App.jsx (עברית, RTL)
-/en        → EnglishPage.jsx (אנגלית, LTR)
-/ig        → IgPage.jsx (Link in Bio — נסתר, מובייל-פירסט)
-/freebies  → FreePage.jsx (ספריית פרומפטים — נסתר, סושיאל traffic)
-/login     → LoginPage.jsx
+/             → App.jsx (עברית, RTL)
+/en           → EnglishPage.jsx (אנגלית, LTR)
+/ig           → IgPage.jsx (Link in Bio — נסתר, מובייל-פירסט)
+/freebies     → FreePage.jsx (ספריית פרומפטים — נסתר, סושיאל traffic)
+/testimonials → TestimonialsPage.jsx (עדויות לקוחות — לוגו + ציטוט)
+/login        → LoginPage.jsx (התחברות admin)
+/admin        → AdminPage.jsx (ממשק ניהול — מוגן ב-RequireAuth)
 ```
 כל הדפים נפתחים באותו טאב (לא `target="_blank"`).
+כל ה-routes המשניים lazy-loaded (code-split) — `/` נטען הכי מהר.
 
 ## Design System (CSS Variables)
 ```css
@@ -125,6 +138,49 @@ shift-up-site/
 - GSAP ScrollTrigger — כל הסקשנים
 - `translate="no"` על h1 ו-Manifesto (מונע שבירת אנימציות)
 
+## CMS — ניהול תוכן דרך Supabase
+
+### ארכיטקטורה
+- **Backend:** Supabase (PostgreSQL + RLS + Auth). Project URL: `https://fsqstwlapiiqbnyjjzqx.supabase.co`
+- **Env vars:** `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` (publishable key `sb_publishable_...`).
+  ⚠️ ה-`.env` המקומי מכיל **placeholders** בלבד — המפתחות האמיתיים ב-Vercel env vars.
+- **Auth:** email/password. `/admin` מוגן ב-`RequireAuth.jsx` (redirect ל-`/login?next=`).
+- **RLS לכל טבלה:** `public read` (select using true) + `auth write` (all using auth.role()='authenticated').
+
+### עיקרון Fallback-first (חשוב!)
+כל קומפוננטה דינמית מציגה **fallback hardcoded מיד**, ומחליפה בשקט בנתוני DB כשמגיעים — ללא loading flash, ללא skeleton. אם Supabase נופל, האתר עדיין מציג את התוכן המקורי.
+```js
+const [data, setData] = useState(FALLBACK_DATA);
+useEffect(() => { supabase.from('table').select('*').order('position')
+  .then(({ data }) => { if (data?.length) setData(data); }); }, []);
+```
+
+### טבלאות (8)
+| טבלה | תוכן | קומפוננטה |
+|------|------|-----------|
+| `prompts` | ספריית פרומפטים | FreePage |
+| `ig_links` | כפתורי Link in Bio | IgPage |
+| `site_content` | key/value — קישורים + טקסטים (Hero/CTA/Footer/contact) | Hero, CTA, Footer, useSiteLinks |
+| `faqs` | שאלות נפוצות | FAQ |
+| `stats` | סטטיסטיקות | Stats |
+| `process_steps` | שלבי תהליך (bullets = jsonb) | Process |
+| `why_me_reasons` | כרטיסי "למה אני" | WhyMe |
+| `testimonials` | עדויות (featured=הצג בדף הבית) | TestimonialsPage, TestimonialsPreview |
+
+### site_content — מפתחות
+`contact.whatsapp_url`, `contact.whatsapp_group`, `contact.phone`, `contact.email`, `contact.linkedin`, `contact.facebook`, `contact.instagram`, `hero.subtitle`, `cta.subtext`.
+כל שורה: `key, value, section, label, type` (text/url/phone/email/textarea). ה-ContactTab ב-admin מציג אוטומטית כל שורה לפי section.
+
+### useSiteLinks() — סנכרון עברית ↔ אנגלית
+Hook משותף (`src/lib/useSiteLinks.js`) ששולף את כל קישורי `contact.*`. משמש את הקומפוננטות העבריות **וגם** את כל תתי-הקומפוננטות בעמוד האנגלי. שינוי קישור אחד ב-admin → מתעדכן בשני העמודים. העמוד האנגלי שומר על טקסט prefill באנגלית (`.split('?')[0]` + טקסט אנגלי), רק המספר/קישור מסונכרן.
+
+### מה נשאר hardcoded (לא ב-CMS)
+markup מורכב מדי ל-key/value: כותרת Hero (gradient spans + GSAP refs), Manifesto (אנימציה per-מילה), פסקאות About (inline HTML). הטקסט השיווקי **באנגלית** לא מנוהל (תרגום נפרד) — רק הקישורים מסונכרנים.
+
+### Admin — 8 טאבים (`/admin`)
+📚 פרומפטים · 🔗 כפתורי /ig · 📞 פרטי קשר · ❓ שאלות · 📊 סטטיסטיקות · 🔄 תהליך · 💡 למה אני · ⭐ עדויות.
+`GenericCrudTab` = factory לכל טאבי ה-CRUD (faqs/stats/process/whyme/testimonials) — CRUD + reorder ▲▼ + toggles.
+
 ## פיקסלים — ארכיטקטורת Tracking
 
 ### היכן מוטמעים
@@ -173,6 +229,8 @@ shift-up-site/
 4. Google Business Profile
 5. לפני חידוש דומיין — העברה ל-Cloudflare Registrar (~$22/שנה)
 6. הוספת UTM params לקישור ביו האינסטגרם (`?utm_source=instagram&utm_medium=social&utm_campaign=bio`)
+7. (אופציונלי) ניהול CMS גם לטקסט השיווקי באנגלית — כרגע רק הקישורים מסונכרנים
+8. הוספת /testimonials ל-sitemap.xml אם רוצים שיופיע בחיפוש
 
 ## Deploy
 ```bash
@@ -185,6 +243,7 @@ git push        # Vercel מפרס אוטומטית
 ## לוג שינויים (עיקריים)
 | תאריך | שינוי |
 |--------|-------|
+| 2026-06-14 | **CMS מלא דרך Supabase** — כל הקומפוננטות דינמיות, עמוד עדויות /testimonials + הצצה בדף הבית, /admin עם 8 טאבים, useSiteLinks לסנכרון עברית↔אנגלית |
 | 2026-06-03 | תמונת פרופיל חדשה (shmuel.png), עיצוב About משודרג (טבעת, float, scan), עמוד /ig, Analytics.jsx, אופטימיזציה פיקסלים |
 | 2026-05-29 | שיפורי UI/UX — scroll progress, navbar active, footer redesign |
 | 2026-05-29 | הסרת אוטומציות AI מ-FAQ ומהמטא |
