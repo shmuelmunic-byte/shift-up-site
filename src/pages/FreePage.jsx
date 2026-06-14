@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import Cursor from '../components/Cursor';
 
 // ─── CONFIGURATION ──────────────────────────────────────────────────────────
 //
@@ -582,6 +583,7 @@ export default function FreePage() {
         overscrollBehavior: 'contain',
       }}
     >
+      <Cursor />
       {/* ── Background aurora ── */}
       <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
         <div className="aurora-orb" style={{

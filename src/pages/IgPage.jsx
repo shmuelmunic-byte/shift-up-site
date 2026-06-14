@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import Cursor from '../components/Cursor';
 
 const BUSINESS_LINK =
   'https://wa.me/972534673151?text=' +
@@ -79,6 +80,7 @@ export default function IgPage() {
       overflow: 'hidden',
       fontFamily: "'Heebo', sans-serif",
     }}>
+      <Cursor />
       {/* Aurora blobs */}
       <div className="aurora-orb" style={{
         width: 400, height: 400,
