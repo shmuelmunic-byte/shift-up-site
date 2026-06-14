@@ -719,7 +719,7 @@ export default function FreePage() {
               textTransform: 'uppercase',
               whiteSpace: 'nowrap',
             }}>
-              <span>{PROMPTS.length} כלי זמין{PROMPTS.length !== 1 ? 'ים' : ''}</span>
+              <span>{PROMPTS.length} כלי{PROMPTS.length !== 1 ? ' זמינים' : ' זמין'}</span>
             </div>
             <div className="glow-divider" style={{ flex: 1 }} />
           </div>
