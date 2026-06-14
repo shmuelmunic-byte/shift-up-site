@@ -1,62 +1,33 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { supabase } from '../lib/supabase';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const reasons = [
-  {
-    title: 'גישה יזמית',
-    en: 'Entrepreneurial Mindset',
-    desc: 'אני חושב כמו בעלים של עסק, לא כמו ספק שירות. אני שואל את השאלות הקשות לפני שאני שולח הצעת מחיר.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
-      </svg>
-    ),
-    accent: 'var(--brand-prime)',
-    wide: true,
-  },
-  {
-    title: 'AI ראשון',
-    en: 'AI-First',
-    desc: 'מה שלוקח לאחרים שבוע — אני מבצע בכמה שעות, ובאיכות גבוהה יותר.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.64"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.64"/>
-      </svg>
-    ),
-    accent: 'var(--accent-void)',
-    wide: false,
-  },
-  {
-    title: 'מספר לקוחות מצומצם',
-    en: 'Focused Clientele',
-    desc: 'כל לקוח מקבל ראש שלם, לא חצי תשומת לב.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-      </svg>
-    ),
-    accent: 'var(--brand-prime)',
-    wide: false,
-  },
-  {
-    title: 'מסר לפני תקציב',
-    en: 'Message Before Budget',
-    desc: 'לא שורפים כסף בקמפיינים לפני שהבנו מה אנחנו מוכרים ולמי. הכסף שלך עובד רק כשהמסר מדויק.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
-      </svg>
-    ),
-    accent: 'var(--brand-prime)',
-    wide: true,
-  },
+const REASON_ICONS = [
+  <svg key="0" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>,
+  <svg key="1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.64"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.64"/></svg>,
+  <svg key="2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+  <svg key="3" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
+];
+const REASON_EN    = ['Entrepreneurial Mindset', 'AI-First', 'Focused Clientele', 'Message Before Budget'];
+const REASON_WIDE  = [true, false, false, true];
+const REASON_ACCENT = ['var(--brand-prime)', 'var(--accent-void)', 'var(--brand-prime)', 'var(--brand-prime)'];
+
+const FALLBACK_REASONS = [
+  { title: 'גישה יזמית',             description: 'אני חושב כמו בעלים של עסק, לא כמו ספק שירות. אני שואל את השאלות הקשות לפני שאני שולח הצעת מחיר.' },
+  { title: 'AI ראשון',               description: 'מה שלוקח לאחרים שבוע — אני מבצע בכמה שעות, ובאיכות גבוהה יותר.' },
+  { title: 'מספר לקוחות מצומצם',    description: 'כל לקוח מקבל ראש שלם, לא חצי תשומת לב.' },
+  { title: 'מסר לפני תקציב',        description: 'לא שורפים כסף בקמפיינים לפני שהבנו מה אנחנו מוכרים ולמי. הכסף שלך עובד רק כשהמסר מדויק.' },
 ];
 
 function BentoCard({ reason, index }) {
   const cardRef = useRef(null);
+  const icon   = REASON_ICONS[index]   || REASON_ICONS[0];
+  const en     = REASON_EN[index]      || '';
+  const wide   = REASON_WIDE[index]    ?? false;
+  const accent = REASON_ACCENT[index]  || 'var(--brand-prime)';
 
   const onMove = (e) => {
     const card = cardRef.current;
@@ -71,9 +42,9 @@ function BentoCard({ reason, index }) {
   return (
     <div
       ref={cardRef}
-      className={`whyme-card bento-card shimmer-card${reason.wide ? ' bento-wide' : ''}`}
+      className={`whyme-card bento-card shimmer-card${wide ? ' bento-wide' : ''}`}
       onMouseMove={onMove}
-      style={{ opacity: 0, minHeight: reason.wide ? 180 : 200 }}
+      style={{ opacity: 0, minHeight: wide ? 180 : 200 }}
     >
       {/* Accent corner dot */}
       <div style={{
@@ -81,8 +52,8 @@ function BentoCard({ reason, index }) {
         top: 20, left: 20,
         width: 6, height: 6,
         borderRadius: '50%',
-        background: reason.accent,
-        boxShadow: `0 0 12px ${reason.accent}`,
+        background: accent,
+        boxShadow: `0 0 12px ${accent}`,
         opacity: 0.7,
       }} />
 
@@ -109,7 +80,7 @@ function BentoCard({ reason, index }) {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexShrink: 0,
           }}>
-            {reason.icon}
+            {icon}
           </div>
           <span style={{
             fontSize: '0.62rem',
@@ -119,12 +90,12 @@ function BentoCard({ reason, index }) {
             fontWeight: 700,
             direction: 'ltr',
           }}>
-            {reason.en}
+            {en}
           </span>
         </div>
 
         <h3 style={{
-          fontSize: reason.wide ? 'clamp(1.25rem, 2.5vw, 1.6rem)' : 'clamp(1.1rem, 2vw, 1.35rem)',
+          fontSize: wide ? 'clamp(1.25rem, 2.5vw, 1.6rem)' : 'clamp(1.1rem, 2vw, 1.35rem)',
           fontWeight: 900,
           letterSpacing: '-0.01em',
           marginBottom: 10,
@@ -138,9 +109,9 @@ function BentoCard({ reason, index }) {
           fontSize: '0.88rem',
           color: 'var(--text-secondary)',
           lineHeight: 1.75,
-          maxWidth: reason.wide ? 480 : '100%',
+          maxWidth: wide ? 480 : '100%',
         }}>
-          {reason.desc}
+          {reason.description}
         </p>
       </div>
     </div>
@@ -149,6 +120,12 @@ function BentoCard({ reason, index }) {
 
 export default function WhyMe() {
   const sectionRef = useRef(null);
+  const [reasons, setReasons] = useState(FALLBACK_REASONS);
+
+  useEffect(() => {
+    supabase.from('why_me_reasons').select('*').order('position')
+      .then(({ data }) => { if (data?.length) setReasons(data); });
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {

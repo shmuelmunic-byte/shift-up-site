@@ -1,12 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { supabase } from '../lib/supabase';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const whatsappLink =
+const DEFAULT_WA =
   'https://wa.me/972534673151?text=' +
   encodeURIComponent('היי שמואל, אשמח לשמוע פרטים על השירות');
+
+const DEFAULT_SUBTEXT = 'הקפה עליי. הפיצוח עליי. ההחלטה עליכם.';
+const DEFAULT_LINKEDIN = 'https://www.linkedin.com/in/shmuel-munitz-marketing';
 
 function MagneticCTA({ children }) {
   const wrapRef = useRef(null);
@@ -44,6 +48,23 @@ export default function CTA() {
   const [hovered, setHovered]   = useState(false);
   const idleTimerRef = useRef(null);
   const [idlePulse, setIdlePulse] = useState(false);
+  const [whatsappLink, setWhatsappLink] = useState(DEFAULT_WA);
+  const [subtext, setSubtext]           = useState(DEFAULT_SUBTEXT);
+  const [linkedinUrl, setLinkedinUrl]   = useState(DEFAULT_LINKEDIN);
+
+  useEffect(() => {
+    supabase.from('site_content')
+      .select('key, value')
+      .in('key', ['contact.whatsapp_url', 'cta.subtext', 'contact.linkedin'])
+      .then(({ data }) => {
+        if (!data) return;
+        data.forEach(row => {
+          if (row.key === 'contact.whatsapp_url') setWhatsappLink(row.value);
+          if (row.key === 'cta.subtext')          setSubtext(row.value);
+          if (row.key === 'contact.linkedin')     setLinkedinUrl(row.value);
+        });
+      });
+  }, []);
 
   const trackLead = () => {
     if (typeof window.fbq === 'function') {
@@ -176,7 +197,7 @@ export default function CTA() {
             lineHeight: 1.7,
           }}
         >
-          הקפה עליי. הפיצוח עליי. ההחלטה עליכם.
+          {subtext}
         </p>
 
 
@@ -268,7 +289,7 @@ export default function CTA() {
           {/* LinkedIn secondary CTA */}
           <div style={{ marginTop: 20, marginBottom: 4 }}>
             <a
-              href="https://www.linkedin.com/in/shmuel-munitz-marketing"
+              href={linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
               style={{

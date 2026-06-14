@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { supabase } from '../lib/supabase';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -140,18 +141,32 @@ function StatCard({ stat, index }) {
   );
 }
 
-const statsData = [
-  { count: 100, suffix: '%', label: 'מותאם אישית לכל עסק' },
-  { live: true,              label: 'זמינות לפנייה' },
-  { display: 'AI',           label: 'כלים מתקדמים' },
-  { display: 'ROI',          label: 'הפוקוס היחיד' },
+const FALLBACK_STATS = [
+  { display: '100%', label: 'מותאם אישית לכל עסק', is_live: false },
+  { display: 'מענה מיידי', label: 'זמינות לפנייה', is_live: true },
+  { display: 'AI',   label: 'כלים מתקדמים',     is_live: false },
+  { display: 'ROI',  label: 'הפוקוס היחיד',      is_live: false },
 ];
 
 export default function Stats() {
+  const [statsData, setStatsData] = useState(FALLBACK_STATS);
+
+  useEffect(() => {
+    supabase.from('stats').select('*').order('position')
+      .then(({ data }) => { if (data?.length) setStatsData(data); });
+  }, []);
+
+  // Map DB format to StatCard format
+  const mapped = statsData.map(s => ({
+    display: s.display,
+    label:   s.label,
+    live:    s.is_live,
+  }));
+
   return (
     <section style={{ padding: 'clamp(48px, 8vw, 80px) 28px', background: 'var(--bedrock)' }}>
       <div className="stats-layout" style={{ maxWidth: 1200, margin: '0 auto' }}>
-        {statsData.map((s, i) => <StatCard key={i} stat={s} index={i} />)}
+        {mapped.map((s, i) => <StatCard key={i} stat={s} index={i} />)}
       </div>
     </section>
   );

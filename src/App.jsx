@@ -12,9 +12,10 @@ import Process        from './components/Process';
 import WhyMe          from './components/WhyMe';
 import Manifesto      from './components/Manifesto';
 import About          from './components/About';
-import FAQ            from './components/FAQ';
-import WhatsAppGroup  from './components/WhatsAppGroup';
-import CTA            from './components/CTA';
+import FAQ                  from './components/FAQ';
+import TestimonialsPreview  from './components/TestimonialsPreview';
+import WhatsAppGroup        from './components/WhatsAppGroup';
+import CTA                  from './components/CTA';
 import Footer         from './components/Footer';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -119,6 +120,7 @@ export default function App() {
         <About />
         <div className="section-divider" />
         <FAQ />
+        <TestimonialsPreview />
         <WhatsAppGroup />
         <CTA />
       </main>

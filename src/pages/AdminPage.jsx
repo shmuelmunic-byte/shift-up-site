@@ -521,11 +521,368 @@ function IgLinksTab({ toast }) {
   );
 }
 
+// ─── CONTACT / SITE_CONTENT TAB ─────────────────────────────────────────────
+
+function ContactTab({ toast }) {
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(null);
+  const [edits, setEdits] = useState({});
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const { data } = await supabase.from('site_content').select('*').order('section').order('key');
+    setRows(data || []);
+    const initEdits = {};
+    (data || []).forEach(r => { initEdits[r.key] = r.value; });
+    setEdits(initEdits);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const save = async (key) => {
+    setSaving(key);
+    const { error } = await supabase.from('site_content').update({ value: edits[key] }).eq('key', key);
+    setSaving(null);
+    if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
+    toast('נשמר בהצלחה');
+  };
+
+  const sections = [...new Set(rows.map(r => r.section))];
+
+  if (loading) return <div style={{ color: 'var(--text-muted)', padding: 24 }}>טוען...</div>;
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {sections.map(sec => (
+        <div key={sec} style={S.card}>
+          <div style={{ padding: '14px 20px', borderBottom: '1px solid oklch(0.97 0.005 240 / 0.08)', fontWeight: 800, fontSize: '0.88rem', color: 'var(--brand-prime)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            {sec}
+          </div>
+          <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {rows.filter(r => r.section === sec).map(r => (
+              <div key={r.key}>
+                <label style={S.label}>{r.label} <span style={{ opacity: 0.4, fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>({r.key})</span></label>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  {r.type === 'textarea' ? (
+                    <textarea
+                      style={{ ...S.input, minHeight: 80, padding: '10px 14px', resize: 'vertical', flex: 1 }}
+                      value={edits[r.key] ?? r.value}
+                      onChange={e => setEdits(prev => ({ ...prev, [r.key]: e.target.value }))}
+                    />
+                  ) : (
+                    <input
+                      type={r.type === 'email' ? 'email' : r.type === 'url' ? 'url' : 'text'}
+                      style={{ ...S.input, flex: 1 }}
+                      value={edits[r.key] ?? r.value}
+                      onChange={e => setEdits(prev => ({ ...prev, [r.key]: e.target.value }))}
+                    />
+                  )}
+                  <button style={S.btn('primary')} onClick={() => save(r.key)} disabled={saving === r.key}>
+                    {saving === r.key ? '...' : <IconCheck size={14} />}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+      {rows.length === 0 && (
+        <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-muted)' }}>
+          הטבלה site_content ריקה — יש להריץ את ה-SQL תחילה
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── GENERIC CRUD TAB FACTORY ────────────────────────────────────────────────
+
+function GenericCrudTab({ toast, table, emptyForm, fields, itemTitle }) {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState(emptyForm);
+  const [addingNew, setAddingNew] = useState(false);
+  const [newForm, setNewForm] = useState(emptyForm);
+  const [saving, setSaving] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const { data } = await supabase.from(table).select('*').order('position');
+    setItems(data || []);
+    setLoading(false);
+  }, [table]);
+
+  useEffect(() => { load(); }, [load]);
+
+  const handleSaveNew = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    const maxPos = items.length ? Math.max(...items.map(i => i.position)) + 1 : 0;
+    const { error } = await supabase.from(table).insert({ ...newForm, position: maxPos });
+    setSaving(false);
+    if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
+    toast('נוסף בהצלחה');
+    setAddingNew(false);
+    setNewForm(emptyForm);
+    load();
+  };
+
+  const handleSaveEdit = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    const { error } = await supabase.from(table).update(editForm).eq('id', editingId);
+    setSaving(false);
+    if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
+    toast('עודכן בהצלחה');
+    setEditingId(null);
+    load();
+  };
+
+  const handleDelete = async (id) => {
+    const { error } = await supabase.from(table).delete().eq('id', id);
+    if (error) { toast('שגיאה במחיקה', 'error'); return; }
+    toast('נמחק');
+    setConfirmDelete(null);
+    load();
+  };
+
+  const move = async (index, dir) => {
+    const arr = [...items];
+    const swapIdx = index + dir;
+    if (swapIdx < 0 || swapIdx >= arr.length) return;
+    [arr[index], arr[swapIdx]] = [arr[swapIdx], arr[index]];
+    await Promise.all(arr.map((x, i) => supabase.from(table).update({ position: i }).eq('id', x.id)));
+    load();
+  };
+
+  const InlineForm = ({ form, setForm, onSubmit, onCancel }) => (
+    <form onSubmit={onSubmit} style={{ padding: '14px 16px', borderTop: '1px solid oklch(0.97 0.005 240 / 0.08)', background: 'oklch(0.09 0.012 240)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {fields.map(f => (
+        <div key={f.key}>
+          <label style={S.label}>{f.label}</label>
+          {f.type === 'textarea' ? (
+            <textarea
+              style={{ ...S.input, minHeight: f.rows ? f.rows * 24 : 90, padding: '10px 14px', resize: 'vertical' }}
+              value={form[f.key] ?? ''}
+              onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
+              placeholder={f.placeholder || ''}
+              required={f.required}
+            />
+          ) : f.type === 'checkbox' ? (
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-secondary)', fontSize: '0.88rem', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={!!form[f.key]}
+                onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.checked }))}
+                style={{ width: 16, height: 16, accentColor: 'var(--brand-prime)' }}
+              />
+              {f.checkLabel || f.label}
+            </label>
+          ) : (
+            <input
+              type={f.type || 'text'}
+              style={S.input}
+              value={form[f.key] ?? ''}
+              onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
+              placeholder={f.placeholder || ''}
+              required={f.required}
+            />
+          )}
+        </div>
+      ))}
+      <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 4 }}>
+        <button type="button" style={S.btn('ghost')} onClick={onCancel}>ביטול</button>
+        <button type="submit" style={S.btn('primary')} disabled={saving}>
+          {saving ? 'שומר...' : <><IconCheck size={14} /> שמור</>}
+        </button>
+      </div>
+    </form>
+  );
+
+  if (loading) return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {[1,2,3].map(i => <div key={i} style={{ ...S.card, height: 64, animation: 'breathing 1.5s ease-in-out infinite', opacity: 0.4 }} />)}
+    </div>
+  );
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem', fontWeight: 600 }}>{items.length} פריטים</span>
+        {!addingNew && (
+          <button style={S.btn('primary')} onClick={() => { setAddingNew(true); setEditingId(null); }}>
+            <IconPlus size={15} /> הוסף
+          </button>
+        )}
+      </div>
+
+      {addingNew && (
+        <div style={{ ...S.card, marginBottom: 12 }}>
+          <div style={{ padding: '12px 16px', fontWeight: 800, color: 'var(--brand-prime)', fontSize: '0.88rem', borderBottom: '1px solid oklch(0.97 0.005 240 / 0.08)' }}>+ חדש</div>
+          <InlineForm form={newForm} setForm={setNewForm} onSubmit={handleSaveNew} onCancel={() => { setAddingNew(false); setNewForm(emptyForm); }} />
+        </div>
+      )}
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {items.map((item, i) => (
+          <div key={item.id} style={S.card}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flexShrink: 0 }}>
+                <button style={{ ...S.btn('ghost'), padding: '3px 6px', borderRadius: 6 }} onClick={() => move(i, -1)} disabled={i === 0}><IconChevronUp size={13} /></button>
+                <button style={{ ...S.btn('ghost'), padding: '3px 6px', borderRadius: 6 }} onClick={() => move(i, 1)} disabled={i === items.length - 1}><IconChevronDown size={13} /></button>
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 800, fontSize: '0.92rem', color: 'var(--text-primary)', marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {itemTitle(item)}
+                </div>
+                {item.featured !== undefined && (
+                  <span style={{ fontSize: '0.7rem', padding: '1px 7px', borderRadius: 100, background: item.featured ? 'oklch(0.78 0.20 145 / 0.12)' : 'oklch(0.14 0.02 240)', color: item.featured ? 'var(--brand-prime)' : 'var(--text-muted)', fontWeight: 700 }}>
+                    {item.featured ? '⭐ featured' : 'לא מוצג בדף הבית'}
+                  </span>
+                )}
+                {item.is_live !== undefined && (
+                  <span style={{ fontSize: '0.7rem', padding: '1px 7px', borderRadius: 100, background: item.is_live ? 'oklch(0.78 0.20 145 / 0.12)' : 'oklch(0.14 0.02 240)', color: item.is_live ? 'var(--brand-prime)' : 'var(--text-muted)', fontWeight: 700 }}>
+                    {item.is_live ? '🟢 live badge' : ''}
+                  </span>
+                )}
+              </div>
+              <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                <button style={S.btn('ghost')} onClick={() => {
+                  if (editingId === item.id) { setEditingId(null); return; }
+                  setEditingId(item.id);
+                  setEditForm({ ...item });
+                  setAddingNew(false);
+                }}>
+                  <IconEdit size={14} />
+                </button>
+                <button style={S.btn('danger')} onClick={() => setConfirmDelete(item.id)}>
+                  <IconTrash size={14} />
+                </button>
+              </div>
+            </div>
+
+            {confirmDelete === item.id && (
+              <div style={{ padding: '10px 14px', borderTop: '1px solid oklch(0.65 0.22 25 / 0.2)', background: 'oklch(0.65 0.22 25 / 0.06)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ flex: 1, fontSize: '0.83rem', color: 'oklch(0.75 0.18 25)', fontWeight: 600 }}>למחוק "{itemTitle(item)}"?</span>
+                <button style={S.btn('ghost')} onClick={() => setConfirmDelete(null)}>ביטול</button>
+                <button style={S.btn('danger')} onClick={() => handleDelete(item.id)}><IconTrash size={13} /> מחק</button>
+              </div>
+            )}
+
+            {editingId === item.id && (
+              <InlineForm form={editForm} setForm={setEditForm} onSubmit={handleSaveEdit} onCancel={() => setEditingId(null)} />
+            )}
+          </div>
+        ))}
+      </div>
+
+      {items.length === 0 && !addingNew && (
+        <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+          אין פריטים — לחץ "הוסף" להתחלה
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── SPECIFIC TABS (thin wrappers over GenericCrudTab) ───────────────────────
+
+function FaqsTab({ toast }) {
+  return (
+    <GenericCrudTab
+      toast={toast}
+      table="faqs"
+      emptyForm={{ question: '', answer: '', position: 0 }}
+      itemTitle={item => item.question}
+      fields={[
+        { key: 'question', label: 'שאלה', required: true, placeholder: 'כמה זמן לוקח לראות תוצאות?' },
+        { key: 'answer',   label: 'תשובה', type: 'textarea', rows: 4, required: true },
+      ]}
+    />
+  );
+}
+
+function StatsTab({ toast }) {
+  return (
+    <GenericCrudTab
+      toast={toast}
+      table="stats"
+      emptyForm={{ display: '', label: '', is_live: false, position: 0 }}
+      itemTitle={item => `${item.display} — ${item.label}`}
+      fields={[
+        { key: 'display', label: 'ערך מוצג (100% / AI / ROI)', required: true, placeholder: '100%' },
+        { key: 'label',   label: 'תווית מתחת לערך', required: true, placeholder: 'מותאם אישית לכל עסק' },
+        { key: 'is_live', label: 'Live badge (זמינות)', type: 'checkbox', checkLabel: 'הצג badge זמינות (ירוק)' },
+      ]}
+    />
+  );
+}
+
+function ProcessTab({ toast }) {
+  return (
+    <GenericCrudTab
+      toast={toast}
+      table="process_steps"
+      emptyForm={{ title: '', description: '', bullets: '[]', position: 0 }}
+      itemTitle={item => item.title}
+      fields={[
+        { key: 'title',       label: 'כותרת שלב', required: true, placeholder: 'הפיצוח' },
+        { key: 'description', label: 'תיאור', type: 'textarea', rows: 3, required: true },
+        { key: 'bullets',     label: 'בולטים — JSON array', type: 'textarea', rows: 2, placeholder: '["ניתוח מתחרים","מיפוי קהל יעד"]' },
+      ]}
+    />
+  );
+}
+
+function WhyMeTab({ toast }) {
+  return (
+    <GenericCrudTab
+      toast={toast}
+      table="why_me_reasons"
+      emptyForm={{ title: '', description: '', position: 0 }}
+      itemTitle={item => item.title}
+      fields={[
+        { key: 'title',       label: 'כותרת כרטיס', required: true, placeholder: 'גישה יזמית' },
+        { key: 'description', label: 'תיאור', type: 'textarea', rows: 3, required: true },
+      ]}
+    />
+  );
+}
+
+function TestimonialsTab({ toast }) {
+  return (
+    <GenericCrudTab
+      toast={toast}
+      table="testimonials"
+      emptyForm={{ name: '', role: '', company: '', quote: '', logo_url: '', featured: false, position: 0 }}
+      itemTitle={item => item.name + (item.company ? ` · ${item.company}` : '')}
+      fields={[
+        { key: 'name',     label: 'שם', required: true, placeholder: 'ישראל ישראלי' },
+        { key: 'role',     label: 'תפקיד', placeholder: 'מנכ"ל' },
+        { key: 'company',  label: 'חברה', placeholder: 'ABC Ltd' },
+        { key: 'quote',    label: 'ציטוט', type: 'textarea', rows: 3, required: true },
+        { key: 'logo_url', label: 'URL לוגו (אופציונלי)', placeholder: 'https://...' },
+        { key: 'featured', label: 'הצג בדף הבית', type: 'checkbox', checkLabel: '⭐ הצג בסקשן עדויות בדף הראשי' },
+      ]}
+    />
+  );
+}
+
 // ─── MAIN PAGE ───────────────────────────────────────────────────────────────
 
 const TABS = [
-  { id: 'prompts', label: '📚 פרומפטים', desc: '/freebies' },
-  { id: 'ig',      label: '🔗 כפתורי /ig', desc: 'Link in Bio' },
+  { id: 'prompts',      label: '📚 פרומפטים',    desc: '/freebies' },
+  { id: 'ig',           label: '🔗 כפתורי /ig',  desc: 'Link in Bio' },
+  { id: 'contact',      label: '📞 פרטי קשר',    desc: 'site_content' },
+  { id: 'faqs',         label: '❓ שאלות',        desc: 'FAQ' },
+  { id: 'stats',        label: '📊 סטטיסטיקות',  desc: 'Stats' },
+  { id: 'process',      label: '🔄 תהליך',        desc: 'Process' },
+  { id: 'whyme',        label: '💡 למה אני',      desc: 'WhyMe' },
+  { id: 'testimonials', label: '⭐ עדויות',        desc: 'Testimonials' },
 ];
 
 export default function AdminPage() {
@@ -573,7 +930,7 @@ export default function AdminPage() {
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px' }}>
 
         {/* Tab nav */}
-        <div style={{ display: 'flex', gap: 6, marginBottom: 28, background: 'oklch(0.11 0.015 240)', borderRadius: 14, padding: 5, width: 'fit-content' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 28, background: 'oklch(0.11 0.015 240)', borderRadius: 14, padding: 5 }}>
           {TABS.map(t => (
             <button
               key={t.id}
@@ -594,8 +951,14 @@ export default function AdminPage() {
         </div>
 
         {/* Tab content */}
-        {activeTab === 'prompts' && <PromptsTab toast={showToast} />}
-        {activeTab === 'ig'      && <IgLinksTab toast={showToast} />}
+        {activeTab === 'prompts'      && <PromptsTab      toast={showToast} />}
+        {activeTab === 'ig'           && <IgLinksTab      toast={showToast} />}
+        {activeTab === 'contact'      && <ContactTab      toast={showToast} />}
+        {activeTab === 'faqs'         && <FaqsTab         toast={showToast} />}
+        {activeTab === 'stats'        && <StatsTab        toast={showToast} />}
+        {activeTab === 'process'      && <ProcessTab      toast={showToast} />}
+        {activeTab === 'whyme'        && <WhyMeTab        toast={showToast} />}
+        {activeTab === 'testimonials' && <TestimonialsTab toast={showToast} />}
       </div>
 
       {/* Toast */}

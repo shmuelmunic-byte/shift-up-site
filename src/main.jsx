@@ -8,11 +8,12 @@ import './index.css'
 
 // Secondary routes are code-split so the primary Hebrew homepage ("/")
 // ships the smallest possible bundle and loads in well under a second.
-const EnglishPage = lazy(() => import('./pages/EnglishPage.jsx'))
-const LoginPage   = lazy(() => import('./pages/LoginPage.jsx'))
-const IgPage      = lazy(() => import('./pages/IgPage.jsx'))
-const FreePage    = lazy(() => import('./pages/FreePage.jsx'))
-const AdminPage   = lazy(() => import('./pages/AdminPage.jsx'))
+const EnglishPage       = lazy(() => import('./pages/EnglishPage.jsx'))
+const LoginPage         = lazy(() => import('./pages/LoginPage.jsx'))
+const IgPage            = lazy(() => import('./pages/IgPage.jsx'))
+const FreePage          = lazy(() => import('./pages/FreePage.jsx'))
+const AdminPage         = lazy(() => import('./pages/AdminPage.jsx'))
+const TestimonialsPage  = lazy(() => import('./pages/TestimonialsPage.jsx'))
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -26,7 +27,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/login" element={<LoginPage />} />
           <Route path="/ig"       element={<IgPage />} />
           <Route path="/freebies" element={<FreePage />} />
-          <Route path="/admin"    element={<RequireAuth><AdminPage /></RequireAuth>} />
+          <Route path="/admin"         element={<RequireAuth><AdminPage /></RequireAuth>} />
+          <Route path="/testimonials" element={<TestimonialsPage />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

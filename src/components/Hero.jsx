@@ -1,9 +1,13 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import { supabase } from '../lib/supabase';
 
-const whatsappLink =
+const DEFAULT_WA =
   'https://wa.me/972534673151?text=' +
   encodeURIComponent('היי שמואל, אשמח לשמוע פרטים על השירות');
+
+const DEFAULT_SUBTITLE =
+  'לפני ששורפים תקציב על ממומן, צריך לדעת מה אנחנו מוכרים, ולמי. אני בונה את האסטרטגיה — ומבצע אותה בפועל.';
 
 const profileSrc = '/shmuel.png';
 
@@ -97,6 +101,21 @@ function MagneticBtn({ children, href, onClick, style }) {
 /* ── Hero section ── */
 export default function Hero({ onProcess }) {
   const sectionRef = useRef(null);
+  const [whatsappLink, setWhatsappLink] = useState(DEFAULT_WA);
+  const [subtitle, setSubtitle] = useState(DEFAULT_SUBTITLE);
+
+  useEffect(() => {
+    supabase.from('site_content')
+      .select('key, value')
+      .in('key', ['contact.whatsapp_url', 'hero.subtitle'])
+      .then(({ data }) => {
+        if (!data) return;
+        data.forEach(row => {
+          if (row.key === 'contact.whatsapp_url') setWhatsappLink(row.value);
+          if (row.key === 'hero.subtitle')        setSubtitle(row.value);
+        });
+      });
+  }, []);
 
   const trackLead = () => {
     if (typeof window.fbq === 'function') window.fbq('track', 'Lead', { content_name: 'WhatsApp Click' });
@@ -160,10 +179,7 @@ export default function Hero({ onProcess }) {
             className="hero-sub"
             style={{ fontSize: 'clamp(1rem, 2.5vw, 1.18rem)', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 520, marginBottom: 8, opacity: 0 }}
           >
-            לפני ששורפים תקציב על ממומן, צריך לדעת{' '}
-            <strong style={{ color: 'var(--text-primary)' }}>מה אנחנו מוכרים, ולמי</strong>.
-            <br />
-            אני בונה את האסטרטגיה — ומבצע אותה בפועל.
+            {subtitle}
           </p>
 
           {/* CTAs */}

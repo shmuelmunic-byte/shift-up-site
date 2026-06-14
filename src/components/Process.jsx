@@ -1,54 +1,37 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { supabase } from '../lib/supabase';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const steps = [
-  {
-    n: '01',
-    title: 'הפיצוח',
-    en: 'The Crack',
-    desc: 'אנחנו חופרים פנימה. מי הקהל שבאמת משלם, מה ה-DNA של העסק, ולמה שיבחרו בך ולא במתחרה. מזקקים את הצעת הערך הייחודית שלך, בלי בלבולי מוח.',
-    bullets: ['ניתוח מתחרים', 'מיפוי קהל יעד', 'הצעת ערך חדה'],
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-      </svg>
-    ),
-  },
-  {
-    n: '02',
-    title: 'האסטרטגיה',
-    en: 'The Shift',
-    desc: 'לוקחים את התובנות ובונים תוכנית פעולה ברורה. איזה משפך שיווקי נכון לך, איזה תוכן יניע לפעולה, ובאיזה ערוצים נשים את הכסף. מפת דרכים, לא הימור.',
-    bullets: ['בניית משפך שיווקי', 'תוכנית תוכן', 'מסרים לכל ערוץ'],
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
-        <path d="M9 18h6"/><path d="M10 22h4"/>
-      </svg>
-    ),
-  },
-  {
-    n: '03',
-    title: 'הביצוע',
-    en: 'The Action',
-    desc: 'רק עכשיו ניגשים לכלים. אני מקים ומנהל לך את הקמפיינים הממומנים ב-Meta וב-Google, בונה דפי נחיתה ממירים, ומקים אוטומציות AI שחוסכות זמן.',
-    bullets: ['קמפיינים ב-Meta + Google', 'דפי נחיתה ממירים', 'אוטומציות AI'],
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
-        <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
-        <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
-      </svg>
-    ),
-  },
+const STEP_ICONS = [
+  <svg key="0" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>,
+  <svg key="1" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>,
+  <svg key="2" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>,
+];
+
+const FALLBACK_STEPS = [
+  { title: 'הפיצוח',     description: 'אנחנו חופרים פנימה. מי הקהל שבאמת משלם, מה ה-DNA של העסק, ולמה שיבחרו בך ולא במתחרה. מזקקים את הצעת הערך הייחודית שלך, בלי בלבולי מוח.', bullets: ['ניתוח מתחרים', 'מיפוי קהל יעד', 'הצעת ערך חדה'] },
+  { title: 'האסטרטגיה',  description: 'לוקחים את התובנות ובונים תוכנית פעולה ברורה. איזה משפך שיווקי נכון לך, איזה תוכן יניע לפעולה, ובאיזה ערוצים נשים את הכסף. מפת דרכים, לא הימור.', bullets: ['בניית משפך שיווקי', 'תוכנית תוכן', 'מסרים לכל ערוץ'] },
+  { title: 'הביצוע',     description: 'רק עכשיו ניגשים לכלים. אני מקים ומנהל לך את הקמפיינים הממומנים ב-Meta וב-Google, בונה דפי נחיתה ממירים, ומקים אוטומציות AI שחוסכות זמן.', bullets: ['קמפיינים ב-Meta + Google', 'דפי נחיתה ממירים', 'אוטומציות AI'] },
 ];
 
 export default function Process() {
   const sectionRef = useRef(null);
   const [active, setActive] = useState(null);
+  const [steps, setSteps] = useState(FALLBACK_STEPS);
+
+  useEffect(() => {
+    supabase.from('process_steps').select('*').order('position')
+      .then(({ data }) => {
+        if (data?.length) setSteps(data.map(r => ({
+          title:       r.title,
+          description: r.description,
+          bullets:     Array.isArray(r.bullets) ? r.bullets : JSON.parse(r.bullets || '[]'),
+        })));
+      });
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -142,6 +125,7 @@ export default function Process() {
         >
           {steps.map((step, i) => {
             const isActive = active === i;
+            const num = String(i + 1).padStart(2, '0');
 
             return (
               <div
@@ -177,7 +161,7 @@ export default function Process() {
                     flexShrink: 0,
                     transition: 'background 0.35s ease, color 0.35s ease',
                   }}>
-                    {step.icon}
+                    {STEP_ICONS[i] || STEP_ICONS[0]}
                   </div>
 
                   <div style={{ textAlign: 'right' }}>
@@ -192,7 +176,7 @@ export default function Process() {
                       transition: 'opacity 0.3s',
                       direction: 'ltr',
                     }}>
-                      {step.n}
+                      {num}
                     </div>
                   </div>
                 </div>
@@ -218,11 +202,11 @@ export default function Process() {
                   marginBottom: 18,
                   transition: 'color 0.3s',
                 }}>
-                  {step.en}
+                  {['The Crack', 'The Shift', 'The Action'][i] || ''}
                 </div>
 
                 <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: 24 }}>
-                  {step.desc}
+                  {step.description}
                 </p>
 
                 {/* Bullets */}
