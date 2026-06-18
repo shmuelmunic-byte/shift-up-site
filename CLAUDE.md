@@ -112,6 +112,7 @@ shift-up-site/
   - A record: `@` → `76.76.21.21` (Vercel)
   - CNAME: `www` → `cname.vercel-dns.com`
 - **Vercel:** redirect מ-`shiftup.marketing` ל-`www.shiftup.marketing`
+- ⚠️ **GSC "הדף מפנה לכתובת אתר אחרת" (Page with redirect) — צפוי, לא תקלה.** הגרסאות הלא-קנוניות (`http://`, בלי `www`) מפנות בכוונה לקנוני `https://www.shiftup.marketing/`. Google לא מאנדקס את מקור ההפניה (מונע duplicate content) — מאנדקס את היעד. **אין מה לתקן, לא ללחוץ "אמת תיקון".** עדיף Domain property ב-GSC על URL-prefix.
 
 ## SEO — מה קיים
 - `robots.txt` + `sitemap.xml` (כולל /en עם hreflang)
