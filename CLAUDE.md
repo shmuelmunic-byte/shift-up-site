@@ -217,6 +217,15 @@ markup מורכב מדי ל-key/value: כותרת Hero (gradient spans + GSAP re
 - **כפתור 2:** "להצטרף לקהילת Shift Up" → קבוצת WhatsApp שקטה
 - **Tracking:** ViewContent על כניסה, Lead/Contact על לחיצה
 
+## AI Discovery — llms.txt + Markdown Mirrors
+מטרה: לגרום ל-LLMs (ChatGPT/Claude/Perplexity) להמליץ על העסק ולקרוא את האתר נכון.
+**כל הקבצים האלה ידניים ב-`public/` — לא נשאבים מ-Supabase.** אם משנים תוכן ב-`/admin`, צריך לעדכן אותם ידנית.
+- `public/llms.txt` — מדריך AI ראשי (פורמט llmstxt.org): כותרת, blockquote סיכום (עברית+אנגלית), סעיפי שירותים/תהליך/קשר, ולינקים ל-markdown mirrors.
+- **Markdown Mirrors** — גרסאות markdown נקיות (ללא JS/אנימציות) של הדפים: `public/index.md`, `public/faq.md`, `public/en.md`.
+- `robots.txt` — שורת `LLM: .../llms.txt` (קונבנציה לא רשמית) + `Sitemap:`.
+- **הגשה ב-Vercel:** ה-rewrite ב-`vercel.json` (`/((?!assets|.*\..*).*)`) מחריג כל נתיב עם נקודה, אז קבצי `.txt`/`.md` מוגשים סטטית — לא נחטפים ל-`index.html`.
+- מקור התוכן: נשאב מהקומפוננטות (Hero/Process/WhyMe/About/FAQ) בזמן יצירה. בעדכון תוכן מהותי — לסנכרן.
+
 ## Email — הגיון
 - **touch (מובייל):** `mailto:` פותח אפליקציית מייל
 - **mouse (דסקטופ):** פותח Gmail compose
@@ -230,7 +239,7 @@ markup מורכב מדי ל-key/value: כותרת Hero (gradient spans + GSAP re
 5. לפני חידוש דומיין — העברה ל-Cloudflare Registrar (~$22/שנה)
 6. הוספת UTM params לקישור ביו האינסטגרם (`?utm_source=instagram&utm_medium=social&utm_campaign=bio`)
 7. (אופציונלי) ניהול CMS גם לטקסט השיווקי באנגלית — כרגע רק הקישורים מסונכרנים
-8. הוספת /testimonials ל-sitemap.xml אם רוצים שיופיע בחיפוש
+8. ✅ ~~הוספת /testimonials ל-sitemap.xml~~ (בוצע 2026-06-19 — נוספו /testimonials + /freebies)
 
 ## Deploy
 ```bash
@@ -243,6 +252,7 @@ git push        # Vercel מפרס אוטומטית
 ## לוג שינויים (עיקריים)
 | תאריך | שינוי |
 |--------|-------|
+| 2026-06-19 | **AI Discovery** — `llms.txt` + markdown mirrors (index/faq/en) ב-`public/`, שורת `LLM:` ב-robots.txt, sitemap הורחב (+/testimonials +/freebies) |
 | 2026-06-14 | **CMS מלא דרך Supabase** — כל הקומפוננטות דינמיות, עמוד עדויות /testimonials + הצצה בדף הבית, /admin עם 8 טאבים, useSiteLinks לסנכרון עברית↔אנגלית |
 | 2026-06-03 | תמונת פרופיל חדשה (shmuel.png), עיצוב About משודרג (טבעת, float, scan), עמוד /ig, Analytics.jsx, אופטימיזציה פיקסלים |
 | 2026-05-29 | שיפורי UI/UX — scroll progress, navbar active, footer redesign |
