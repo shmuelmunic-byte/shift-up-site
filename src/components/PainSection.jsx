@@ -94,7 +94,7 @@ export default function PainSection() {
         </div>
 
         {/* כרטיסי כאב — 2×2 */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
+        <div className="grid-2x2">
           {PAINS.map((t, i) => <PainCard key={i} text={t} index={i} />)}
         </div>
 

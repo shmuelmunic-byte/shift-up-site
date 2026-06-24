@@ -872,9 +872,127 @@ function TestimonialsTab({ toast }) {
   );
 }
 
+// ─── LEADS TAB ───────────────────────────────────────────────────────────────
+
+function waFromPhone(phone) {
+  let d = (phone || '').replace(/\D/g, '');
+  if (d.startsWith('0')) d = '972' + d.slice(1);
+  else if (!d.startsWith('972') && d.length <= 10) d = '972' + d;
+  return `https://wa.me/${d}`;
+}
+
+const fmtDate = (iso) => {
+  try {
+    return new Intl.DateTimeFormat('he-IL', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(iso));
+  } catch { return iso; }
+};
+
+function LeadsTab({ toast }) {
+  const [leads, setLeads] = useState(null); // null = loading
+  const [setupNeeded, setSetupNeeded] = useState(false);
+
+  const load = useCallback(async () => {
+    const { data, error } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
+    if (error) {
+      // קרוב לוודאי שהטבלה עוד לא נוצרה — מציגים הנחיית התקנה
+      setSetupNeeded(true);
+      setLeads([]);
+      return;
+    }
+    setSetupNeeded(false);
+    setLeads(data || []);
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const toggleHandled = async (lead) => {
+    const { error } = await supabase.from('leads').update({ handled: !lead.handled }).eq('id', lead.id);
+    if (error) return toast('שגיאה בעדכון', 'error');
+    setLeads(ls => ls.map(l => l.id === lead.id ? { ...l, handled: !l.handled } : l));
+  };
+
+  const remove = async (id) => {
+    if (!window.confirm('למחוק את הליד? פעולה בלתי הפיכה.')) return;
+    const { error } = await supabase.from('leads').delete().eq('id', id);
+    if (error) return toast('שגיאה במחיקה', 'error');
+    setLeads(ls => ls.filter(l => l.id !== id));
+    toast('הליד נמחק');
+  };
+
+  if (leads === null) {
+    return <div style={{ display: 'grid', gap: 12 }}>{[1,2,3].map(i => <div key={i} style={{ ...S.card, height: 90, animation: 'breathing 1.5s ease-in-out infinite', opacity: 0.4 }} />)}</div>;
+  }
+
+  if (setupNeeded) {
+    return (
+      <div style={{ ...S.card, padding: 24, lineHeight: 1.8 }}>
+        <h3 style={{ fontWeight: 800, marginBottom: 10, color: 'var(--brand-prime)' }}>טבלת הלידים עוד לא קיימת 🛠️</h3>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+          כדי לקלוט לידים מהטופס, הרץ פעם אחת את ה-SQL מהקובץ <code style={{ color: 'var(--text-primary)' }}>docs/leads-table.sql</code> ב-
+          Supabase → SQL Editor. אחר כך רענן את העמוד. עד אז, לידים מהטופס נופלים אוטומטית לוואטסאפ ולא אובדים.
+        </p>
+        <button style={{ ...S.btn('ghost'), marginTop: 14 }} onClick={load}>רענן ובדוק שוב</button>
+      </div>
+    );
+  }
+
+  const unhandled = leads.filter(l => !l.handled).length;
+
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
+        <span style={{ fontWeight: 800, fontSize: '1.05rem' }}>{leads.length} לידים</span>
+        {unhandled > 0 && (
+          <span style={{ background: 'oklch(0.78 0.20 145 / 0.15)', color: 'var(--brand-prime)', border: '1px solid oklch(0.78 0.20 145 / 0.3)', borderRadius: 999, padding: '3px 12px', fontSize: '0.78rem', fontWeight: 700 }}>
+            {unhandled} חדשים
+          </span>
+        )}
+        <div style={{ flex: 1 }} />
+        <button style={S.btn('ghost')} onClick={load}>רענן</button>
+      </div>
+
+      {leads.length === 0 ? (
+        <div style={{ ...S.card, padding: 32, textAlign: 'center', color: 'var(--text-muted)' }}>
+          עוד אין לידים. כשמישהו ימלא את הטופס באתר — הוא יופיע כאן.
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gap: 12 }}>
+          {leads.map(l => (
+            <div key={l.id} style={{ ...S.card, padding: 18, opacity: l.handled ? 0.6 : 1, borderColor: l.handled ? undefined : 'oklch(0.78 0.20 145 / 0.25)' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
+                <div style={{ flex: 1, minWidth: 200 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                    <span style={{ fontWeight: 800, fontSize: '1.02rem' }}>{l.name}</span>
+                    {l.business && <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', background: 'oklch(0.16 0.02 240)', borderRadius: 999, padding: '2px 10px' }}>{l.business}</span>}
+                  </div>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{fmtDate(l.created_at)} · {l.source || 'form'}</div>
+                  {l.message && <p style={{ marginTop: 10, fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{l.message}</p>}
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'stretch' }}>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <a href={waFromPhone(l.phone)} target="_blank" rel="noopener noreferrer" style={{ ...S.btn('primary'), textDecoration: 'none', fontSize: '0.8rem' }} dir="ltr">{l.phone}</a>
+                  </div>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button style={{ ...S.btn(l.handled ? 'ghost' : 'ghost'), flex: 1, fontSize: '0.78rem' }} onClick={() => toggleHandled(l)}>
+                      {l.handled ? '↩︎ החזר לחדשים' : <><IconCheck size={13} /> טופל</>}
+                    </button>
+                    <button style={S.btn('danger')} onClick={() => remove(l.id)} aria-label="מחק"><IconTrash size={14} /></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── MAIN PAGE ───────────────────────────────────────────────────────────────
 
 const TABS = [
+  { id: 'leads',        label: '📥 לידים',        desc: 'טופס' },
   { id: 'prompts',      label: '📚 פרומפטים',    desc: '/freebies' },
   { id: 'ig',           label: '🔗 כפתורי /ig',  desc: 'Link in Bio' },
   { id: 'contact',      label: '📞 פרטי קשר',    desc: 'site_content' },
@@ -886,7 +1004,7 @@ const TABS = [
 ];
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState('prompts');
+  const [activeTab, setActiveTab] = useState('leads');
   const [toast, setToast] = useState(null);
   const navigate = useNavigate();
 
@@ -951,6 +1069,7 @@ export default function AdminPage() {
         </div>
 
         {/* Tab content */}
+        {activeTab === 'leads'        && <LeadsTab        toast={showToast} />}
         {activeTab === 'prompts'      && <PromptsTab      toast={showToast} />}
         {activeTab === 'ig'           && <IgLinksTab      toast={showToast} />}
         {activeTab === 'contact'      && <ContactTab      toast={showToast} />}

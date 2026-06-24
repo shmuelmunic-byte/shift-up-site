@@ -136,7 +136,7 @@ export default function WhatYouGet() {
         </div>
 
         {/* כרטיסי תוצאה — 2×2 */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+        <div className="grid-2x2">
           {OUTCOMES.map((o, i) => <OutcomeCard key={i} outcome={o} index={i} />)}
         </div>
 

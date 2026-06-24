@@ -279,7 +279,8 @@ markup מורכב מדי ל-key/value: כותרת Hero (gradient spans + GSAP re
 - שינוי מבנה: `MarqueeSection`, `Stats`, **`TestimonialsPreview`, `CTA` נותקו מ-App** (קיימים על הדיסק; /testimonials עדיין חי). הסדר ב-`App.jsx` (תואם spec): Hero → TrustStrip → Pain → Manifesto → Process → WhatYouGet → WhyMe → **Proof** → About → FAQ → **LeadForm** → WhatsAppGroup → Footer.
 
 ### ⚠️ פתוח אחרי הבנייה
-- **טבלת `leads`:** לוודא שקיימת ב-Supabase עם עמודות `name, phone, business, message, source` + RLS שמאפשר insert ל-anon. אם לא — הטופס נופל לוואטסאפ (לא קורס), אבל לידים לא יישמרו ב-DB. **כדאי גם:** טאב `leads` ב-/admin + התראת מייל (edge function / DB trigger) — עדיין לא קיים.
+- **טבלת `leads`:** ✅ נבנה טאב "📥 לידים" ב-/admin (טאב ברירת מחדל) + SQL מוכן ב-`docs/leads-table.sql`. **חובה להריץ פעם אחת** את ה-SQL ב-Supabase → SQL Editor כדי שהטבלה+RLS ייווצרו (anon insert בלבד; admin קורא/מעדכן/מוחק). עד שמריצים — הטאב מציג הנחיית התקנה והטופס נופל לוואטסאפ (לידים לא אובדים, אבל לא נשמרים ב-DB). התראת מייל (edge function/webhook) — עדיין לא קיים.
+- **גריד 2×2:** Pain + WhatYouGet עברו ל-class משותף `.grid-2x2` (1 עמ' מובייל / 2 עמ' דסקטופ) — תיקון ה-3+1 הלא מאוזן של `auto-fit`.
 - **גריד פורטפוליו:** `food-shira-events.jpg` = הקובץ הישן; להחליף ב-`food-shira-shabbat.jpg` המעודכן כשמגיע. `health-24fit.png` הוא PNG (תקין).
 
 ### ⚠️ סנכרון DB פתוח (תוכן "נעול" שיושב ב-CMS ודורס את הקוד — לעשות ב-/admin)

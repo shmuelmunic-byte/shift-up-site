@@ -377,6 +377,18 @@ body {
   }
 }
 
+/* Even 2×2 grid (1 col mobile) — avoids the lopsided 3+1 auto-fit layout */
+.grid-2x2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 640px) {
+  .grid-2x2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (min-width: 768px) {
   .stats-layout {
     grid-template-columns: repeat(4, 1fr);
