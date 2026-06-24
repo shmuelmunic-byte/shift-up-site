@@ -158,17 +158,26 @@ useEffect(() => { supabase.from('table').select('*').order('position')
   .then(({ data }) => { if (data?.length) setData(data); }); }, []);
 ```
 
-### טבלאות (8)
+### טבלאות (13) + `leads`
 | טבלה | תוכן | קומפוננטה |
 |------|------|-----------|
 | `prompts` | ספריית פרומפטים | FreePage |
 | `ig_links` | כפתורי Link in Bio | IgPage |
-| `site_content` | key/value — קישורים + טקסטים (Hero/CTA/Footer/contact) | Hero, CTA, Footer, useSiteLinks |
+| `site_content` | key/value — קישורים + **כל הכותרות/טקסטים** של הסקשנים | Hero, CTA, Footer, useSiteLinks, **useContent** |
 | `faqs` | שאלות נפוצות | FAQ |
-| `stats` | סטטיסטיקות | Stats |
+| `stats` | סטטיסטיקות (מנותק) | Stats |
 | `process_steps` | שלבי תהליך (bullets = jsonb) | Process |
 | `why_me_reasons` | כרטיסי "למה אני" | WhyMe |
 | `testimonials` | עדויות (featured=הצג בדף הבית) | TestimonialsPage, TestimonialsPreview |
+| `trust_pillars` | 3 עמודי רצועת אמון (סקשן 2) | TrustStrip |
+| `pain_points` | 4 משפטי כאב (סקשן 3) | PainSection |
+| `outcomes` | 4 כרטיסי "מה תקבל" (סקשן 6) | WhatYouGet |
+| `proof_cases` | קייסים (steps = **text** עם JSON) | Proof |
+| `proof_grid` | גריד מודעות (file/client/field) | Proof |
+| `leads` | לידים מהטופס | LeadForm, LeadsTab |
+
+**SQL ליצירה:** `docs/cms-sections.sql` (5 הטבלאות החדשות + RLS + seed + שורות site_content) · `docs/leads-table.sql` (leads). idempotent — בטוח להריץ.
+**`useContent(fallbackMap)`** (`src/lib/useContent.js`) — הוק fallback-first שמושך קבוצת מפתחות מ-`site_content`. כל הכותרות/תת-כותרות של הסקשנים החדשים (trust/pain/wyg/proof/leadform) עוברות דרכו. אייקונים של trust/outcomes נשארים בקוד (ממופים לפי index).
 
 ### site_content — מפתחות
 `contact.whatsapp_url`, `contact.whatsapp_group`, `contact.phone`, `contact.email`, `contact.linkedin`, `contact.facebook`, `contact.instagram`, `hero.subtitle`, `cta.subtext`.
@@ -177,8 +186,8 @@ useEffect(() => { supabase.from('table').select('*').order('position')
 ### useSiteLinks() — סנכרון עברית ↔ אנגלית
 Hook משותף (`src/lib/useSiteLinks.js`) ששולף את כל קישורי `contact.*`. משמש את הקומפוננטות העבריות **וגם** את כל תתי-הקומפוננטות בעמוד האנגלי. שינוי קישור אחד ב-admin → מתעדכן בשני העמודים. העמוד האנגלי שומר על טקסט prefill באנגלית (`.split('?')[0]` + טקסט אנגלי), רק המספר/קישור מסונכרן.
 
-### מה נשאר hardcoded (לא ב-CMS)
-markup מורכב מדי ל-key/value: כותרת Hero (gradient spans + GSAP refs), Manifesto (אנימציה per-מילה), פסקאות About (inline HTML). הטקסט השיווקי **באנגלית** לא מנוהל (תרגום נפרד) — רק הקישורים מסונכרנים.
+### מה נשאר hardcoded (לא ב-CMS) — בכוונה
+רק סקשנים מבוססי-אנימציה ש-key/value ישבור: **כותרת Hero הראשית** (gradient spans + GSAP kinetic), **Manifesto** (אנימציה per-מילה), **פסקאות About** (inline HTML). שאר הטקסטים ב-Hero (chips/eyebrow/badges/price) עדיין hardcoded — אפשר להעביר ל-site_content בעתיד. הטקסט השיווקי **באנגלית** לא מנוהל — רק הקישורים מסונכרנים.
 
 ### Admin — 9 טאבים (`/admin`)
 📥 לידים (ברירת מחדל) · 📚 פרומפטים · 🔗 כפתורי /ig · 📞 פרטי קשר · ❓ שאלות · 📊 סטטיסטיקות · 🔄 תהליך · 💡 למה אני · ⭐ עדויות.

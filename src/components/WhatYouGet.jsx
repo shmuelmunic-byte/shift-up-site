@@ -1,51 +1,26 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { supabase } from '../lib/supabase';
+import { useContent } from '../lib/useContent';
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* ── סקשן 6 — "מה תקבל" ("מה יוצא לי?") ──
-   התשובה הרגשית למשפך: לידים + שקט, בלי שתתעסק.
-   ירוק על האייקונים — זו נקודת הפייאוף החיובית של הדף. */
-const OUTCOMES = [
-  {
-    title: 'לידים שנכנסים — לא רק חשיפות',
-    text: 'קמפיינים שמביאים פניות אמיתיות מלקוחות שמתאימים לך. לא לייקים, לא "מודעות מותג" מעורפלת — פניות שאפשר לסגור.',
-    icon: (
-      <>
-        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-      </>
-    ),
-  },
-  {
-    title: 'שקט נפשי — מישהו אחד אחראי',
-    text: 'אתה מפסיק לרדוף אחרי פוסטים, קמפיינים ומספרים. איש אחד לוקח את כל השיווק לידיים, מבצע ומדווח לך.',
-    icon: (
-      <>
-        <path d="M9 12l2 2 4-4" />
-        <path d="M12 3c-1.5 2-4 3-7 3 0 5.5 2.5 9.5 7 12 4.5-2.5 7-6.5 7-12-3 0-5.5-1-7-3Z" />
-      </>
-    ),
-  },
-  {
-    title: 'מסר חד שאתה גאה בו',
-    text: 'סוף סוף השיווק שלך נשמע כמוך — מזקק את מה שמייחד אותך, ומבדל אותך מהמתחרים בלי הנחות.',
-    icon: (
-      <>
-        <path d="M3 11l19-9-9 19-2-8-8-2Z" />
-      </>
-    ),
-  },
-  {
-    title: 'הזמן שלך חוזר אליך',
-    text: 'במקום להתעסק בשיווק, אתה חוזר לעשות את מה שאתה הכי טוב בו — לנהל ולהצמיח את העסק.',
-    icon: (
-      <>
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 7v5l3 2" />
-      </>
-    ),
-  },
+/* אייקונים נשארים בקוד — ממופים לפי position/index */
+const OUTCOME_ICONS = [
+  (<><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></>),
+  (<><path d="M9 12l2 2 4-4" /><path d="M12 3c-1.5 2-4 3-7 3 0 5.5 2.5 9.5 7 12 4.5-2.5 7-6.5 7-12-3 0-5.5-1-7-3Z" /></>),
+  (<><path d="M3 11l19-9-9 19-2-8-8-2Z" /></>),
+  (<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>),
+];
+
+/* ── סקשן 6 — "מה תקבל" ("מה יוצא לי?") — fallback ──
+   התשובה הרגשית למשפך: לידים + שקט, בלי שתתעסק. */
+const FALLBACK_OUTCOMES = [
+  { title: 'לידים שנכנסים — לא רק חשיפות', text: 'קמפיינים שמביאים פניות אמיתיות מלקוחות שמתאימים לך. לא לייקים, לא "מודעות מותג" מעורפלת — פניות שאפשר לסגור.' },
+  { title: 'שקט נפשי — מישהו אחד אחראי', text: 'אתה מפסיק לרדוף אחרי פוסטים, קמפיינים ומספרים. איש אחד לוקח את כל השיווק לידיים, מבצע ומדווח לך.' },
+  { title: 'מסר חד שאתה גאה בו', text: 'סוף סוף השיווק שלך נשמע כמוך — מזקק את מה שמייחד אותך, ומבדל אותך מהמתחרים בלי הנחות.' },
+  { title: 'הזמן שלך חוזר אליך', text: 'במקום להתעסק בשיווק, אתה חוזר לעשות את מה שאתה הכי טוב בו — לנהל ולהצמיח את העסק.' },
 ];
 
 function OutcomeCard({ outcome, index }) {
@@ -81,7 +56,7 @@ function OutcomeCard({ outcome, index }) {
         background: 'oklch(0.78 0.20 145 / 0.1)', border: '1px solid oklch(0.78 0.20 145 / 0.22)',
       }}>
         <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          {outcome.icon}
+          {OUTCOME_ICONS[index] || OUTCOME_ICONS[0]}
         </svg>
       </span>
       <div>
@@ -99,6 +74,20 @@ function OutcomeCard({ outcome, index }) {
 export default function WhatYouGet() {
   const headRef = useRef(null);
   const lineRef = useRef(null);
+  const [outcomes, setOutcomes] = useState(FALLBACK_OUTCOMES);
+  const t = useContent({
+    'wyg.kicker': 'What You Get',
+    'wyg.title': 'בשורה התחתונה?',
+    'wyg.title_accent': 'לידים ושקט.',
+    'wyg.subtitle': 'אתה ממשיך לנהל את העסק. את השיווק אני לוקח על עצמי — וזה מה שמחזירים לך.',
+    'wyg.summary': 'תפסיק להיות מנהל שיווק במשרה חלקית.',
+    'wyg.summary_accent': 'תהיה שוב הבעלים.',
+  });
+
+  useEffect(() => {
+    supabase.from('outcomes').select('*').order('position')
+      .then(({ data }) => { if (data?.length) setOutcomes(data); });
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -121,30 +110,30 @@ export default function WhatYouGet() {
         {/* כותרת */}
         <div ref={headRef} className="wyg-head" style={{ textAlign: 'center', marginBottom: 'clamp(36px, 6vw, 56px)', opacity: 0 }}>
           <span style={{ color: 'var(--brand-prime)', fontSize: '0.74rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase' }}>
-            What You Get
+            {t['wyg.kicker']}
           </span>
           <h2 style={{
             fontSize: 'clamp(1.7rem, 5vw, 3rem)', fontWeight: 900,
             letterSpacing: '-0.02em', lineHeight: 1.2, color: 'var(--text-primary)',
             marginTop: 14, maxWidth: 700, marginInline: 'auto',
           }}>
-            בשורה התחתונה? <span style={{ color: 'var(--brand-prime)' }}>לידים ושקט.</span>
+            {t['wyg.title']} <span style={{ color: 'var(--brand-prime)' }}>{t['wyg.title_accent']}</span>
           </h2>
           <p style={{ fontSize: 'clamp(1rem, 2.5vw, 1.15rem)', color: 'var(--text-secondary)', lineHeight: 1.7, marginTop: 14, maxWidth: 560, marginInline: 'auto' }}>
-            אתה ממשיך לנהל את העסק. את השיווק אני לוקח על עצמי — וזה מה שמחזירים לך.
+            {t['wyg.subtitle']}
           </p>
         </div>
 
         {/* כרטיסי תוצאה — 2×2 */}
         <div className="grid-2x2">
-          {OUTCOMES.map((o, i) => <OutcomeCard key={i} outcome={o} index={i} />)}
+          {outcomes.map((o, i) => <OutcomeCard key={o.id || i} outcome={o} index={i} />)}
         </div>
 
         {/* שורת סיכום */}
         <div ref={lineRef} className="wyg-line" style={{ textAlign: 'center', marginTop: 'clamp(40px, 6vw, 60px)', opacity: 0 }}>
           <p style={{ fontSize: 'clamp(1.1rem, 3vw, 1.5rem)', fontWeight: 800, lineHeight: 1.5, color: 'var(--text-primary)' }}>
-            תפסיק להיות מנהל שיווק במשרה חלקית.{' '}
-            <span style={{ color: 'var(--brand-prime)' }}>תהיה שוב הבעלים.</span>
+            {t['wyg.summary']}{' '}
+            <span style={{ color: 'var(--brand-prime)' }}>{t['wyg.summary_accent']}</span>
           </p>
         </div>
       </div>

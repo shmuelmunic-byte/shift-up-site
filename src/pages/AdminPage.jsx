@@ -872,6 +872,84 @@ function TestimonialsTab({ toast }) {
   );
 }
 
+function TrustTab({ toast }) {
+  return (
+    <GenericCrudTab
+      toast={toast}
+      table="trust_pillars"
+      emptyForm={{ title: '', text: '', position: 0 }}
+      itemTitle={item => item.title}
+      fields={[
+        { key: 'title', label: 'כותרת עמוד', required: true, placeholder: '2–3 עסקים ברבעון' },
+        { key: 'text',  label: 'טקסט', type: 'textarea', rows: 2, required: true },
+      ]}
+    />
+  );
+}
+
+function PainTab({ toast }) {
+  return (
+    <GenericCrudTab
+      toast={toast}
+      table="pain_points"
+      emptyForm={{ text: '', position: 0 }}
+      itemTitle={item => item.text}
+      fields={[
+        { key: 'text', label: 'משפט כאב', type: 'textarea', rows: 2, required: true, placeholder: 'שורף תקציב על ממומן — והלידים לא מגיעים.' },
+      ]}
+    />
+  );
+}
+
+function OutcomesTab({ toast }) {
+  return (
+    <GenericCrudTab
+      toast={toast}
+      table="outcomes"
+      emptyForm={{ title: '', text: '', position: 0 }}
+      itemTitle={item => item.title}
+      fields={[
+        { key: 'title', label: 'כותרת תוצאה', required: true, placeholder: 'לידים שנכנסים — לא רק חשיפות' },
+        { key: 'text',  label: 'טקסט', type: 'textarea', rows: 3, required: true },
+      ]}
+    />
+  );
+}
+
+function ProofCasesTab({ toast }) {
+  return (
+    <GenericCrudTab
+      toast={toast}
+      table="proof_cases"
+      emptyForm={{ tag: 'דוגמת תהליך', title: '', subtitle: '', quote: '', steps: '[]', position: 0 }}
+      itemTitle={item => item.title}
+      fields={[
+        { key: 'tag',      label: 'תגית', placeholder: 'דוגמת תהליך' },
+        { key: 'title',    label: 'כותרת הקייס', required: true, placeholder: 'עסק קינוחי בוטיק' },
+        { key: 'subtitle', label: 'תת-כותרת', placeholder: 'מיצוב פרימיום בשוק רווי' },
+        { key: 'quote',    label: 'ציטוט מיצוב', placeholder: 'We don’t sell cakes, we sell style.' },
+        { key: 'steps',    label: 'שלבים — JSON: [{"k":"הכאב","v":"..."}]', type: 'textarea', rows: 5, placeholder: '[{"k":"הכאב","v":"..."},{"k":"המיצוב","v":"..."}]' },
+      ]}
+    />
+  );
+}
+
+function ProofGridTab({ toast }) {
+  return (
+    <GenericCrudTab
+      toast={toast}
+      table="proof_grid"
+      emptyForm={{ file: '', client: '', field: '', position: 0 }}
+      itemTitle={item => `${item.client} · ${item.field || ''}`}
+      fields={[
+        { key: 'file',   label: 'שם קובץ (בתוך public/portfolio/)', required: true, placeholder: 'events-yehuda.jpg' },
+        { key: 'client', label: 'שם לקוח', required: true, placeholder: 'יהודה סימן-טוב' },
+        { key: 'field',  label: 'תחום', placeholder: 'אירועים' },
+      ]}
+    />
+  );
+}
+
 // ─── LEADS TAB ───────────────────────────────────────────────────────────────
 
 function waFromPhone(phone) {
@@ -993,14 +1071,19 @@ function LeadsTab({ toast }) {
 
 const TABS = [
   { id: 'leads',        label: '📥 לידים',        desc: 'טופס' },
+  { id: 'contact',      label: '📝 תוכן + קשר',   desc: 'כותרות · קישורים' },
+  { id: 'trust',        label: '🤝 רצועת אמון',   desc: 'סקשן 2' },
+  { id: 'pain',         label: '😣 כאב',          desc: 'סקשן 3' },
+  { id: 'process',      label: '🔄 תהליך',        desc: 'סקשן 5' },
+  { id: 'outcomes',     label: '🎁 מה תקבל',      desc: 'סקשן 6' },
+  { id: 'whyme',        label: '💡 למה אני',      desc: 'סקשן 7' },
+  { id: 'proofcases',   label: '🏆 קייסים',       desc: 'סקשן 8' },
+  { id: 'proofgrid',    label: '🖼️ גריד מודעות', desc: 'סקשן 8' },
+  { id: 'faqs',         label: '❓ שאלות',        desc: 'סקשן 10' },
+  { id: 'testimonials', label: '⭐ עדויות',        desc: '/testimonials' },
+  { id: 'stats',        label: '📊 סטטיסטיקות',  desc: 'מנותק' },
   { id: 'prompts',      label: '📚 פרומפטים',    desc: '/freebies' },
   { id: 'ig',           label: '🔗 כפתורי /ig',  desc: 'Link in Bio' },
-  { id: 'contact',      label: '📞 פרטי קשר',    desc: 'site_content' },
-  { id: 'faqs',         label: '❓ שאלות',        desc: 'FAQ' },
-  { id: 'stats',        label: '📊 סטטיסטיקות',  desc: 'Stats' },
-  { id: 'process',      label: '🔄 תהליך',        desc: 'Process' },
-  { id: 'whyme',        label: '💡 למה אני',      desc: 'WhyMe' },
-  { id: 'testimonials', label: '⭐ עדויות',        desc: 'Testimonials' },
 ];
 
 export default function AdminPage() {
@@ -1080,14 +1163,19 @@ export default function AdminPage() {
 
         {/* Tab content */}
         {activeTab === 'leads'        && <LeadsTab        toast={showToast} />}
+        {activeTab === 'contact'      && <ContactTab      toast={showToast} />}
+        {activeTab === 'trust'        && <TrustTab        toast={showToast} />}
+        {activeTab === 'pain'         && <PainTab         toast={showToast} />}
+        {activeTab === 'process'      && <ProcessTab      toast={showToast} />}
+        {activeTab === 'outcomes'     && <OutcomesTab     toast={showToast} />}
+        {activeTab === 'whyme'        && <WhyMeTab        toast={showToast} />}
+        {activeTab === 'proofcases'   && <ProofCasesTab   toast={showToast} />}
+        {activeTab === 'proofgrid'    && <ProofGridTab    toast={showToast} />}
+        {activeTab === 'faqs'         && <FaqsTab         toast={showToast} />}
+        {activeTab === 'testimonials' && <TestimonialsTab toast={showToast} />}
+        {activeTab === 'stats'        && <StatsTab        toast={showToast} />}
         {activeTab === 'prompts'      && <PromptsTab      toast={showToast} />}
         {activeTab === 'ig'           && <IgLinksTab      toast={showToast} />}
-        {activeTab === 'contact'      && <ContactTab      toast={showToast} />}
-        {activeTab === 'faqs'         && <FaqsTab         toast={showToast} />}
-        {activeTab === 'stats'        && <StatsTab        toast={showToast} />}
-        {activeTab === 'process'      && <ProcessTab      toast={showToast} />}
-        {activeTab === 'whyme'        && <WhyMeTab        toast={showToast} />}
-        {activeTab === 'testimonials' && <TestimonialsTab toast={showToast} />}
       </div>
 
       {/* Toast */}

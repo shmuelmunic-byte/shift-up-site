@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { supabase } from '../lib/supabase';
+import { useContent } from '../lib/useContent';
 
 gsap.registerPlugin(ScrollTrigger);
 
 /* ── סקשן 8 — הוכחה דו-שכבתית ("אתה יודע לחשוב ולעשות?") ──
    שכבה 1: קייסים אסטרטגיים (מוכיחים חשיבה) · שכבה 2: גריד קריאייטיב (מוכיח ביצוע+גיוון).
-   אין טענות תוצאות — הכל מתויג "דוגמת תהליך". */
+   אין טענות תוצאות — הכל מתויג "דוגמת תהליך". fallback-first מ-DB. */
 
-const CASES = [
+const FALLBACK_CASES = [
   {
     tag: 'דוגמת תהליך',
     title: 'עסק קינוחי בוטיק',
@@ -33,7 +35,7 @@ const CASES = [
   },
 ];
 
-const GRID = [
+const FALLBACK_GRID = [
   { file: 'events-yehuda.jpg',      client: 'יהודה סימן-טוב', field: 'אירועים' },
   { file: 'realestate-villas.jpg',  client: 'Real Estate',     field: 'נדל"ן' },
   { file: 'legal-skler.jpg',        client: 'עו"ד סקלר',       field: 'משפטי' },
@@ -127,7 +129,7 @@ function GridTile({ item, index, onOpen }) {
   return (
     <button
       ref={ref}
-      onClick={() => onOpen(index)}
+      onClick={() => onOpen(item)}
       style={{
         opacity: 0, position: 'relative', display: 'block', width: '100%',
         aspectRatio: '4 / 5', borderRadius: 14, overflow: 'hidden',
@@ -153,9 +155,8 @@ function GridTile({ item, index, onOpen }) {
   );
 }
 
-function Lightbox({ index, onClose }) {
-  if (index === null) return null;
-  const item = GRID[index];
+function Lightbox({ item, onClose }) {
+  if (!item) return null;
   return (
     <div
       onClick={onClose}
@@ -188,6 +189,27 @@ export default function Proof() {
   const headRef = useRef(null);
   const grHeadRef = useRef(null);
   const [open, setOpen] = useState(null);
+  const [cases, setCases] = useState(FALLBACK_CASES);
+  const [grid, setGrid] = useState(FALLBACK_GRID);
+  const t = useContent({
+    'proof.kicker': 'The Proof',
+    'proof.title': 'לא מבטיח.',
+    'proof.title_accent': 'מראה.',
+    'proof.lead': 'קודם החשיבה — איך מפצחים מיצוב של עסק. אחר כך הביצוע — קריאייטיב אמיתי שיצרתי, בכל תחום ולכל קהל.',
+    'proof.grid_title': 'קריאייטיב שמוכר —',
+    'proof.grid_title_accent': 'בכל תחום, לכל קהל.',
+  });
+
+  useEffect(() => {
+    supabase.from('proof_cases').select('*').order('position')
+      .then(({ data }) => {
+        if (data?.length) setCases(data.map(r => ({
+          ...r, steps: Array.isArray(r.steps) ? r.steps : JSON.parse(r.steps || '[]'),
+        })));
+      });
+    supabase.from('proof_grid').select('*').order('position')
+      .then(({ data }) => { if (data?.length) setGrid(data); });
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -215,33 +237,33 @@ export default function Proof() {
 
         {/* כותרת */}
         <div ref={headRef} className="proof-head" style={{ textAlign: 'right', maxWidth: 680, marginBottom: 'clamp(36px, 5vw, 56px)', opacity: 0 }}>
-          <div className="section-label">The Proof</div>
+          <div className="section-label">{t['proof.kicker']}</div>
           <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.4rem)', fontWeight: 900, lineHeight: 1.08, letterSpacing: '-0.02em', marginBottom: 16, fontFamily: "'Heebo', sans-serif" }}>
-            לא מבטיח. <span className="text-gradient">מראה.</span>
+            {t['proof.title']} <span className="text-gradient">{t['proof.title_accent']}</span>
           </h2>
           <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
-            קודם החשיבה — איך מפצחים מיצוב של עסק. אחר כך הביצוע — קריאייטיב אמיתי שיצרתי, בכל תחום ולכל קהל.
+            {t['proof.lead']}
           </p>
         </div>
 
         {/* שכבה 1 — קייסים */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20, marginBottom: 'clamp(56px, 8vw, 84px)' }}>
-          {CASES.map((c, i) => <CaseCard key={i} item={c} index={i} />)}
+          {cases.map((c, i) => <CaseCard key={c.id || i} item={c} index={i} />)}
         </div>
 
         {/* שכבה 2 — גריד קריאייטיב */}
         <div ref={grHeadRef} className="proof-grid-head" style={{ textAlign: 'center', marginBottom: 'clamp(28px, 4vw, 40px)', opacity: 0 }}>
           <h3 style={{ fontSize: 'clamp(1.4rem, 3.5vw, 2.2rem)', fontWeight: 900, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
-            קריאייטיב שמוכר — <span style={{ color: 'var(--brand-prime)' }}>בכל תחום, לכל קהל.</span>
+            {t['proof.grid_title']} <span style={{ color: 'var(--brand-prime)' }}>{t['proof.grid_title_accent']}</span>
           </h3>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14 }}>
-          {GRID.map((g, i) => <GridTile key={g.file} item={g} index={i} onOpen={setOpen} />)}
+          {grid.map((g, i) => <GridTile key={g.id || g.file} item={g} index={i} onOpen={setOpen} />)}
         </div>
       </div>
 
-      <Lightbox index={open} onClose={() => setOpen(null)} />
+      <Lightbox item={open} onClose={() => setOpen(null)} />
     </section>
   );
 }

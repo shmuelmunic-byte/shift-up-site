@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { supabase } from '../lib/supabase';
+import { useContent } from '../lib/useContent';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,38 +15,18 @@ function isOnlineNow() {
   return hour >= 8 && hour < 17;
 }
 
-/* ── עמודי אמון (סקשן 2 — "אפשר לסמוך?") ── */
-const PILLARS = [
-  {
-    title: '2–3 עסקים ברבעון',
-    text: 'בוחר מעט לקוחות בכוונה — כדי שכל אחד יקבל ליווי מלא, לא תור.',
-    icon: (
-      <>
-        <circle cx="12" cy="12" r="9" />
-        <circle cx="12" cy="12" r="4.5" />
-        <circle cx="12" cy="12" r="0.6" fill="currentColor" stroke="none" />
-      </>
-    ),
-  },
-  {
-    title: 'אדם אחד, לא סוכנות',
-    text: 'מי שמפצח את האסטרטגיה הוא מי שמבצע אותה. בלי צוות מתחלף, בלי מתמחה.',
-    icon: (
-      <>
-        <circle cx="12" cy="8" r="3.5" />
-        <path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7" />
-      </>
-    ),
-  },
-  {
-    title: 'שיחת היכרות חינם',
-    text: 'נבדוק יחד אם יש התאמה — בלי התחייבות, בלי לחץ מכירה.',
-    icon: (
-      <>
-        <path d="M21 11.5a8.4 8.4 0 0 1-9 8.4L3 21l1.1-4.1A8.4 8.4 0 1 1 21 11.5Z" />
-      </>
-    ),
-  },
+/* אייקונים נשארים בקוד — ממופים לפי position/index */
+const PILLAR_ICONS = [
+  (<><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" /><circle cx="12" cy="12" r="0.6" fill="currentColor" stroke="none" /></>),
+  (<><circle cx="12" cy="8" r="3.5" /><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7" /></>),
+  (<><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4L3 21l1.1-4.1A8.4 8.4 0 1 1 21 11.5Z" /></>),
+];
+
+/* ── עמודי אמון (סקשן 2 — "אפשר לסמוך?") — fallback ── */
+const FALLBACK_PILLARS = [
+  { title: '2–3 עסקים ברבעון', text: 'בוחר מעט לקוחות בכוונה — כדי שכל אחד יקבל ליווי מלא, לא תור.' },
+  { title: 'אדם אחד, לא סוכנות', text: 'מי שמפצח את האסטרטגיה הוא מי שמבצע אותה. בלי צוות מתחלף, בלי מתמחה.' },
+  { title: 'שיחת היכרות חינם', text: 'נבדוק יחד אם יש התאמה — בלי התחייבות, בלי לחץ מכירה.' },
 ];
 
 function Pillar({ pillar, index }) {
@@ -77,7 +59,7 @@ function Pillar({ pillar, index }) {
         background: 'oklch(0.78 0.20 145 / 0.1)', border: '1px solid oklch(0.78 0.20 145 / 0.22)',
       }}>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          {pillar.icon}
+          {PILLAR_ICONS[index] || PILLAR_ICONS[0]}
         </svg>
       </span>
       <div>
@@ -95,6 +77,16 @@ function Pillar({ pillar, index }) {
 export default function TrustStrip() {
   const headRef = useRef(null);
   const [online, setOnline] = useState(isOnlineNow);
+  const [pillars, setPillars] = useState(FALLBACK_PILLARS);
+  const t = useContent({
+    'trust.title': 'לא עובד עם כולם.',
+    'trust.title_accent': 'וזה בדיוק העניין.',
+  });
+
+  useEffect(() => {
+    supabase.from('trust_pillars').select('*').order('position')
+      .then(({ data }) => { if (data?.length) setPillars(data); });
+  }, []);
 
   useEffect(() => {
     const id = setInterval(() => setOnline(isOnlineNow()), 60000);
@@ -140,13 +132,13 @@ export default function TrustStrip() {
             fontSize: 'clamp(1.5rem, 4vw, 2.4rem)', fontWeight: 900,
             letterSpacing: '-0.02em', lineHeight: 1.2, color: 'var(--text-primary)',
           }}>
-            לא עובד עם כולם. <span style={{ color: 'var(--brand-prime)' }}>וזה בדיוק העניין.</span>
+            {t['trust.title']} <span style={{ color: 'var(--brand-prime)' }}>{t['trust.title_accent']}</span>
           </h2>
         </div>
 
         {/* עמודי אמון */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'clamp(24px, 4vw, 40px)', justifyContent: 'center' }}>
-          {PILLARS.map((p, i) => <Pillar key={i} pillar={p} index={i} />)}
+          {pillars.map((p, i) => <Pillar key={p.id || i} pillar={p} index={i} />)}
         </div>
       </div>
     </section>

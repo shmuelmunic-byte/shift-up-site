@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { supabase } from '../lib/supabase';
 import { useSiteLinks } from '../lib/useSiteLinks';
+import { useContent } from '../lib/useContent';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -30,6 +31,15 @@ function fireLead() {
 export default function LeadForm() {
   const sectionRef = useRef(null);
   const { whatsapp_url: waLinkRaw } = useSiteLinks();
+  const c = useContent({
+    'leadform.scarcity': 'פנוי כרגע ל-2–3 עסקים בלבד ברבעון',
+    'leadform.title': 'בוא נעשה לעסק שלך',
+    'leadform.title_accent': 'Shift Up.',
+    'leadform.subtitle': 'השאר פרטים ואחזור אליך לשיחת פיצוח קצרה — נבדוק יחד אם יש התאמה.',
+    'leadform.price_note': 'מתחיל מ-1,500 ₪ · שיחת הפיצוח הראשונה חינם, ללא התחייבות.',
+    'leadform.wa_title': 'מעדיף לדבר עכשיו?',
+    'leadform.soft_door': 'עוד לא בשל? זה בסדר. תוכל פשוט לעקוב ולקבל ערך — גלול מטה לקהילת ה-WhatsApp השקטה.',
+  });
   const [form, setForm] = useState({ name: '', phone: '', business: '', message: '' });
   const [status, setStatus] = useState('idle'); // idle | sending | done | error
   const [touched, setTouched] = useState(false);
@@ -100,18 +110,18 @@ export default function LeadForm() {
             borderRadius: 999, padding: '6px 16px', fontSize: '0.82rem', fontWeight: 700, color: '#117a41',
           }}>
             <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#1f9d57', display: 'block', boxShadow: '0 0 6px #1f9d57', animation: 'pulse-ring 2s ease-out infinite' }} />
-            פנוי כרגע ל-2–3 עסקים בלבד ברבעון
+            {c['leadform.scarcity']}
           </span>
         </div>
 
         <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.15, color: '#0c1118', marginBottom: 12 }}>
-          בוא נעשה לעסק שלך <span style={{ color: '#117a41' }}>Shift Up.</span>
+          {c['leadform.title']} <span style={{ color: '#117a41' }}>{c['leadform.title_accent']}</span>
         </h2>
         <p style={{ textAlign: 'center', fontSize: 'clamp(1rem, 2.4vw, 1.15rem)', color: '#4a5868', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 8px' }}>
-          השאר פרטים ואחזור אליך לשיחת פיצוח קצרה — נבדוק יחד אם יש התאמה.
+          {c['leadform.subtitle']}
         </p>
         <p style={{ textAlign: 'center', fontSize: '0.9rem', color: '#6b7d92', fontWeight: 600, marginBottom: 36 }}>
-          מתחיל מ-1,500 ₪ · שיחת הפיצוח הראשונה <strong style={{ color: '#117a41' }}>חינם</strong>, ללא התחייבות.
+          {c['leadform.price_note']}
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.3fr) minmax(0, 1fr)', gap: 'clamp(20px, 3vw, 36px)', alignItems: 'start' }} className="lf-grid">
@@ -187,7 +197,7 @@ export default function LeadForm() {
           {/* ── דלת משנית (וואטסאפ) + שלישית רכה ── */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div style={{ background: '#fff', borderRadius: 20, padding: 'clamp(22px, 3vw, 30px)', border: '1px solid #e1e8f0', boxShadow: '0 10px 40px rgba(12,17,24,0.05)' }}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0c1118', marginBottom: 8 }}>מעדיף לדבר עכשיו?</h3>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0c1118', marginBottom: 8 }}>{c['leadform.wa_title']}</h3>
               <p style={{ fontSize: '0.92rem', color: '#4a5868', lineHeight: 1.6, marginBottom: 18 }}>
                 שלח לי הודעה בוואטסאפ ואחזור אליך מהר.
               </p>
@@ -198,7 +208,7 @@ export default function LeadForm() {
 
             <div style={{ background: 'rgba(12,17,24,0.04)', borderRadius: 16, padding: '20px 22px', border: '1px dashed #c3cedb' }}>
               <p style={{ fontSize: '0.92rem', color: '#3a4757', lineHeight: 1.6 }}>
-                <strong style={{ color: '#0c1118' }}>עוד לא בשל?</strong> זה בסדר. תוכל פשוט לעקוב ולקבל ערך — גלול מטה לקהילת ה-WhatsApp השקטה. 👇
+                {c['leadform.soft_door']} 👇
               </p>
             </div>
           </div>

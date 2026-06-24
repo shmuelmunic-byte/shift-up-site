@@ -1,16 +1,18 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { supabase } from '../lib/supabase';
+import { useContent } from '../lib/useContent';
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* ── סקשן 3 — הכאב ("מבינים אותי?") ──
+/* ── סקשן 3 — הכאב ("מבינים אותי?") — fallback ──
    ירוק שמור לפעולה בלבד; הכאב ניטרלי/כהה, וההקלה (ירוק) רק בסוף. */
-const PAINS = [
-  'שורף תקציב על ממומן — והלידים פשוט לא מגיעים.',
-  'מפרסם, אבל לא באמת בטוח מה המסר שעובד, ולמי.',
-  'במקום לנהל את העסק, אתה רודף אחרי הקמפיינים והפוסטים.',
-  'כבר נכווית מסוכנות שהבטיחה הרים — והעבירה אותך למתמחה.',
+const FALLBACK_PAINS = [
+  { text: 'שורף תקציב על ממומן — והלידים פשוט לא מגיעים.' },
+  { text: 'מפרסם, אבל לא באמת בטוח מה המסר שעובד, ולמי.' },
+  { text: 'במקום לנהל את העסק, אתה רודף אחרי הקמפיינים והפוסטים.' },
+  { text: 'כבר נכווית מסוכנות שהבטיחה הרים — והעבירה אותך למתמחה.' },
 ];
 
 function PainCard({ text, index }) {
@@ -60,6 +62,18 @@ function PainCard({ text, index }) {
 export default function PainSection() {
   const headRef = useRef(null);
   const bridgeRef = useRef(null);
+  const [pains, setPains] = useState(FALLBACK_PAINS);
+  const t = useContent({
+    'pain.kicker': 'רגע של אמת',
+    'pain.title': 'נמאס לרדוף אחרי השיווק — ולא לראות תוצאה?',
+    'pain.bridge': 'זה לא חייב להיות ככה.',
+    'pain.bridge_accent': 'יש דרך אחת מסודרת.',
+  });
+
+  useEffect(() => {
+    supabase.from('pain_points').select('*').order('position')
+      .then(({ data }) => { if (data?.length) setPains(data); });
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -82,27 +96,27 @@ export default function PainSection() {
         {/* כותרת — הוק הכאב */}
         <div ref={headRef} className="pain-head" style={{ textAlign: 'center', marginBottom: 'clamp(36px, 6vw, 56px)', opacity: 0 }}>
           <span style={{ color: 'var(--text-muted)', fontSize: '0.74rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase' }}>
-            רגע של אמת
+            {t['pain.kicker']}
           </span>
           <h2 style={{
             fontSize: 'clamp(1.7rem, 5vw, 3rem)', fontWeight: 900,
             letterSpacing: '-0.02em', lineHeight: 1.2, color: 'var(--text-primary)',
             marginTop: 14, maxWidth: 680, marginInline: 'auto',
           }}>
-            נמאס לרדוף אחרי השיווק — ולא לראות תוצאה?
+            {t['pain.title']}
           </h2>
         </div>
 
         {/* כרטיסי כאב — 2×2 */}
         <div className="grid-2x2">
-          {PAINS.map((t, i) => <PainCard key={i} text={t} index={i} />)}
+          {pains.map((p, i) => <PainCard key={p.id || i} text={p.text} index={i} />)}
         </div>
 
         {/* מעבר להקלה — כאן נכנס הירוק */}
         <div ref={bridgeRef} className="pain-bridge" style={{ textAlign: 'center', marginTop: 'clamp(40px, 6vw, 60px)', opacity: 0 }}>
           <p style={{ fontSize: 'clamp(1.15rem, 3vw, 1.6rem)', fontWeight: 800, lineHeight: 1.5, color: 'var(--text-primary)' }}>
-            זה לא חייב להיות ככה.{' '}
-            <span style={{ color: 'var(--brand-prime)' }}>יש דרך אחת מסודרת.</span>
+            {t['pain.bridge']}{' '}
+            <span style={{ color: 'var(--brand-prime)' }}>{t['pain.bridge_accent']}</span>
           </p>
         </div>
       </div>
