@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shift Up — אפיון דף הבית</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c1118; --surface:#141b25; --surface2:#1b2430;
+    --green:#34d97b; --green-soft:#34d97b22; --green-line:#34d97b44;
+    --purple:#9a7bff; --ink:#eaf0f7; --muted:#9fb0c3; --dim:#6b7d92; --border:#ffffff14;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:'Heebo',sans-serif;
+    font-size:16px; line-height:1.75; direction:rtl; text-align:right;}
+  .wrap{max-width:920px; margin:0 auto; padding:48px 22px 90px;}
+  header.doc{border-bottom:3px solid var(--green); padding-bottom:20px; margin-bottom:8px;}
+  .kicker{color:var(--green); font-weight:800; letter-spacing:.08em; font-size:.8rem; text-transform:uppercase;}
+  h1{font-size:2.1rem; font-weight:900; line-height:1.15; margin:6px 0 10px;}
+  h2{font-size:1.4rem; font-weight:900; margin:40px 0 12px; padding-top:10px; color:#fff; border-top:1px solid var(--border);}
+  h2 .num{color:var(--green); font-size:1rem; margin-left:8px; border:1px solid var(--green-line); border-radius:6px; padding:1px 8px;}
+  h3{font-size:1.08rem; font-weight:800; color:var(--green); margin:20px 0 6px;}
+  p{margin:8px 0;}
+  .lead{color:var(--muted); font-size:1.02rem;}
+  strong{color:#fff;}
+  a{color:var(--green);}
+  .meta{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:18px 0;}
+  .meta .box{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 14px;}
+  .meta .lbl{font-size:.72rem; color:var(--dim); font-weight:800; letter-spacing:.05em; text-transform:uppercase;}
+  .meta .val{font-size:1.02rem; font-weight:800; color:#fff; margin-top:3px;}
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px 18px; margin:12px 0;}
+  blockquote{margin:16px 0; padding:14px 18px; background:var(--green-soft); border-right:4px solid var(--green); border-radius:8px;}
+  blockquote p{margin:4px 0; color:#dffbe9;}
+  table{width:100%; border-collapse:collapse; margin:12px 0; font-size:.9rem;}
+  th,td{border:1px solid var(--border); padding:9px 11px; text-align:right; vertical-align:top;}
+  th{background:#16241c; color:var(--green); font-weight:800;}
+  tr:nth-child(even) td{background:#101722;}
+  .funnel td:nth-child(2){font-weight:800; color:#fff; white-space:nowrap;}
+  ul,ol{margin:8px 0; padding-right:22px;} li{margin:5px 0;}
+  .swatches{display:flex; flex-wrap:wrap; gap:10px; margin:12px 0;}
+  .sw{border-radius:10px; padding:14px 12px; min-width:110px; flex:1; border:1px solid var(--border); font-size:.76rem; font-weight:800;}
+  .footnote{color:var(--dim); font-size:.85rem;}
+  .pill{display:inline-block; background:var(--surface2); border:1px solid var(--border); border-radius:100px; padding:3px 12px; font-size:.82rem; color:var(--muted); margin:2px 3px;}
+  .star{color:var(--green);}
+  @media(max-width:640px){.meta{grid-template-columns:1fr 1fr;} h1{font-size:1.7rem;} body{font-size:15px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <div class="kicker">אפיון · דף נחיתה</div>
+  <h1>Shift Up — אפיון דף הבית</h1>
+  <p class="lead">בריף קצר בדף אחד שממנו בונים את הדף. זו טיוטה להגיב עליה — עוברים, מתקנים, ומאשרים לפני שמתחילים לבנות. נשען על מסמך המחקר (<a href="landing-research.html">landing-research.html</a>).</p>
+</header>
+
+<div class="meta">
+  <div class="box"><div class="lbl">לקוח</div><div class="val">שמואל מוניץ · Shift Up</div></div>
+  <div class="box"><div class="lbl">דף</div><div class="val">דף הבית (/)</div></div>
+  <div class="box"><div class="lbl">מטרת הדף</div><div class="val">ליד: טופס + וואטסאפ</div></div>
+  <div class="box"><div class="lbl">עוגן מחיר</div><div class="val">מתחיל מ-1,500 ₪</div></div>
+  <div class="box"><div class="lbl">קיבולת</div><div class="val">2–3 מקומות / חודש</div></div>
+  <div class="box"><div class="lbl">סטטוס</div><div class="val">מאושר — מוכן לבנייה</div></div>
+</div>
+
+<!-- 01 -->
+<h2><span class="num">01</span> תקציר</h2>
+<p>דף נחיתה שמטרתו אחת: <strong>להפוך מבקר לליד</strong> — בעל עסק שעייף מלרדוף אחרי השיווק ורוצה מקצוען אחד שייקח את זה ממנו. הדף מוכר <strong>אסטרטגיה שיווקית, קריאייטיב שמוכר, וקמפיינים ממומנים</strong> — לא דיוור ולא הגדלת רשימה.</p>
+<p>שלושת הדברים שהדף חייב להעביר: <strong>(1)</strong> מפצחים את המסר לפני ששורפים תקציב; <strong>(2)</strong> אדם אחד אחראי על הכל — אתה משוחרר מהעול; <strong>(3)</strong> מהירות AI = יותר, מהר, בלי בזבוז.</p>
+
+<!-- 02 -->
+<h2><span class="num">02</span> המטרה</h2>
+<ul>
+  <li><strong>מטרה ראשית:</strong> מבקר מתאים משאיר פרטים ב<strong>טופס</strong> (דלת רכה) או פונה ב<strong>וואטסאפ</strong> (דלת חמה). כל הדף עובד לכיוון הפעולה הזו.</li>
+  <li><strong>מטרה משנית:</strong> לבסס אמון בשמואל ובשיטה, ולסנן את מי שזה באמת מתאים לו.</li>
+  <li><strong>לא מטרה:</strong> ללמד מה זה AI, למכור על מחיר זול, או למצב על דיוור/רשימת תפוצה.</li>
+</ul>
+<p class="footnote">מנגנון ליד: טופס → טבלת <code>leads</code> ב-Supabase (קיים) + התראת מייל, צפייה ב-/admin. אירוע <code>Lead</code> (מטא + GA4) בשליחה.</p>
+
+<!-- 03 -->
+<h2><span class="num">03</span> קהל היעד</h2>
+<p>בעל עסק קטן/בינוני מבוסס, שכבר מוציא על פרסום אבל לא רואה תוצאה — ובעיקר <strong>כזה שרוצה פשוט מקצוען שייקח את העול ויחזיר לו שקט</strong>, כדי שיתפנה לנהל את העסק. מה שמשותף: הם רוצים שמישהו יבין אותם ויטפל — לא עוד הרצאה על שיווק.</p>
+
+<h3>ההתנגדויות, ואיך הדף עונה</h3>
+<table>
+  <thead><tr><th>מה עוצר אותם</th><th>איך הדף מפרק את זה</th></tr></thead>
+  <tbody>
+    <tr><td>"כבר ניסיתי שיווק וזה לא עבד."</td><td>"כי קודם צריך לפצח את המסר. בלי זה כל תקציב נשרף." — השיטה לפני הביצוע.</td></tr>
+    <tr><td>"אין לי זמן/כוח להתעסק בזה."</td><td>בדיוק בשביל זה — אדם אחד לוקח את הכל לידיים. אתה משוחרר.</td></tr>
+    <tr><td>"למה אתה ולא סוכנות?"</td><td>בסוכנות אתה תיק. אצלי אתה מדבר ישירות עם מי שמבצע.</td></tr>
+    <tr><td>"יקר לי?"</td><td>עוגן ברור ("מתחיל מ-1,500 ₪"), שיחת פיצוח חינם, התאמה לתקציב.</td></tr>
+    <tr><td>"AI = זול/לא איכותי?"</td><td>AI עושה את העבודה השחורה מהר; ההחלטות, המסר והקריאייטיב — אנושיים.</td></tr>
+  </tbody>
+</table>
+
+<!-- 04 -->
+<h2><span class="num">04</span> המסר המרכזי והמיצוב</h2>
+<blockquote>
+  <p style="font-size:1.15rem; font-weight:800; color:#fff;">"שיווק שעובד — בלי שתתעסק בזה. מפצחים את המסר, מריצים את הקמפיין, ואתה מקבל לידים."</p>
+</blockquote>
+<h3>מול מה מתמצבים</h3>
+<ul>
+  <li><strong>מול סוכנות:</strong> אצלנו אתה לא תיק — אדם אחד שמכיר אותך ומבצע בעצמו.</li>
+  <li><strong>מול "הייפ AI":</strong> אין קסם. AI מאיץ, השיפוט והמסר אנושיים.</li>
+  <li><strong>מול "תריץ קמפיין":</strong> קודם מפצחים מה מוכרים ולמי — אחרת זה כסף בפח.</li>
+</ul>
+<p class="footnote"><strong>הכוכב הצפון:</strong> אתה ממשיך לנהל את העסק — שמואל לוקח את השיווק. זה גם הטון וגם ההבטחה.</p>
+
+<!-- 05 -->
+<h2><span class="num">05</span> טון ואווירה</h2>
+<ul>
+  <li><strong>מרגיע ובטוח</strong> — "אתה לא צריך להבין שיווק, אתה צריך מישהו שמבין."</li>
+  <li><strong>קונקרטי</strong> — מדברים בתוצאות ובפעולות, לא בהבטחות מעורפלות. בלי באזז-וורדס.</li>
+  <li><strong>דוגרי מקצועי</strong>, בעברית נגישה. בלי הייפ של AI.</li>
+</ul>
+
+<!-- 06 -->
+<h2><span class="num">06</span> שפה עיצובית</h2>
+<p>לשמר את הזהות הכהה+ירוקה (נכס מעל המתחרים), לרענן להמרה. כלל 60-30-10: 60% כהה · 30% משטחים+טקסט · 10% ירוק <strong>רק על פעולה</strong>.</p>
+<div class="swatches">
+  <div class="sw" style="background:#0c1118; color:#eaf0f7;">רקע · 60%</div>
+  <div class="sw" style="background:#141b25; color:#eaf0f7;">משטחים · 30%</div>
+  <div class="sw" style="background:#34d97b; color:#06210f;">ירוק · 10% (CTA)</div>
+  <div class="sw" style="background:#9a7bff; color:#0c0820;">סגול · הדגשה משנית</div>
+  <div class="sw" style="background:#1fb6cf; color:#04231f;">ציאן · מעברי גרדיאנט</div>
+</div>
+<p class="footnote"><strong>ציאן</strong> (<code>oklch(0.65 0.22 200)</code>) — קיים באתר הנוכחי ב-aurora orbs וכצבע מעבר בגרדיאנטים (ירוק↔סגול↔ציאן). לשמר: משמש לאווירה/רקע, <strong>לא</strong> ל-CTA.</p>
+<ul>
+  <li><strong>טיפוגרפיה:</strong> Heebo. כותרות 800–900, גוף 400–500. היררכיה ממשקל וגודל.</li>
+  <li><strong>סקשן הטופס על רקע בהיר</strong> — ניגוד ונקודת מיקוד; טפסים ממירים טוב יותר על בהיר.</li>
+  <li><strong>דימויים אמיתיים:</strong> תמונת שמואל + <strong>קריאייטיב שיצרת</strong> (ההוכחה הראשית). לא סטוק.</li>
+  <li><strong>ירוק במשורה</strong> — היום הוא בכל מקום; פחות = יותר המרה.</li>
+</ul>
+
+<!-- 07 -->
+<h2><span class="num">07</span> מבנה הדף, סקשן אחרי סקשן</h2>
+<p class="lead">משפך, לא ערימת סקשנים. כל סקשן עונה על השאלה הבאה ומסיר עוד סיבה לעזוב.</p>
+<table class="funnel">
+  <thead><tr><th>#</th><th>הסקשן</th><th>השאלה</th><th>למה כאן</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Hero + 2 כפתורים</td><td>"מה זה, וזה בשבילי?"</td><td>5 שניות. הקלה+תוצאה, ושתי דלתות.</td></tr>
+    <tr><td>2</td><td>רצועת אמון</td><td>"אפשר לסמוך?"</td><td>סלקטיביות / "בוחר מעט לקוחות" + שיחת היכרות חינם.</td></tr>
+    <tr><td>3</td><td>הכאב</td><td>"מבינים אותי?"</td><td>"נמאס לרדוף אחרי השיווק?" — לפני היתרונות.</td></tr>
+    <tr><td>4</td><td>המניפסט (האני מאמין)</td><td>"במה אתה מאמין?"</td><td>אחרי הכאב — אמירת עומק רגשית שממצבת את הגישה ("מסר לפני תקציב"), לפני המתודה. (קיים באתר — נשמר.)</td></tr>
+    <tr><td>5</td><td>3 השלבים</td><td>"איך זה עובד?"</td><td>פיצוח / שיפט / אקשן.</td></tr>
+    <tr><td>6</td><td>מה תקבל</td><td>"מה יוצא לי?"</td><td>לידים + שקט, בלי שתתעסק.</td></tr>
+    <tr><td>7</td><td>למה אני, לא סוכנות</td><td>"למה אתה?"</td><td>הבידול. כאן נופלים המתחרים.</td></tr>
+    <tr><td>8</td><td>הוכחה דו-שכבתית</td><td>"אתה יודע לחשוב ולעשות?"</td><td>קייס מיצוב (קינוחי בוטיק) + City Transformer + גריד 9 מודעות.</td></tr>
+    <tr><td>9</td><td>אודות שמואל</td><td>"מי האדם?"</td><td>הפנים מאחורי ההבטחה.</td></tr>
+    <tr><td>10</td><td>שאלות נפוצות</td><td>"מה אם...?"</td><td>מפרק התנגדויות (פרק 03).</td></tr>
+    <tr><td>11</td><td>טופס + וואטסאפ + scarcity</td><td>"מה עכשיו?"</td><td>רקע בהיר. טופס ראשי, וואטסאפ משני, "2–3 מקומות". + דלת שלישית רכה: <strong>קבוצת וואטסאפ שקטה</strong> ("עוד לא מוכן? הישאר בקשר").</td></tr>
+  </tbody>
+</table>
+<p class="footnote">שינוי מהקיים: נוסף "כאב" (3), "קריאייטיב/הוכחה" (8) ו"טופס" (11); סטטיסטיקות→תוצאות/סלקטיביות; <strong>המניפסט נשמר</strong> וממוקם אחרי הכאב (4); רק "מרקי" יורד (לא מקדם במשפך).</p>
+
+<!-- 08 -->
+<h2><span class="num">08</span> בריף תוכן לסקשנים המרכזיים</h2>
+<div class="card">
+<h3>Hero</h3>
+<p><strong>כותרת ראשית (נעול ✓):</strong> "תחזור לנהל את העסק. את השיווק תשאיר לי."<br>
+<strong>תת-כותרת:</strong> "אסטרטגיה, קריאייטיב שמוכר וקמפיינים ממומנים — מפוצחים לפני ששורפים תקציב."<br>
+<strong>כפתור ראשי:</strong> "לקבל הצעה / השאר פרטים" · <strong>משני:</strong> "דבר איתי בוואטסאפ"</p>
+</div>
+<div class="card">
+<h3>המניפסט (האני מאמין)</h3>
+<p>הטקסט הקיים באתר — נשמר <strong>כמו שהוא</strong>, בלי שינוי. אנימציית מילה-אחר-מילה (scrub), מילים מודגשות בירוק (רעיונות / הדלק / אנשים / היעד), חתימה "שמואל מוניץ":</p>
+<blockquote><p style="font-size:1.1rem; font-weight:800; color:#fff;">"רעיונות זה הדלק שלי. אנשים זה היעד. העסקים שלכם הם הדרך לשם."</p></blockquote>
+</div>
+<div class="card">
+<h3>3 השלבים</h3>
+<p><strong>הפיצוח:</strong> מי הקהל, מה מוכרים, ומה המסר — + תוכנית עבודה ברורה.<br>
+<strong>השיפט:</strong> משפך, תוכן וערוצים — לפני שקל אחד נכנס.<br>
+<strong>האקשן:</strong> קמפיינים מטא/גוגל, קריאייטיב שמוכר, דפי נחיתה ואוטומציות AI.</p>
+</div>
+<div class="card">
+<h3>הוכחה (סקשן 8)</h3>
+<p><strong>שכבה 1 — קייסים אסטרטגיים:</strong> ראשי — "עסק קינוחי בוטיק" (אנונימי): הכאב ("מה יגידו?") → המיצוב ("We don't sell cakes, we sell style") → המשפך. משני/טווח — City Transformer ("קטן עליך"). שניהם מתויגים "דוגמת תהליך", בלי טענת תוצאות.<br>
+<strong>שכבה 2 — גריד קריאייטיב:</strong> 9 מודעות שיצרת, 9 תחומים. כיתוב-על: "קריאייטיב שמוכר — בכל תחום, לכל קהל."</p>
+</div>
+<div class="card">
+<h3>קריאה לפעולה (חוזרת)</h3>
+<p><strong>ראשית:</strong> "קבל הצעה מותאמת" / "השאר פרטים ונדבר". <strong>משנית:</strong> "שאלה? דבר איתי בוואטסאפ". כפתור ירוק דומיננטי, פעולה אחת ברורה. עוגן: "מתחיל מ-1,500 ₪, שיחת פיצוח ראשונה חינם."<br>
+<strong>שלישית (רכה):</strong> "עוד לא מוכן? הצטרף לקהילת Shift Up השקטה" → קבוצת וואטסאפ. דלת ל-nurture של מי שלא בשל לליד. ויזואלית עדינה — לא מתחרה בכפתור הראשי. אירוע <code>Contact</code>/<code>join_group</code> (קיים).</p>
+</div>
+
+<!-- 09 -->
+<h2><span class="num">09</span> איך מוצאים את הדף (SEO)</h2>
+<p>ביטויים לשלב טבעי בכותרות ובטקסט:</p>
+<p>
+<span class="pill">שיווק דיגיטלי לעסק קטן</span>
+<span class="pill">אסטרטגיית שיווק לעסק</span>
+<span class="pill">קמפיינים ממומנים לעסק</span>
+<span class="pill">קריאייטיב שמוכר</span>
+<span class="pill">שיווק עם AI לעסקים</span>
+<span class="pill">איך לבחור משווק דיגיטלי</span>
+</p>
+<p class="footnote">דף הבית לבדו לא יתפוס הכל — דפי שירות/בלוג בהמשך. כאן: שילוב טבעי בכותרות.</p>
+
+<!-- 10 -->
+<h2><span class="num">10</span> מדד הצלחה</h2>
+<ul>
+  <li><strong>מדד ראשי:</strong> אחוז מבקרים שמשאירים פרטים או פונים בוואטסאפ.</li>
+  <li><strong>מדדי משנה:</strong> כמה גוללים עד הטופס, יחס טופס מול וואטסאפ, מקור תנועה (GA4/GSC/פיקסל מטא).</li>
+  <li><strong>יעד התחלתי:</strong> לקבוע baseline אחרי שבוע תנועה אמיתית, ואז יעד שיפור.</li>
+</ul>
+
+<!-- 11 -->
+<h2><span class="num">11</span> עוד לבדוק / לאסוף</h2>
+<ul>
+  <li><strong>הוכחה (סקשן 8):</strong> ✓ מוכן — 2 קייסים (קינוחי בוטיק אנונימי + City Transformer) + 9 מודעות בתיקייה <code>public/portfolio/</code>, אישורי הצגה as-is. <strong>נותר:</strong> להחליף מודעת SHIRA בגרסת קינוחי השבת המעודכנת, ולוודא ש-<code>retail-kehilot-card.jpg</code> = מודעת ה-5%. פירוט מלא: <a href="portfolio-manifest.md">portfolio-manifest.md</a>.</li>
+  <li><strong>עדויות/תוצאות:</strong> אין כרגע — להוסיף כשייכנסו, לא ממציאים.</li>
+  <li><strong>נתוני GA4/GSC:</strong> לייצא 90 יום לכיול היעד.</li>
+  <li><strong>נוסח scarcity מדויק</strong> + תדירות עדכון ידני.</li>
+</ul>
+
+<p class="footnote" style="margin-top:30px;">מסמך עבודה להגיב עליו, לא סופי. הופק עם Claude Code לפי שיטת הסדנה. מבוסס על <a href="landing-research.html">מסמך המחקר</a>.</p>
+
+</div>
+</body>
+</html>

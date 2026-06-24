@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shift Up — מחקר דף נחיתה (דף הבית)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c1118; --surface:#141b25; --surface2:#1b2430;
+    --green:#34d97b; --green-soft:#34d97b22; --green-line:#34d97b44;
+    --purple:#9a7bff; --ink:#eaf0f7; --muted:#9fb0c3; --dim:#6b7d92;
+    --border:#ffffff14;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Heebo',sans-serif; font-size:16px; line-height:1.75;
+    direction:rtl; text-align:right;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:48px 22px 90px;}
+  header.doc{border-bottom:3px solid var(--green); padding-bottom:20px; margin-bottom:8px;}
+  .kicker{color:var(--green); font-weight:800; letter-spacing:.08em; font-size:.8rem; text-transform:uppercase;}
+  h1{font-size:2.1rem; font-weight:900; line-height:1.15; margin:6px 0 10px;}
+  h2{font-size:1.45rem; font-weight:900; margin:42px 0 12px; padding-top:10px; color:#fff;
+     border-top:1px solid var(--border);}
+  h2 .num{color:var(--green); font-size:1.1rem; margin-left:8px;}
+  h3{font-size:1.12rem; font-weight:800; color:var(--green); margin:24px 0 6px;}
+  p{margin:8px 0; color:var(--ink);}
+  .lead{color:var(--muted); font-size:1.02rem;}
+  a{color:var(--green); text-decoration:none; border-bottom:1px dotted var(--green-line);}
+  ul,ol{margin:8px 0; padding-right:22px;}
+  li{margin:5px 0;}
+  strong{color:#fff;}
+  blockquote{margin:16px 0; padding:14px 18px; background:var(--green-soft);
+    border-right:4px solid var(--green); border-radius:8px; color:#dffbe9;}
+  blockquote p{margin:4px 0; color:#dffbe9;}
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:18px 20px; margin:14px 0;}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:14px 0;}
+  .pill{display:inline-block; background:var(--surface2); border:1px solid var(--border);
+    border-radius:100px; padding:3px 12px; font-size:.82rem; color:var(--muted); margin:2px 3px;}
+  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.9rem;}
+  th,td{border:1px solid var(--border); padding:9px 11px; text-align:right; vertical-align:top;}
+  th{background:#16241c; color:var(--green); font-weight:800; white-space:nowrap;}
+  tr:nth-child(even) td{background:#101722;}
+  .yes{color:var(--green); font-weight:800;}
+  .no{color:#ff7a7a; font-weight:800;}
+  .meh{color:#ffcf6b; font-weight:800;}
+  .funnel td:first-child{font-weight:800; color:#fff; white-space:nowrap;}
+  .swatches{display:flex; flex-wrap:wrap; gap:10px; margin:14px 0;}
+  .sw{border-radius:10px; padding:14px 12px; min-width:120px; flex:1; border:1px solid var(--border);
+    font-size:.78rem; font-weight:700;}
+  .footnote{color:var(--dim); font-size:.85rem;}
+  .tag{display:inline-block; font-size:.72rem; font-weight:800; padding:2px 9px; border-radius:6px;
+    background:var(--green-soft); color:var(--green); margin-inline-start:6px;}
+  .danger{background:#2a1718; border-color:#ff7a7a33;}
+  .ok{background:#13241a; border-color:var(--green-line);}
+  .src{font-size:.85rem; color:var(--dim);}
+  .src a{color:var(--muted);}
+  hr{border:none; border-top:1px solid var(--border); margin:26px 0;}
+  @media(max-width:640px){.grid3{grid-template-columns:1fr;} h1{font-size:1.7rem;} body{font-size:15px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <div class="kicker">מסמך מחקר · דף נחיתה</div>
+  <h1>Shift Up — מחקר לפני בנייה של דף הבית</h1>
+  <p class="lead">נכתב לפי שיטת <em>landing-page-research</em>: ריאיון → תוכנית → מחקר עם מקורות. זו טיוטה להגיב עליה — אתה המומחה בתחום שלך. סמן מה לא נכון או חסר, ונחדד יחד. מתוך זה ייכתב האפיון (הבריף בדף אחד).</p>
+  <p class="footnote">תאריך: 24/06/2026 · גרסה 1.0 · מוקד: דף הבית (<code>/</code>). שאר העמודים (/en, /ig, /freebies) נסקרו כהקשר בלבד.</p>
+</header>
+
+<!-- ============ SUMMARY ============ -->
+<h2><span class="num">★</span> תקציר — שלושת הדברים שהכי חשובים</h2>
+
+<div class="card">
+  <h3>1. השוק רווי, והבידול הוא המנוף #1</h3>
+  <p>כמעט כל מתחרה ישראלי מוכר בדיוק את אותו דבר: "שיווק דיגיטלי 360 לעסקים קטנים ובינוניים", "ליווי אישי", "תוצאות מדידות". מי שאומר את אותם משפטים — נבלע. לשיפט-אפ יש שילוב בידול שאף מתחרה בתוצאות החיפוש לא מחזיק יחד: <strong>איש אחד שגם חושב וגם מבצע + AI-native + מסר לפני תקציב</strong>.</p>
+
+  <h3>2. הפער ההמרתי הכי גדול: אין טופס ואין מספרים</h3>
+  <p><strong>כל</strong> המתחרים שמיפיתי תופסים לידים עם טופס (לרוב <em>שניים</em>) <em>וגם</em> וואטסאפ, ומציגים מספרים (90% המרה, 250+ פרויקטים, 764 לקוחות, דירוג 4.9). דף הבית של שיפט-אפ מסתמך כמעט רק על וואטסאפ ולא מציג מספרים. <span class="footnote">(מעניין: עמודי /ig ו-/freebies שלך כבר עושים "שתי דלתות" נכון — רק דף הבית לא.)</span></p>
+
+  <h3>3. הזווית של "תורידו ממני את העול" חזקה — אבל תפוסה חלקית</h3>
+  <p>הקהל שבחרת (עסק ששורף תקציב, שרוצה מקצוען שייקח את זה ממנו) הוא קהל עם כאב + תקציב. אבל מתחרה ישירה (<strong>אייה</strong>) כבר משחקת בדיוק שם ("השיווק כבד עליכם?", "השותפה שלך לצמיחה"). לכן הזווית חייבת להישען על מה שרק לך יש: <strong>אדם אחד אחראי, מסר לפני כסף, ומהירות AI</strong>.</p>
+</div>
+
+<blockquote>
+  <p><strong>המסר המרכזי (מאושר ✓):</strong></p>
+  <p style="font-size:1.15rem; font-weight:800; color:#fff;">"שיווק שעובד — בלי שתתעסק בזה. מפצחים את המסר, מריצים את הקמפיין, ואתה מקבל לידים."</p>
+  <p class="footnote">משלב הקלה (לא תתעסק) + תוצאה (לידים) + השיטה הייחודית (מסר לפני תקציב).</p>
+</blockquote>
+
+<!-- ============ TARGET A ============ -->
+<h2><span class="num">A</span> העסק, המותג והמסר</h2>
+
+<h3>מה שיפט-אפ מוכר (מאומת מהאתר + תיקוני הלקוח)</h3>
+<p>שלושה תחומים, לפי המתודולוגיה התלת-שלבית: <strong>הפיצוח</strong> (אבחון: מתחרים, קהל, הצעת ערך, מסר ליבה, ו<strong>תוכנית עבודה ברורה</strong> — לא משימות תוכן יומיות) · <strong>השיפט</strong> (אסטרטגיה: משפך, תוכן, ערוצים) · <strong>האקשן</strong> (ביצוע: קמפיינים מטא/גוגל, <strong>יצירת מודעות וקריאייטיב</strong>, דפי נחיתה, אוטומציות AI). דמות אחת — אסטרטג <em>וגם</em> מבצע.
+<span class="src">מקור: <a href="https://www.shiftup.marketing/llms.txt">llms.txt</a>, <a href="https://www.shiftup.marketing/index.md">index.md</a> (נקרא 24/06/2026) + תיקוני הלקוח 24/06.</span></p>
+
+<h3>עובדות מאומתות מהלקוח <span class="tag">חדש</span></h3>
+<div class="card">
+<ul>
+  <li><strong>תמחור (עוגן):</strong> 1,500–2,000 ₪ לחלק האסטרטגיה/פיצוח/הקמה · 1,000–1,500 ₪ ריטיינר חודשי לניהול שוטף (לא כולל תקציבי מדיה).</li>
+  <li><strong>קיבולת:</strong> עד 5–7 לקוחות ברבעון כרגע (במהלך שירות לאומי) — זמן מוגבל.</li>
+  <li><strong>עדויות:</strong> אין כרגע. <span class="no">פער הוכחה.</span></li>
+  <li><strong>מנגנון ליד:</strong> אין CRM כרגע — ליד ייכנס למייל + טבלה (Sheets/Supabase).</li>
+  <li><strong>מדידה:</strong> GA4 + Search Console חשובים; באתר גם פיקסל מטא.</li>
+</ul>
+</div>
+
+<div class="card ok">
+  <h3 style="margin-top:0;">✓ הוכרע: מיצוב על אסטרטגיה + קריאייטיב שמוכר + קמפיינים ממומנים</h3>
+  <p>הדף <strong>לא</strong> ימצב על דיוור או הגדלת רשימה (זה רק מה שמתבצע ללקוח אחד כרגע, לא מה שרוצים למכור). המיקוד: <strong>אסטרטגיה שיווקית, קריאייטיב שמוכר, וקמפיינים ממומנים</strong> — תואם לאתר הקיים ולכיוון העסק.</p>
+  <p><strong>האתגר שנותר:</strong> במיצוב הזה אין כרגע הוכחה — לא עדויות ולא תוצאות קמפיין. לכן האמון ייבנה אחרת (לא דרך תוצאות מומצאות):</p>
+  <ul>
+    <li><strong>למכור את השיטה והאדם</strong> — "מסר לפני תקציב", 3 השלבים, ושמואל עצמו. אסטרטג נמדד באיכות החשיבה, וזו לגיטימית להציג.</li>
+    <li><strong>להראות קריאייטיב אמיתי</strong> — מודעות/ויזואלים שיצרת בפועל = הוכחת מיומנות שיש לך <em>היום</em>, גם בלי שם לקוח. הכי חזק.</li>
+    <li><strong>להוריד סיכון</strong> — "שיחת פיצוח חינם, בלי התחייבות" כמנגנון אמון במקום הבטחת תוצאה.</li>
+    <li><strong>סלקטיביות כיתרון</strong> — "בוחר מעט לקוחות" הופך מיעוט נפח ליוקרה/מיקוד.</li>
+    <li><strong>ככל שייכנסו תוצאות אמיתיות</strong> — מוסיפים עדויות ומספרים. עד אז, לא ממציאים.</li>
+  </ul>
+</div>
+
+<h3>הבידול האמיתי</h3>
+<p>לא תכונה בודדת — <strong>שילוב</strong>: (1) לא סוכנות, איש אחד שאתה מדבר איתו ישירות; (2) AI שמקצר שבועות לשעות = מהיר וזול יותר; (3) מסר לפני תקציב כעיקרון, לא סיסמה. מול קהל ה"תורידו ממני את העול", מוסיפים שכבה רגשית: <strong>שקט נפשי — מישהו אחד אחראי על הכל.</strong></p>
+
+<h3>טון וקול</h3>
+<p>ישיר, בטוח, "דוגרי" מקצועי — אבל לקהל הזה צריך גם נימה <strong>מרגיעה</strong>: "אתה לא צריך להבין שיווק, אתה צריך מישהו שמבין." בלי באזז-וורדס, בלי הייפ של AI.</p>
+
+<h3>נכסי מותג קיימים (לשמר)</h3>
+<div class="swatches">
+  <div class="sw" style="background:#0c1118; color:#eaf0f7;">Bedrock<br><span class="footnote">oklch(.08 .01 240)</span></div>
+  <div class="sw" style="background:#141b25; color:#eaf0f7;">Surface<br><span class="footnote">oklch(.14 .02 240)</span></div>
+  <div class="sw" style="background:#34d97b; color:#06210f;">Brand green<br><span class="footnote">oklch(.78 .20 145)</span></div>
+  <div class="sw" style="background:#9a7bff; color:#0c0820;">Accent purple<br><span class="footnote">oklch(.50 .20 285)</span></div>
+  <div class="sw" style="background:#1fb6cf; color:#04231f;">Cyan (gradient)<br><span class="footnote">oklch(.65 .22 200)</span></div>
+</div>
+<p>רקע כהה, ירוק ניאון כצבע מותג, סגול כהדגשה משנית, <strong>ציאן למעברי גרדיאנט/aurora</strong>, פונט <strong>Heebo</strong>, לוגו עם אנימציית hue-drift. רמה עיצובית מעל המתחרים — נכס לשמר. <span class="footnote">מקור: design system בקוד הפרויקט.</span></p>
+
+<h3>מבנה דף הבית הקיים (היום)</h3>
+<p class="lead">Hero → מרקי → סטטיסטיקות → תהליך → למה אני → מניפסט → אודות → שאלות → הצצת עדויות → קבוצת וואטסאפ → CTA → פוטר.</p>
+<div class="card danger">
+  <strong>הבעיה במבנה הנוכחי:</strong> אין סקשן "כאב" מפורש לפני הפתרון, אין טופס לידים, המספרים בסטטיסטיקות לא תוצאתיים, ו-"מרקי" יפה אבל לא מקדם את המבקר במשפך (<strong>המניפסט נשמר</strong> — נכס זהות). הסדר טוב לאתר-תדמית, פחות לדף-נחיתה-שממיר.
+</div>
+
+<!-- ============ TARGET B ============ -->
+<h2><span class="num">B</span> הזירה — מיפוי מתחרים בפועל</h2>
+<p class="lead">פתחתי דפים אמיתיים ומיפיתי אותם סקשן-אחרי-סקשן. שלושה ממוקדים למטה; STRA ו-IL Digital נסקרו כרקע (אותו דפוס: 360 + ליווי אישי + טפסים).</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ממד</th>
+      <th>אייה דיגיטל</th>
+      <th>שירדן</th>
+      <th>דוקטור שיווק</th>
+      <th>Shift Up (היום)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>זווית Hero</td><td>"השותפה שלך לצמיחה — כל שקל עובד בשבילך"</td><td>"חברת שיווק דיגיטלי לעסקים" — אישי, שקוף, מדיד</td><td>"שני עסקים, לא אותו שיווק" — מותאם, בלי תבניות</td><td>"Smart Strategy. Bold Creativity." + מסר לפני תקציב</td></tr>
+    <tr><td>מספרים/הוכחה</td><td class="yes">90% המרה, 250+, 96% שימור</td><td class="meh">4+ שנים, לוגואים, 5.0</td><td class="yes">20+ שנים, 764 לקוחות, 9,205 שעות, 4.9</td><td class="no">אין מספרים תוצאתיים</td></tr>
+    <tr><td>טופס לידים</td><td class="yes">שניים (אמצע + תחתון)</td><td class="yes">כן (שם/מייל/טל/שירות)</td><td class="meh">לא טופס — וואטסאפ/מייל + צ'קבוקס</td><td class="no">אין</td></tr>
+    <tr><td>וואטסאפ</td><td class="yes">כן (header+hero)</td><td class="yes">כן</td><td class="yes">כן</td><td class="yes">כן</td></tr>
+    <tr><td>מחיר גלוי</td><td class="yes">חבילות 1,750/4,500/7,900 ₪</td><td class="no">לא</td><td class="yes">650 ₪+מע"מ/שעה</td><td class="no">לא</td></tr>
+    <tr><td>תהליך</td><td class="yes">3 עמודים + 5 שלבים</td><td class="yes">5 שלבים</td><td class="yes">8 נקודות</td><td class="yes">3 שלבים (חזק)</td></tr>
+    <tr><td>בלוג (SEO)</td><td class="yes">כן</td><td class="yes">כן</td><td class="yes">כן</td><td class="no">אין</td></tr>
+    <tr><td>עדויות</td><td class="yes">12+</td><td class="yes">כן</td><td class="yes">4 + עמוד</td><td class="meh">יש עמוד + הצצה</td></tr>
+    <tr><td>זווית "עול/הקלה"</td><td class="yes">"השיווק כבד עליכם?"</td><td class="no">לא</td><td class="no">לא</td><td class="no">לא (הזדמנות!)</td></tr>
+  </tbody>
+</table>
+<p class="src">מקורות: <a href="https://ayadigitalmarket.co.il/">ayadigitalmarket.co.il</a> · <a href="https://shirdendigital.co.il/">shirdendigital.co.il</a> · <a href="https://drshivuk.co.il/">drshivuk.co.il</a> · <a href="https://stra.co.il/">stra.co.il</a> · <a href="https://ildigital.co.il/">ildigital.co.il</a> (נמופו 24/06/2026).</p>
+
+<h3>מה הם עושים טוב</h3>
+<ul>
+  <li><strong>מספרים בכל מקום</strong> — בונים אמון מהר (כולם).</li>
+  <li><strong>טפסים + וואטסאפ יחד</strong> — תופסים גם חם וגם רך (אייה, שירדן).</li>
+  <li><strong>שקיפות מחיר</strong> — מסנן ומפחית חיכוך (אייה, דוקטור שיווק).</li>
+  <li><strong>בלוג</strong> — תופס תנועה אורגנית בכוונת חיפוש (כולם).</li>
+</ul>
+
+<h3>איפה הם חלשים (הפער שלך)</h3>
+<ul>
+  <li>מדברים כ"אנחנו/צוות" — אף אחד לא מוכר <strong>איש אחד אמיתי שאתה מדבר איתו</strong>.</li>
+  <li>AI מוזכר כבאז — אף אחד לא הופך אותו ל<strong>תועלת מוחשית</strong> (מהירות/מחיר).</li>
+  <li>אף אחד לא מחזיק את העיקרון "<strong>מסר לפני תקציב</strong>".</li>
+  <li>אייה תופסת את ה"עול" אבל כ"שותפה" — לא כ"שקט: תוריד את זה ממני לגמרי".</li>
+</ul>
+
+<h3>איך מחפשים עסק כזה בגוגל (SEO פרקטי)</h3>
+<p>
+<span class="pill">שיווק דיגיטלי לעסק קטן</span>
+<span class="pill">כמה עולה ייעוץ שיווקי</span>
+<span class="pill">למה הקמפיין שלי לא מביא לידים</span>
+<span class="pill">אסטרטגיית שיווק לעסק</span>
+<span class="pill">שיווק עם AI לעסקים</span>
+<span class="pill">איך לבחור משווק דיגיטלי</span>
+</p>
+<p class="footnote">דף הבית לבדו לא יתפוס את אלה — צריך דפי שירות/בלוג בהמשך. בתוך דף הבית: לשלב את הביטויים בכותרות ובטקסט באופן טבעי.</p>
+
+<!-- ============ TARGET C ============ -->
+<h2><span class="num">C</span> איך בונים דף נחיתה חזק בתחום הזה</h2>
+<p class="lead">דף נחיתה הוא משפך, לא ערימת סקשנים. כל סקשן עונה על השאלה הבאה שעולה למבקר ומסיר עוד סיבה לעזוב. עקרון 2026: <strong>התאמה → ערך → אמון → הסמכה → המשכיות</strong>. <span class="src">מקור: <a href="https://unicornplatform.com/blog/lead-generation-landing-pages-in-2026/">Unicorn Platform</a>, <a href="https://swipepages.com/blog/landing-page-conversion-elements/">Swipe Pages</a>.</span></p>
+
+<p>מותאם ל<strong>מותג אישי / שירות B2B</strong>, לקהל "תורידו ממני את העול", עם מטרת שתי דלתות (טופס ראשי + וואטסאפ):</p>
+
+<table class="funnel">
+  <thead><tr><th>#</th><th>הסקשן</th><th>השאלה שהוא עונה</th><th>למה דווקא כאן</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Hero + 2 כפתורים</td><td>"מה זה, וזה בשבילי?"</td><td>5 שניות להחליט. כותרת הקלה+תוצאה, תת-כותרת, ושתי דלתות.</td></tr>
+    <tr><td>2</td><td>רצועת אמון + מספר</td><td>"אפשר לסמוך?"</td><td>מיד אחרי ההבטחה — בלי אמון לא ממשיכים. לוגואים/מספר אחד חזק.</td></tr>
+    <tr><td>3</td><td>הכאב</td><td>"הם מבינים אותי?"</td><td>"נמאס לך לרדוף אחרי השיווק ולא לראות תוצאה?" — לפני היתרונות.</td></tr>
+    <tr><td>4</td><td>המניפסט (האני מאמין)</td><td>"במה אתה מאמין?"</td><td>אחרי הכאב — אמירה אמונית שממצבת את הגישה. (קיים באתר — נשמר.)</td></tr>
+    <tr><td>5</td><td>הפתרון / 3 השלבים</td><td>"איך זה עובד?"</td><td>הפיצוח/השיפט/האקשן — אחרי שהמבקר מרגיש מובן.</td></tr>
+    <tr><td>6</td><td>מה תקבל (התוצאה)</td><td>"מה יוצא לי מזה?"</td><td>תמונת ניצחון: לידים איכותיים + שקט, בלי שתתעסק.</td></tr>
+    <tr><td>7</td><td>למה אני, לא סוכנות</td><td>"למה דווקא אתה?"</td><td>הבידול: אדם אחד, AI, מסר לפני כסף. כאן נופלים המתחרים.</td></tr>
+    <tr><td>8</td><td>הוכחה — קייסים + קריאייטיב</td><td>"אתה יודע לחשוב ולעשות?"</td><td>במקום עדויות (אין): קייס אסטרטגי + גריד מודעות אמיתיות.</td></tr>
+    <tr><td>9</td><td>אודות שמואל</td><td>"מי האדם הזה?"</td><td>הפנים שמאחורי ההבטחה — מחזק את "מישהו אחד אחראי".</td></tr>
+    <tr><td>10</td><td>שאלות נפוצות</td><td>"מה אם...?"</td><td>מפרק התנגדויות: "יקר?", "אני לא טכני?", "למה לא סוכנות?".</td></tr>
+    <tr><td>11</td><td>טופס + וואטסאפ + scarcity</td><td>"מה אני עושה עכשיו?"</td><td>בסוף, עם מומנטום. טופס ראשי, וואטסאפ משני, scarcity + קבוצה שקטה (דלת רכה).</td></tr>
+  </tbody>
+</table>
+
+<div class="card ok">
+  <strong>מה משתנה מהמבנה הקיים:</strong> מוסיפים סקשן <strong>כאב</strong> (3), הוכחה = <strong>קייסים+קריאייטיב</strong> במקום עדויות (8), <strong>טופס</strong> (11) + <strong>קבוצה שקטה</strong> כדלת רכה, רצועת אמון/סלקטיביות (2), מחדדים "למה אני" (7) ומוסיפים <strong>scarcity</strong>. <strong>המניפסט נשמר</strong> (4); רק "מרקי" יורד.
+</div>
+
+<!-- ============ DESIGN ============ -->
+<h2><span class="num">◐</span> כיוון עיצובי (המלצה)</h2>
+<p><strong>המלצה: לשמר את הזהות הכהה+ירוקה, אבל לרענן להמרה.</strong> הזהות הקיימת מעל המתחרים ושווה לשמור — אבל דף נחיתה שממיר צריך כמה התאמות.</p>
+
+<h3>פלטה — כלל 60-30-10</h3>
+<ul>
+  <li><strong>60%</strong> רקע כהה (bedrock/surface) — האווירה.</li>
+  <li><strong>30%</strong> משטחים בהירים יותר + טקסט לבן/אפור — קריאוּת.</li>
+  <li><strong>10%</strong> ירוק ניאון — <strong>רק על פעולה</strong> (כפתורים, הדגשות). סגול במשורה כהדגשה משנית.</li>
+</ul>
+<div class="card ok">
+  <strong>הוחלט:</strong> סקשן הטופס (10) יהיה על <strong>רקע בהיר</strong> — ניגוד מול הדף הכהה, נקודת מיקוד ויזואלית, וטפסים ממירים טוב יותר על רקע בהיר. שאר הדף נשאר כהה.
+</div>
+
+<h3>טיפוגרפיה</h3>
+<p>Heebo נשאר (RTL מצוין, מוכר במותג). היררכיה ממשקל וגודל: כותרות 800–900, גוף 400–500. אופציה: זוג — כותרות ב-Heebo כבד, גוף ב-Heebo רגיל. אין צורך בפונט שני.</p>
+
+<h3>כיוון ויזואלי</h3>
+<ul>
+  <li><strong>אווירה:</strong> בטוח, נקי, מרגיע — לא "סוכנות צעקנית".</li>
+  <li><strong>ירוק במשורה</strong> — רק על מה שצריך פעולה. היום הוא בכל מקום; פחות = יותר המרה.</li>
+  <li><strong>דימויים אמיתיים:</strong> תמונת שמואל (יש), צילומי תוצאות/דשבורדים אמיתיים — לא סטוק.</li>
+</ul>
+
+<h3>אתרי השראה</h3>
+<p><a href="https://ayadigitalmarket.co.il/">אייה</a> — לראות איך זווית ה"עול" + טפסים כפולים + חבילות עובדים יחד (המתחרה הכי קרובה אליך). <a href="https://drshivuk.co.il/">דוקטור שיווק</a> — לראות כוח של מספרים והסמכות. <span class="footnote">להסתכל על המבנה וההמרה, לא להעתיק את השפה.</span></p>
+
+<!-- ============ OPEN ============ -->
+<h2><span class="num">✓</span> נסגר בריאיון (עדכון 24/06)</h2>
+<div class="card ok">
+<ul>
+  <li><strong>עוגן מחיר:</strong> 1,500–2,000 ₪ הקמה · 1,000–1,500 ₪ ריטיינר. <em>החלטה: להציג "מתחיל מ-1,500 ₪" כעוגן שמסנן חיכוך.</em></li>
+  <li><strong>scarcity:</strong> עד 5–7 לקוחות/רבעון. <em>המלצה: להציג "מקומות פנויים" בודדים (ר' תשובתי).</em></li>
+  <li><strong>מנגנון ליד:</strong> מייל + טבלה. <em>המלצה: טבלת <code>leads</code> ב-Supabase (כבר קיים!) + התראת מייל, צפייה ב-/admin.</em></li>
+  <li><strong>רקע טופס:</strong> בהיר. ✓</li>
+  <li><strong>מדידה:</strong> GA4 + GSC + פיקסל מטא — להזרים אירוע <code>Lead</code> בשליחת הטופס.</li>
+</ul>
+</div>
+
+<h2><span class="num">?</span> עדיין פתוח — לאיסוף בהמשך</h2>
+<div class="card">
+<ul>
+  <li><strong>קריאייטיב להצגה:</strong> ✓ נאסף — 9 מודעות + 2 קייסים אסטרטגיים (קינוחי בוטיק אנונימי + City Transformer) בתיקייה <code>public/portfolio/</code>. פירוט: <a href="portfolio-manifest.md">portfolio-manifest.md</a>.</li>
+  <li><strong>עדויות/תוצאות:</strong> אין כרגע. להוסיף ברגע שייכנסו — לא ממציאים.</li>
+  <li><strong>נתוני GA4/GSC:</strong> לייצא 90 יום כדי לאמת תנועה ואחוז המרה נוכחי.</li>
+  <li><strong>מודעת SHIRA בגריד:</strong> להחליף בגרסת קינוחי השבת המעודכנת.</li>
+</ul>
+</div>
+
+<hr>
+<h2 style="border:none;">מקורות</h2>
+<p class="src">
+האתר: <a href="https://www.shiftup.marketing/llms.txt">llms.txt</a>, <a href="https://www.shiftup.marketing/index.md">index.md</a>, <a href="https://www.shiftup.marketing/faq.md">faq.md</a>, <a href="https://www.shiftup.marketing/en.md">en.md</a> · קוד: IgPage.jsx, FreePage.jsx.<br>
+מתחרים: <a href="https://ayadigitalmarket.co.il/">ayadigitalmarket.co.il</a>, <a href="https://shirdendigital.co.il/">shirdendigital.co.il</a>, <a href="https://drshivuk.co.il/">drshivuk.co.il</a>, <a href="https://stra.co.il/">stra.co.il</a>, <a href="https://ildigital.co.il/">ildigital.co.il</a>.<br>
+תמחור: <a href="https://horizon.org.il/cfo-outsource/business-consulting-cost-israel-2026/">Horizon Group 2026</a>, <a href="https://www.x2y.co.il/">X2Y</a>.<br>
+עקרונות דף נחיתה 2026: <a href="https://unicornplatform.com/blog/lead-generation-landing-pages-in-2026/">Unicorn Platform</a>, <a href="https://swipepages.com/blog/landing-page-conversion-elements/">Swipe Pages</a>, <a href="https://www.leadfeeder.com/blog/landing-pages-convert/">Leadfeeder</a>.
+</p>
+
+<p class="footnote" style="margin-top:30px;">מסמך עבודה להגיב עליו, לא סופי. הופק עם Claude Code לפי סקיל landing-page-research. רמת ביטחון כללית: 8/10 — יעלה ל-9 עם נתוני GA4/GSC ומספרי תוצאה אמיתיים.</p>
+
+</div>
+</body>
+</html>

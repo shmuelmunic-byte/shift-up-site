@@ -6,8 +6,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Cursor         from './components/Cursor';
 import Navbar         from './components/Navbar';
 import Hero           from './components/Hero';
-import MarqueeSection from './components/MarqueeSection';
-import Stats          from './components/Stats';
+import TrustStrip     from './components/TrustStrip';
+import PainSection    from './components/PainSection';
 import Process        from './components/Process';
 import WhyMe          from './components/WhyMe';
 import Manifesto      from './components/Manifesto';
@@ -108,9 +108,9 @@ export default function App() {
       <Navbar onCta={scrollToContact} />
       <main>
         <Hero onContact={scrollToContact} onProcess={scrollToProcess} />
-        <MarqueeSection />
+        <TrustStrip />
         <div className="section-divider" />
-        <Stats />
+        <PainSection />
         <div className="section-divider" />
         <Process />
         <div className="section-divider" />
