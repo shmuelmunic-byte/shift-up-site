@@ -4,10 +4,10 @@ import { supabase } from '../lib/supabase';
 
 const DEFAULT_WA =
   'https://wa.me/972534673151?text=' +
-  encodeURIComponent('היי שמואל, אשמח לשמוע פרטים על השירות');
+  encodeURIComponent('היי שמואל, יש לי שאלה על השירות');
 
 const DEFAULT_SUBTITLE =
-  'לפני ששורפים תקציב על ממומן, צריך לדעת מה אנחנו מוכרים, ולמי. אני בונה את האסטרטגיה — ומבצע אותה בפועל.';
+  'אסטרטגיה, קריאייטיב שמוכר וקמפיינים ממומנים — מפוצחים לפני ששורפים תקציב.';
 
 const profileSrc = '/shmuel.png';
 
@@ -44,6 +44,9 @@ function FluidBg() {
       {/* Accent — violet bottom */}
       <div className="aurora-orb" style={{ width: 450, height: 450, bottom: '-5%', right: '28%',
         background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.15), transparent 70%)', '--dur': '30s', '--delay': '-11s' }} />
+      {/* Cyan transition glow — gradient/aurora only, never on CTA */}
+      <div className="aurora-orb" style={{ width: 520, height: 520, bottom: '8%', left: '6%',
+        background: 'radial-gradient(circle, oklch(0.65 0.22 200 / 0.12), transparent 70%)', '--dur': '24s', '--delay': '-9s' }} />
       {/* Small highlight */}
       <div className="aurora-orb" style={{ width: 280, height: 280, top: '12%', right: '22%',
         background: 'radial-gradient(circle, oklch(0.92 0.18 140 / 0.09), transparent 70%)', '--dur': '16s', '--delay': '-4s' }} />
@@ -99,7 +102,7 @@ function MagneticBtn({ children, href, onClick, style }) {
 }
 
 /* ── Hero section ── */
-export default function Hero({ onProcess }) {
+export default function Hero({ onContact, onProcess }) {
   const sectionRef = useRef(null);
   const [whatsappLink, setWhatsappLink] = useState(DEFAULT_WA);
   const [subtitle, setSubtitle] = useState(DEFAULT_SUBTITLE);
@@ -117,16 +120,25 @@ export default function Hero({ onProcess }) {
       });
   }, []);
 
-  const trackLead = () => {
-    if (typeof window.fbq === 'function') window.fbq('track', 'Lead', { content_name: 'WhatsApp Click' });
+  // WhatsApp = פנייה משנית. אירוע ה-Lead "הכבד" נשמר לשליחת הטופס.
+  const trackWhatsApp = () => {
+    if (typeof window.fbq === 'function') window.fbq('track', 'Contact', { content_name: 'Hero WhatsApp' });
+    if (typeof window.gtag === 'function') window.gtag('event', 'contact', { method: 'whatsapp', location: 'hero' });
+  };
+
+  // הכפתור הראשי גולל לטופס — מסמן כוונה, לא המרה מלאה.
+  const handlePrimary = () => {
+    if (typeof window.gtag === 'function') window.gtag('event', 'cta_click', { location: 'hero', target: 'lead_form' });
+    onContact?.();
   };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo('.hero-sub',   { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', delay: 0.95 });
-      gsap.fromTo('.hero-quote', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 1.2  });
-      gsap.fromTo('.hero-ctas',  { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 1.05 });
-      gsap.fromTo('.hero-image', { y: 40, opacity: 0, scale: 0.96 }, { y: 0, opacity: 1, scale: 1, duration: 1.1, ease: 'expo.out', delay: 0.35 });
+      gsap.fromTo('.hero-sub',    { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', delay: 0.95 });
+      gsap.fromTo('.hero-anchor', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 1.25 });
+      gsap.fromTo('.hero-trust',  { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 1.4  });
+      gsap.fromTo('.hero-ctas',   { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 1.05 });
+      gsap.fromTo('.hero-image',  { y: 40, opacity: 0, scale: 0.96 }, { y: 0, opacity: 1, scale: 1, duration: 1.1, ease: 'expo.out', delay: 0.35 });
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -150,100 +162,100 @@ export default function Hero({ onProcess }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28, direction: 'ltr' }}>
             <span style={{ height: 1, width: 36, background: 'var(--brand-prime)', opacity: 0.6, display: 'block' }} />
             <span style={{ color: 'var(--brand-prime)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
-              Smart Strategy. Bold Creativity.
+              Strategy First. Budget Second.
             </span>
           </div>
 
-          {/* headline */}
+          {/* headline — נעול */}
           <h1
             translate="no"
             style={{
-              fontSize: 'clamp(1.9rem, 7vw, 5.2rem)',
+              fontSize: 'clamp(2rem, 7vw, 5rem)',
               fontWeight: 900,
-              lineHeight: 1.05,
+              lineHeight: 1.08,
               letterSpacing: '-0.02em',
-              marginBottom: 28,
+              marginBottom: 26,
               fontFamily: "'Heebo', sans-serif",
             }}
           >
-            <span style={{ color: 'var(--text-primary)' }}>להפוך </span>
-            <KineticWords text="רעיונות" gradient delay={0.08} />
+            <span style={{ color: 'var(--text-primary)' }}>תחזור לנהל את העסק.</span>
             <br />
-            <span style={{ color: 'var(--text-primary)' }}>ל</span>
-            <KineticWords text="אסטרטגיה שיווקית" gradient delay={0.2} />
+            <span style={{ color: 'var(--text-primary)' }}>את השיווק </span>
+            <KineticWords text="תשאיר לי" gradient delay={0.2} />
             <span style={{ color: 'var(--brand-prime)' }}>.</span>
           </h1>
 
-          {/* subtext */}
+          {/* subtext — נעול */}
           <p
             className="hero-sub"
-            style={{ fontSize: 'clamp(1rem, 2.5vw, 1.18rem)', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 520, marginBottom: 8, opacity: 0 }}
+            style={{ fontSize: 'clamp(1rem, 2.5vw, 1.18rem)', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 540, marginBottom: 8, opacity: 0 }}
           >
             {subtitle}
           </p>
 
-          {/* CTAs */}
-          <div className="hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 36, marginBottom: 48, opacity: 0 }}>
+          {/* CTAs — ראשי: טופס · משני: וואטסאפ */}
+          <div className="hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 36, marginBottom: 18, opacity: 0 }}>
             <MagneticBtn
-              href={whatsappLink}
-              onClick={trackLead}
+              onClick={handlePrimary}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 10,
-                padding: '14px 32px', background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)',
-                borderRadius: 999, fontWeight: 800, fontSize: '1rem', fontFamily: "'Heebo', sans-serif",
-                textDecoration: 'none', border: 'none',
+                padding: '15px 34px', background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)',
+                borderRadius: 999, fontWeight: 800, fontSize: '1.05rem', fontFamily: "'Heebo', sans-serif",
+                border: 'none', cursor: 'pointer',
                 boxShadow: '0 0 40px oklch(0.78 0.20 145 / 0.42)',
                 transition: 'background 0.25s, box-shadow 0.25s',
               }}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              לקבלת הצעה מותאמת
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
               </svg>
-              בוא נדבר תכלס
             </MagneticBtn>
 
             <MagneticBtn
-              onClick={onProcess}
+              href={whatsappLink}
+              onClick={trackWhatsApp}
               style={{
-                display: 'inline-flex', alignItems: 'center', gap: 8,
-                padding: '14px 28px', background: 'oklch(0.14 0.02 240 / 0.7)', color: 'var(--text-primary)',
+                display: 'inline-flex', alignItems: 'center', gap: 10,
+                padding: '15px 28px', background: 'oklch(0.14 0.02 240 / 0.7)', color: 'var(--text-primary)',
                 borderRadius: 999, fontWeight: 600, fontSize: '1rem', fontFamily: "'Heebo', sans-serif",
                 border: '1px solid oklch(0.25 0.02 240)', backdropFilter: 'blur(12px)',
+                textDecoration: 'none',
                 transition: 'background 0.25s, border-color 0.25s',
               }}
             >
-              איך התהליך עובד?
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m6 9 6 6 6-6"/>
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
               </svg>
+              שאלה? דבר איתי בוואטסאפ
             </MagneticBtn>
           </div>
 
-          {/* scroll hint */}
-          <div
-            className="scroll-hint"
-            onClick={onProcess}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              marginBottom: 32, cursor: 'pointer', color: 'var(--text-muted)',
-              fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
-            גלול למטה
-          </div>
+          {/* price anchor + free call */}
+          <p className="hero-anchor" style={{ fontSize: '0.92rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 38, opacity: 0 }}>
+            מתחיל מ-<span style={{ color: 'var(--text-secondary)', fontWeight: 800 }}>1,500 ₪</span>
+            <span style={{ margin: '0 8px', opacity: 0.5 }}>·</span>
+            שיחת פיצוח ראשונה — <span style={{ color: 'var(--brand-prime)', fontWeight: 800 }}>חינם</span>
+          </p>
 
-          {/* quote */}
-          <div className="hero-quote" style={{ display: 'flex', alignItems: 'flex-start', gap: 14, opacity: 0 }}>
-            <div style={{ width: 3, height: 56, background: 'linear-gradient(to bottom, var(--brand-prime), var(--accent-void))', borderRadius: 999, flexShrink: 0 }} />
-            <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', fontWeight: 500, lineHeight: 1.65 }}>
-              "רעיונות זה הדלק שלי.
-              <br />
-              <strong style={{ color: 'var(--text-primary)', fontWeight: 800 }}>אנשים זה היעד."</strong>
-            </p>
+          {/* trust chips — מיצוב */}
+          <div className="hero-trust" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, opacity: 0 }}>
+            {['מסר לפני תקציב', 'קריאייטיב שמוכר', 'מהירות AI', 'אדם אחד — לא סוכנות'].map((chip) => (
+              <span
+                key={chip}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 7,
+                  padding: '7px 14px', borderRadius: 999,
+                  background: 'oklch(0.14 0.02 240 / 0.55)', border: '1px solid oklch(0.25 0.02 240)',
+                  fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)',
+                }}
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M20 6 9 17l-5-5"/>
+                </svg>
+                {chip}
+              </span>
+            ))}
           </div>
         </div>
 
@@ -274,8 +286,8 @@ export default function Hero({ onProcess }) {
                 boxShadow: '0 0 10px var(--brand-prime)', flexShrink: 0, animation: 'pulse-ring 1.8s ease-out infinite',
               }} />
               <div>
-                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>סטטוס</div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>זמין לפרויקטים</div>
+                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>פנוי לרבעון</div>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>2–3 מקומות</div>
               </div>
             </div>
 

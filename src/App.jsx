@@ -107,7 +107,7 @@ export default function App() {
       <Cursor />
       <Navbar onCta={scrollToContact} />
       <main>
-        <Hero onProcess={scrollToProcess} />
+        <Hero onContact={scrollToContact} onProcess={scrollToProcess} />
         <MarqueeSection />
         <div className="section-divider" />
         <Stats />
