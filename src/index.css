@@ -389,6 +389,72 @@ body {
   }
 }
 
+/* ─── Admin (/admin) — interaction polish over inline styles ─── */
+.admin-scope input:focus,
+.admin-scope textarea:focus,
+.admin-scope select:focus {
+  border-color: var(--brand-prime) !important;
+  box-shadow: 0 0 0 3px oklch(0.78 0.20 145 / 0.15) !important;
+}
+.admin-scope input::placeholder,
+.admin-scope textarea::placeholder {
+  color: oklch(0.45 0.01 240);
+}
+.admin-card {
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.admin-card:hover {
+  border-color: oklch(0.78 0.20 145 / 0.28) !important;
+  box-shadow: 0 8px 30px oklch(0 0 0 / 0.25);
+}
+.admin-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.3 0.02 240) transparent;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
+.admin-tabs::-webkit-scrollbar { height: 6px; }
+.admin-tabs::-webkit-scrollbar-thumb { background: oklch(0.25 0.02 240); border-radius: 99px; }
+.admin-tab {
+  scroll-snap-align: start;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  border-radius: 11px;
+  font-family: 'Heebo', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+.admin-tab:hover {
+  color: var(--text-secondary);
+  background: oklch(0.97 0.005 240 / 0.04);
+}
+.admin-tab[data-active="true"] {
+  background: oklch(0.78 0.20 145 / 0.14);
+  color: var(--brand-prime);
+  border-color: oklch(0.78 0.20 145 / 0.3);
+}
+.admin-tab .tab-count {
+  background: var(--brand-prime);
+  color: oklch(0.08 0.01 240);
+  font-size: 0.66rem;
+  font-weight: 800;
+  border-radius: 99px;
+  padding: 1px 7px;
+  line-height: 1.5;
+}
+
 @media (min-width: 768px) {
   .stats-layout {
     grid-template-columns: repeat(4, 1fr);

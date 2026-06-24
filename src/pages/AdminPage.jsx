@@ -958,7 +958,7 @@ function LeadsTab({ toast }) {
       ) : (
         <div style={{ display: 'grid', gap: 12 }}>
           {leads.map(l => (
-            <div key={l.id} style={{ ...S.card, padding: 18, opacity: l.handled ? 0.6 : 1, borderColor: l.handled ? undefined : 'oklch(0.78 0.20 145 / 0.25)' }}>
+            <div key={l.id} className="admin-card" style={{ ...S.card, padding: 18, opacity: l.handled ? 0.6 : 1, borderColor: l.handled ? undefined : 'oklch(0.78 0.20 145 / 0.25)' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
                 <div style={{ flex: 1, minWidth: 200 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
@@ -1006,11 +1006,20 @@ const TABS = [
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('leads');
   const [toast, setToast] = useState(null);
+  const [newLeads, setNewLeads] = useState(0);
   const navigate = useNavigate();
 
   const showToast = useCallback((msg, type = 'success') => {
     setToast({ msg, type, key: Date.now() });
   }, []);
+
+  // ספירת לידים שלא טופלו — ל-badge על הטאב
+  useEffect(() => {
+    let alive = true;
+    supabase.from('leads').select('id', { count: 'exact', head: true }).eq('handled', false)
+      .then(({ count, error }) => { if (alive && !error) setNewLeads(count || 0); });
+    return () => { alive = false; };
+  }, [activeTab]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -1018,23 +1027,29 @@ export default function AdminPage() {
   };
 
   return (
-    <div dir="rtl" style={{ minHeight: '100dvh', background: 'var(--bedrock)', fontFamily: "'Heebo', sans-serif", color: 'var(--text-primary)' }}>
+    <div className="admin-scope" dir="rtl" style={{ minHeight: '100dvh', background: 'var(--bedrock)', fontFamily: "'Heebo', sans-serif", color: 'var(--text-primary)', position: 'relative', overflowX: 'hidden' }}>
+      <div className="noise-overlay" aria-hidden="true" />
+      {/* ambient aurora */}
+      <div className="aurora-orb" style={{ width: 480, height: 480, top: '-12%', right: '-6%', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.10), transparent 70%)', '--dur': '24s' }} />
+      <div className="aurora-orb" style={{ width: 420, height: 420, top: '34%', left: '-12%', background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.08), transparent 72%)', '--dur': '28s', '--delay': '-9s' }} />
       <Cursor />
 
       {/* ── Header ── */}
       <header style={{
         position: 'sticky', top: 0, zIndex: 100,
-        background: 'oklch(0.09 0.012 240 / 0.92)',
-        backdropFilter: 'blur(20px)',
+        background: 'oklch(0.09 0.012 240 / 0.82)',
+        backdropFilter: 'blur(20px) saturate(1.3)',
+        WebkitBackdropFilter: 'blur(20px) saturate(1.3)',
         borderBottom: '1px solid oklch(0.97 0.005 240 / 0.08)',
-        padding: '0 24px',
-        display: 'flex', alignItems: 'center', gap: 16, height: 60,
+        padding: '0 clamp(16px, 4vw, 28px)',
+        display: 'flex', alignItems: 'center', gap: 14, height: 62,
       }}>
-        <img src="/logo.png" alt="Shift Up" style={{ height: 34, animation: 'hue-drift 8s ease-in-out infinite' }} />
-        <div style={{ width: 1, height: 22, background: 'oklch(0.97 0.005 240 / 0.1)' }} />
-        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-          ממשק ניהול
-        </span>
+        <img src="/logo.png" alt="Shift Up" style={{ height: 36, animation: 'hue-drift 8s ease-in-out infinite' }} />
+        <div style={{ width: 1, height: 24, background: 'oklch(0.97 0.005 240 / 0.1)' }} />
+        <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
+          <span style={{ fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-primary)' }}>ממשק ניהול</span>
+          <span style={{ fontSize: '0.62rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Shift Up CMS</span>
+        </div>
         <div style={{ flex: 1 }} />
         <a href="/" target="_blank" rel="noopener noreferrer" style={{ ...S.btn('ghost'), textDecoration: 'none', fontSize: '0.78rem' }}>
           צפה באתר ↗
@@ -1045,25 +1060,20 @@ export default function AdminPage() {
       </header>
 
       {/* ── Layout ── */}
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px' }}>
+      <div style={{ maxWidth: 920, margin: '0 auto', padding: 'clamp(20px, 4vw, 32px) clamp(16px, 4vw, 24px)', position: 'relative', zIndex: 1 }}>
 
         {/* Tab nav */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 28, background: 'oklch(0.11 0.015 240)', borderRadius: 14, padding: 5 }}>
+        <div className="admin-tabs" style={{ marginBottom: 26, background: 'oklch(0.11 0.015 240)', borderRadius: 14, padding: 6, border: '1px solid oklch(0.97 0.005 240 / 0.06)' }}>
           {TABS.map(t => (
             <button
               key={t.id}
+              className="admin-tab"
+              data-active={activeTab === t.id}
               onClick={() => setActiveTab(t.id)}
-              style={{
-                padding: '9px 20px', borderRadius: 10,
-                fontFamily: "'Heebo', sans-serif", fontWeight: 700, fontSize: '0.88rem',
-                cursor: 'pointer', transition: 'all 0.18s ease',
-                background: activeTab === t.id ? 'oklch(0.78 0.20 145 / 0.15)' : 'transparent',
-                color: activeTab === t.id ? 'var(--brand-prime)' : 'var(--text-muted)',
-                border: activeTab === t.id ? '1px solid oklch(0.78 0.20 145 / 0.3)' : '1px solid transparent',
-              }}
+              title={t.desc}
             >
               {t.label}
-              <span style={{ fontSize: '0.7rem', opacity: 0.6, marginRight: 6 }}>{t.desc}</span>
+              {t.id === 'leads' && newLeads > 0 && <span className="tab-count">{newLeads}</span>}
             </button>
           ))}
         </div>

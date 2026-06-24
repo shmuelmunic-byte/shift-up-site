@@ -180,9 +180,14 @@ Hook משותף (`src/lib/useSiteLinks.js`) ששולף את כל קישורי `c
 ### מה נשאר hardcoded (לא ב-CMS)
 markup מורכב מדי ל-key/value: כותרת Hero (gradient spans + GSAP refs), Manifesto (אנימציה per-מילה), פסקאות About (inline HTML). הטקסט השיווקי **באנגלית** לא מנוהל (תרגום נפרד) — רק הקישורים מסונכרנים.
 
-### Admin — 8 טאבים (`/admin`)
-📚 פרומפטים · 🔗 כפתורי /ig · 📞 פרטי קשר · ❓ שאלות · 📊 סטטיסטיקות · 🔄 תהליך · 💡 למה אני · ⭐ עדויות.
+### Admin — 9 טאבים (`/admin`)
+📥 לידים (ברירת מחדל) · 📚 פרומפטים · 🔗 כפתורי /ig · 📞 פרטי קשר · ❓ שאלות · 📊 סטטיסטיקות · 🔄 תהליך · 💡 למה אני · ⭐ עדויות.
 `GenericCrudTab` = factory לכל טאבי ה-CRUD (faqs/stats/process/whyme/testimonials) — CRUD + reorder ▲▼ + toggles.
+**`LeadsTab`** = טאב ייעודי (לא CRUD): רשימת לידים מ-`leads` (created_at desc), סימון "טופל", מחיקה, וואטסאפ בלחיצה. badge על הטאב = לידים שלא טופלו. אם הטבלה חסרה → מציג הנחיית התקנה (`docs/leads-table.sql`).
+**עיצוב (סשן 3):** ה-shell עודכן לזהות האתר — רקע bedrock + aurora orbs + noise, header עם CMS subtitle, ניווט טאבים אופקי-נגלל (`.admin-tabs`/`.admin-tab` ב-index.css תחת `.admin-scope`), focus glow ירוק על כל ה-inputs, hover על כרטיסים.
+
+### התראת מייל על ליד (Edge Function)
+`supabase/functions/notify-lead/index.ts` — Deno function ששולחת מייל דרך **Resend** על כל INSERT ל-`leads` (מופעל ע"י Database Webhook). הגדרה מלאה (פעם אחת): `docs/email-notifications-setup.md`. הליד נשמר ב-DB גם אם המייל נכשל. סודות: `RESEND_API_KEY`, `NOTIFY_TO`, `WEBHOOK_SECRET` (אופציונלי).
 
 ## פיקסלים — ארכיטקטורת Tracking
 
