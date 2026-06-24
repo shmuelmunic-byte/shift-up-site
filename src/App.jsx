@@ -9,13 +9,14 @@ import Hero           from './components/Hero';
 import TrustStrip     from './components/TrustStrip';
 import PainSection    from './components/PainSection';
 import Process        from './components/Process';
+import WhatYouGet     from './components/WhatYouGet';
 import WhyMe          from './components/WhyMe';
+import Proof          from './components/Proof';
 import Manifesto      from './components/Manifesto';
 import About          from './components/About';
 import FAQ                  from './components/FAQ';
-import TestimonialsPreview  from './components/TestimonialsPreview';
+import LeadForm             from './components/LeadForm';
 import WhatsAppGroup        from './components/WhatsAppGroup';
-import CTA                  from './components/CTA';
 import Footer         from './components/Footer';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -111,18 +112,21 @@ export default function App() {
         <TrustStrip />
         <div className="section-divider" />
         <PainSection />
+        <Manifesto />
         <div className="section-divider" />
         <Process />
         <div className="section-divider" />
+        <WhatYouGet />
+        <div className="section-divider" />
         <WhyMe />
-        <Manifesto />
+        <div className="section-divider" />
+        <Proof />
         <div className="section-divider" />
         <About />
         <div className="section-divider" />
         <FAQ />
-        <TestimonialsPreview />
+        <LeadForm />
         <WhatsAppGroup />
-        <CTA />
       </main>
       <Footer />
     </div>

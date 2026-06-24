@@ -367,6 +367,16 @@ body {
   align-items: start;
 }
 
+/* Lead form: stack columns on mobile, side-by-side on desktop */
+.lf-grid {
+  grid-template-columns: 1fr !important;
+}
+@media (min-width: 768px) {
+  .lf-grid {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) !important;
+  }
+}
+
 @media (min-width: 768px) {
   .stats-layout {
     grid-template-columns: repeat(4, 1fr);
