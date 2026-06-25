@@ -176,7 +176,7 @@ useEffect(() => { supabase.from('table').select('*').order('position')
 | `proof_grid` | גריד מודעות (file/client/field) | Proof |
 | `leads` | לידים מהטופס | LeadForm, LeadsTab |
 
-**SQL ליצירה:** `docs/cms-sections.sql` (5 הטבלאות החדשות + RLS + seed + שורות site_content) · `docs/leads-table.sql` (leads). idempotent — בטוח להריץ.
+**SQL ליצירה:** ⭐ **`docs/setup.sql`** = קובץ הרצה אחד (לידים + CMS + התראת מייל) — להריץ פעם אחת ב-Supabase SQL Editor. מורכב מ-`docs/leads-table.sql` + `docs/cms-sections.sql` + בלוק מייל (pg_net→Resend). idempotent. (הקבצים הנפרדים נשמרים כמקור.)
 **`useContent(fallbackMap)`** (`src/lib/useContent.js`) — הוק fallback-first שמושך קבוצת מפתחות מ-`site_content`. כל הכותרות/תת-כותרות של הסקשנים החדשים (trust/pain/wyg/proof/leadform) עוברות דרכו. אייקונים של trust/outcomes נשארים בקוד (ממופים לפי index).
 
 ### site_content — מפתחות
@@ -195,8 +195,9 @@ Hook משותף (`src/lib/useSiteLinks.js`) ששולף את כל קישורי `c
 **`LeadsTab`** = טאב ייעודי (לא CRUD): רשימת לידים מ-`leads` (created_at desc), סימון "טופל", מחיקה, וואטסאפ בלחיצה. badge על הטאב = לידים שלא טופלו. אם הטבלה חסרה → מציג הנחיית התקנה (`docs/leads-table.sql`).
 **עיצוב (סשן 3):** ה-shell עודכן לזהות האתר — רקע bedrock + aurora orbs + noise, header עם CMS subtitle, ניווט טאבים אופקי-נגלל (`.admin-tabs`/`.admin-tab` ב-index.css תחת `.admin-scope`), focus glow ירוק על כל ה-inputs, hover על כרטיסים.
 
-### התראת מייל על ליד (Edge Function)
-`supabase/functions/notify-lead/index.ts` — Deno function ששולחת מייל דרך **Resend** על כל INSERT ל-`leads` (מופעל ע"י Database Webhook). הגדרה מלאה (פעם אחת): `docs/email-notifications-setup.md`. הליד נשמר ב-DB גם אם המייל נכשל. סודות: `RESEND_API_KEY`, `NOTIFY_TO`, `WEBHOOK_SECRET` (אופציונלי).
+### התראת מייל על ליד
+**דרך ראשית (מומלצת):** טריגר `after insert` על `leads` שמשתמש ב-`pg_net` לשלוח דרך **Resend** — הכל ב-`docs/setup.sql` PART 3 (המפתח ב-Supabase Vault). מדריך: `docs/email-notifications-setup.md`. צריך רק להחליף `re_REPLACE_WITH_YOUR_KEY` ולהריץ.
+**חלופה מתקדמת:** Edge Function `supabase/functions/notify-lead/index.ts` (Deno + Resend, דורש CLI + Database Webhook). הליד נשמר ב-DB גם אם המייל נכשל.
 
 ## פיקסלים — ארכיטקטורת Tracking
 
