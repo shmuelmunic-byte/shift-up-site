@@ -293,8 +293,8 @@ Hook משותף (`src/lib/useSiteLinks.js`) ששולף את כל קישורי `c
 - ✅ **סקשן 11 — טופס לידים** (`LeadForm.jsx`): חדש. **רקע בהיר.** טופס ראשי (שם/טלפון/תחום/הודעה)→`supabase.from('leads').insert` + אירוע `Lead`/`generate_lead`. וואטסאפ משני + דלת שלישית רכה (מפנה ל-`WhatsAppGroup`). id=`contact` (יעד ה-CTA של Hero). **עמיד-לתקלות:** אם ה-insert נכשל (סכמה/RLS) → נופל לוואטסאפ עם פרטים ממולאים, הליד לא אובד.
 - שינוי מבנה: `MarqueeSection`, `Stats`, **`TestimonialsPreview`, `CTA` נותקו מ-App** (קיימים על הדיסק; /testimonials עדיין חי). הסדר ב-`App.jsx` (תואם spec): Hero → TrustStrip → Pain → Manifesto → Process → WhatYouGet → WhyMe → **Proof** → About → FAQ → **LeadForm** → WhatsAppGroup → Footer.
 
-### ⚠️ פתוח אחרי הבנייה
-- **טבלת `leads`:** ✅ נבנה טאב "📥 לידים" ב-/admin (טאב ברירת מחדל) + SQL מוכן ב-`docs/leads-table.sql`. **חובה להריץ פעם אחת** את ה-SQL ב-Supabase → SQL Editor כדי שהטבלה+RLS ייווצרו (anon insert בלבד; admin קורא/מעדכן/מוחק). עד שמריצים — הטאב מציג הנחיית התקנה והטופס נופל לוואטסאפ (לידים לא אובדים, אבל לא נשמרים ב-DB). התראת מייל (edge function/webhook) — עדיין לא קיים.
+### ✅ תשתית DB — פעיל (הורץ 2026-06-25)
+`docs/setup.sql` הורץ בהצלחה ב-Supabase: **כל הטבלאות חיות** (leads + 5 טבלאות CMS + שורות site_content), ו**התראת המייל פעילה** (טריגר pg_net→Resend, מפתח ב-Vault, נבדק ועובד). הלולאה סגורה: טופס → ליד ב-DB → מייל לשמואל → עריכה ב-/admin. **אין צורך להריץ SQL שוב** (idempotent ממילא).
 - **גריד 2×2:** Pain + WhatYouGet עברו ל-class משותף `.grid-2x2` (1 עמ' מובייל / 2 עמ' דסקטופ) — תיקון ה-3+1 הלא מאוזן של `auto-fit`.
 - **גריד פורטפוליו:** `food-shira-events.jpg` = הקובץ הישן; להחליף ב-`food-shira-shabbat.jpg` המעודכן כשמגיע. `health-24fit.png` הוא PNG (תקין).
 
