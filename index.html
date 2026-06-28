@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#07080a" />
 
     <title>Shift Up | אסטרטגיה ושיווק דיגיטלי מבוסס AI - שמואל מוניץ</title>
-    <meta name="description" content="תחזור לנהל את העסק — את השיווק תשאיר לי. אסטרטגיה, קריאייטיב שמוכר וקמפיינים ב-Meta וב-Google, מפוצחים לפני ששורפים תקציב. אדם אחד, לא סוכנות. שיחת פיצוח ראשונה — חינם." />
+    <meta name="description" content="תחזור לנהל את העסק — את השיווק תשאיר לי. אסטרטגיה, קריאייטיב שמוכר וקמפיינים ב-Meta וב-Google, מפוצחים לפני ששורפים תקציב. שיחת פיצוח ראשונה — חינם." />
     <meta name="author" content="שמואל מוניץ" />
     <meta name="robots" content="index, follow" />
 
@@ -222,7 +222,14 @@
          URL. The JS pixel above covers all users with JavaScript enabled. -->
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Pre-render fallback for crawlers / no-JS: React replaces this on mount.
+           Mirrors the real client-rendered H1 + positioning (not cloaking). -->
+      <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">
+        <h1>Shift Up — תחזור לנהל את העסק. את השיווק תשאיר לי.</h1>
+        <p>שמואל מוניץ — אסטרטג שיווק דיגיטלי ומומחה AI. אסטרטגיה, קריאייטיב שמוכר וקמפיינים ממומנים ב-Meta וב-Google, מפוצחים לפני ששורפים תקציב. אדם אחד, לא סוכנות. שיחת פיצוח ראשונה — חינם, 2–3 מקומות פנויים לרבעון.</p>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
