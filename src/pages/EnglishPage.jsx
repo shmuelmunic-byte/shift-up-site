@@ -1484,8 +1484,8 @@ export default function EnglishPage() {
         <EnAbout />
         <div className="section-divider" />
         <EnFAQ />
-        <EnWhatsAppGroup />
         <EnLeadForm />
+        <EnWhatsAppGroup />
       </main>
       <EnFooter />
     </div>
