@@ -114,13 +114,13 @@ export default function IgPage() {
 
         {/* Title */}
         <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', textAlign: 'center', marginBottom: 14, lineHeight: 1.5 }}>
-          אסטרטג שיווק דיגיטלי ומומחה AI
+          מסר לפני תקציב · קריאייטיב שמוכר · מהירות AI
         </p>
 
         {/* Brand chip */}
         <div className="chip" style={{ marginBottom: 36 }}>
           <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', animation: 'breathing 2s ease-in-out infinite', boxShadow: '0 0 6px var(--brand-prime)' }} />
-          Shift Up · Marketing Strategy
+          Shift Up · אדם אחד, לא סוכנות
         </div>
 
         <div className="glow-divider" style={{ width: '100%', marginBottom: 28 }} />
@@ -168,7 +168,7 @@ export default function IgPage() {
         {/* Trust line */}
         <div style={{ marginTop: 28, display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--brand-prime)', boxShadow: '0 0 6px var(--brand-prime)', animation: 'pulse-ring 2s ease-out infinite', display: 'block', flexShrink: 0 }} />
-          זמין לשיחת היכרות — חינם, ללא התחייבות
+          שיחת פיצוח ראשונה — חינם · 2–3 מקומות לרבעון
         </div>
 
         {/* Footer */}

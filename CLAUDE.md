@@ -293,10 +293,15 @@ Hook משותף (`src/lib/useSiteLinks.js`) ששולף את כל קישורי `c
 - ✅ **סקשן 11 — טופס לידים** (`LeadForm.jsx`): חדש. **רקע בהיר.** טופס ראשי (שם/טלפון/תחום/הודעה)→`supabase.from('leads').insert` + אירוע `Lead`/`generate_lead`. וואטסאפ משני + דלת שלישית רכה (מפנה ל-`WhatsAppGroup`). id=`contact` (יעד ה-CTA של Hero). **עמיד-לתקלות:** אם ה-insert נכשל (סכמה/RLS) → נופל לוואטסאפ עם פרטים ממולאים, הליד לא אובד.
 - שינוי מבנה: `MarqueeSection`, `Stats`, **`TestimonialsPreview`, `CTA` נותקו מ-App** (קיימים על הדיסק; /testimonials עדיין חי). הסדר ב-`App.jsx` (תואם spec): Hero → TrustStrip → Pain → Manifesto → Process → WhatYouGet → WhyMe → **Proof** → About → FAQ → **LeadForm** → WhatsAppGroup → Footer.
 
+### ✅ יישור כל הדפים למשפך + מיצוב (סשן 4 — 2026-06-28)
+- **`/en` (`EnglishPage.jsx`) — נבנה מחדש 1:1 לדף הבית.** Hero חדש ("Get back to running your business. Leave the marketing to me" / "Strategy First. Budget Second." / עוגן מחיר / scarcity 2–3 spots / trust chips / CTA ראשי=טופס, משני=וואטסאפ). נוספו 5 סקשנים אנגליים (תרגום-ראי): TrustStrip, Pain, WhatYouGet, Proof (lightbox, id=`en-work`), **LeadForm** (רקע בהיר, insert ל-`leads` + נפילה לוואטסאפ, id=`en-contact`). נמחקו Marquee+Stats; מניפסט הוזז אחרי Pain. הסדר זהה ל-`App.jsx`. הטקסט האנגלי hardcoded (כמדיניות); רק קישורי `contact.*` מסונכרנים דרך `useSiteLinks`.
+- **`/ig` + `/freebies` + `/testimonials`** — יושרו במסר ל"אדם אחד לא סוכנות · מסר לפני תקציב · מהירות AI · שיחת פיצוח חינם · 2–3 מקומות לרבעון". בלי המצאת תוצאות; `/testimonials` ממוסגר ככנה ("הבאים יהיו הראשונים").
+- ⚠️ פתוח קל: כותרת `/testimonials` עדיין "מה אומרים הלקוחות" (הווה) בעוד הגוף עתידני — לסנכרן כשתגיע עדות ראשונה.
+
 ### ✅ תשתית DB — פעיל (הורץ 2026-06-25)
 `docs/setup.sql` הורץ בהצלחה ב-Supabase: **כל הטבלאות חיות** (leads + 5 טבלאות CMS + שורות site_content), ו**התראת המייל פעילה** (טריגר pg_net→Resend, מפתח ב-Vault, נבדק ועובד). הלולאה סגורה: טופס → ליד ב-DB → מייל לשמואל → עריכה ב-/admin. **אין צורך להריץ SQL שוב** (idempotent ממילא).
 - **גריד 2×2:** Pain + WhatYouGet עברו ל-class משותף `.grid-2x2` (1 עמ' מובייל / 2 עמ' דסקטופ) — תיקון ה-3+1 הלא מאוזן של `auto-fit`.
-- **גריד פורטפוליו:** `food-shira-events.jpg` = הקובץ הישן; להחליף ב-`food-shira-shabbat.jpg` המעודכן כשמגיע. `health-24fit.png` הוא PNG (תקין).
+- **גריד פורטפוליו:** `food-shira-events.jpg` — ✅ הוחלף בגרסה המעודכנת (אותו שם קובץ, תוכן חדש). `health-24fit.png` הוא PNG (תקין).
 
 ### ⚠️ סנכרון DB פתוח (תוכן "נעול" שיושב ב-CMS ודורס את הקוד — לעשות ב-/admin)
 ה-fallback בקוד מעודכן, אבל Supabase דורס. **חובה לעדכן ידנית ב-/admin לפני שהאתר החי משקף את ה-spec:**
@@ -310,7 +315,7 @@ Hook משותף (`src/lib/useSiteLinks.js`) ששולף את כל קישורי `c
 - מצאי מלא + בחירה: `docs/portfolio-manifest.md`. קבצים ב-`public/portfolio/` ✅ (9 נבחרות בשמות נכונים).
 - אישורי הצגה: **as-is** (מודעות שרצו בפומבי + עבודה עצמית). חריג: להוריד לקוח ספציפי רק אם יתנגד.
 - קייסים: "עסק קינוחי בוטיק" אנונימי (flagship) + City Transformer (טווח) — מצגות ב-Downloads, לחתוך 4–6 מסכים מכל אחד.
-- ⚠️ מודעת SHIRA בגריד: הקובץ הנוכחי ישן — להחליף בגרסת קינוחי השבת המעודכנת (שמואל ישלח).
+- ✅ מודעת SHIRA בגריד: הוחלפה בגרסת קינוחי השבת המעודכנת (`food-shira-events.jpg`, אותו שם).
 - ⚠️ לבנייה: לוודא ש-`retail-kehilot-card.jpg` = מודעת 5% (FABIO/BAGIR). הכל מוכן ל"מפגש בנייה".
 
 **טרם נסגר:** איסוף הקריאייטיב לתיקייה, נוסח scarcity מדויק, ייצוא GA4/GSC לכיול.
@@ -326,6 +331,7 @@ git push        # Vercel מפרס אוטומטית
 ## לוג שינויים (עיקריים)
 | תאריך | שינוי |
 |--------|-------|
+| 2026-06-28 | **יישור כל הדפים למשפך — סשן 4** (3 סוכנים מקבילים): `/en` נבנה מחדש 1:1 לדף הבית (Hero חדש + TrustStrip/Pain/WhatYouGet/Proof/LeadForm אנגליים, Marquee+Stats נמחקו). `/ig`+`/freebies`+`/testimonials` יושרו במסר למיצוב הנעול. תמונת SHIRA המעודכנת אומתה. build נקי. |
 | 2026-06-24 | **בניית משפך — סשן 2** (commits `4788793`,`775a85d`): Hero מחדש (2CTA טופס/וואטסאפ, עוגן מחיר, scarcity), `TrustStrip.jsx` (סקשן 2), `PainSection.jsx` (סקשן 3), `Process.jsx` שמות שלבים לפי spec. Marquee+Stats נותקו. ⚠️ טעון סנכרון DB ב-/admin (subtitle + שלבים). |
 | 2026-06-24 | **אפיון שדרוג דף הבית** — מחקר+מתחרים (`docs/landing-research.html`) + אפיון דף-נחיתה (`docs/landing-spec.html`) בשיטת סקיל `landing-page-research`. Hero נעול, מבנה 10 סקשנים, מנגנון ליד Supabase. |
 | 2026-06-19 | **AI Discovery** — `llms.txt` + markdown mirrors (index/faq/en) ב-`public/`, שורת `LLM:` ב-robots.txt, sitemap הורחב (+/testimonials +/freebies) |

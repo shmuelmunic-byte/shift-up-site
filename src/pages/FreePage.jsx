@@ -815,8 +815,8 @@ export default function FreePage() {
                 color: 'var(--text-secondary)',
                 lineHeight: 1.5,
               }}>
-                אסטרטג שיווק דיגיטלי ומומחה AI.
-                עוזר לבעלי עסקים לגדול עם אסטרטגיה חדה.
+                אסטרטג שיווק + מומחה AI. אדם אחד, לא סוכנות —
+                מסר לפני תקציב, קריאייטיב שמוכר.
               </div>
             </div>
           </div>
@@ -830,7 +830,7 @@ export default function FreePage() {
               marginBottom: 10,
               fontWeight: 600,
             }}>
-              רוצה שיחת אסטרטגיה ממוקדת?
+              רוצה לפצח את השיווק לפני ששורפים תקציב?
             </p>
             <a
               href={WA_LINK}
@@ -866,7 +866,7 @@ export default function FreePage() {
               }}
             >
               <IconWhatsApp size={20} />
-              לדבר על השיווק של העסק שלי
+              לשיחת פיצוח ראשונה — חינם, ללא התחייבות
             </a>
           </div>
 

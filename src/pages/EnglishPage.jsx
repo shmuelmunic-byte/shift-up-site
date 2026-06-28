@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import Cursor from '../components/Cursor';
+import { supabase } from '../lib/supabase';
 import { useSiteLinks } from '../lib/useSiteLinks';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -55,6 +56,7 @@ const WA_ICON = (
 const navLinks = [
   { label: 'The Process', id: 'en-strategy' },
   { label: 'Why Me',      id: 'en-why'      },
+  { label: 'Work',        id: 'en-work'     },
   { label: 'About',       id: 'en-about'    },
   { label: 'FAQ',         id: 'en-faq'      },
 ];
@@ -159,7 +161,14 @@ function EnNavbar() {
 
 /* ─── Hero ───────────────────────────────────────────────────────────── */
 
-function EnHero({ onProcess }) {
+const EN_TRUST_CHIPS = [
+  'Message before budget',
+  'Creative that sells',
+  'AI speed',
+  'One person — not an agency',
+];
+
+function EnHero({ onProcess, onForm }) {
   const ref = useRef(null);
   const links = useSiteLinks();
   const WA_LINK = links.whatsapp_url.split('?')[0] + '?text=' + WA_TEXT;
@@ -190,52 +199,45 @@ function EnHero({ onProcess }) {
         <div style={{ textAlign: 'left' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
             <span style={{ height: 1, width: 36, background: 'var(--brand-prime)', opacity: 0.6, display: 'block' }} />
-            <span style={{ color: 'var(--brand-prime)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Smart Strategy. Bold Creativity.</span>
+            <span style={{ color: 'var(--brand-prime)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Strategy First. Budget Second.</span>
           </div>
 
           <h1 className="en-hero-h1" style={{ fontSize: 'clamp(1.9rem, 7vw, 5.2rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 28, fontFamily: "'Heebo', sans-serif", opacity: 0 }}>
-            <span style={{ color: 'var(--text-primary)' }}>Turning </span>
-            <span className="text-gradient">Ideas</span>
+            <span style={{ color: 'var(--text-primary)' }}>Get back to running your business.</span>
             <br />
-            <span style={{ color: 'var(--text-primary)' }}>into a </span>
-            <span className="text-gradient">Winning Strategy</span>
+            <span style={{ color: 'var(--text-primary)' }}>Leave the </span>
+            <span className="text-gradient">marketing to me</span>
             <span style={{ color: 'var(--brand-prime)' }}>.</span>
           </h1>
 
           <p className="en-hero-sub" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.18rem)', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 520, marginBottom: 8, opacity: 0 }}>
-            Before burning budget on paid ads, you need to know{' '}
-            <strong style={{ color: 'var(--text-primary)' }}>what you're selling — and to whom</strong>.
-            <br />
-            I build the strategy — then make it happen.
+            Strategy, creative that sells, and paid campaigns —{' '}
+            <strong style={{ color: 'var(--text-primary)' }}>cracked before you burn budget</strong>.
           </p>
 
-          <div className="en-hero-ctas hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 36, marginBottom: 48, opacity: 0 }}>
-            <MagneticWrap href={WA_LINK} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 32px', background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', borderRadius: 999, fontWeight: 800, fontSize: '1rem', fontFamily: "'Heebo', sans-serif", textDecoration: 'none', border: 'none', boxShadow: '0 0 40px oklch(0.78 0.20 145 / 0.42)', transition: 'background 0.25s, box-shadow 0.25s' }}>
-              {WA_ICON} Let's Talk
-            </MagneticWrap>
-            <MagneticWrap onClick={onProcess} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', background: 'oklch(0.14 0.02 240 / 0.7)', color: 'var(--text-primary)', borderRadius: 999, fontWeight: 600, fontSize: '1rem', fontFamily: "'Heebo', sans-serif", border: '1px solid oklch(0.25 0.02 240)', backdropFilter: 'blur(12px)', transition: 'background 0.25s, border-color 0.25s' }}>
-              How It Works
+          {/* price anchor */}
+          <p className="en-hero-sub" style={{ fontSize: '0.92rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: 14, opacity: 0 }}>
+            From ₪1,500 · <span style={{ color: 'var(--brand-prime)' }}>First crack-call — free</span>
+          </p>
+
+          <div className="en-hero-ctas hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 32, marginBottom: 32, opacity: 0 }}>
+            <MagneticWrap onClick={onForm} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 32px', background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', borderRadius: 999, fontWeight: 800, fontSize: '1rem', fontFamily: "'Heebo', sans-serif", textDecoration: 'none', border: 'none', boxShadow: '0 0 40px oklch(0.78 0.20 145 / 0.42)', transition: 'background 0.25s, box-shadow 0.25s' }}>
+              Get a tailored proposal
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </MagneticWrap>
+            <MagneticWrap href={WA_LINK} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', background: 'oklch(0.14 0.02 240 / 0.7)', color: 'var(--text-primary)', borderRadius: 999, fontWeight: 600, fontSize: '1rem', fontFamily: "'Heebo', sans-serif", border: '1px solid oklch(0.25 0.02 240)', backdropFilter: 'blur(12px)', transition: 'background 0.25s, border-color 0.25s' }}>
+              {WA_ICON} Got a question? Message me
+            </MagneticWrap>
           </div>
 
-          {/* scroll hint */}
-          <div
-            className="scroll-hint"
-            onClick={onProcess}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 32, cursor: 'pointer', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-            Scroll down
-          </div>
-
-          <div className="en-hero-quote" style={{ display: 'flex', alignItems: 'flex-start', gap: 14, opacity: 0 }}>
-            <div style={{ width: 3, height: 56, background: 'linear-gradient(to bottom, var(--brand-prime), var(--accent-void))', borderRadius: 999, flexShrink: 0 }} />
-            <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', fontWeight: 500, lineHeight: 1.65 }}>
-              "Ideas are my fuel.
-              <br />
-              <strong style={{ color: 'var(--text-primary)', fontWeight: 800 }}>People are the goal."</strong>
-            </p>
+          {/* trust chips */}
+          <div className="en-hero-quote" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, opacity: 0 }}>
+            {EN_TRUST_CHIPS.map((chip, i) => (
+              <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '6px 13px', borderRadius: 999, background: 'oklch(0.14 0.02 240 / 0.6)', border: '1px solid oklch(0.22 0.02 240)', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', flexShrink: 0 }} />
+                {chip}
+              </span>
+            ))}
           </div>
         </div>
 
@@ -251,8 +253,8 @@ function EnHero({ onProcess }) {
             <div className="float-badge" style={{ position: 'absolute', bottom: -24, right: -16, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', boxShadow: '0 0 10px var(--brand-prime)', flexShrink: 0, animation: 'pulse-ring 1.8s ease-out infinite' }} />
               <div>
-                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>STATUS</div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>Available Now</div>
+                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>THIS QUARTER</div>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>2–3 spots open</div>
               </div>
             </div>
 
@@ -273,100 +275,386 @@ function EnHero({ onProcess }) {
   );
 }
 
-/* ─── Marquee ────────────────────────────────────────────────────────── */
-
-const marqueeWords = [
-  'Marketing Strategy', '↑', 'Meta Ads', '↑', 'Google Ads', '↑',
-  'Landing Pages', '↑', 'Quality Leads', '↑', 'AI Marketing', '↑',
-  'Sharp Messaging', '↑', 'ROI', '↑',
-];
-const marqueeTripled = [...marqueeWords, ...marqueeWords, ...marqueeWords];
-
-function EnMarquee() {
-  return (
-    <div style={{ background: 'oklch(0.105 0.012 240)', borderTop: '1px solid oklch(0.22 0.02 240 / 0.5)', borderBottom: '1px solid oklch(0.22 0.02 240 / 0.5)', padding: '20px 0', overflow: 'hidden', position: 'relative' }} aria-hidden="true">
-      <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: 80, background: 'linear-gradient(to right, oklch(0.105 0.012 240), transparent)', zIndex: 2, pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', top: 0, bottom: 0, right: 0, width: 80, background: 'linear-gradient(to left, oklch(0.105 0.012 240), transparent)', zIndex: 2, pointerEvents: 'none' }} />
-      <div className="marquee-track-ltr">
-        {marqueeTripled.map((word, i) => (
-          <span key={i} style={{ margin: '0 24px', fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 900, letterSpacing: '-0.01em', color: word === '↑' ? 'var(--brand-prime)' : 'oklch(0.55 0.01 240)', fontFamily: "'Heebo', sans-serif", whiteSpace: 'nowrap' }}>
-            {word}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ─── Stats ──────────────────────────────────────────────────────────── */
+/* ─── isOnlineNow helper (used by TrustStrip) ────────────────────────── */
 
 function isOnlineNow() {
   const h = parseInt(new Intl.DateTimeFormat('he-IL', { hour: 'numeric', hour12: false, timeZone: 'Asia/Jerusalem' }).format(new Date()), 10);
   return h >= 8 && h < 17;
 }
 
-const gradStyle = {
-  background: 'linear-gradient(120deg, var(--brand-glow) 0%, var(--brand-prime) 55%, var(--accent-void) 100%)',
-  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-};
+/* ─── TrustStrip (section 2) ─────────────────────────────────────────── */
 
-const enStats = [
-  { count: 100, suffix: '%', label: 'Fully Personalized' },
-  { live: true,              label: 'Availability' },
-  { display: 'AI',           label: 'Advanced Tools' },
-  { display: 'ROI',          label: 'The Only Focus' },
+const EN_PILLAR_ICONS = [
+  (<><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" /><circle cx="12" cy="12" r="0.6" fill="currentColor" stroke="none" /></>),
+  (<><circle cx="12" cy="8" r="3.5" /><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7" /></>),
+  (<><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4L3 21l1.1-4.1A8.4 8.4 0 1 1 21 11.5Z" /></>),
 ];
 
-function EnStatItem({ stat, index }) {
-  const numRef  = useRef(null);
-  const itemRef = useRef(null);
-  const [online, setOnline] = useState(() => (stat.live ? isOnlineNow() : false));
+const EN_PILLARS = [
+  { title: '2–3 businesses a quarter', text: 'I take on few clients on purpose — so each one gets full attention, not a place in line.' },
+  { title: 'One person, not an agency', text: 'The person who cracks the strategy is the one who executes it. No rotating team, no junior intern.' },
+  { title: 'Free intro call', text: "We'll check together if it's a fit — no commitment, no sales pressure." },
+];
 
+function EnPillar({ pillar, index }) {
+  const ref = useRef(null);
   useEffect(() => {
-    if (!stat.live) return undefined;
-    const id = setInterval(() => setOnline(isOnlineNow()), 60000);
-    return () => clearInterval(id);
-  }, [stat.live]);
-
-  useEffect(() => {
-    const el = itemRef.current;
+    const el = ref.current;
     if (!el) return;
-    gsap.fromTo(el, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: index * 0.1, scrollTrigger: { trigger: el, start: 'top 82%', once: true } });
-    if (typeof stat.count === 'number') {
-      const obj = { val: 0 };
-      ScrollTrigger.create({ trigger: el, start: 'top 82%', once: true, onEnter: () => {
-        gsap.to(obj, { val: stat.count, duration: 1.8, ease: 'power2.out', onUpdate: () => {
-          if (numRef.current) numRef.current.textContent = Math.round(obj.val) + (stat.suffix || '');
-        }});
-      }});
-    }
-  }, [stat, index]);
-
-  const showOnline = stat.live && online;
+    gsap.fromTo(el, { y: 28, opacity: 0 }, {
+      y: 0, opacity: 1, duration: 0.7, ease: 'expo.out', delay: index * 0.1,
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+    });
+  }, [index]);
 
   return (
-    <div ref={itemRef} className="stat-card shimmer-card" style={{ textAlign: 'left', opacity: 0 }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(to right, transparent, oklch(0.78 0.20 145 / 0.3), transparent)' }} />
-      <div style={{ fontSize: 'clamp(2rem, 5vw, 3.4rem)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 12, fontFamily: "'Heebo', sans-serif" }}>
-        {typeof stat.count === 'number' ? (
-          <span ref={numRef} className="counter-num" style={gradStyle}>0{stat.suffix || ''}</span>
-        ) : stat.live ? (
-          <span style={gradStyle}>Instant Response</span>
-        ) : (
-          <span style={gradStyle}>{stat.display}</span>
-        )}
+    <div ref={ref} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, flex: '1 1 240px', minWidth: 0, opacity: 0, textAlign: 'left' }}>
+      <span style={{ flexShrink: 0, width: 44, height: 44, borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'oklch(0.78 0.20 145 / 0.1)', border: '1px solid oklch(0.78 0.20 145 / 0.22)' }}>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          {EN_PILLAR_ICONS[index] || EN_PILLAR_ICONS[0]}
+        </svg>
+      </span>
+      <div>
+        <div style={{ fontSize: '1.02rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 4 }}>{pillar.title}</div>
+        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{pillar.text}</p>
       </div>
-      {stat.live && (
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: showOnline ? 'oklch(0.78 0.20 145 / 0.1)' : 'oklch(0.14 0.02 240)', border: `1px solid ${showOnline ? 'oklch(0.78 0.20 145 / 0.3)' : 'oklch(0.22 0.02 240)'}`, borderRadius: 999, padding: '3px 10px', marginBottom: 8 }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: showOnline ? 'var(--brand-prime)' : 'oklch(0.4 0.01 240)', display: 'block', flexShrink: 0, boxShadow: showOnline ? '0 0 6px var(--brand-prime)' : 'none', animation: showOnline ? 'pulse-ring 2s ease-out infinite' : 'none' }} />
-          <span style={{ fontSize: '0.7rem', fontWeight: 700, color: showOnline ? 'var(--brand-prime)' : 'var(--text-muted)', letterSpacing: '0.04em' }}>
-            {showOnline ? 'Available now' : 'Usually within 1h'}
-          </span>
-        </div>
-      )}
-      {!stat.live && <div style={{ height: 2, width: 32, background: 'var(--brand-prime)', borderRadius: 999, marginBottom: 10, opacity: 0.5 }} />}
-      <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.04em' }}>{stat.label}</div>
     </div>
+  );
+}
+
+function EnTrustStrip() {
+  const headRef = useRef(null);
+  const [online, setOnline] = useState(isOnlineNow);
+
+  useEffect(() => {
+    const id = setInterval(() => setOnline(isOnlineNow()), 60000);
+    return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    const el = headRef.current;
+    if (!el) return;
+    gsap.fromTo(el, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
+  }, []);
+
+  return (
+    <section style={{ padding: 'clamp(40px, 7vw, 72px) 28px', background: 'var(--surface-0)' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <div ref={headRef} style={{ textAlign: 'center', marginBottom: 'clamp(32px, 5vw, 48px)', opacity: 0 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: online ? 'oklch(0.78 0.20 145 / 0.1)' : 'oklch(0.14 0.02 240)', border: `1px solid ${online ? 'oklch(0.78 0.20 145 / 0.3)' : 'oklch(0.22 0.02 240)'}`, borderRadius: 999, padding: '5px 14px', marginBottom: 20, transition: 'all 0.4s ease' }}>
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: online ? 'var(--brand-prime)' : 'oklch(0.4 0.01 240)', display: 'block', flexShrink: 0, boxShadow: online ? '0 0 6px var(--brand-prime)' : 'none', animation: online ? 'pulse-ring 2s ease-out infinite' : 'none' }} />
+            <span style={{ fontSize: '0.74rem', fontWeight: 700, color: online ? 'var(--brand-prime)' : 'var(--text-muted)', letterSpacing: '0.04em' }}>
+              {online ? 'Available now' : 'Usually replies within an hour'}
+            </span>
+          </div>
+          <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.4rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.2, color: 'var(--text-primary)' }}>
+            I don't work with everyone. <span style={{ color: 'var(--brand-prime)' }}>That's exactly the point.</span>
+          </h2>
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'clamp(24px, 4vw, 40px)', justifyContent: 'center' }}>
+          {EN_PILLARS.map((p, i) => <EnPillar key={i} pillar={p} index={i} />)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Pain (section 3) ───────────────────────────────────────────────── */
+
+const EN_PAINS = [
+  { text: 'Burning budget on paid ads — and the leads just never show up.' },
+  { text: "You're advertising, but not really sure which message works, or for whom." },
+  { text: 'Instead of running your business, you chase campaigns and posts.' },
+  { text: 'You got burned by an agency that promised the world — then handed you to an intern.' },
+];
+
+function EnPainCard({ text, index }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    gsap.fromTo(el, { y: 30, opacity: 0 }, {
+      y: 0, opacity: 1, duration: 0.7, ease: 'expo.out', delay: index * 0.08,
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+    });
+  }, [index]);
+
+  return (
+    <div ref={ref} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '20px 22px', borderRadius: 16, background: 'oklch(0.11 0.015 240 / 0.6)', border: '1px solid oklch(0.20 0.02 240)', textAlign: 'left', opacity: 0 }}>
+      <span style={{ flexShrink: 0, width: 30, height: 30, borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'oklch(0.18 0.025 240)', border: '1px solid oklch(0.30 0.02 240)', marginTop: 2 }}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+      </span>
+      <p style={{ fontSize: '1.02rem', color: 'var(--text-secondary)', fontWeight: 600, lineHeight: 1.55 }}>{text}</p>
+    </div>
+  );
+}
+
+function EnPain() {
+  const headRef = useRef(null);
+  const bridgeRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.en-pain-head', { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: { trigger: headRef.current, start: 'top 85%', once: true } });
+      gsap.fromTo('.en-pain-bridge', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: { trigger: bridgeRef.current, start: 'top 90%', once: true } });
+    });
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section style={{ padding: 'clamp(64px, 10vw, 110px) 28px', background: 'var(--bedrock)' }}>
+      <div style={{ maxWidth: 920, margin: '0 auto' }}>
+        <div ref={headRef} className="en-pain-head" style={{ textAlign: 'center', marginBottom: 'clamp(36px, 6vw, 56px)', opacity: 0 }}>
+          <span style={{ color: 'var(--text-muted)', fontSize: '0.74rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase' }}>A moment of truth</span>
+          <h2 style={{ fontSize: 'clamp(1.7rem, 5vw, 3rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.2, color: 'var(--text-primary)', marginTop: 14, maxWidth: 680, marginInline: 'auto' }}>
+            Tired of chasing your marketing — and seeing no results?
+          </h2>
+        </div>
+        <div className="grid-2x2">
+          {EN_PAINS.map((p, i) => <EnPainCard key={i} text={p.text} index={i} />)}
+        </div>
+        <div ref={bridgeRef} className="en-pain-bridge" style={{ textAlign: 'center', marginTop: 'clamp(40px, 6vw, 60px)', opacity: 0 }}>
+          <p style={{ fontSize: 'clamp(1.15rem, 3vw, 1.6rem)', fontWeight: 800, lineHeight: 1.5, color: 'var(--text-primary)' }}>
+            It doesn't have to be this way. <span style={{ color: 'var(--brand-prime)' }}>There's one orderly path.</span>
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── WhatYouGet (section 6) ─────────────────────────────────────────── */
+
+const EN_OUTCOME_ICONS = [
+  (<><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></>),
+  (<><path d="M9 12l2 2 4-4" /><path d="M12 3c-1.5 2-4 3-7 3 0 5.5 2.5 9.5 7 12 4.5-2.5 7-6.5 7-12-3 0-5.5-1-7-3Z" /></>),
+  (<><path d="M3 11l19-9-9 19-2-8-8-2Z" /></>),
+  (<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>),
+];
+
+const EN_OUTCOMES = [
+  { title: 'Leads coming in — not just impressions', text: 'Campaigns that bring real inquiries from people who actually fit you. Not likes, not vague "brand awareness" — inquiries you can close.' },
+  { title: 'Peace of mind — one person owns it', text: 'You stop chasing posts, campaigns and numbers. One person takes all of the marketing, executes it, and reports back to you.' },
+  { title: 'A sharp message you\'re proud of', text: 'Finally your marketing sounds like you — distilling what makes you different and setting you apart from competitors, no discounts.' },
+  { title: 'Your time comes back to you', text: 'Instead of dealing with marketing, you go back to what you do best — running and growing your business.' },
+];
+
+function EnOutcomeCard({ outcome, index }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    gsap.fromTo(el, { y: 30, opacity: 0 }, {
+      y: 0, opacity: 1, duration: 0.7, ease: 'expo.out', delay: index * 0.08,
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+    });
+  }, [index]);
+
+  return (
+    <div ref={ref} style={{ display: 'flex', alignItems: 'flex-start', gap: 16, padding: '24px 24px', borderRadius: 16, background: 'oklch(0.11 0.015 240 / 0.6)', border: '1px solid oklch(0.20 0.02 240)', textAlign: 'left', opacity: 0 }}>
+      <span style={{ flexShrink: 0, width: 46, height: 46, borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'oklch(0.78 0.20 145 / 0.1)', border: '1px solid oklch(0.78 0.20 145 / 0.22)' }}>
+        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          {EN_OUTCOME_ICONS[index] || EN_OUTCOME_ICONS[0]}
+        </svg>
+      </span>
+      <div>
+        <h3 style={{ fontSize: '1.08rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>{outcome.title}</h3>
+        <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>{outcome.text}</p>
+      </div>
+    </div>
+  );
+}
+
+function EnWhatYouGet() {
+  const headRef = useRef(null);
+  const lineRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.en-wyg-head', { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: { trigger: headRef.current, start: 'top 85%', once: true } });
+      gsap.fromTo('.en-wyg-line', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: { trigger: lineRef.current, start: 'top 90%', once: true } });
+    });
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section style={{ padding: 'clamp(64px, 10vw, 110px) 28px', background: 'var(--bedrock)' }}>
+      <div style={{ maxWidth: 920, margin: '0 auto' }}>
+        <div ref={headRef} className="en-wyg-head" style={{ textAlign: 'center', marginBottom: 'clamp(36px, 6vw, 56px)', opacity: 0 }}>
+          <span style={{ color: 'var(--brand-prime)', fontSize: '0.74rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase' }}>What You Get</span>
+          <h2 style={{ fontSize: 'clamp(1.7rem, 5vw, 3rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.2, color: 'var(--text-primary)', marginTop: 14, maxWidth: 700, marginInline: 'auto' }}>
+            Bottom line? <span style={{ color: 'var(--brand-prime)' }}>Leads and peace of mind.</span>
+          </h2>
+          <p style={{ fontSize: 'clamp(1rem, 2.5vw, 1.15rem)', color: 'var(--text-secondary)', lineHeight: 1.7, marginTop: 14, maxWidth: 560, marginInline: 'auto' }}>
+            You keep running the business. I take the marketing on myself — and this is what you get back.
+          </p>
+        </div>
+        <div className="grid-2x2">
+          {EN_OUTCOMES.map((o, i) => <EnOutcomeCard key={i} outcome={o} index={i} />)}
+        </div>
+        <div ref={lineRef} className="en-wyg-line" style={{ textAlign: 'center', marginTop: 'clamp(40px, 6vw, 60px)', opacity: 0 }}>
+          <p style={{ fontSize: 'clamp(1.1rem, 3vw, 1.5rem)', fontWeight: 800, lineHeight: 1.5, color: 'var(--text-primary)' }}>
+            Stop being a part-time marketing manager. <span style={{ color: 'var(--brand-prime)' }}>Be the owner again.</span>
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Proof (section 8) ──────────────────────────────────────────────── */
+
+const EN_CASES = [
+  {
+    tag: 'Process example',
+    title: 'Boutique dessert business',
+    subtitle: 'Premium positioning in a saturated market',
+    quote: "We don't sell cakes, we sell style.",
+    steps: [
+      { k: 'The pain', v: 'In a saturated market, the customer doesn\'t ask "how much" — she asks "what will people think?". Price isn\'t the problem, status is.' },
+      { k: 'Positioning', v: 'Not another bakery — a design house. Selling an experience and prestige, not a kilo of chocolate.' },
+      { k: 'The funnel', v: 'A clear persona ("the hosting perfectionist"), a message that speaks to status, and visual channels that signal luxury.' },
+    ],
+  },
+  {
+    tag: 'Process example · course project',
+    title: 'City Transformer',
+    subtitle: 'Creating a new category',
+    quote: 'Easy for you.',
+    steps: [
+      { k: 'The problem', v: 'A folding electric vehicle — a category that has no shelf yet in the consumer\'s mind.' },
+      { k: 'Positioning', v: 'Instead of fighting for existing space — create a new category. The "easy for you" concept.' },
+      { k: 'The creative', v: 'An Urban Luxury brand language, personas, and a video storyboard that tells the story.' },
+    ],
+  },
+];
+
+const EN_GRID = [
+  { file: 'events-yehuda.jpg',      client: 'Yehuda Siman-Tov', field: 'Events' },
+  { file: 'realestate-villas.jpg',  client: 'Real Estate',      field: 'Real Estate' },
+  { file: 'legal-skler.jpg',        client: 'Skler Law',        field: 'Legal' },
+  { file: 'retail-kehilot-card.jpg',client: 'Kehilot Card',     field: 'Retail' },
+  { file: 'food-shira-events.jpg',  client: 'SHIRA',            field: 'Food' },
+  { file: 'health-24fit.png',       client: '24fit',            field: 'Fitness' },
+  { file: 'home-emanuel.jpg',       client: 'Emanuel Paint',    field: 'Home Services' },
+  { file: 'beauty-hili.jpg',        client: 'Hili Nails',       field: 'Beauty' },
+  { file: 'education-imahot.jpg',   client: 'Mothers Workshop',  field: 'Parenting' },
+];
+
+function EnCaseCard({ item, index }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    gsap.fromTo(el, { y: 40, opacity: 0 }, {
+      y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: index * 0.1,
+      scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+    });
+  }, [index]);
+
+  return (
+    <div ref={ref} className="shimmer-card" style={{ opacity: 0, textAlign: 'left', padding: 'clamp(24px, 3vw, 34px)', borderRadius: 20, background: 'var(--surface-1)', border: '1px solid oklch(0.22 0.02 240)', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: 0, right: 0, left: 0, height: 2, background: 'linear-gradient(to right, var(--brand-prime), oklch(0.65 0.22 200 / 0.6), transparent)' }} />
+      <span style={{ display: 'inline-block', fontSize: '0.66rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', background: 'oklch(0.18 0.025 240)', border: '1px solid oklch(0.28 0.02 240)', borderRadius: 999, padding: '4px 12px', marginBottom: 16 }}>
+        {item.tag}
+      </span>
+      <h3 style={{ fontSize: 'clamp(1.4rem, 3vw, 1.9rem)', fontWeight: 900, letterSpacing: '-0.01em', color: 'var(--text-primary)', marginBottom: 4 }}>{item.title}</h3>
+      <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 18 }}>{item.subtitle}</div>
+      <blockquote style={{ margin: '0 0 22px', padding: '12px 16px', borderRadius: 12, background: 'oklch(0.78 0.20 145 / 0.08)', borderLeft: '3px solid var(--brand-prime)', fontSize: '1.02rem', fontWeight: 800, color: 'var(--brand-glow)', textAlign: 'left' }}>
+        {item.quote}
+      </blockquote>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {item.steps.map((s, i) => (
+          <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+            <span style={{ flexShrink: 0, fontSize: '0.72rem', fontWeight: 800, color: 'var(--brand-prime)', minWidth: 84, paddingTop: 2 }}>{s.k}</span>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{s.v}</p>
+          </div>
+        ))}
+      </div>
+      <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 20, fontStyle: 'italic' }}>
+        A thinking & process example — not a results claim.
+      </p>
+    </div>
+  );
+}
+
+function EnGridTile({ item, index, onOpen }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    gsap.fromTo(el, { y: 30, opacity: 0, scale: 0.96 }, {
+      y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'expo.out', delay: (index % 3) * 0.07,
+      scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+    });
+  }, [index]);
+
+  return (
+    <button ref={ref} onClick={() => onOpen(item)} style={{ opacity: 0, position: 'relative', display: 'block', width: '100%', aspectRatio: '4 / 5', borderRadius: 14, overflow: 'hidden', border: '1px solid oklch(0.22 0.02 240)', background: 'var(--surface-1)', cursor: 'pointer', padding: 0, textAlign: 'left' }} aria-label={`Enlarge ad — ${item.client}`}>
+      <img src={`/portfolio/${item.file}`} alt={`${item.client} creative — ${item.field}`} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+      <div style={{ position: 'absolute', insetInline: 0, bottom: 0, padding: '28px 14px 12px', background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.92), transparent)' }}>
+        <div style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-primary)' }}>{item.client}</div>
+        <div style={{ fontSize: '0.74rem', color: 'var(--brand-glow)', fontWeight: 600 }}>{item.field}</div>
+      </div>
+    </button>
+  );
+}
+
+function EnLightbox({ item, onClose }) {
+  if (!item) return null;
+  return (
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'oklch(0.05 0.01 240 / 0.9)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      <button onClick={onClose} aria-label="Close" style={{ position: 'absolute', top: 20, right: 20, width: 44, height: 44, borderRadius: '50%', background: 'oklch(0.14 0.02 240)', border: '1px solid oklch(0.3 0.02 240)', color: 'var(--text-primary)', fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}>×</button>
+      <img src={`/portfolio/${item.file}`} alt={`${item.client} creative — ${item.field}`} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '92vw', maxHeight: '88vh', borderRadius: 14, objectFit: 'contain', boxShadow: '0 20px 80px oklch(0 0 0 / 0.6)' }} />
+    </div>
+  );
+}
+
+function EnProof() {
+  const headRef = useRef(null);
+  const grHeadRef = useRef(null);
+  const [open, setOpen] = useState(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.en-proof-head', { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: { trigger: headRef.current, start: 'top 85%', once: true } });
+      gsap.fromTo('.en-proof-grid-head', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: { trigger: grHeadRef.current, start: 'top 88%', once: true } });
+    });
+    return () => ctx.revert();
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(null); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  return (
+    <section id="en-work" style={{ padding: 'clamp(80px, 10vw, 130px) 28px', background: 'var(--surface-0)', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <div ref={headRef} className="en-proof-head" style={{ textAlign: 'left', maxWidth: 680, marginBottom: 'clamp(36px, 5vw, 56px)', opacity: 0 }}>
+          <div className="section-label">The Proof</div>
+          <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.4rem)', fontWeight: 900, lineHeight: 1.08, letterSpacing: '-0.02em', marginBottom: 16, fontFamily: "'Heebo', sans-serif" }}>
+            I don't promise. <span className="text-gradient">I show.</span>
+          </h2>
+          <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
+            First the thinking — how you crack a business's positioning. Then the execution — real creative I made, across every field and audience.
+          </p>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20, marginBottom: 'clamp(56px, 8vw, 84px)' }}>
+          {EN_CASES.map((c, i) => <EnCaseCard key={i} item={c} index={i} />)}
+        </div>
+        <div ref={grHeadRef} className="en-proof-grid-head" style={{ textAlign: 'center', marginBottom: 'clamp(28px, 4vw, 40px)', opacity: 0 }}>
+          <h3 style={{ fontSize: 'clamp(1.4rem, 3.5vw, 2.2rem)', fontWeight: 900, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
+            Creative that sells — <span style={{ color: 'var(--brand-prime)' }}>every field, every audience.</span>
+          </h3>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14 }}>
+          {EN_GRID.map((g, i) => <EnGridTile key={g.file} item={g} index={i} onOpen={setOpen} />)}
+        </div>
+      </div>
+      <EnLightbox item={open} onClose={() => setOpen(null)} />
+    </section>
   );
 }
 
@@ -381,13 +669,13 @@ const enSteps = [
   },
   {
     n: '02', title: 'The Shift', sub: 'Strategy',
-    desc: 'We take the insights and build a clear action plan. Which marketing funnel works for you, what content will drive action, and where to put the money. A roadmap, not a gamble.',
-    bullets: ['Marketing funnel design', 'Content plan', 'Channel-specific messaging'],
+    desc: 'We turn the insights into a clear plan and creative that sells: the funnel that fits you, the message that drives action, and where the money goes — all locked in before a single shekel goes in.',
+    bullets: ['Marketing funnel design', 'Creative that sells', 'Channel-specific messaging'],
     icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>,
   },
   {
     n: '03', title: 'The Action', sub: 'Execution',
-    desc: 'Only now we go to the tools. I set up and manage your paid campaigns on Meta and Google, build high-converting landing pages, and deploy AI automations that save time.',
+    desc: 'Only now — once the message is sharp — we go to the tools. I set up and manage your paid campaigns on Meta and Google, build high-converting landing pages, and deploy AI automations that save time.',
     bullets: ['Meta + Google Campaigns', 'High-converting landing pages', 'AI automations'],
     icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>,
   },
@@ -828,72 +1116,199 @@ function EnWhatsAppGroup() {
   );
 }
 
-/* ─── CTA ────────────────────────────────────────────────────────────── */
+/* ─── Lead Form (section 11) ─────────────────────────────────────────── */
 
-function EnCTA() {
-  const ref = useRef(null);
-  const [hovered, setHovered] = useState(false);
-  const [idlePulse, setIdlePulse] = useState(false);
-  const idleRef = useRef(null);
+const EN_PHONE = '972534673151';
+
+function enBuildWaLink(form) {
+  const lines = [
+    "Hi Shmuel, I'd love to hear about your services.",
+    form.name && `Name: ${form.name}`,
+    form.business && `Business field: ${form.business}`,
+    form.message && `What I'm after: ${form.message}`,
+  ].filter(Boolean);
+  return `https://wa.me/${EN_PHONE}?text=${encodeURIComponent(lines.join('\n'))}`;
+}
+
+function enFireLead() {
+  if (typeof window.fbq === 'function') window.fbq('track', 'Lead', { content_name: 'Lead Form (EN)' });
+  if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { method: 'form_en' });
+}
+
+const enWaBtnStyle = {
+  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%',
+  padding: '13px 22px', borderRadius: 12, background: '#25955a', color: '#fff',
+  fontWeight: 800, fontSize: '1rem', fontFamily: "'Heebo', sans-serif", textDecoration: 'none',
+  boxShadow: '0 6px 20px rgba(37,149,90,0.3)',
+};
+
+function EnLeadForm() {
+  const sectionRef = useRef(null);
   const links = useSiteLinks();
-  const WA_LINK = links.whatsapp_url.split('?')[0] + '?text=' + WA_TEXT;
+  const waSecondary = (links.whatsapp_url && links.whatsapp_url.split('?')[0] + '?text=' + WA_TEXT)
+    || `https://wa.me/${EN_PHONE}?text=${WA_TEXT}`;
+
+  const [form, setForm] = useState({ name: '', phone: '', business: '', message: '' });
+  const [status, setStatus] = useState('idle'); // idle | sending | done | error
+  const [touched, setTouched] = useState(false);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo('.en-cta-content', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 1.0, ease: 'expo.out', scrollTrigger: { trigger: '.en-cta-content', start: 'top 78%', once: true } });
-      ScrollTrigger.create({ trigger: ref.current, start: 'top 60%', once: true, onEnter: () => { idleRef.current = setTimeout(() => setIdlePulse(true), 5000); } });
-    }, ref);
-    return () => { ctx.revert(); clearTimeout(idleRef.current); };
+      gsap.fromTo('.en-lf-inner', { y: 40, opacity: 0 }, {
+        y: 0, opacity: 1, duration: 0.9, ease: 'expo.out',
+        scrollTrigger: { trigger: sectionRef.current, start: 'top 78%', once: true },
+      });
+    }, sectionRef);
+    return () => ctx.revert();
   }, []);
 
-  const handleEnter = () => { setHovered(true); setIdlePulse(false); clearTimeout(idleRef.current); };
+  const valid = form.name.trim().length > 1 && /\d{7,}/.test(form.phone.replace(/\D/g, ''));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setTouched(true);
+    if (!valid || status === 'sending') return;
+    setStatus('sending');
+
+    // best-effort save; lead is also captured via WhatsApp regardless of DB result
+    try {
+      const { error } = await supabase.from('leads').insert({
+        name: form.name.trim(),
+        phone: form.phone.trim(),
+        business: form.business.trim() || null,
+        message: form.message.trim() || null,
+        source: 'landing_form_en',
+      });
+      if (error) throw error;
+      enFireLead();
+      setStatus('done');
+    } catch (err) {
+      // DB save failed (schema/RLS/offline) — don't lose the lead: push to WhatsApp prefilled
+      console.warn('[EnLeadForm] supabase insert failed, falling back to WhatsApp:', err?.message);
+      enFireLead();
+      setStatus('error');
+    }
+  };
+
+  const inputStyle = {
+    width: '100%', padding: '13px 16px', borderRadius: 12,
+    border: '1px solid #cdd7e3', background: '#fff', color: '#0c1118',
+    fontSize: '1rem', fontFamily: "'Heebo', sans-serif", outline: 'none',
+    transition: 'border-color 0.2s, box-shadow 0.2s',
+  };
+  const labelStyle = { display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#3a4757', marginBottom: 6 };
+  const focusOn = (e) => { e.target.style.borderColor = '#1f9d57'; e.target.style.boxShadow = '0 0 0 3px rgba(52,217,123,0.15)'; };
+  const focusOff = (e) => { e.target.style.borderColor = '#cdd7e3'; e.target.style.boxShadow = 'none'; };
 
   return (
-    <section id="en-contact" ref={ref} className="cta-bg" style={{ padding: 'clamp(80px, 12vw, 140px) 28px', position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
-      <FluidBlob style={{ width: 700, height: 700, top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.10), transparent 65%)', '--dur': '20s' }} />
-      <div className="en-cta-content" style={{ maxWidth: 700, margin: '0 auto', position: 'relative', zIndex: 1, opacity: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 24 }}>
-          <span style={{ height: 1, width: 24, background: 'var(--brand-prime)', opacity: 0.5, display: 'block' }} />
-          <span style={{ fontSize: '0.7rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--brand-prime)', fontWeight: 700 }}>Let's Talk</span>
-          <span style={{ height: 1, width: 24, background: 'var(--brand-prime)', opacity: 0.5, display: 'block' }} />
+    <section id="en-contact" ref={sectionRef} style={{ padding: 'clamp(70px, 10vw, 120px) 28px', background: 'linear-gradient(180deg, #eef3f8 0%, #e6edf5 100%)', position: 'relative', overflow: 'hidden' }}>
+      <div className="en-lf-inner" style={{ maxWidth: 920, margin: '0 auto', opacity: 0 }}>
+
+        {/* scarcity pill */}
+        <div style={{ textAlign: 'center', marginBottom: 18 }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(52,217,123,0.12)', border: '1px solid rgba(31,157,87,0.35)', borderRadius: 999, padding: '6px 16px', fontSize: '0.82rem', fontWeight: 700, color: '#117a41' }}>
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#1f9d57', display: 'block', boxShadow: '0 0 6px #1f9d57', animation: 'pulse-ring 2s ease-out infinite' }} />
+            2–3 spots open this quarter
+          </span>
         </div>
-        <h2 style={{ fontSize: 'clamp(2.4rem, 6vw, 5rem)', fontWeight: 900, letterSpacing: '-0.025em', lineHeight: 1.05, marginBottom: 20, fontFamily: "'Heebo', sans-serif" }}>
-          Ready to make a <span className="text-gradient">Shift Up?</span>
+
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.15, color: '#0c1118', marginBottom: 12 }}>
+          Let's make a <span style={{ color: '#117a41' }}>Shift Up</span> for your business.
         </h2>
-        <p style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: 'var(--text-secondary)', marginBottom: 52, lineHeight: 1.7 }}>
-          The coffee's on me. The strategy session's on me. The decision's yours.
+        <p style={{ textAlign: 'center', fontSize: 'clamp(1rem, 2.4vw, 1.15rem)', color: '#4a5868', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 8px' }}>
+          Leave your details and I'll get back to you for a short crack-call — we'll check together if it's a fit.
         </p>
-        <div className="animated-border glass-panel" style={{ padding: 'clamp(32px,4vw,52px)', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(to right, var(--brand-deep), var(--brand-prime), var(--accent-void))' }} />
-          <div style={{ position: 'relative', display: 'inline-flex', justifyContent: 'center', marginBottom: 24 }}>
-            {[1, 2].map(k => (
-              <div key={k} style={{ position: 'absolute', inset: 0, borderRadius: 999, border: `1.5px solid oklch(0.78 0.20 145 / ${hovered || idlePulse ? 0.5 : 0.25})`, animation: (hovered || idlePulse) ? `pulse-ring ${1.4 + k * 0.5}s ease-out ${k * 0.35}s infinite` : 'none', pointerEvents: 'none' }} />
-            ))}
-            <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
-              onMouseEnter={handleEnter} onMouseLeave={() => setHovered(false)}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 12, padding: '16px 40px', background: hovered ? 'var(--brand-glow)' : 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', borderRadius: 999, fontWeight: 800, fontSize: 'clamp(1rem, 2vw, 1.1rem)', fontFamily: "'Heebo', sans-serif", textDecoration: 'none', boxShadow: hovered || idlePulse ? '0 0 60px oklch(0.78 0.20 145 / 0.65)' : '0 0 40px oklch(0.78 0.20 145 / 0.35)', transform: hovered ? 'translateY(-2px)' : 'translateY(0)', transition: 'background 0.25s, box-shadow 0.35s, transform 0.3s', position: 'relative', zIndex: 1 }}>
-              {WA_ICON} Send a WhatsApp Message
-            </a>
+        <p style={{ textAlign: 'center', fontSize: '0.9rem', color: '#6b7d92', fontWeight: 600, marginBottom: 36 }}>
+          From ₪1,500 · the first crack-call is free, no commitment.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.3fr) minmax(0, 1fr)', gap: 'clamp(20px, 3vw, 36px)', alignItems: 'start' }} className="lf-grid">
+
+          {/* ── Form (primary door) ── */}
+          <div style={{ background: '#fff', borderRadius: 20, padding: 'clamp(24px, 3vw, 36px)', boxShadow: '0 10px 40px rgba(12,17,24,0.08)', border: '1px solid #e1e8f0' }}>
+            {status === 'done' ? (
+              <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                <div style={{ width: 60, height: 60, borderRadius: '50%', background: 'rgba(52,217,123,0.15)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#117a41" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                </div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0c1118', marginBottom: 8 }}>Got it! I'll be in touch soon.</h3>
+                <p style={{ color: '#4a5868', lineHeight: 1.6, marginBottom: 20 }}>Want to skip ahead? Message me directly on WhatsApp now.</p>
+                <a href={enBuildWaLink(form)} target="_blank" rel="noopener noreferrer" style={enWaBtnStyle}>
+                  {WA_ICON}Open a WhatsApp chat
+                </a>
+              </div>
+            ) : status === 'error' ? (
+              <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0c1118', marginBottom: 8 }}>Almost there 🙂</h3>
+                <p style={{ color: '#4a5868', lineHeight: 1.6, marginBottom: 20 }}>The fastest way to continue is WhatsApp — your details are already filled in.</p>
+                <a href={enBuildWaLink(form)} target="_blank" rel="noopener noreferrer" style={enWaBtnStyle}>
+                  {WA_ICON}Continue on WhatsApp
+                </a>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} noValidate>
+                <div style={{ marginBottom: 16 }}>
+                  <label style={labelStyle} htmlFor="en-lf-name">Full name *</label>
+                  <input id="en-lf-name" type="text" value={form.name} onFocus={focusOn} onBlur={focusOff}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    style={inputStyle} placeholder="What should I call you?" autoComplete="name" />
+                </div>
+                <div style={{ marginBottom: 16 }}>
+                  <label style={labelStyle} htmlFor="en-lf-phone">Phone *</label>
+                  <input id="en-lf-phone" type="tel" value={form.phone} onFocus={focusOn} onBlur={focusOff}
+                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                    style={inputStyle} placeholder="050-0000000" autoComplete="tel" />
+                </div>
+                <div style={{ marginBottom: 16 }}>
+                  <label style={labelStyle} htmlFor="en-lf-business">Business field</label>
+                  <input id="en-lf-business" type="text" value={form.business} onFocus={focusOn} onBlur={focusOff}
+                    onChange={(e) => setForm({ ...form, business: e.target.value })}
+                    style={inputStyle} placeholder="e.g. restaurant, real estate, clinic…" />
+                </div>
+                <div style={{ marginBottom: 20 }}>
+                  <label style={labelStyle} htmlFor="en-lf-message">What's most urgent? (optional)</label>
+                  <textarea id="en-lf-message" rows={3} value={form.message} onFocus={focusOn} onBlur={focusOff}
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    style={{ ...inputStyle, resize: 'vertical' }} placeholder="A few words about your marketing challenge" />
+                </div>
+
+                {touched && !valid && (
+                  <p style={{ color: '#c0392b', fontSize: '0.82rem', marginBottom: 12 }}>Please add a name and a valid phone so I can get back to you.</p>
+                )}
+
+                <button type="submit" disabled={status === 'sending'} style={{
+                  width: '100%', padding: '15px', borderRadius: 12, border: 'none',
+                  background: status === 'sending' ? '#7fc89e' : '#1f9d57', color: '#fff',
+                  fontSize: '1.08rem', fontWeight: 800, fontFamily: "'Heebo', sans-serif",
+                  cursor: status === 'sending' ? 'default' : 'pointer',
+                  boxShadow: '0 8px 24px rgba(31,157,87,0.35)', transition: 'background 0.2s, transform 0.15s',
+                }}>
+                  {status === 'sending' ? 'Sending…' : 'Get a tailored proposal'}
+                </button>
+                <p style={{ textAlign: 'center', fontSize: '0.76rem', color: '#8190a3', marginTop: 12 }}>
+                  Your details stay with me only. No spam, no sharing.
+                </p>
+              </form>
+            )}
           </div>
 
-          {/* LinkedIn secondary CTA */}
-          <div style={{ marginTop: 20, marginBottom: 4 }}>
-            <a href={links.linkedin} target="_blank" rel="noopener noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 24px', background: 'transparent', border: '1px solid var(--surface-2)', borderRadius: 999, color: 'var(--text-secondary)', fontSize: '0.88rem', fontWeight: 600, fontFamily: "'Heebo', sans-serif", textDecoration: 'none', transition: 'border-color 0.25s, color 0.25s', cursor: 'pointer' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'oklch(0.78 0.20 145 / 0.4)'; e.currentTarget.style.color = 'var(--brand-prime)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--surface-2)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
-              Follow on LinkedIn
-            </a>
-          </div>
+          {/* ── Secondary door (WhatsApp) + soft third door ── */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ background: '#fff', borderRadius: 20, padding: 'clamp(22px, 3vw, 30px)', border: '1px solid #e1e8f0', boxShadow: '0 10px 40px rgba(12,17,24,0.05)' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0c1118', marginBottom: 8 }}>Prefer to talk now?</h3>
+              <p style={{ fontSize: '0.92rem', color: '#4a5868', lineHeight: 1.6, marginBottom: 18 }}>
+                Message me on WhatsApp and I'll get back to you fast.
+              </p>
+              <a href={waSecondary} target="_blank" rel="noopener noreferrer" style={enWaBtnStyle}>
+                {WA_ICON}Talk to me on WhatsApp
+              </a>
+            </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: 16 }}>
-            <span style={{ position: 'relative', display: 'flex', width: 8, height: 8, flexShrink: 0 }}>
-              <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'var(--brand-prime)', opacity: 0.6, animation: 'pulse-ring 1.8s ease-out infinite' }} />
-              <span style={{ position: 'relative', width: 8, height: 8, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block' }} />
-            </span>
-            Available for a short intro call — free, no commitment.
+            <div style={{ background: 'rgba(12,17,24,0.04)', borderRadius: 16, padding: '20px 22px', border: '1px dashed #c3cedb' }}>
+              <p style={{ fontSize: '0.92rem', color: '#3a4757', lineHeight: 1.6 }}>
+                Not ready yet? That's fine. You can just follow along and get value — scroll down to the quiet WhatsApp community. 👇
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -922,6 +1337,7 @@ const EN_SOCIAL_ICONS = {
 const enNavLinks = [
   { label: 'The Process', id: 'en-strategy' },
   { label: 'Why Me',      id: 'en-why'      },
+  { label: 'Work',        id: 'en-work'     },
   { label: 'About',       id: 'en-about'    },
   { label: 'FAQ',         id: 'en-faq'      },
   { label: 'Contact',     id: 'en-contact'  },
@@ -950,7 +1366,7 @@ function EnFooter() {
           <div>
             <img src={logoSrc} alt="Shift Up" style={{ height: 80, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite', display: 'block', marginBottom: 14 }} />
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.65, maxWidth: 240 }}>
-              Smart Strategy + Bold Creativity.<br />Marketing that drives real results.
+              Strategy before budget.<br />One person who takes marketing off your plate.
             </p>
           </div>
 
@@ -1044,6 +1460,7 @@ export default function EnglishPage() {
   }, []);
 
   const scrollToProcess = () => document.getElementById('en-strategy')?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToForm = () => document.getElementById('en-contact')?.scrollIntoView({ behavior: 'smooth' });
 
   return (
     <div ref={rootRef} dir="ltr" style={{ minHeight: '100vh', background: 'var(--bedrock)', color: 'var(--text-primary)', fontFamily: "'Heebo', sans-serif", overflowX: 'hidden', position: 'relative' }}>
@@ -1052,25 +1469,23 @@ export default function EnglishPage() {
       <Cursor />
       <EnNavbar />
       <main>
-        <EnHero onProcess={scrollToProcess} />
-        <EnMarquee />
-        <div className="section-divider" />
-        <section style={{ padding: '80px 28px', background: 'var(--bedrock)' }}>
-          <div className="stats-layout" style={{ maxWidth: 1200, margin: '0 auto' }}>
-            {enStats.map((s, i) => <EnStatItem key={i} stat={s} index={i} />)}
-          </div>
-        </section>
+        <EnHero onProcess={scrollToProcess} onForm={scrollToForm} />
+        <EnTrustStrip />
+        <EnPain />
+        <EnManifesto />
         <div className="section-divider" />
         <EnProcess />
+        <EnWhatYouGet />
         <div className="section-divider" />
         <EnWhyMe />
-        <EnManifesto />
+        <div className="section-divider" />
+        <EnProof />
         <div className="section-divider" />
         <EnAbout />
         <div className="section-divider" />
         <EnFAQ />
         <EnWhatsAppGroup />
-        <EnCTA />
+        <EnLeadForm />
       </main>
       <EnFooter />
     </div>
