@@ -6,7 +6,7 @@ const FALLBACK_LINKS = [
   {
     id: 'business',
     label: 'לעשות Shift Up לעסק',
-    href: 'https://wa.me/972534673151?text=' + encodeURIComponent('היי שמואל, ראיתי אותך באינסטגרם ואשמח לקבוע שיחת פיצוח לעסק שלי'),
+    href: 'https://wa.me/972534673151?text=' + encodeURIComponent('היי שמואל, ראיתי אותך באינסטגרם ואשמח לקבוע שיחת פיצוח ראשונה לעסק שלי'),
     style: 'primary',
   },
   {

@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase';
 
 const WA_LINK =
   'https://wa.me/972534673151?text=' +
-  encodeURIComponent('היי שמואל, רוצה לדבר על השיווק של העסק שלי');
+  encodeURIComponent('היי שמואל, ראיתי את הפרומפטים ורוצה לקבוע שיחת פיצוח ראשונה לעסק שלי');
 
 const COMMUNITY_LINK =
   'https://chat.whatsapp.com/BBhSKstQEgg3jZsSo9RvdZ?s=cl&p=a&mlu=3';
