@@ -1,5 +1,43 @@
 User-agent: *
 Allow: /
 
+# ── Search engines ──
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# ── AI search-time crawlers (citation visibility) ──
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: MistralAI-User
+Allow: /
+
 Sitemap: https://www.shiftup.marketing/sitemap.xml
 LLM: https://www.shiftup.marketing/llms.txt
