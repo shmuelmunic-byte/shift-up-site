@@ -29,6 +29,13 @@ function ChatItem({ item, isActive, onOpen }) {
       return;
     }
 
+    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      setThinking(false);
+      setDisplayed(item.a);
+      return;
+    }
+
     setDisplayed('');
     setThinking(true);
 
