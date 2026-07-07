@@ -331,6 +331,7 @@ git push        # Vercel מפרס אוטומטית
 ## לוג שינויים (עיקריים)
 | תאריך | שינוי |
 |--------|-------|
+| 2026-07-07 | **בניית המשפך המלא + CMS מלא + לולאת לידים.** נבנו WhatYouGet(6)/Proof(8)/LeadForm(11), מניפסט הוזז ל-4, גריד 2×2. טבלת `leads` + טאב לידים + התראת מייל (pg_net→Resend, Vault) ב-`docs/setup.sql` — **הורץ, המייל עובד**. CMS מלא: 5 טבלאות חדשות + `useContent()` + 5 טאבי admin. שדרוג UI/UX לאדמין. הכל fallback-first, חי בפרודקשן. |
 | 2026-06-28 | **AI Discovery + SEO — רענון למיצוב החדש** (סקילים `ai-discovery-setup` + `hebrew-seo-geo-toolkit`): `llms.txt`/`index.md`/`en.md` נכתבו מחדש למסר "תחזור לנהל את העסק" + מחיר/scarcity/קריאייטיב. `index.html`: title/description/OG/Twitter חדשים, `hreflang he→he-IL`, Schema מורחב (slogan, `makesOffer` ILS, שעות א׳–ה׳ 08:00–17:00, `speakable`, `knowsAbout`). `robots.txt`: allow מפורש לבוטי AI (OAI-SearchBot/PerplexityBot/ClaudeBot…). `sitemap.xml`: lastmod 2026-06-28. JSON-LD אומת (3/3). |
 | 2026-06-28 | **יישור כל הדפים למשפך — סשן 4** (3 סוכנים מקבילים): `/en` נבנה מחדש 1:1 לדף הבית (Hero חדש + TrustStrip/Pain/WhatYouGet/Proof/LeadForm אנגליים, Marquee+Stats נמחקו). `/ig`+`/freebies`+`/testimonials` יושרו במסר למיצוב הנעול. תמונת SHIRA המעודכנת אומתה. build נקי. |
 | 2026-06-24 | **בניית משפך — סשן 2** (commits `4788793`,`775a85d`): Hero מחדש (2CTA טופס/וואטסאפ, עוגן מחיר, scarcity), `TrustStrip.jsx` (סקשן 2), `PainSection.jsx` (סקשן 3), `Process.jsx` שמות שלבים לפי spec. Marquee+Stats נותקו. ⚠️ טעון סנכרון DB ב-/admin (subtitle + שלבים). |
