@@ -2,6 +2,39 @@
 
 ---
 
+# סשן: יישור כל הדפים + רענון AI-Discovery/SEO (2026-07-07 · מאוחר)
+
+## מה בנינו
+יישרנו את כל דפי האתר לדף הבית החדש, ואז רעננו את שכבת ה-AI-discovery וה-SEO.
+1. **`/en` (`EnglishPage.jsx`) — בנייה מחדש 1:1** למשפך: Hero חדש ("Get back to running your business. Leave the marketing to me"), 5 סקשנים אנגליים חדשים (TrustStrip, Pain, WhatYouGet, Proof+lightbox, LeadForm רקע בהיר + insert ל-`leads` + נפילה לוואטסאפ). נמחקו Marquee+Stats; מניפסט הוזז אחרי Pain; הזמנת הקבוצה הועברה מתחת לטופס.
+2. **`/ig` + `/freebies` + `/testimonials`** — יישור מסרים למיצוב הנעול, בלי המצאת תוצאות.
+3. **AI Discovery** — `llms.txt` + `index.md` + `en.md` נכתבו מחדש למיצוב החדש (מחיר/scarcity/קריאייטיב/שמות שלבים). `faq.md` נשאר.
+4. **SEO + GEO** — `index.html`: title/description/OG/Twitter, `hreflang he→he-IL`, Schema מורחב (slogan, `makesOffer` ILS, שעות א׳–ה׳ 08:00–17:00, `speakable`, `knowsAbout`). `robots.txt`: allow מפורש לבוטי AI. `sitemap.xml`: lastmod. **h1 fallback סטטי ב-`#root`** לסורקים ללא JS.
+5. תיאור ל-Google Business Profile (≤750 תווים, בלי קישורים/מבצעים).
+
+## טכניקות Claude Code שהשתמשנו בהן
+- **סוכנים מקבילים על קבצים דיסיוינטיים** — 3 בו-זמנית (English כבד = סוכן ייעודי אחד). כלל: קובץ גדול אחד = סוכן אחד; לא לחלק קובץ בין סוכנים (התנגשות merge).
+- **צמד סקילים ל-SEO/AI:** `ai-discovery-setup` + `hebrew-seo-geo-toolkit` — הביאו רשימת בוטי-AI עדכנית ועקרונות GEO, עדיף על ידע כללי.
+- **אימות ב-preview** אחרי כל שינוי נצפה (screenshot + בדיקת DOM: מיקום סקשנים, ספירת h1, שה-fallback הוחלף נקי).
+- **הרצת `seo_audit.py` של הסקיל** לאודיט חי — תפס את ה-`h1: MISSING`.
+
+## מה עבד טוב
+- חילוץ תוכן מהקומפוננטות החיות (לא המצאה) — הקבצים נשארו מדויקים למיצוב.
+- אימות ה-h1 fallback משני הכיוונים: HTML גולמי (יש h1) + אחרי React (h1 יחיד, בלי כפילות/cloaking).
+
+## מה פחות / לשים לב
+- **PowerShell 5.1 שובר here-strings** מרובי-שורות → הודעות commit ארוכות דרך `git commit -F` מקובץ.
+- **יוניקוד עברי ב-Python על Windows** קורס ב-cp1252 → תמיד `PYTHONUTF8=1`.
+- `node -e` עם מרכאות נשבר ב-PowerShell → דרך Bash tool או קובץ.
+
+## Gotcha מרכזי — SEO על SPA
+דף React שולח HTML ראשוני **בלי h1/תוכן**; סורקים ללא JS לא רואים על מה הדף. פתרון זול: בלוק fallback מוסתר ב-`#root` עם h1+מיצוב ש-React מחליף ב-mount. פתרון מלא: pre-render/SSR.
+
+## Skills ששווה לשמור
+- `ai-discovery-setup` + `hebrew-seo-geo-toolkit` — צמד קבוע לכל אתר תדמית/נחיתה חדש.
+
+---
+
 # סשן: השלמת המשפך + CMS מלא + לולאת לידים (2026-07-07)
 
 ## מה בנינו
