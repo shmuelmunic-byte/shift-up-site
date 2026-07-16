@@ -162,10 +162,10 @@ function EnNavbar() {
 /* ─── Hero ───────────────────────────────────────────────────────────── */
 
 const EN_TRUST_CHIPS = [
-  'Message before budget',
+  'Research-based',
+  'Performance guarantee',
   'Creative that sells',
-  'AI speed',
-  'One person — not an agency',
+  'Eye-level execution partner',
 ];
 
 function EnHero({ onProcess, onForm }) {
@@ -211,13 +211,13 @@ function EnHero({ onProcess, onForm }) {
           </h1>
 
           <p className="en-hero-sub" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.18rem)', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 520, marginBottom: 8, opacity: 0 }}>
-            Strategy, creative that sells, and paid campaigns —{' '}
-            <strong style={{ color: 'var(--text-primary)' }}>cracked before you burn budget</strong>.
+            Research-based campaigns for businesses that already get marketing —{' '}
+            <strong style={{ color: 'var(--text-primary)' }}>with a performance guarantee on the first month</strong>.
           </p>
 
           {/* price anchor */}
           <p className="en-hero-sub" style={{ fontSize: '0.92rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: 14, opacity: 0 }}>
-            From ₪1,500 · <span style={{ color: 'var(--brand-prime)' }}>First crack-call — free</span>
+            Setup ₪2,250 + management from ₪1,300/mo · <span style={{ color: 'var(--brand-prime)' }}>First month — on me if it doesn't deliver</span>
           </p>
 
           <div className="en-hero-ctas hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 32, marginBottom: 32, opacity: 0 }}>
@@ -253,8 +253,8 @@ function EnHero({ onProcess, onForm }) {
             <div className="float-badge" style={{ position: 'absolute', bottom: -24, right: -16, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', boxShadow: '0 0 10px var(--brand-prime)', flexShrink: 0, animation: 'pulse-ring 1.8s ease-out infinite' }} />
               <div>
-                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>THIS QUARTER</div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>2–3 spots open</div>
+                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>FOUNDING RATE</div>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>1 case-study spot</div>
               </div>
             </div>
 
@@ -291,9 +291,9 @@ const EN_PILLAR_ICONS = [
 ];
 
 const EN_PILLARS = [
-  { title: '2–3 businesses a quarter', text: 'I take on few clients on purpose — so each one gets full attention, not a place in line.' },
-  { title: 'One person, not an agency', text: 'The person who cracks the strategy is the one who executes it. No rotating team, no junior intern.' },
-  { title: 'Free intro call', text: "We'll check together if it's a fit — no commitment, no sales pressure." },
+  { title: 'Research-based', text: 'Not a single shekel goes into a campaign before research: audience, competitors, message. Decisions on data — not gut feeling.' },
+  { title: 'Performance guarantee', text: "The first month of management is on my responsibility: if it doesn't bring inquiries — I keep working without charging until it does." },
+  { title: 'Eye-level partner', text: "An execution partner, not a salesman. Free intro call — we'll check the fit with no pressure and no buzzwords." },
 ];
 
 function EnPillar({ pillar, index }) {
@@ -348,7 +348,7 @@ function EnTrustStrip() {
             </span>
           </div>
           <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.4rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.2, color: 'var(--text-primary)' }}>
-            I don't work with everyone. <span style={{ color: 'var(--brand-prime)' }}>That's exactly the point.</span>
+            Why trust me? <span style={{ color: 'var(--brand-prime)' }}>Because the risk is on me.</span>
           </h2>
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'clamp(24px, 4vw, 40px)', justifyContent: 'center' }}>
@@ -638,7 +638,7 @@ function EnProof() {
             I don't promise. <span className="text-gradient">I show.</span>
           </h2>
           <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
-            First the thinking — how you crack a business's positioning. Then the execution — real creative I made, across every field and audience.
+            First the thinking — how sharp research builds a business's positioning. Then the execution — real creative I made, across every field and audience.
           </p>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20, marginBottom: 'clamp(56px, 8vw, 84px)' }}>
@@ -662,9 +662,9 @@ function EnProof() {
 
 const enSteps = [
   {
-    n: '01', title: 'The Decode', sub: 'Discovery',
-    desc: "We dig deep. Who's actually paying, what's the business DNA, and why would they choose you over the competition. We distill your unique value proposition — no fluff.",
-    bullets: ['Competitor analysis', 'Target audience mapping', 'Sharp value proposition'],
+    n: '01', title: 'The Research', sub: 'Discovery',
+    desc: "We dig deep. Who's actually paying, what competitors are doing, and why they'd choose you. We distill a precise message and a clear work plan — on data, not guesswork.",
+    bullets: ['Audience + competitor research', 'Sharp value proposition', 'Clear work plan'],
     icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>,
   },
   {
@@ -675,8 +675,8 @@ const enSteps = [
   },
   {
     n: '03', title: 'The Action', sub: 'Execution',
-    desc: 'Only now — once the message is sharp — we go to the tools. I set up and manage your paid campaigns on Meta and Google, build high-converting landing pages, and deploy AI automations that save time.',
-    bullets: ['Meta + Google Campaigns', 'High-converting landing pages', 'AI automations'],
+    desc: 'A ready-to-run campaign goes live: I set up and manage your paid campaigns on Meta and Google, create the creative that sells — and the first month of management is on my responsibility.',
+    bullets: ['Meta + Google Campaigns', 'Creative that sells', 'First-month performance guarantee'],
     icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>,
   },
 ];
@@ -747,10 +747,10 @@ function EnProcess() {
 /* ─── Why Me ─────────────────────────────────────────────────────────── */
 
 const enReasons = [
-  { title: 'Entrepreneurial Mindset', en: 'Owner Mindset', desc: 'I think like a business owner, not a vendor. I ask the hard questions before sending a proposal.', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>, accent: 'var(--brand-prime)', wide: true },
+  { title: 'Research-Based', en: 'Research-Based', desc: "I don't run campaigns on gut feeling. Audience, competitors, message — everything is researched and distilled before a single shekel goes into paid.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>, accent: 'var(--brand-prime)', wide: true },
   { title: 'AI-First', en: 'AI-First', desc: 'What takes others a week, I execute in hours — at higher quality.', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.64"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.64"/></svg>, accent: 'var(--accent-void)', wide: false },
-  { title: 'Focused Clientele', en: 'Small Roster', desc: 'Every client gets my full attention, not half of it.', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>, accent: 'var(--brand-prime)', wide: false },
-  { title: 'Message Before Budget', en: 'Strategy First', desc: "We don't burn money on campaigns before understanding what we're selling and to whom. Your money only works when the message is precise.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>, accent: 'var(--brand-prime)', wide: true },
+  { title: 'Performance Guarantee', en: 'Guarantee', desc: "The first month of management is on my responsibility — if there are no inquiries, I keep working without charging until it works. The risk is on me.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>, accent: 'var(--brand-prime)', wide: false },
+  { title: 'Eye-Level Partner', en: 'No Buzzwords', desc: "An execution partner, not a salesman. No buzzwords, no inflated decks — straight talk: what we do, why, and what it costs.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>, accent: 'var(--brand-prime)', wide: true },
 ];
 
 function EnBentoCard({ reason, index }) {
@@ -938,11 +938,11 @@ function EnAbout() {
 
 const enFaqs = [
   { q: 'How long does it take to see results?', a: 'The discovery and strategy phase takes about two weeks. To see quality leads flowing — between 30 and 60 days, depending on the industry. I build for the long term, not empty promises of "results in a week."' },
-  { q: "I'm a small business — is this too expensive?", a: "That's exactly why it's most critical for small businesses. You can't afford to waste budget on the wrong messages. I tailor the scope to your budget, and we start with a free conversation." },
-  { q: 'How are you different from other digital marketers?', a: 'Most start with "let\'s run a campaign." I start with "let\'s understand what we\'re selling and to whom." I also integrate AI tools that save time and money, and I take a limited number of clients.' },
-  { q: 'Do you work with every type of business?', a: 'I work with small and medium businesses — B2B and B2C: service businesses, e-commerce, startups, established companies. If I don\'t feel I can bring real value, I\'ll tell you upfront in the intro call.' },
+  { q: 'How much does it cost?', a: 'A one-time setup of ₪1,500–3,000 (usually around ₪2,250, depending on scope) + monthly management of ₪1,300–1,500, media budget not included. No vague packages — a clear price before we start.' },
+  { q: 'How are you different from other digital marketers?', a: 'Most start with "let\'s run a campaign." I start with research — audience, competitors, message — and only then build the campaign. I also integrate AI tools that save time and money, and take a limited number of clients.' },
+  { q: "I've been burned by a previous provider. Why would this time be different?", a: "That's exactly why there's a performance guarantee: the first month of management is on my responsibility — if it doesn't bring inquiries, I keep working without charging until it works. The risk is on me, not on you." },
   { q: 'What does the discovery process include?', a: 'A complete strategy document: competitor analysis, target audience mapping, a precise value proposition, core messaging, recommended marketing channels, and a 90-day actionable roadmap.' },
-  { q: 'Do you also execute or just advise?', a: 'Both. Once the strategy is locked in, I build and manage your paid campaigns on Meta and Google, create landing pages, and implement AI automations. Strategist and practitioner — one person.' },
+  { q: 'Do you also execute or just advise?', a: 'Both. Once the strategy is locked in, I build and manage your paid campaigns on Meta and Google, and handle the messaging and creative. An execution partner — from the research until the campaign is live.' },
 ];
 
 function EnChatItem({ item, isActive, onOpen }) {
@@ -1208,7 +1208,7 @@ function EnLeadForm() {
         <div style={{ textAlign: 'center', marginBottom: 18 }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(52,217,123,0.12)', border: '1px solid rgba(31,157,87,0.35)', borderRadius: 999, padding: '6px 16px', fontSize: '0.82rem', fontWeight: 700, color: '#117a41' }}>
             <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#1f9d57', display: 'block', boxShadow: '0 0 6px #1f9d57', animation: 'pulse-ring 2s ease-out infinite' }} />
-            2–3 spots open this quarter
+            1 founding case-study spot open — setup ₪1,500 instead of ₪2,250
           </span>
         </div>
 
@@ -1216,10 +1216,10 @@ function EnLeadForm() {
           Let's make a <span style={{ color: '#117a41' }}>Shift Up</span> for your business.
         </h2>
         <p style={{ textAlign: 'center', fontSize: 'clamp(1rem, 2.4vw, 1.15rem)', color: '#4a5868', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 8px' }}>
-          Leave your details and I'll get back to you for a short crack-call — we'll check together if it's a fit.
+          Leave your details and I'll get back to you for a short intro call — we'll check together if it's a fit.
         </p>
         <p style={{ textAlign: 'center', fontSize: '0.9rem', color: '#6b7d92', fontWeight: 600, marginBottom: 36 }}>
-          From ₪1,500 · the first crack-call is free, no commitment.
+          Setup ₪2,250 + management from ₪1,300/mo · the first month of management is on my responsibility.
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.3fr) minmax(0, 1fr)', gap: 'clamp(20px, 3vw, 36px)', alignItems: 'start' }} className="lf-grid">
@@ -1366,7 +1366,7 @@ function EnFooter() {
           <div>
             <img src={logoSrc} alt="Shift Up" style={{ height: 80, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite', display: 'block', marginBottom: 14 }} />
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.65, maxWidth: 240 }}>
-              Strategy before budget.<br />One person who takes marketing off your plate.
+              Research-based campaigns.<br />A performance guarantee that puts the risk on me.
             </p>
           </div>
 

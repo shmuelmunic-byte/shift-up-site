@@ -3,6 +3,16 @@
 ## מה הפרויקט
 אתר נחיתה שיווקי מקצועי עבור **שמואל מוניץ** — אסטרטג שיווק דיגיטלי ומומחה AI.
 
+## 🔄 מיצוב קנוני (פיבוט 14–15.07.2026 — הוטמע באתר 16.07)
+מקור אמת: הוולט → `Projects/Shift Up.md`. **כל תוכן חדש באתר חייב להתיישר לזה:**
+- **טאגליין (נשמר):** "תחזור לנהל את העסק. את השיווק תשאיר לי."
+- **מיצוב:** אסטרטג שיווק שבונה **קמפיינים מבוססי-מחקר לעסקים בוגרים** — עם **הבטחת ביצוע** על חודש הניהול הראשון.
+- **3 עמודי בידול:** מבוסס מחקר · הבטחת ביצוע (הסיכון עליי — אם החודש הראשון לא מביא פניות, ממשיך לעבוד בלי לגבות) · בגובה העיניים (שותף ביצוע, לא מוכר).
+- **מחיר:** הקמה 1,500–3,000 ₪ (~2,250) + ניהול 1,300–1,500 ₪/ח' (ללא מדיה). **Scarcity:** מקום קייס מייסדים אחד — הקמה 1,500 ₪.
+- **קהל:** עסקים בוגרים שיווקית שכבר נכוו (לא מתחילים). תהליך: **המחקר → השיפט → האקשן**.
+- **💀 Kill-words (לא להשתמש):** "אדם אחד, לא סוכנות" · "מפצחים לפני ששורפים" · "שיחת פיצוח" (עכשיו: שיחת היכרות) · "אסטרטג שיודע גם לבצע" · "משלם כשאתה רואה" · "2–3 מקומות ברבעון".
+- ⚠️ **מחירים/scarcity ישנים במסמכי docs/ (landing-spec וכו') — היסטוריים, לא לצטט מהם.**
+
 ## כתובות
 - **דומיין ראשי:** https://www.shiftup.marketing
 - **Vercel URL (גיבוי):** https://shift-up-site.vercel.app
@@ -146,7 +156,7 @@ shift-up-site/
 ### ארכיטקטורה
 - **Backend:** Supabase (PostgreSQL + RLS + Auth). Project URL: `https://fsqstwlapiiqbnyjjzqx.supabase.co`
 - **Env vars:** `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` (publishable key `sb_publishable_...`).
-  ⚠️ ה-`.env` המקומי מכיל **placeholders** בלבד — המפתחות האמיתיים ב-Vercel env vars.
+  ה-`.env` המקומי מכיל את המפתחות האמיתיים (publishable/anon — קריאה בלבד תחת RLS) — dev מקומי מתחבר ל-DB החי. (עודכן 2026-07-16; בעבר נכתב כאן "placeholders" — לא נכון יותר.)
 - **Auth:** email/password. `/admin` מוגן ב-`RequireAuth.jsx` (redirect ל-`/login?next=`).
 - **RLS לכל טבלה:** `public read` (select using true) + `auth write` (all using auth.role()='authenticated').
 
@@ -303,11 +313,10 @@ Hook משותף (`src/lib/useSiteLinks.js`) ששולף את כל קישורי `c
 - **גריד 2×2:** Pain + WhatYouGet עברו ל-class משותף `.grid-2x2` (1 עמ' מובייל / 2 עמ' דסקטופ) — תיקון ה-3+1 הלא מאוזן של `auto-fit`.
 - **גריד פורטפוליו:** `food-shira-events.jpg` — ✅ הוחלף בגרסה המעודכנת (אותו שם קובץ, תוכן חדש). `health-24fit.png` הוא PNG (תקין).
 
-### ⚠️ סנכרון DB פתוח (תוכן "נעול" שיושב ב-CMS ודורס את הקוד — לעשות ב-/admin)
-ה-fallback בקוד מעודכן, אבל Supabase דורס. **חובה לעדכן ידנית ב-/admin לפני שהאתר החי משקף את ה-spec:**
-1. **📞 פרטי קשר** → `hero.subtitle` = `אסטרטגיה, קריאייטיב שמוכר וקמפיינים ממומנים — מפוצחים לפני ששורפים תקציב.`
-2. **🔄 תהליך** → שלב 2 כותרת `השיפט`, שלב 3 כותרת `האקשן` + תיאורים/נקודות לפי `FALLBACK_STEPS` ב-`Process.jsx` (מבליטים "קריאייטיב שמוכר" ו"לפני שקל אחד נכנס").
-- 💡 דפוס: כל סקשן עתידי שמבוסס CMS (FAQ, WhyMe) יצטרך סנכרון דומה. כדאי לרכז רשימת סנכרון אחת בסוף הבנייה.
+### ⚠️ סנכרון DB פתוח — פיבוט המיצוב (16.07)
+ה-fallback בקוד מעודכן למיצוב החדש, אבל **Supabase החי דורס אותו** (אומת מקומית: hero.subtitle, trust_pillars, why_me_reasons, faqs, leadform.* עדיין ישנים ב-DB).
+**הפעולה:** להריץ את ⭐ **`docs/pivot-sync.sql`** פעם אחת ב-Supabase SQL Editor — מעדכן site_content + מחליף trust_pillars / why_me_reasons / process_steps / faqs לתוכן החדש. (idempotent; דורס עריכות ידניות ב-/admin בטבלאות האלה.)
+- 💡 דפוס קבוע: כל שינוי מסר עתידי = לעדכן גם fallback בקוד וגם DB (קובץ sync או /admin). ה-DB תמיד מנצח.
 
 **נכסי הוכחה לסקשן 7 (דו-שכבתי):**
 - **קייסים אסטרטגיים (2)** — מוכיחים **חשיבה**. (א) **"עסק קינוחי בוטיק" — אנונימי** (flagship; פיבוט ישן של עסק אשתו שלא יצא לפועל, **מנותק מהשם שירה**; מיצוב "We don't sell cakes, we sell style"). (ב) **City Transformer** (טווח; פרויקט קורס). שניהם "דוגמת תהליך", בלי טענת תוצאות.
@@ -331,6 +340,7 @@ git push        # Vercel מפרס אוטומטית
 ## לוג שינויים (עיקריים)
 | תאריך | שינוי |
 |--------|-------|
+| 2026-07-16 | **פיבוט המיצוב הוטמע באתר** (מקור: וולט, סשנים 14–15.07): כל הדפים (/, /en, /ig, /freebies, /testimonials) + SEO (title/desc/OG/Schema עם 3 הצעות מחיר ILS) + AI-discovery (llms.txt, index.md, en.md, faq.md) עברו ל"קמפיינים מבוססי-מחקר + הבטחת ביצוע". מחיר: הקמה 2,250 + ניהול 1,300–1,500. scarcity: מקום קייס מייסדים (1,500). Kill-words הוסרו. תהליך: הפיצוח→**המחקר**. FAQ: +"כמה זה עולה?" +"כבר נכוויתי". נוצר `docs/pivot-sync.sql` — ⚠️ **חובה להריץ ב-Supabase** (ה-DB עדיין ישן ודורס). build נקי, אומת בדפדפן. |
 | 2026-07-07 | **בניית המשפך המלא + CMS מלא + לולאת לידים.** נבנו WhatYouGet(6)/Proof(8)/LeadForm(11), מניפסט הוזז ל-4, גריד 2×2. טבלת `leads` + טאב לידים + התראת מייל (pg_net→Resend, Vault) ב-`docs/setup.sql` — **הורץ, המייל עובד**. CMS מלא: 5 טבלאות חדשות + `useContent()` + 5 טאבי admin. שדרוג UI/UX לאדמין. הכל fallback-first, חי בפרודקשן. |
 | 2026-06-28 | **AI Discovery + SEO — רענון למיצוב החדש** (סקילים `ai-discovery-setup` + `hebrew-seo-geo-toolkit`): `llms.txt`/`index.md`/`en.md` נכתבו מחדש למסר "תחזור לנהל את העסק" + מחיר/scarcity/קריאייטיב. `index.html`: title/description/OG/Twitter חדשים, `hreflang he→he-IL`, Schema מורחב (slogan, `makesOffer` ILS, שעות א׳–ה׳ 08:00–17:00, `speakable`, `knowsAbout`). `robots.txt`: allow מפורש לבוטי AI (OAI-SearchBot/PerplexityBot/ClaudeBot…). `sitemap.xml`: lastmod 2026-06-28. JSON-LD אומת (3/3). |
 | 2026-06-28 | **יישור כל הדפים למשפך — סשן 4** (3 סוכנים מקבילים): `/en` נבנה מחדש 1:1 לדף הבית (Hero חדש + TrustStrip/Pain/WhatYouGet/Proof/LeadForm אנגליים, Marquee+Stats נמחקו). `/ig`+`/freebies`+`/testimonials` יושרו במסר למיצוב הנעול. תמונת SHIRA המעודכנת אומתה. build נקי. |

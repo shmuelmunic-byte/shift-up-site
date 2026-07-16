@@ -195,7 +195,7 @@ export default function Proof() {
     'proof.kicker': 'The Proof',
     'proof.title': 'לא מבטיח.',
     'proof.title_accent': 'מראה.',
-    'proof.lead': 'קודם החשיבה — איך מפצחים מיצוב של עסק. אחר כך הביצוע — קריאייטיב אמיתי שיצרתי, בכל תחום ולכל קהל.',
+    'proof.lead': 'קודם החשיבה — איך מחקר מדויק בונה מיצוב של עסק. אחר כך הביצוע — קריאייטיב אמיתי שיצרתי, בכל תחום ולכל קהל.',
     'proof.grid_title': 'קריאייטיב שמוכר —',
     'proof.grid_title_accent': 'בכל תחום, לכל קהל.',
   });

@@ -6,7 +6,7 @@ const FALLBACK_LINKS = [
   {
     id: 'business',
     label: 'לעשות Shift Up לעסק',
-    href: 'https://wa.me/972534673151?text=' + encodeURIComponent('היי שמואל, ראיתי אותך באינסטגרם ואשמח לקבוע שיחת פיצוח ראשונה לעסק שלי'),
+    href: 'https://wa.me/972534673151?text=' + encodeURIComponent('היי שמואל, ראיתי אותך באינסטגרם ואשמח לשמוע על קמפיין מבוסס-מחקר לעסק שלי'),
     style: 'primary',
   },
   {
@@ -114,13 +114,13 @@ export default function IgPage() {
 
         {/* Title */}
         <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', textAlign: 'center', marginBottom: 14, lineHeight: 1.5 }}>
-          מסר לפני תקציב · קריאייטיב שמוכר · מהירות AI
+          מבוסס מחקר · קריאייטיב שמוכר · הבטחת ביצוע
         </p>
 
         {/* Brand chip */}
         <div className="chip" style={{ marginBottom: 36 }}>
           <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', animation: 'breathing 2s ease-in-out infinite', boxShadow: '0 0 6px var(--brand-prime)' }} />
-          Shift Up · אדם אחד, לא סוכנות
+          Shift Up · שיווק מבוסס-מחקר
         </div>
 
         <div className="glow-divider" style={{ width: '100%', marginBottom: 28 }} />
@@ -168,7 +168,7 @@ export default function IgPage() {
         {/* Trust line */}
         <div style={{ marginTop: 28, display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--brand-prime)', boxShadow: '0 0 6px var(--brand-prime)', animation: 'pulse-ring 2s ease-out infinite', display: 'block', flexShrink: 0 }} />
-          שיחת פיצוח ראשונה — חינם · 2–3 מקומות לרבעון
+          שיחת היכרות חינם · חודש ניהול ראשון על אחריותי
         </div>
 
         {/* Footer */}

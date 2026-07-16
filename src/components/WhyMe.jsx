@@ -11,15 +11,15 @@ const REASON_ICONS = [
   <svg key="2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
   <svg key="3" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
 ];
-const REASON_EN    = ['Entrepreneurial Mindset', 'AI-First', 'Focused Clientele', 'Message Before Budget'];
+const REASON_EN    = ['Research-Based', 'AI-First', 'Performance Guarantee', 'Eye-Level Partner'];
 const REASON_WIDE  = [true, false, false, true];
 const REASON_ACCENT = ['var(--brand-prime)', 'var(--accent-void)', 'var(--brand-prime)', 'var(--brand-prime)'];
 
 const FALLBACK_REASONS = [
-  { title: 'גישה יזמית',             description: 'אני חושב כמו בעלים של עסק, לא כמו ספק שירות. אני שואל את השאלות הקשות לפני שאני שולח הצעת מחיר.' },
-  { title: 'AI ראשון',               description: 'מה שלוקח לאחרים שבוע — אני מבצע בכמה שעות, ובאיכות גבוהה יותר.' },
-  { title: 'מספר לקוחות מצומצם',    description: 'כל לקוח מקבל ראש שלם, לא חצי תשומת לב.' },
-  { title: 'מסר לפני תקציב',        description: 'לא שורפים כסף בקמפיינים לפני שהבנו מה אנחנו מוכרים ולמי. הכסף שלך עובד רק כשהמסר מדויק.' },
+  { title: 'מבוסס מחקר',        description: 'אני לא מריץ קמפיין על תחושת בטן. קהל, מתחרים, מסר — הכל נחקר ומזוקק לפני ששקל אחד נכנס לממומן.' },
+  { title: 'AI ראשון',           description: 'מה שלוקח לאחרים שבוע — אני מבצע בכמה שעות, ובאיכות גבוהה יותר.' },
+  { title: 'הבטחת ביצוע',       description: 'חודש הניהול הראשון על אחריותי — אם אין פניות, ממשיך לעבוד בלי לגבות עד שעובד. הסיכון עליי.' },
+  { title: 'בגובה העיניים',     description: 'שותף ביצוע, לא מוכר. בלי באזוורדז ובלי מצגות מנופחות — תכל׳ס: מה עושים, למה, וכמה זה עולה.' },
 ];
 
 function BentoCard({ reason, index }) {

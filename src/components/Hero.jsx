@@ -8,7 +8,7 @@ const DEFAULT_WA =
   encodeURIComponent('היי שמואל, יש לי שאלה על השירות');
 
 const DEFAULT_SUBTITLE =
-  'אסטרטגיה, קריאייטיב שמוכר וקמפיינים ממומנים — מפוצחים לפני ששורפים תקציב.';
+  'קמפיינים מבוססי-מחקר לעסקים שכבר מבינים שיווק — עם הבטחת ביצוע על חודש הניהול הראשון.';
 
 const profileSrc = '/shmuel.png';
 
@@ -232,14 +232,14 @@ export default function Hero({ onContact, onProcess }) {
 
           {/* price anchor + free call */}
           <p className="hero-anchor" style={{ fontSize: '0.92rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 38, opacity: 0 }}>
-            מתחיל מ-<span style={{ color: 'var(--text-secondary)', fontWeight: 800 }}>1,500 ₪</span>
+            הקמה <span style={{ color: 'var(--text-secondary)', fontWeight: 800 }}>2,250 ₪</span> + ניהול מ-<span style={{ color: 'var(--text-secondary)', fontWeight: 800 }}>1,300 ₪/ח׳</span>
             <span style={{ margin: '0 8px', opacity: 0.5 }}>·</span>
-            שיחת פיצוח ראשונה — <span style={{ color: 'var(--brand-prime)', fontWeight: 800 }}>חינם</span>
+            חודש ניהול ראשון — <span style={{ color: 'var(--brand-prime)', fontWeight: 800 }}>על אחריותי</span>
           </p>
 
           {/* trust chips — מיצוב */}
           <div className="hero-trust" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, opacity: 0 }}>
-            {['מסר לפני תקציב', 'קריאייטיב שמוכר', 'מהירות AI', 'אדם אחד — לא סוכנות'].map((chip) => (
+            {['מבוסס מחקר', 'הבטחת ביצוע', 'קריאייטיב שמוכר', 'שותף ביצוע — בגובה העיניים'].map((chip) => (
               <span
                 key={chip}
                 style={{
@@ -285,8 +285,8 @@ export default function Hero({ onContact, onProcess }) {
                 boxShadow: '0 0 10px var(--brand-prime)', flexShrink: 0, animation: 'pulse-ring 1.8s ease-out infinite',
               }} />
               <div>
-                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>פנוי לרבעון</div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>2–3 מקומות</div>
+                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>מחיר מייסדים</div>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>מקום קייס אחד</div>
               </div>
             </div>
 

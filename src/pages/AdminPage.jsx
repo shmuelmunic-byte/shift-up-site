@@ -830,7 +830,7 @@ function ProcessTab({ toast }) {
       emptyForm={{ title: '', description: '', bullets: '[]', position: 0 }}
       itemTitle={item => item.title}
       fields={[
-        { key: 'title',       label: 'כותרת שלב', required: true, placeholder: 'הפיצוח' },
+        { key: 'title',       label: 'כותרת שלב', required: true, placeholder: 'המחקר' },
         { key: 'description', label: 'תיאור', type: 'textarea', rows: 3, required: true },
         { key: 'bullets',     label: 'בולטים — JSON array', type: 'textarea', rows: 2, placeholder: '["ניתוח מתחרים","מיפוי קהל יעד"]' },
       ]}
@@ -880,7 +880,7 @@ function TrustTab({ toast }) {
       emptyForm={{ title: '', text: '', position: 0 }}
       itemTitle={item => item.title}
       fields={[
-        { key: 'title', label: 'כותרת עמוד', required: true, placeholder: '2–3 עסקים ברבעון' },
+        { key: 'title', label: 'כותרת עמוד', required: true, placeholder: 'הבטחת ביצוע' },
         { key: 'text',  label: 'טקסט', type: 'textarea', rows: 2, required: true },
       ]}
     />

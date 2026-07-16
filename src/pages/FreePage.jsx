@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase';
 
 const WA_LINK =
   'https://wa.me/972534673151?text=' +
-  encodeURIComponent('היי שמואל, ראיתי את הפרומפטים ורוצה לקבוע שיחת פיצוח ראשונה לעסק שלי');
+  encodeURIComponent('היי שמואל, ראיתי את הפרומפטים ואשמח לשמוע על קמפיין מבוסס-מחקר לעסק שלי');
 
 const COMMUNITY_LINK =
   'https://chat.whatsapp.com/BBhSKstQEgg3jZsSo9RvdZ?s=cl&p=a&mlu=3';
@@ -815,8 +815,8 @@ export default function FreePage() {
                 color: 'var(--text-secondary)',
                 lineHeight: 1.5,
               }}>
-                אסטרטג שיווק + מומחה AI. אדם אחד, לא סוכנות —
-                מסר לפני תקציב, קריאייטיב שמוכר.
+                אסטרטג שיווק + מומחה AI. קמפיינים מבוססי-מחקר,
+                קריאייטיב שמוכר — עם הבטחת ביצוע.
               </div>
             </div>
           </div>
@@ -830,7 +830,7 @@ export default function FreePage() {
               marginBottom: 10,
               fontWeight: 600,
             }}>
-              רוצה לפצח את השיווק לפני ששורפים תקציב?
+              רוצה קמפיין שנבנה על מחקר — לא על ניחוש?
             </p>
             <a
               href={WA_LINK}
@@ -866,7 +866,7 @@ export default function FreePage() {
               }}
             >
               <IconWhatsApp size={20} />
-              לשיחת פיצוח ראשונה — חינם, ללא התחייבות
+              לשיחת היכרות — חינם, ללא התחייבות
             </a>
           </div>
 

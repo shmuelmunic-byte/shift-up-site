@@ -150,7 +150,7 @@ export default function TestimonialsPage() {
             }}>הלקוחות</span>
           </h1>
           <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', maxWidth: 500, margin: '0 auto', lineHeight: 1.7 }}>
-            שיטה שעובדת, אדם אחד שאחראי, תוצאות שמדברות. הלקוחות שלי יספרו — פה תוכל לקרוא.
+            שיטה מבוססת-מחקר, הבטחת ביצוע, תוצאות שמדברות. הלקוחות שלי יספרו — פה תוכל לקרוא.
           </p>
         </div>
 
@@ -158,7 +158,7 @@ export default function TestimonialsPage() {
         {testimonials.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--text-muted)' }}>
             <div style={{ fontSize: '3rem', marginBottom: 20 }}>⭐</div>
-            <p style={{ fontSize: '1.1rem' }}>אני עובד עם 2–3 לקוחות בכל רבעון. הבאים יהיו הראשונים לספר.</p>
+            <p style={{ fontSize: '1.1rem' }}>אני לוקח מעט לקוחות במקביל, בכוונה. הבאים יהיו הראשונים לספר.</p>
           </div>
         ) : (
           <div style={{
@@ -175,7 +175,7 @@ export default function TestimonialsPage() {
         {/* CTA */}
         <div style={{ textAlign: 'center', marginTop: 80 }}>
           <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: 20 }}>
-            רוצה להיות בין הראשונים? שיחת פיצוח ראשונה — חינם, ללא התחייבות.
+            רוצה להיות בין הראשונים? מקום קייס מייסדים אחד פנוי — וחודש הניהול הראשון על אחריותי.
           </p>
           <a
             href="https://wa.me/972534673151"
@@ -194,7 +194,7 @@ export default function TestimonialsPage() {
               boxShadow: '0 0 40px oklch(0.78 0.20 145 / 0.35)',
             }}
           >
-            לשיחת פיצוח חינם
+            לשיחת היכרות חינם
           </a>
         </div>
       </div>

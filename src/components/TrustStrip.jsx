@@ -24,9 +24,9 @@ const PILLAR_ICONS = [
 
 /* ── עמודי אמון (סקשן 2 — "אפשר לסמוך?") — fallback ── */
 const FALLBACK_PILLARS = [
-  { title: '2–3 עסקים ברבעון', text: 'בוחר מעט לקוחות בכוונה — כדי שכל אחד יקבל ליווי מלא, לא תור.' },
-  { title: 'אדם אחד, לא סוכנות', text: 'מי שמפצח את האסטרטגיה הוא מי שמבצע אותה. בלי צוות מתחלף, בלי מתמחה.' },
-  { title: 'שיחת היכרות חינם', text: 'נבדוק יחד אם יש התאמה — בלי התחייבות, בלי לחץ מכירה.' },
+  { title: 'מבוסס מחקר', text: 'אף שקל לא נכנס לקמפיין לפני מחקר: קהל, מתחרים, מסר. החלטות על דאטה — לא על תחושת בטן.' },
+  { title: 'הבטחת ביצוע', text: 'חודש הניהול הראשון על אחריותי: אם הוא לא מביא פניות — ממשיך לעבוד בלי לגבות, עד שעובד.' },
+  { title: 'בגובה העיניים', text: 'שותף ביצוע, לא מוכר. שיחת היכרות חינם — נבדוק התאמה בלי לחץ ובלי באזוורדז.' },
 ];
 
 function Pillar({ pillar, index }) {
@@ -79,8 +79,8 @@ export default function TrustStrip() {
   const [online, setOnline] = useState(isOnlineNow);
   const [pillars, setPillars] = useState(FALLBACK_PILLARS);
   const t = useContent({
-    'trust.title': 'לא עובד עם כולם.',
-    'trust.title_accent': 'וזה בדיוק העניין.',
+    'trust.title': 'למה לסמוך עליי?',
+    'trust.title_accent': 'כי הסיכון עליי.',
   });
 
   useEffect(() => {
