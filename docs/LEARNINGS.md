@@ -2,6 +2,22 @@
 
 ---
 
+# סשן: הפיכת LEARNINGS לסקילים קבועים (2026-07-08)
+
+## מה בנינו
+קראנו את `docs/LEARNINGS.md` וחילצנו ממנו את כל הסקילים המומלצים. 4 כבר היו מותקנים (`ai-discovery-setup`, `hebrew-seo-geo-toolkit`, `sitemap-optimizer`, `landing-page-research`) — נמנעה יצירה כפולה. 3 היו חסרים ונבנו כסקילים גלובליים (`~/.claude/skills/`):
+1. **`supabase-cms-fallback-first`** — הדפוס "fallback-first CMS על Supabase". SKILL.md + 4 נכסים דרופ-אין: `useContent.js` (האמיתי מהפרויקט), `GenericCrudTab.jsx` (מוכלל), `tab-example.jsx`, `setup-template.sql` (idempotent+RLS). כולל את כל ה-gotchas (jsonb→`[object Object]`, סוד ל-Vault, בונים עריך מלכתחילה).
+2. **`landing-section-builder`** — בניית סקשן לפי spec נעול + זהות עיצוב + אימות preview. 60-30-10, gotchas של Lenis/lazy-load/auth, כלל "קובץ אחד = סוכן אחד".
+3. **`hebrew-rtl-pdf-windows`** — `markdown`→HTML→Chrome headless. `build_pdf.py` הוכלל ל-argv (לא נעול לנתיב).
+
+## טכניקות / לקחים
+- **"מה כבר קיים?" לפני "תיצור".** בדיקת תיקיית הסקילים לפני יצירה חסכה 4 סקילים כפולים. תמיד לבדוק מלאי קודם.
+- **נכסים = קבצים אמיתיים, לא הוראות.** חילצתי את `useContent.js`/`GenericCrudTab.jsx` מהקוד החי → הסקיל מדויק ולא ממציא. אותו עיקרון כמו ב-`shift-up-proposal-builder` (מצרפים build_pdf.py כקובץ).
+- **הכללה קלה בזמן החילוץ.** `build_pdf.py` הנעול-לנתיב הפך ל-argv; `GenericCrudTab` קיבל סטיילים ניטרליים — כך הסקיל עובד בפרויקט הבא, לא רק כאן.
+- **`description` = מנוע ההפעלה.** לכל סקיל כתבתי טריגרים מפורשים + "Do NOT use for..." שמפנה לסקיל המתחרה הנכון — אחרת הסקיל לא נטען.
+
+---
+
 # סשן: יישור כל הדפים + רענון AI-Discovery/SEO (2026-07-07 · מאוחר)
 
 ## מה בנינו
