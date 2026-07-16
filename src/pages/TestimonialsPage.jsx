@@ -175,7 +175,7 @@ export default function TestimonialsPage() {
         {/* CTA */}
         <div style={{ textAlign: 'center', marginTop: 80 }}>
           <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: 20 }}>
-            רוצה להיות בין הראשונים? מקום קייס מייסדים אחד פנוי — וחודש הניהול הראשון על אחריותי.
+            רוצה להיות בין הראשונים? מקום קייס מייסדים אחד פנוי — ואם בחודש הניהול הראשון אין פניות, ממשיך לנהל בחינם עד שיש.
           </p>
           <a
             href="https://wa.me/972534673151"

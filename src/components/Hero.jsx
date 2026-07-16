@@ -232,9 +232,7 @@ export default function Hero({ onContact, onProcess }) {
 
           {/* price anchor + free call */}
           <p className="hero-anchor" style={{ fontSize: '0.92rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 38, opacity: 0 }}>
-            הקמה <span style={{ color: 'var(--text-secondary)', fontWeight: 800 }}>2,250 ₪</span> + ניהול מ-<span style={{ color: 'var(--text-secondary)', fontWeight: 800 }}>1,300 ₪/ח׳</span>
-            <span style={{ margin: '0 8px', opacity: 0.5 }}>·</span>
-            חודש ניהול ראשון — <span style={{ color: 'var(--brand-prime)', fontWeight: 800 }}>על אחריותי</span>
+            הבטחת ביצוע: אם בחודש הניהול הראשון אין פניות — <span style={{ color: 'var(--brand-prime)', fontWeight: 800 }}>ממשיך לנהל בחינם עד שיש</span>
           </p>
 
           {/* trust chips — מיצוב */}
@@ -285,8 +283,8 @@ export default function Hero({ onContact, onProcess }) {
                 boxShadow: '0 0 10px var(--brand-prime)', flexShrink: 0, animation: 'pulse-ring 1.8s ease-out infinite',
               }} />
               <div>
-                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>מחיר מייסדים</div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>מקום קייס אחד</div>
+                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>זמינות</div>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>מקום קייס מייסדים אחד</div>
               </div>
             </div>
 

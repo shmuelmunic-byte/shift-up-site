@@ -215,9 +215,9 @@ function EnHero({ onProcess, onForm }) {
             <strong style={{ color: 'var(--text-primary)' }}>with a performance guarantee on the first month</strong>.
           </p>
 
-          {/* price anchor */}
+          {/* guarantee anchor */}
           <p className="en-hero-sub" style={{ fontSize: '0.92rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: 14, opacity: 0 }}>
-            Setup ₪2,250 + management from ₪1,300/mo · <span style={{ color: 'var(--brand-prime)' }}>First month — on me if it doesn't deliver</span>
+            Performance guarantee: no inquiries in the first month — <span style={{ color: 'var(--brand-prime)' }}>I keep managing for free until there are</span>
           </p>
 
           <div className="en-hero-ctas hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 32, marginBottom: 32, opacity: 0 }}>
@@ -253,8 +253,8 @@ function EnHero({ onProcess, onForm }) {
             <div className="float-badge" style={{ position: 'absolute', bottom: -24, right: -16, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', boxShadow: '0 0 10px var(--brand-prime)', flexShrink: 0, animation: 'pulse-ring 1.8s ease-out infinite' }} />
               <div>
-                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>FOUNDING RATE</div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>1 case-study spot</div>
+                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>AVAILABILITY</div>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>1 founding case-study spot</div>
               </div>
             </div>
 
@@ -292,7 +292,7 @@ const EN_PILLAR_ICONS = [
 
 const EN_PILLARS = [
   { title: 'Research-based', text: 'Not a single shekel goes into a campaign before research: audience, competitors, message. Decisions on data — not gut feeling.' },
-  { title: 'Performance guarantee', text: "The first month of management is on my responsibility: if it doesn't bring inquiries — I keep working without charging until it does." },
+  { title: 'Performance guarantee', text: 'Not a "free first month" — accountability: if the first month of management brings no inquiries, I keep managing for free until it does.' },
   { title: 'Eye-level partner', text: "An execution partner, not a salesman. Free intro call — we'll check the fit with no pressure and no buzzwords." },
 ];
 
@@ -675,7 +675,7 @@ const enSteps = [
   },
   {
     n: '03', title: 'The Action', sub: 'Execution',
-    desc: 'A ready-to-run campaign goes live: I set up and manage your paid campaigns on Meta and Google, create the creative that sells — and the first month of management is on my responsibility.',
+    desc: 'A ready-to-run campaign goes live: I set up and manage your paid campaigns on Meta and Google, create the creative that sells — and if the first month brings no inquiries, I keep managing for free until it does.',
     bullets: ['Meta + Google Campaigns', 'Creative that sells', 'First-month performance guarantee'],
     icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>,
   },
@@ -749,7 +749,7 @@ function EnProcess() {
 const enReasons = [
   { title: 'Research-Based', en: 'Research-Based', desc: "I don't run campaigns on gut feeling. Audience, competitors, message — everything is researched and distilled before a single shekel goes into paid.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>, accent: 'var(--brand-prime)', wide: true },
   { title: 'AI-First', en: 'AI-First', desc: 'What takes others a week, I execute in hours — at higher quality.', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.64"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.64"/></svg>, accent: 'var(--accent-void)', wide: false },
-  { title: 'Performance Guarantee', en: 'Guarantee', desc: "The first month of management is on my responsibility — if there are no inquiries, I keep working without charging until it works. The risk is on me.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>, accent: 'var(--brand-prime)', wide: false },
+  { title: 'Performance Guarantee', en: 'Guarantee', desc: "If the first month of management brings no inquiries — I keep managing for free until it does. The risk is on me, not you.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>, accent: 'var(--brand-prime)', wide: false },
   { title: 'Eye-Level Partner', en: 'No Buzzwords', desc: "An execution partner, not a salesman. No buzzwords, no inflated decks — straight talk: what we do, why, and what it costs.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>, accent: 'var(--brand-prime)', wide: true },
 ];
 
@@ -938,9 +938,9 @@ function EnAbout() {
 
 const enFaqs = [
   { q: 'How long does it take to see results?', a: 'The discovery and strategy phase takes about two weeks. To see quality leads flowing — between 30 and 60 days, depending on the industry. I build for the long term, not empty promises of "results in a week."' },
-  { q: 'How much does it cost?', a: 'A one-time setup of ₪1,500–3,000 (usually around ₪2,250, depending on scope) + monthly management of ₪1,300–1,500, media budget not included. No vague packages — a clear price before we start.' },
+  { q: 'How much does it cost?', a: "A fixed, clear price set in the intro call based on scope: a one-time setup + monthly management (media budget separate). No vague packages, no surprises — you'll know exactly how much before we start." },
   { q: 'How are you different from other digital marketers?', a: 'Most start with "let\'s run a campaign." I start with research — audience, competitors, message — and only then build the campaign. I also integrate AI tools that save time and money, and take a limited number of clients.' },
-  { q: "I've been burned by a previous provider. Why would this time be different?", a: "That's exactly why there's a performance guarantee: the first month of management is on my responsibility — if it doesn't bring inquiries, I keep working without charging until it works. The risk is on me, not on you." },
+  { q: "I've been burned by a previous provider. Why would this time be different?", a: 'That\'s exactly why there\'s a performance guarantee. To be clear — it\'s not a "free first month": if the first month of management brings no inquiries, I keep managing for free until it does. The risk is on me, not on you.' },
   { q: 'What does the discovery process include?', a: 'A complete strategy document: competitor analysis, target audience mapping, a precise value proposition, core messaging, recommended marketing channels, and a 90-day actionable roadmap.' },
   { q: 'Do you also execute or just advise?', a: 'Both. Once the strategy is locked in, I build and manage your paid campaigns on Meta and Google, and handle the messaging and creative. An execution partner — from the research until the campaign is live.' },
 ];
@@ -1208,7 +1208,7 @@ function EnLeadForm() {
         <div style={{ textAlign: 'center', marginBottom: 18 }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(52,217,123,0.12)', border: '1px solid rgba(31,157,87,0.35)', borderRadius: 999, padding: '6px 16px', fontSize: '0.82rem', fontWeight: 700, color: '#117a41' }}>
             <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#1f9d57', display: 'block', boxShadow: '0 0 6px #1f9d57', animation: 'pulse-ring 2s ease-out infinite' }} />
-            1 founding case-study spot open — setup ₪1,500 instead of ₪2,250
+            1 founding case-study spot open — special founding terms
           </span>
         </div>
 
@@ -1219,7 +1219,7 @@ function EnLeadForm() {
           Leave your details and I'll get back to you for a short intro call — we'll check together if it's a fit.
         </p>
         <p style={{ textAlign: 'center', fontSize: '0.9rem', color: '#6b7d92', fontWeight: 600, marginBottom: 36 }}>
-          Setup ₪2,250 + management from ₪1,300/mo · the first month of management is on my responsibility.
+          A clear, fixed price in the intro call · if the first month of management brings no inquiries — I keep managing for free until it does.
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.3fr) minmax(0, 1fr)', gap: 'clamp(20px, 3vw, 36px)', alignItems: 'start' }} className="lf-grid">

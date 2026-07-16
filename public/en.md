@@ -5,7 +5,7 @@ Strategy First. Budget Second.
 
 Research-based campaigns for businesses that already get marketing — with a performance guarantee on the first month of management.
 
-> Setup ₪2,250 + management from ₪1,300/mo · First month — on my responsibility · 1 founding case-study spot (setup ₪1,500).
+> Performance guarantee: if the first month of management brings no inquiries — I keep managing for free until it does · 1 founding case-study spot · free intro call.
 
 [Get a tailored proposal](https://www.shiftup.marketing/en#en-contact) · [Got a question? Message me](https://wa.me/972534673151)
 
@@ -14,7 +14,7 @@ Research-based campaigns for businesses that already get marketing — with a pe
 ## Why trust me? Because the risk is on me.
 
 - **Research-based** — not a single shekel goes into a campaign before research: audience, competitors, message. Decisions on data, not gut feeling.
-- **Performance guarantee** — the first month of management is on my responsibility: if it doesn't bring inquiries, I keep working without charging until it does.
+- **Performance guarantee** — not a "free first month": if the first month of management brings no inquiries, I keep managing for free until it does.
 - **Eye-level partner** — an execution partner, not a salesman. Free intro call — we check the fit with no pressure and no buzzwords.
 
 ---
@@ -42,7 +42,7 @@ Before a single shekel goes into ads, we build the playing field: which funnel b
 - The right channels
 
 ### 03 · The Action
-A ready-to-run campaign goes live: I set up and manage your paid campaigns on Meta and Google and produce creative that sells — and the first month of management is on my responsibility.
+A ready-to-run campaign goes live: I set up and manage your paid campaigns on Meta and Google and produce creative that sells — and if the first month brings no inquiries, I keep managing for free until it does.
 - Meta + Google campaigns
 - Creative that sells
 - First-month performance guarantee
@@ -66,7 +66,7 @@ There are plenty of digital marketers. Here are 4 real reasons I'd be your smart
 
 1. **Research-Based** — I don't run campaigns on gut feeling. Audience, competitors, message — everything is researched before a single shekel goes into paid.
 2. **AI-First** — What takes others a week, I do in hours, at higher quality.
-3. **Performance Guarantee** — The first month of management is on my responsibility: no inquiries — I keep working without charging until it works.
+3. **Performance Guarantee** — If the first month of management brings no inquiries, I keep managing for free until it does. The risk is on me.
 4. **Eye-Level Partner** — An execution partner, not a salesman. No buzzwords, no inflated decks — straight talk: what we do, why, and what it costs.
 
 ---
@@ -78,10 +78,10 @@ I'm Shmuel Munitz. I don't come from a 20-year-old ad agency — and that's exac
 ---
 
 ## Pricing & availability
-- One-time setup: ₪1,500–3,000 (usually ~₪2,250, by scope) — research, strategy, creative and a ready-to-run campaign
-- Monthly management: ₪1,300–1,500 (excluding media budgets)
-- Performance guarantee: if the first month of management brings no inquiries — I keep working without charging until it works
-- 1 founding case-study spot: setup ₪1,500 in exchange for publishing the results
+- Structure: a one-time setup (research, strategy, creative and a ready-to-run campaign) + monthly management (media budget separate)
+- A fixed, clear price is set in the intro call based on scope — no vague packages, no surprises
+- Performance guarantee (not a "free first month"): if the first month of management brings no inquiries — management continues for free until it does
+- 1 founding case-study spot on special terms, in exchange for publishing the results
 - Free intro call — no commitment
 
 ---

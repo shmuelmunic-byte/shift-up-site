@@ -33,11 +33,11 @@ export default function LeadForm() {
   const sectionRef = useRef(null);
   const { whatsapp_url: waLinkRaw } = useSiteLinks();
   const c = useContent({
-    'leadform.scarcity': 'מקום קייס מייסדים אחד פנוי — הקמה 1,500 ₪ במקום 2,250 ₪',
+    'leadform.scarcity': 'מקום קייס מייסדים אחד פנוי — בתנאים מיוחדים',
     'leadform.title': 'בוא נעשה לעסק שלך',
     'leadform.title_accent': 'Shift Up.',
     'leadform.subtitle': 'השאר פרטים ואחזור אליך לשיחת היכרות קצרה — נבדוק יחד אם יש התאמה.',
-    'leadform.price_note': 'הקמה 2,250 ₪ + ניהול מ-1,300 ₪/חודש · חודש הניהול הראשון — על אחריותי.',
+    'leadform.price_note': 'מחיר סגור וברור בשיחת ההיכרות · אם בחודש הניהול הראשון אין פניות — ממשיך לנהל בחינם עד שיש.',
     'leadform.wa_title': 'מעדיף לדבר עכשיו?',
     'leadform.soft_door': 'עוד לא בשל? זה בסדר. תוכל פשוט לעקוב ולקבל ערך — גלול מטה לקהילת ה-WhatsApp השקטה.',
   });
