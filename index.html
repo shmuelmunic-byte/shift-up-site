@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#07080a" />
 
+    <!-- A11y preferences bootstrap — applies saved accessibility prefs before React hydrates (prevents FOUC) -->
+    <script>
+      (function(){try{var raw=localStorage.getItem('shiftup_a11y_prefs_v1');if(!raw)return;var p=JSON.parse(raw);var c=document.documentElement.classList;c.toggle('a11y-text-115',p.textSize===115);c.toggle('a11y-text-130',p.textSize===130);c.toggle('a11y-text-150',p.textSize===150);c.toggle('a11y-contrast',!!p.contrast);c.toggle('a11y-links',!!p.links);c.toggle('a11y-readable-font',!!p.readableFont);c.toggle('a11y-stop-motion',!!p.stopMotion);c.toggle('a11y-big-cursor',!!p.bigCursor);}catch(e){}})();
+    </script>
+    <!-- Cookie consent bootstrap — honor a prior "reject" before GA can send events -->
+    <script>
+      (function(){try{if(localStorage.getItem('shiftup_cookie_consent_v1')==='rejected'){window['ga-disable-G-RCGQNYG1V8']=true;}}catch(e){}})();
+    </script>
+
     <title>Shift Up | אסטרטגיה ושיווק דיגיטלי מבוסס AI - שמואל מוניץ</title>
     <meta name="description" content="תחזור לנהל את העסק — את השיווק תשאיר לי. קמפיינים מבוססי-מחקר ב-Meta וב-Google עם הבטחת ביצוע על חודש הניהול הראשון. שיחת היכרות חינם." />
     <meta name="author" content="שמואל מוניץ" />

@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
+import Cursor from '../components/Cursor';
 
 /* ═══════════════════════════════════════════════════════════════════════
    /audit — "אבחון שיווק ב-10 דקות"
@@ -139,6 +140,7 @@ export default function DiagnosticPage() {
   const [displayScore, setDisplayScore] = useState(0);
 
   const [form, setForm] = useState({ name: '', business: '', email: '', phone: '' });
+  const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState('idle'); // idle | sending | done
   const [touched, setTouched] = useState(false);
 
@@ -189,7 +191,7 @@ export default function DiagnosticPage() {
 
   const nameValid = form.name.trim().length > 1;
   const phoneValid = /\d{7,}/.test(form.phone.replace(/\D/g, ''));
-  const valid = nameValid && phoneValid;
+  const valid = nameValid && phoneValid && consent;
 
   const submitLead = async (e) => {
     e.preventDefault();
@@ -229,6 +231,7 @@ export default function DiagnosticPage() {
 
   return (
     <div className="dg-root" dir="rtl">
+      <Cursor />
       <style>{CSS}</style>
 
       <div className="dg-wrap">
@@ -368,7 +371,19 @@ export default function DiagnosticPage() {
                     <input id="dg-phone" type="tel" value={form.phone} placeholder="050-0000000" dir="ltr" style={{ textAlign: 'right', ...(touched && !phoneValid ? { borderColor: 'var(--dg-danger)' } : {}) }}
                       onChange={(e) => setForm({ ...form, phone: e.target.value })} autoComplete="tel" />
                   </div>
-                  {touched && !valid && <p style={{ color: 'var(--dg-danger)', fontSize: '.82rem', marginBottom: 12 }}>נא למלא שם וטלפון תקין.</p>}
+                  <div className="dg-field" style={{ marginBottom: 8 }}>
+                    <label htmlFor="dg-consent" style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer', fontWeight: 400 }}>
+                      <input id="dg-consent" type="checkbox" checked={consent}
+                        onChange={(e) => setConsent(e.target.checked)}
+                        style={{ width: 18, height: 18, marginTop: 2, flexShrink: 0, accentColor: 'var(--dg-green)', cursor: 'pointer' }} />
+                      <span style={{ fontSize: '.85rem', lineHeight: 1.5 }}>
+                        קראתי ואני מסכים/ה ל<a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--dg-green)', fontWeight: 600 }}>מדיניות הפרטיות</a> ולכך שתיצרו איתי קשר. *
+                      </span>
+                    </label>
+                  </div>
+                  {touched && !nameValid && <p style={{ color: 'var(--dg-danger)', fontSize: '.82rem', marginBottom: 8 }}>נא למלא שם.</p>}
+                  {touched && nameValid && !phoneValid && <p style={{ color: 'var(--dg-danger)', fontSize: '.82rem', marginBottom: 8 }}>נא למלא מספר טלפון תקין.</p>}
+                  {touched && nameValid && phoneValid && !consent && <p style={{ color: 'var(--dg-danger)', fontSize: '.82rem', marginBottom: 8 }}>יש לאשר את מדיניות הפרטיות כדי להמשיך.</p>}
                   <button type="submit" className="dg-btn dg-btn-primary" disabled={status === 'sending'}>
                     {status === 'sending' ? 'שולח…' : 'בוא נדבר - שלח לי את הצעדים ←'}
                   </button>
@@ -387,7 +402,7 @@ export default function DiagnosticPage() {
               </div>
             )}
 
-            <button className="dg-btn dg-btn-ghost" style={{ marginTop: 8 }} onClick={() => { setStage('intro'); setCur(0); setAnswers(new Array(Q.length).fill(null)); setResult(null); setAnim(false); setDisplayScore(0); setForm({ name: '', business: '', email: '', phone: '' }); setStatus('idle'); setTouched(false); }}>↻ התחל אבחון מחדש</button>
+            <button className="dg-btn dg-btn-ghost" style={{ marginTop: 8 }} onClick={() => { setStage('intro'); setCur(0); setAnswers(new Array(Q.length).fill(null)); setResult(null); setAnim(false); setDisplayScore(0); setForm({ name: '', business: '', email: '', phone: '' }); setConsent(false); setStatus('idle'); setTouched(false); }}>↻ התחל אבחון מחדש</button>
           </section>
         )}
 

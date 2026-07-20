@@ -101,6 +101,8 @@ function MagneticIcon({ children, href, label, target, emailBtn }) {
   );
 }
 
+const legalLinkStyle = { fontSize: '0.78rem', color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s', cursor: 'pointer' };
+
 const quickLinks = [
   { label: 'התהליך', id: 'strategy' },
   { label: 'למה אני', id: 'why' },
@@ -253,12 +255,26 @@ export default function Footer() {
           <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
             © {new Date().getFullYear()} Shift Up · שמואל מוניץ. כל הזכויות שמורות.
           </p>
-          <a href="/en" style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s', cursor: 'pointer' }}
-            onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
-          >
-            English Version →
-          </a>
+          <nav aria-label="קישורים משפטיים" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 18 }}>
+            <a href="/accessibility" style={legalLinkStyle}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+            >
+              הצהרת נגישות
+            </a>
+            <a href="/privacy" style={legalLinkStyle}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+            >
+              מדיניות פרטיות
+            </a>
+            <a href="/en" style={legalLinkStyle}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+            >
+              English Version →
+            </a>
+          </nav>
         </div>
       </div>
     </footer>

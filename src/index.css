@@ -1064,3 +1064,195 @@ html[lang]:not([lang=""]):not([lang^="he"]):not([lang^="iw"]) .section-label::be
     transform: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   נגישות — קישור דילוג, תפריט העדפות (ת"י 5568 / תקנה 35), הודעת עוגיות
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* קישור "דלג לתוכן הראשי" — מוסתר עד פוקוס מקלדת */
+.skip-link {
+  position: fixed;
+  inset-inline-start: -9999px;
+  top: 12px;
+  z-index: 10000;
+  background: var(--brand-prime);
+  color: #04120a;
+  font-weight: 800;
+  font-family: 'Heebo', sans-serif;
+  padding: 12px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  inset-inline-start: 12px;
+  outline: 3px solid #fff;
+}
+
+/* טקסט לקוראי מסך בלבד */
+.a11y-sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* ── כפתור הפעלת תפריט הנגישות ── */
+.a11y-trigger {
+  position: fixed;
+  bottom: 22px;
+  inset-inline-start: 22px;
+  z-index: 9998;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: var(--accent-void);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.a11y-trigger:hover { transform: scale(1.08); box-shadow: 0 8px 26px rgba(0,0,0,0.5); }
+
+.a11y-overlay {
+  position: fixed; inset: 0; z-index: 9998;
+  background: rgba(0,0,0,0.35);
+}
+
+/* ── פאנל ── */
+.a11y-panel {
+  position: fixed;
+  bottom: 86px;
+  inset-inline-start: 22px;
+  z-index: 9999;
+  width: min(340px, calc(100vw - 44px));
+  background: var(--surface-0);
+  border: 1px solid var(--surface-2);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.55);
+  color: var(--text-primary);
+}
+.a11y-panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.a11y-panel-head h2 { font-size: 1.15rem; font-weight: 800; }
+.a11y-close {
+  background: none; border: none; color: var(--text-secondary);
+  font-size: 1.1rem; cursor: pointer !important; padding: 6px; line-height: 1; border-radius: 8px;
+}
+.a11y-close:hover { color: var(--text-primary); }
+
+.a11y-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.a11y-card {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  min-height: 82px;
+  background: var(--surface-1);
+  border: 1.5px solid var(--surface-2);
+  border-radius: 12px;
+  color: var(--text-secondary);
+  font-family: 'Heebo', sans-serif;
+  cursor: pointer !important;
+  padding: 8px 4px;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.a11y-card:hover { border-color: var(--brand-prime); color: var(--text-primary); }
+.a11y-card.on { border-color: var(--brand-prime); background: oklch(0.78 0.20 145 / 0.14); color: var(--brand-prime); }
+.a11y-ico { font-size: 1.2rem; font-weight: 800; line-height: 1; }
+.a11y-lbl { font-size: 0.74rem; text-align: center; font-weight: 600; }
+.a11y-val { font-size: 0.7rem; font-weight: 700; color: var(--brand-prime); }
+
+.a11y-reset {
+  width: 100%; margin-top: 14px;
+  background: none; border: 1px solid var(--surface-2); color: var(--text-secondary);
+  border-radius: 10px; padding: 10px; font-family: 'Heebo', sans-serif; font-weight: 600;
+  cursor: pointer !important; transition: border-color 0.15s, color 0.15s;
+}
+.a11y-reset:hover { border-color: var(--brand-prime); color: var(--text-primary); }
+.a11y-statement-link {
+  display: block; text-align: center; margin-top: 12px;
+  font-size: 0.82rem; color: var(--text-muted); text-decoration: underline;
+}
+.a11y-statement-link:hover { color: var(--brand-prime); }
+
+/* ── מחלקות העדפות המשתמש (מוחלות על <html>) ── */
+html.a11y-text-115 { font-size: 115%; }
+html.a11y-text-130 { font-size: 130%; }
+html.a11y-text-150 { font-size: 150%; }
+
+html.a11y-contrast body { filter: contrast(1.35) saturate(1.25); }
+
+html.a11y-links a { text-decoration: underline !important; text-underline-offset: 3px; }
+
+html.a11y-readable-font,
+html.a11y-readable-font body,
+html.a11y-readable-font button,
+html.a11y-readable-font input,
+html.a11y-readable-font textarea {
+  font-family: Arial, "Segoe UI", Tahoma, sans-serif !important;
+  letter-spacing: 0.01em;
+}
+
+/* עצירת אנימציות (CSS transitions/animations; אנימציות GSAP מבוססות-JS אינן נעצרות כאן) */
+html.a11y-stop-motion *,
+html.a11y-stop-motion *::before,
+html.a11y-stop-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* סמן עכבר גדול — גובר על ה-cursor:none של האתר */
+html.a11y-big-cursor,
+html.a11y-big-cursor * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'%3E%3Cpath d='M4 2l14 10-6 1 3.5 7-3 1.5L9 14l-5 4z' fill='white' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E") 4 2, auto !important;
+}
+html.a11y-big-cursor .cursor-dot,
+html.a11y-big-cursor .cursor-ring { display: none !important; }
+
+/* ── הודעת עוגיות ── */
+.cookie-banner {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 9997;
+  background: var(--surface-0);
+  border-top: 1px solid var(--surface-2);
+  box-shadow: 0 -8px 30px rgba(0,0,0,0.4);
+  padding: 16px 20px calc(16px + env(safe-area-inset-bottom));
+}
+.cookie-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap;
+}
+.cookie-text { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; flex: 1; min-width: 260px; }
+.cookie-link { color: var(--brand-prime); text-decoration: underline; }
+.cookie-actions { display: flex; gap: 10px; flex-shrink: 0; }
+.cookie-btn {
+  padding: 10px 22px; border-radius: 10px; font-family: 'Heebo', sans-serif;
+  font-weight: 700; font-size: 0.9rem; cursor: pointer !important; border: 1.5px solid transparent;
+  transition: opacity 0.15s, border-color 0.15s;
+}
+.cookie-btn-primary { background: var(--brand-prime); color: #04120a; }
+.cookie-btn-primary:hover { opacity: 0.9; }
+.cookie-btn-ghost { background: transparent; color: var(--text-secondary); border-color: var(--surface-2); }
+.cookie-btn-ghost:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+
+/* ── תוכן עמודים משפטיים ── */
+.legal-body section { margin-bottom: 34px; }
+.legal-body h2 { font-size: clamp(1.2rem, 3vw, 1.5rem); font-weight: 800; margin-bottom: 12px; color: var(--text-primary); }
+.legal-body h3 { font-size: 1.05rem; font-weight: 700; margin: 18px 0 8px; color: var(--text-primary); }
+.legal-body p { color: var(--text-secondary); line-height: 1.8; margin-bottom: 12px; }
+.legal-body ul { margin: 0 0 12px; padding-inline-start: 22px; }
+.legal-body li { color: var(--text-secondary); line-height: 1.8; margin-bottom: 6px; }
+.legal-body a { color: var(--brand-prime); text-decoration: underline; }
+.legal-body .legal-note {
+  background: var(--surface-1); border: 1px solid var(--surface-2);
+  border-radius: 12px; padding: 14px 16px; font-size: 0.9rem; margin-top: 8px;
+}
+
+/* ביטול פילטרים בהדפסה */
+@media print {
+  html[class*="a11y-"] { filter: none !important; }
+  .a11y-trigger, .a11y-panel, .a11y-overlay, .cookie-banner { display: none !important; }
+}

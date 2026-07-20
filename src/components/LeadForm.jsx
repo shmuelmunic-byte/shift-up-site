@@ -42,6 +42,7 @@ export default function LeadForm() {
     'leadform.soft_door': 'עוד לא בשל? זה בסדר. תוכל פשוט לעקוב ולקבל ערך — גלול מטה לקהילת ה-WhatsApp השקטה.',
   });
   const [form, setForm] = useState({ name: '', phone: '', business: '', message: '' });
+  const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState('idle'); // idle | sending | done | error
   const [touched, setTouched] = useState(false);
 
@@ -59,7 +60,7 @@ export default function LeadForm() {
 
   const nameValid = form.name.trim().length > 1;
   const phoneValid = /\d{7,}/.test(form.phone.replace(/\D/g, ''));
-  const valid = nameValid && phoneValid;
+  const valid = nameValid && phoneValid && consent;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -103,6 +104,7 @@ export default function LeadForm() {
   };
   const nameError = touched && !nameValid;
   const phoneError = touched && !phoneValid;
+  const consentError = touched && !consent;
 
   return (
     <section
@@ -186,6 +188,17 @@ export default function LeadForm() {
                   <textarea id="lf-message" rows={3} value={form.message} onFocus={focusOn} onBlur={makeFocusOff(false)}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                     style={{ ...inputStyle, resize: 'vertical' }} placeholder="כמה מילים על האתגר השיווקי שלך" />
+                </div>
+
+                <div style={{ marginBottom: 16 }}>
+                  <label htmlFor="lf-consent" style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer', fontSize: '0.86rem', color: '#3a4757', lineHeight: 1.5 }}>
+                    <input id="lf-consent" type="checkbox" checked={consent}
+                      onChange={(e) => setConsent(e.target.checked)}
+                      aria-invalid={consentError} aria-describedby={consentError ? 'lf-consent-error' : undefined}
+                      style={{ width: 18, height: 18, marginTop: 2, flexShrink: 0, accentColor: '#1f9d57', cursor: 'pointer' }} />
+                    <span>קראתי ואני מסכים/ה ל<a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#117a41', fontWeight: 700 }}>מדיניות הפרטיות</a> ולכך שתיצרו איתי קשר בעקבות פנייתי. *</span>
+                  </label>
+                  {consentError && <p id="lf-consent-error" style={errorTextStyle}>יש לאשר את מדיניות הפרטיות כדי להמשיך.</p>}
                 </div>
 
                 <button type="submit" disabled={status === 'sending'} style={{
