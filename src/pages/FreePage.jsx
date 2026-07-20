@@ -760,6 +760,49 @@ export default function FreePage() {
             }
           </div>
 
+          {/* ── AUDIT CTA — המדרגה הבאה אחרי הפרומפטים הכלליים ── */}
+          <Link
+            to="/audit"
+            onClick={() => { if (typeof window.fbq === 'function') window.fbq('track', 'ViewContent', { content_name: 'Audit CTA', content_category: 'freebies' }); }}
+            style={{
+              width: '100%',
+              display: 'block',
+              textDecoration: 'none',
+              marginBottom: 36,
+              borderRadius: 20,
+              overflow: 'hidden',
+              border: '1.5px solid oklch(0.78 0.20 145 / 0.3)',
+              background: 'oklch(0.11 0.015 240)',
+              boxShadow: '0 0 50px oklch(0.78 0.20 145 / 0.07)',
+            }}
+          >
+            <div style={{ height: 3, background: 'linear-gradient(90deg, var(--brand-deep) 0%, var(--brand-prime) 55%, var(--brand-glow) 100%)' }} />
+            <div style={{ padding: '20px 20px 22px', textAlign: 'right' }}>
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: 7,
+                padding: '5px 12px', borderRadius: 100, marginBottom: 12,
+                background: 'oklch(0.78 0.20 145 / 0.1)', border: '1px solid oklch(0.78 0.20 145 / 0.25)',
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--brand-prime)', boxShadow: '0 0 6px var(--brand-prime)', display: 'block', animation: 'breathing 2s ease-in-out infinite' }} />
+                <span style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--brand-prime)', letterSpacing: '0.03em' }}>אבחון חינם · 3 דקות</span>
+              </div>
+              <h2 style={{ fontSize: 'clamp(1.35rem, 5.5vw, 1.6rem)', fontWeight: 900, color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.15, marginBottom: 8 }}>
+                רוצה משהו מותאם <span className="text-gradient">לך</span>?
+              </h2>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 18 }}>
+                הפרומפטים כלליים. האבחון האישי אומר לך בדיוק איפה השיווק שלך דולף - הציון שלך ו-3 הדברים לתקן קודם. בלי להשאיר פרטים.
+              </p>
+              <span style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
+                width: '100%', minHeight: 52, borderRadius: 14,
+                background: 'oklch(0.78 0.20 145 / 0.1)', border: '1.5px solid oklch(0.78 0.20 145 / 0.3)',
+                color: 'var(--brand-prime)', fontWeight: 800, fontSize: '0.98rem',
+              }}>
+                עשה את האבחון ←
+              </span>
+            </div>
+          </Link>
+
           {/* ── SEPARATOR ── */}
           <div className="glow-divider" style={{ width: '100%', marginBottom: 28 }} />
 

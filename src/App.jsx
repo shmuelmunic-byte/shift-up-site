@@ -8,6 +8,7 @@ import Navbar         from './components/Navbar';
 import Hero           from './components/Hero';
 import TrustStrip     from './components/TrustStrip';
 import PainSection    from './components/PainSection';
+import AuditBanner     from './components/AuditBanner';
 import Process        from './components/Process';
 import WhatYouGet     from './components/WhatYouGet';
 import WhyMe          from './components/WhyMe';
@@ -112,6 +113,8 @@ export default function App() {
         <TrustStrip />
         <div className="section-divider" />
         <PainSection />
+        <div className="section-divider" />
+        <AuditBanner />
         <Manifesto />
         <div className="section-divider" />
         <Process />
