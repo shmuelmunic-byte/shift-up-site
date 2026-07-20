@@ -12,6 +12,7 @@ const EnglishPage       = lazy(() => import('./pages/EnglishPage.jsx'))
 const LoginPage         = lazy(() => import('./pages/LoginPage.jsx'))
 const IgPage            = lazy(() => import('./pages/IgPage.jsx'))
 const FreePage          = lazy(() => import('./pages/FreePage.jsx'))
+const DiagnosticPage    = lazy(() => import('./pages/DiagnosticPage.jsx'))
 const AdminPage         = lazy(() => import('./pages/AdminPage.jsx'))
 const TestimonialsPage  = lazy(() => import('./pages/TestimonialsPage.jsx'))
 
@@ -27,6 +28,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/login" element={<LoginPage />} />
           <Route path="/ig"       element={<IgPage />} />
           <Route path="/freebies" element={<FreePage />} />
+          <Route path="/audit"    element={<DiagnosticPage />} />
           <Route path="/admin"         element={<RequireAuth><AdminPage /></RequireAuth>} />
           <Route path="/testimonials" element={<TestimonialsPage />} />
         </Routes>
