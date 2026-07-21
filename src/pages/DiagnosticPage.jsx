@@ -367,6 +367,7 @@ export default function DiagnosticPage() {
                     {status === 'sending' ? 'שולח…' : 'בוא נדבר - שלח לי את הצעדים ←'}
                   </button>
                   <p className="dg-consent">אין חובה. משאירים פרטים רק אם רוצים שאחזור. בלי ספאם, אפשר להסיר בכל רגע.</p>
+                  <p className="dg-consent" style={{ marginTop: 6 }}>התוצאות נשמרות אנונימית לצורך סטטיסטיקה - כדי שאדע איפה עסקים נתקעים. בלי שם, בלי טלפון, בלי קשר אליך.</p>
                 </form>
                 <div className="dg-trust">
                   <b style={{ color: 'var(--dg-text)' }}>מי עומד מאחורי זה?</b><br />
