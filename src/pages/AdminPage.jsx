@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import Cursor from '../components/Cursor';
+import { CATS, SEG_LABEL, Q } from '../lib/auditQuestions';
 
 // ─── ICONS ──────────────────────────────────────────────────────────────────
 
@@ -1069,8 +1070,174 @@ function LeadsTab({ toast }) {
 
 // ─── MAIN PAGE ───────────────────────────────────────────────────────────────
 
+// ─── AUDIT STATS TAB (/audit) ────────────────────────────────────────────────
+// סטטיסטיקה מצטברת ואנונימית בלבד — אין בטבלה שם/טלפון/מייל ואין קשר ל-leads.
+
+function StatBox({ value, label, color }) {
+  return (
+    <div style={{ ...S.card, flex: '1 1 150px', padding: '16px 18px', textAlign: 'center' }}>
+      <div style={{ fontSize: '1.9rem', fontWeight: 900, color: color || 'var(--brand-prime)', lineHeight: 1.1 }}>{value}</div>
+      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 4, fontWeight: 600 }}>{label}</div>
+    </div>
+  );
+}
+
+function Bar({ label, pct, count, color }) {
+  return (
+    <div style={{ marginBottom: 12 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.86rem', marginBottom: 5 }}>
+        <span style={{ fontWeight: 600 }}>{label}</span>
+        <span style={{ color: color || 'var(--text-muted)', fontWeight: 700 }}>
+          {pct}%{count != null ? ` · ${count}` : ''}
+        </span>
+      </div>
+      <div style={{ height: 8, background: 'oklch(0.08 0.01 240)', borderRadius: 100, overflow: 'hidden' }}>
+        <div style={{ height: '100%', width: `${pct}%`, background: color || 'var(--brand-prime)', borderRadius: 100, transition: 'width 0.5s ease' }} />
+      </div>
+    </div>
+  );
+}
+
+function AuditStatsTab({ toast }) {
+  const [rows, setRows] = useState(null); // null = loading
+  const [missing, setMissing] = useState(false);
+
+  useEffect(() => {
+    supabase.from('audit_results').select('*').order('created_at', { ascending: false })
+      .then(({ data, error }) => {
+        if (error) { setMissing(true); setRows([]); return; }
+        setRows(data || []);
+      });
+  }, []);
+
+  if (rows === null) return <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>טוען…</div>;
+
+  if (missing) {
+    return (
+      <div style={{ ...S.card, padding: 28, textAlign: 'center', color: 'var(--text-secondary)', lineHeight: 1.8 }}>
+        <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 8 }}>הטבלה עוד לא קיימת</div>
+        כדי לאסוף תוצאות אבחון, הרץ פעם אחת את ה-SQL מהקובץ{' '}
+        <code style={{ color: 'var(--text-primary)' }}>docs/audit-results-table.sql</code> ב-Supabase → SQL Editor.
+      </div>
+    );
+  }
+
+  if (rows.length === 0) {
+    return (
+      <div style={{ ...S.card, padding: 28, textAlign: 'center', color: 'var(--text-secondary)' }}>
+        עוד אף אחד לא סיים אבחון. שתף את <code style={{ color: 'var(--brand-prime)' }}>/audit</code> ותחזור לכאן.
+      </div>
+    );
+  }
+
+  const n = rows.length;
+  const scores = rows.map(r => r.score).sort((a, b) => a - b);
+  const avg = Math.round(scores.reduce((a, b) => a + b, 0) / n);
+  const median = n % 2 ? scores[(n - 1) / 2] : Math.round((scores[n / 2 - 1] + scores[n / 2]) / 2);
+
+  const buckets = { low: 0, mid: 0, high: 0 };
+  scores.forEach(s => { if (s >= 70) buckets.high++; else if (s >= 45) buckets.mid++; else buckets.low++; });
+
+  // ממוצע לפי תחום — איפה רוב האנשים דולפים
+  const catKeys = Object.keys(CATS);
+  const catAvg = catKeys.map(c => {
+    const vals = rows.map(r => (r.cat_scores || {})[c]).filter(v => typeof v === 'number');
+    return { c, avg: vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : 0 };
+  }).sort((a, b) => a.avg - b.avg);
+
+  // דליפות נפוצות
+  const leakCount = {};
+  rows.forEach(r => (r.leaks || []).forEach(l => { leakCount[l] = (leakCount[l] || 0) + 1; }));
+  const topLeaks = Object.entries(leakCount).sort((a, b) => b[1] - a[1]);
+
+  // פילוח לפי סוג השקעה
+  const segCount = {};
+  rows.forEach(r => { const s = r.segment || 'לא ידוע'; segCount[s] = (segCount[s] || 0) + 1; });
+
+  // התפלגות תשובות לכל שאלה
+  const scoredQs = Q.map((q, i) => ({ q, i })).filter(x => !x.q.seg);
+  const answerDist = scoredQs.map(({ q, i }) => {
+    const counts = q.o.map(() => 0);
+    rows.forEach(r => {
+      const rec = (r.answers || []).find(a => a.q === i);
+      if (rec && typeof rec.a === 'number' && counts[rec.a] != null) counts[rec.a]++;
+    });
+    const answered = counts.reduce((a, b) => a + b, 0) || 1;
+    return { q, i, counts, answered };
+  });
+
+  const colorFor = (p) => (p >= 67 ? 'var(--brand-prime)' : p >= 34 ? 'oklch(0.78 0.16 80)' : 'oklch(0.70 0.20 25)');
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.7 }}>
+        🔒 נתונים <strong style={{ color: 'var(--text-secondary)' }}>אנונימיים לחלוטין</strong> — בלי שם, טלפון או מייל, ובלי קשר לטבלת הלידים.
+      </div>
+
+      {/* KPI */}
+      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <StatBox value={n} label="אבחונים שהושלמו" />
+        <StatBox value={avg} label="ציון ממוצע" color={colorFor(avg)} />
+        <StatBox value={median} label="ציון חציוני" color={colorFor(median)} />
+        <StatBox value={`${Math.round((buckets.low / n) * 100)}%`} label="מתחת ל-45 (דולפים חזק)" color="oklch(0.70 0.20 25)" />
+      </div>
+
+      {/* התפלגות ציונים */}
+      <div style={{ ...S.card, padding: 20 }}>
+        <div style={{ fontWeight: 800, marginBottom: 14 }}>התפלגות ציונים</div>
+        <Bar label="70-100 · בסיס בריא" pct={Math.round((buckets.high / n) * 100)} count={buckets.high} color="var(--brand-prime)" />
+        <Bar label="45-69 · דולף בנקודות" pct={Math.round((buckets.mid / n) * 100)} count={buckets.mid} color="oklch(0.78 0.16 80)" />
+        <Bar label="0-44 · דולף חזק" pct={Math.round((buckets.low / n) * 100)} count={buckets.low} color="oklch(0.70 0.20 25)" />
+      </div>
+
+      {/* איפה רוב האנשים חלשים */}
+      <div style={{ ...S.card, padding: 20 }}>
+        <div style={{ fontWeight: 800, marginBottom: 4 }}>ממוצע לפי תחום</div>
+        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 14 }}>מהחלש לחזק — כאן רוב השוק דולף</div>
+        {catAvg.map(({ c, avg: a }) => <Bar key={c} label={CATS[c]} pct={a} color={colorFor(a)} />)}
+      </div>
+
+      {/* דליפות נפוצות */}
+      <div style={{ ...S.card, padding: 20 }}>
+        <div style={{ fontWeight: 800, marginBottom: 14 }}>הדליפות הנפוצות ביותר</div>
+        {topLeaks.length === 0 ? (
+          <div style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>אין דליפות שנרשמו עדיין.</div>
+        ) : topLeaks.map(([title, count]) => (
+          <Bar key={title} label={title} pct={Math.round((count / n) * 100)} count={count} color="oklch(0.70 0.20 25)" />
+        ))}
+      </div>
+
+      {/* פילוח לפי השקעה */}
+      <div style={{ ...S.card, padding: 20 }}>
+        <div style={{ fontWeight: 800, marginBottom: 14 }}>מה הם משקיעים היום</div>
+        {Object.entries(segCount).sort((a, b) => b[1] - a[1]).map(([seg, count]) => (
+          <Bar key={seg} label={SEG_LABEL[seg] || seg} pct={Math.round((count / n) * 100)} count={count} color="oklch(0.65 0.18 285)" />
+        ))}
+      </div>
+
+      {/* התפלגות תשובות לכל שאלה */}
+      <div style={{ ...S.card, padding: 20 }}>
+        <div style={{ fontWeight: 800, marginBottom: 4 }}>מה אנשים עונים — לפי שאלה</div>
+        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 18 }}>ירוק = תשובה חזקה · אדום = תשובה חלשה</div>
+        {answerDist.map(({ q, i, counts, answered }) => (
+          <div key={i} style={{ marginBottom: 22, paddingBottom: 18, borderBottom: '1px solid oklch(0.97 0.005 240 / 0.06)' }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--brand-prime)', fontWeight: 700, marginBottom: 4 }}>{CATS[q.cat]}</div>
+            <div style={{ fontSize: '0.92rem', fontWeight: 700, marginBottom: 12, lineHeight: 1.4 }}>{q.t}</div>
+            {q.o.map((opt, oi) => {
+              const pct = Math.round((counts[oi] / answered) * 100);
+              const col = opt[1] === 3 ? 'var(--brand-prime)' : opt[1] === 1 ? 'oklch(0.78 0.16 80)' : 'oklch(0.70 0.20 25)';
+              return <Bar key={oi} label={opt[0]} pct={pct} count={counts[oi]} color={col} />;
+            })}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const TABS = [
   { id: 'leads',        label: '📥 לידים',        desc: 'טופס' },
+  { id: 'auditstats',   label: '🎯 אבחון',        desc: '/audit · אנונימי' },
   { id: 'contact',      label: '📝 תוכן + קשר',   desc: 'כותרות · קישורים' },
   { id: 'trust',        label: '🤝 רצועת אמון',   desc: 'סקשן 2' },
   { id: 'pain',         label: '😣 כאב',          desc: 'סקשן 3' },
@@ -1163,6 +1330,7 @@ export default function AdminPage() {
 
         {/* Tab content */}
         {activeTab === 'leads'        && <LeadsTab        toast={showToast} />}
+        {activeTab === 'auditstats'   && <AuditStatsTab   toast={showToast} />}
         {activeTab === 'contact'      && <ContactTab      toast={showToast} />}
         {activeTab === 'trust'        && <TrustTab        toast={showToast} />}
         {activeTab === 'pain'         && <PainTab         toast={showToast} />}
