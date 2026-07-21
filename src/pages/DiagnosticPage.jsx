@@ -78,6 +78,22 @@ export default function DiagnosticPage() {
   const [anim, setAnim] = useState(false);
   const [displayScore, setDisplayScore] = useState(0);
 
+  /* סדר תצוגה מעורבב לכל שאלה מדורגת (Fisher-Yates), פעם אחת לכל סשן.
+     בלי זה התשובה הטובה תמיד ראשונה - מי שלוחץ "הכי למעלה" בלי לקרוא מקבל 100,
+     וזה מזהם גם את הציונים וגם את התפלגות התשובות בסטטיסטיקה.
+     שאלת הרקע (seg) נשארת בסדר המקורי - היא לא מדורגת והסדר בה תיאורי. */
+  const [order] = useState(() =>
+    Q.map((q) => {
+      const idx = q.o.map((_, i) => i);
+      if (q.seg) return idx;
+      for (let i = idx.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [idx[i], idx[j]] = [idx[j], idx[i]];
+      }
+      return idx;
+    })
+  );
+
   const [form, setForm] = useState({ name: '', business: '', email: '', phone: '' });
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState('idle'); // idle | sending | done
@@ -232,10 +248,12 @@ export default function DiagnosticPage() {
               <div className="dg-qcat">{q.seg ? q.label : CATS[q.cat]}</div>
               <div className="dg-qtext">{q.t}</div>
               <div className="dg-opts">
-                {q.o.map((opt, i) => (
-                  <button key={i} className={'dg-opt' + (answers[cur] === i ? ' sel' : '')} onClick={() => pick(i)}>
+                {/* מציגים לפי הסדר המעורבב, אבל שומרים תמיד את האינדקס המקורי -
+                    כך כל החישוב, הפידבק והסטטיסטיקה נשארים נכונים. */}
+                {order[cur].map((oi) => (
+                  <button key={oi} className={'dg-opt' + (answers[cur] === oi ? ' sel' : '')} onClick={() => pick(oi)}>
                     <span className="dg-mark" />
-                    <span>{opt[0]}</span>
+                    <span>{q.o[oi][0]}</span>
                   </button>
                 ))}
               </div>
