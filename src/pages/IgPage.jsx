@@ -19,6 +19,9 @@ const FALLBACK_LINKS = [
 
 const INSTAGRAM_URL = 'https://www.instagram.com/shiftup.il';
 
+// אבחון /audit — כפתור קבוע בראש הרשימה (דלת רכה מהריל ומהביו)
+const AUDIT_HREF = '/audit';
+
 function IgIcon({ size = 18 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -31,6 +34,16 @@ function WhatsAppIcon({ size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  );
+}
+
+function TargetIcon({ size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"/>
+      <circle cx="12" cy="12" r="5"/>
+      <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
     </svg>
   );
 }
@@ -51,7 +64,10 @@ export default function IgPage() {
 
   useEffect(() => {
     supabase.from('ig_links').select('*').order('position').then(({ data, error }) => {
-      if (!error && data && data.length > 0) setLinks(data);
+      if (!error && data && data.length > 0) {
+        // כפתור האבחון מרונדר קבוע למעלה — לסנן כפילות אם הוא הוזן גם בטבלה
+        setLinks(data.filter((l) => !String(l.href || '').includes('/audit')));
+      }
     });
   }, []);
 
@@ -70,6 +86,15 @@ export default function IgPage() {
     }
     if (typeof window.gtag === 'function') {
       window.gtag('event', linkStyle === 'primary' ? 'generate_lead' : 'join_group', { source: 'ig_bio' });
+    }
+  };
+
+  const trackAudit = () => {
+    if (typeof window.fbq === 'function') {
+      window.fbq('trackCustom', 'AuditStart', { content_name: 'ig_bio_audit', content_category: 'ig_bio' });
+    }
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'select_content', { source: 'ig_bio', button: 'audit' });
     }
   };
 
@@ -125,8 +150,48 @@ export default function IgPage() {
 
         <div className="glow-divider" style={{ width: '100%', marginBottom: 28 }} />
 
-        {/* Dynamic CTA Buttons */}
+        {/* CTA Buttons */}
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
+
+          {/* אבחון — כפתור קבוע, ראשון ברשימה */}
+          <a
+            href={AUDIT_HREF}
+            onClick={trackAudit}
+            className="ig-btn-secondary glass-panel"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 10,
+              padding: '0 24px',
+              minHeight: 64,
+              borderRadius: 18,
+              fontWeight: 800,
+              fontSize: '1.05rem',
+              fontFamily: "'Heebo', sans-serif",
+              textDecoration: 'none',
+              color: 'var(--text-primary)',
+              border: '1.5px solid oklch(0.78 0.20 145 / 0.45)',
+              boxShadow: '0 0 24px oklch(0.78 0.20 145 / 0.18)',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            <TargetIcon size={20} />
+            <span>אבחון שיווק חינם</span>
+            <span style={{
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              color: 'var(--brand-prime)',
+              border: '1px solid oklch(0.78 0.20 145 / 0.35)',
+              borderRadius: 999,
+              padding: '3px 9px',
+              whiteSpace: 'nowrap',
+            }}>
+              3 דקות
+            </span>
+          </a>
+
           {links.map((link) => (
             <a
               key={link.id}
