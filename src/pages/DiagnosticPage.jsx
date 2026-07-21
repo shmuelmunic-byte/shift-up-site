@@ -17,6 +17,14 @@ const SEG_LINE = {
   none:  'עדיין לא השקעת הרבה בשיווק - וזו בדיוק ההזדמנות: לבנות נכון מההתחלה, בלי הרגלים לתקן אחר כך. ',
 };
 
+// גרסה למקרה שאין דליפות בכלל - בלי אזכור של בעיות שלא קיימות.
+const SEG_LINE_CLEAN = {
+  time:  'אתה משקיע בעיקר זמן - והוא חוזר אליך טוב. ',
+  both:  'אתה משקיע גם זמן וגם כסף - ורואים שזה מנוהל נכון. ',
+  money: 'אתה משקיע בעיקר כסף - והוא עובד בשבילך. ',
+  none:  'עדיין כמעט לא השקעת בשיווק, ובכל זאת הבסיס שלך מסודר. ',
+};
+
 function computeResult(answers) {
   const segIdx = Q.findIndex((q) => q.seg);
   const seg = segIdx >= 0 && answers[segIdx] != null ? Q[segIdx].o[answers[segIdx]][1] : null;
@@ -46,12 +54,20 @@ function computeResult(answers) {
   const leaks = weak.slice(0, 3);
   const moreLeaks = weak.length > leaks.length;
 
-  let v, vs;
-  if (pct >= 70) { v = 'השיווק שלך על בסיס בריא 💪'; vs = 'יש יסודות טובים. הדליפות שנשארו הן דיוקים ששווים הרבה.'; }
-  else if (pct >= 45) { v = 'יש פוטנציאל שנשפך בדרך ⚠️'; vs = 'הבסיס קיים אבל דולף בכמה נקודות קריטיות. אלה בדיוק הדברים שאפשר לתקן מהר.'; }
-  else { v = 'הרבה מההשקעה שלך דולפת בשקט 🩹'; vs = 'הבשורה הטובה: כשהבסיס חלש, כל תיקון קטן מזיז הרבה. יש כאן הזדמנות ענקית.'; }
+  // ללא דליפות (כל התשובות חזקות) — ניסוח נפרד, אחרת מדברים על דליפות שלא קיימות.
+  let v, vs, prefix;
+  if (leaks.length === 0) {
+    v = 'השיווק שלך על בסיס חזק 💪';
+    vs = 'יש יסודות חזקים באמת. מכאן זה כבר ליטוש ודיוק, לא תיקון.';
+    prefix = seg && SEG_LINE_CLEAN[seg] ? SEG_LINE_CLEAN[seg] : '';
+  } else {
+    if (pct >= 70) { v = 'השיווק שלך על בסיס בריא 💪'; vs = 'יש יסודות טובים. הדליפות שנשארו הן דיוקים ששווים הרבה.'; }
+    else if (pct >= 45) { v = 'יש פוטנציאל שנשפך בדרך ⚠️'; vs = 'הבסיס קיים אבל דולף בכמה נקודות קריטיות. אלה בדיוק הדברים שאפשר לתקן מהר.'; }
+    else { v = 'הרבה מההשקעה שלך דולפת בשקט 🩹'; vs = 'הבשורה הטובה: כשהבסיס חלש, כל תיקון קטן מזיז הרבה. יש כאן הזדמנות ענקית.'; }
+    prefix = seg && SEG_LINE[seg] ? SEG_LINE[seg] : '';
+  }
 
-  return { seg, pct, catPcts, leaks, moreLeaks, verdict: v, verdictSub: (seg && SEG_LINE[seg] ? SEG_LINE[seg] : '') + vs };
+  return { seg, pct, catPcts, leaks, moreLeaks, verdict: v, verdictSub: prefix + vs };
 }
 
 export default function DiagnosticPage() {
