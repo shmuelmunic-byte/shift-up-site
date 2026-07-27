@@ -255,7 +255,14 @@ export default function DiagnosticPage() {
   const [copied, setCopied] = useState(false);
   const shareCanvasRef = useRef(null);
   const shareBlobRef = useRef(null);
+  const shareCardRef = useRef(null);
   const canNativeShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
+
+  // רמז השיתוף הקומפקטי בשיא הרגש: במובייל משתף ישר, בדסקטופ גולל לכרטיס המלא.
+  const miniShare = () => {
+    if (canNativeShare) shareNative();
+    else if (shareCardRef.current) shareCardRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   useEffect(() => {
     if (stage !== 'result' || !result) return;
@@ -433,6 +440,12 @@ export default function DiagnosticPage() {
               )}
             </div>
 
+            {/* רמז שיתוף קומפקטי בשיא הרגש — הכרטיס המלא נשאר למטה, אחרי הטופס */}
+            <div className="dg-share-mini">
+              <span>אהבת את התוצאה? קח אותה איתך 👇</span>
+              <button className="dg-btn dg-share-wa" onClick={miniShare}>{canNativeShare ? '📲 שתף' : '📸 תמונה לשיתוף'}</button>
+            </div>
+
             <div className="dg-card">
               <div className="dg-qcat" style={{ marginBottom: 16 }}>פירוט לפי תחום</div>
               {result.catPcts.map(({ c, p }) => {
@@ -531,7 +544,7 @@ export default function DiagnosticPage() {
             )}
 
             {/* שיתוף — תמונה ממותגת + כיתוב, לסטטוס וואטסאפ ושליחה לחברים */}
-            <div className="dg-card">
+            <div className="dg-card" ref={shareCardRef}>
               <div className="dg-qcat" style={{ marginBottom: 8 }}>📣 שתף את התוצאה</div>
               <p style={{ color: 'var(--dg-text-dim)', fontSize: '.92rem', marginBottom: 16 }}>שתף בסטטוס וואטסאפ או שלח לחבר בעל עסק. הטקסט והלינק מתלווים לתמונה:</p>
               {shareImg && <div className="dg-share-img"><img src={shareImg} alt="תמונת התוצאה לשיתוף" /></div>}
@@ -640,6 +653,9 @@ const CSS = `
 .dg-share-img{margin-bottom:18px; border-radius:14px; overflow:hidden; border:1px solid var(--dg-border); background:#070a0e}
 .dg-share-img img{display:block; width:100%; max-height:520px; object-fit:contain; margin:0 auto}
 .dg-share-cap{background:var(--dg-card-2); border:1px solid var(--dg-border); border-radius:12px; padding:14px 16px; font-size:.9rem; color:var(--dg-text-dim); white-space:pre-wrap; line-height:1.6; margin-bottom:18px}
+.dg-share-mini{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; background:var(--dg-card); border:1px solid var(--dg-border); border-radius:16px; padding:14px 18px; margin-bottom:20px}
+.dg-share-mini span{font-weight:600; font-size:.95rem}
+.dg-share-mini .dg-btn{width:auto; padding:11px 20px; font-size:.95rem; white-space:nowrap; flex-shrink:0}
 .dg-share-btns{display:flex; flex-direction:column; gap:10px}
 .dg-share-wa{background:#25d366; color:#04120a}
 .dg-share-wa:hover{transform:translateY(-2px); box-shadow:0 8px 24px rgba(37,211,102,.3)}
