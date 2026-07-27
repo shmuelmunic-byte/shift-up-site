@@ -27,26 +27,30 @@ const SEG_LINE_CLEAN = {
 
 function computeResult(answers) {
   const segIdx = Q.findIndex((q) => q.seg);
-  const seg = segIdx >= 0 && answers[segIdx] != null ? Q[segIdx].o[answers[segIdx]][1] : null;
+  const seg = segIdx >= 0 && answers[segIdx] != null && answers[segIdx] !== 'skip' ? Q[segIdx].o[answers[segIdx]][1] : null;
 
+  // שאלות שדולגו ('skip') לא נספרות לא בציון ולא במקסימום — הציון מחושב רק על מה שנענה.
   const catMax = {}, catScore = {};
   Object.keys(CATS).forEach((c) => { catMax[c] = 0; catScore[c] = 0; });
+  let skipped = 0;
   Q.forEach((q, i) => {
     if (q.seg) return;
+    if (answers[i] === 'skip') { skipped++; return; }
     catMax[q.cat] += 3;
     catScore[q.cat] += q.o[answers[i]][1];
   });
 
   const total = Object.values(catScore).reduce((a, b) => a + b, 0);
   const totalMax = Object.values(catMax).reduce((a, b) => a + b, 0);
-  const pct = Math.round((total / totalMax) * 100);
+  const pct = totalMax > 0 ? Math.round((total / totalMax) * 100) : 0;
 
-  const catPcts = Object.keys(CATS).map((c) => ({ c, p: Math.round((catScore[c] / catMax[c]) * 100) }));
+  // תחום שכל שאלותיו דולגו מקבל p: null ("לא נמדד"), ולא מזייף אחוז.
+  const catPcts = Object.keys(CATS).map((c) => ({ c, p: catMax[c] > 0 ? Math.round((catScore[c] / catMax[c]) * 100) : null }));
 
-  // דליפה = תשובה ספציפית חלשה (ציון < 3 שיש לה פידבק ייעודי). ממוין לפי חומרה (0 לפני 1).
+  // דליפה = תשובה ספציפית חלשה (ציון < 3 שיש לה פידבק ייעודי). ממוין לפי חומרה (0 לפני 1). דילוגים מוחרגים.
   const weak = [];
   Q.forEach((q, i) => {
-    if (q.seg) return;
+    if (q.seg || answers[i] === 'skip') return;
     const opt = q.o[answers[i]];
     if (opt[1] < 3 && opt[2]) weak.push({ qi: i, cat: q.cat, score: opt[1], fb: opt[2] });
   });
@@ -67,7 +71,76 @@ function computeResult(answers) {
     prefix = seg && SEG_LINE[seg] ? SEG_LINE[seg] : '';
   }
 
-  return { seg, pct, catPcts, leaks, moreLeaks, verdict: v, verdictSub: prefix + vs };
+  return { seg, pct, catPcts, leaks, moreLeaks, skipped, verdict: v, verdictSub: prefix + vs };
+}
+
+/* ── תמונת תוצאה לשיתוף (1080×1920, פורמט סטטוס/מובייל) ──
+   נקייה מלינק — הטקסט והלינק נשלחים ככיתוב שמתלווה לתמונה. */
+function wrapCanvasText(ctx, text, cx, y, maxW, lh) {
+  const words = String(text).split(' ');
+  let line = ''; const lines = [];
+  for (const w of words) {
+    const test = line ? line + ' ' + w : w;
+    if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; }
+    else line = test;
+  }
+  if (line) lines.push(line);
+  lines.forEach((ln, i) => ctx.fillText(ln, cx, y + i * lh));
+  return lines.length * lh;
+}
+
+function drawShareImage(result) {
+  const W = 1080, H = 1920;
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d');
+  const pct = result.pct != null ? result.pct : 0;
+  const col = pct >= 70 ? '#36d98a' : pct >= 45 ? '#ffb454' : '#ff5c72';
+
+  x.fillStyle = '#070a0e'; x.fillRect(0, 0, W, H);
+  let g = x.createRadialGradient(W * 0.85, H * 0.03, 0, W * 0.85, H * 0.03, 760);
+  g.addColorStop(0, 'rgba(54,217,138,.20)'); g.addColorStop(1, 'rgba(54,217,138,0)');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  g = x.createRadialGradient(W * 0.08, H * 0.34, 0, W * 0.08, H * 0.34, 760);
+  g.addColorStop(0, 'rgba(106,79,181,.20)'); g.addColorStop(1, 'rgba(106,79,181,0)');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+
+  x.direction = 'rtl'; x.textAlign = 'center'; x.textBaseline = 'middle';
+
+  x.fillStyle = '#e8edf2'; x.font = '700 46px Heebo';
+  x.fillText('Shift Up · אבחון שיווק', W / 2, 160);
+  x.fillStyle = '#36d98a'; x.beginPath(); x.arc(W / 2 + 235, 160, 10, 0, Math.PI * 2); x.fill();
+
+  x.fillStyle = '#e8edf2'; x.font = '900 68px Heebo';
+  x.fillText('בדקתי איפה השיווק שלי דולף', W / 2, 330);
+
+  const cx = W / 2, cy = 830, r = 300, lw = 46;
+  x.lineCap = 'round';
+  x.strokeStyle = '#131a22'; x.lineWidth = lw;
+  x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.stroke();
+  x.strokeStyle = col;
+  x.beginPath(); x.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pct / 100); x.stroke();
+  x.fillStyle = col; x.font = '900 250px Heebo';
+  x.fillText(String(pct), cx, cy - 6);
+  x.fillStyle = '#8b97a3'; x.font = '400 52px Heebo';
+  x.fillText('מתוך 100', cx, cy + 150);
+
+  x.fillStyle = '#e8edf2'; x.font = '800 56px Heebo';
+  const vEnd = 1300 + wrapCanvasText(x, result.verdict, W / 2, 1300, W - 170, 68);
+
+  let y = vEnd + 60;
+  if (result.leaks && result.leaks.length) {
+    x.fillStyle = '#ff5c72'; x.font = '700 40px Heebo';
+    x.fillText('הדליפה הכי דחופה שלי:', W / 2, y); y += 60;
+    x.fillStyle = '#e8edf2'; x.font = '600 46px Heebo';
+    wrapCanvasText(x, result.leaks[0].fb.t, W / 2, y, W - 170, 58);
+  }
+
+  x.fillStyle = '#8b97a3'; x.font = '500 44px Heebo';
+  x.fillText('אבחון שיווק חינמי לבעלי עסקים', W / 2, 1800);
+  x.fillStyle = '#36d98a'; x.font = '800 54px Heebo';
+  x.fillText('Shift Up', W / 2, 1862);
+
+  return c;
 }
 
 export default function DiagnosticPage() {
@@ -122,8 +195,18 @@ export default function DiagnosticPage() {
   };
   const goPrev = () => { if (cur > 0) { setCur(cur - 1); window.scrollTo(0, 0); } };
 
-  const finish = () => {
-    const r = computeResult(answers);
+  // דילוג על שאלה שלא רלוונטית לעסק. לחיצה חוזרת מבטלת. בשאלה האחרונה — מסיים עם התשובות המעודכנות.
+  const skip = () => {
+    const next = [...answers];
+    if (next[cur] === 'skip') { next[cur] = null; setAnswers(next); return; }
+    next[cur] = 'skip';
+    setAnswers(next);
+    if (cur < total - 1) { setCur(cur + 1); window.scrollTo(0, 0); }
+    else finish(next);
+  };
+
+  const finish = (ans = answers) => {
+    const r = computeResult(ans);
     setResult(r);
     setStage('result');
     window.scrollTo(0, 0);
@@ -135,7 +218,8 @@ export default function DiagnosticPage() {
     const detail = [];
     Q.forEach((q, i) => {
       if (q.seg) return;
-      detail.push({ q: i, cat: q.cat, a: answers[i], score: q.o[answers[i]][1] });
+      if (ans[i] === 'skip') { detail.push({ q: i, cat: q.cat, a: 'skip', score: null }); return; }
+      detail.push({ q: i, cat: q.cat, a: ans[i], score: q.o[ans[i]][1] });
     });
     const catObj = {};
     r.catPcts.forEach((x) => { catObj[x.c] = x.p; });
@@ -165,6 +249,59 @@ export default function DiagnosticPage() {
   }, [stage, result]);
 
   const start = () => { setStage('quiz'); window.scrollTo(0, 0); };
+
+  /* ── שיתוף התוצאה: תמונה ממותגת + כיתוב טקסט ולינק, ממוקד סטטוס וואטסאפ ── */
+  const [shareImg, setShareImg] = useState(null);
+  const [copied, setCopied] = useState(false);
+  const shareCanvasRef = useRef(null);
+  const shareBlobRef = useRef(null);
+  const canNativeShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
+
+  useEffect(() => {
+    if (stage !== 'result' || !result) return;
+    let cancelled = false;
+    const make = () => {
+      if (cancelled) return;
+      const canvas = drawShareImage(result);
+      shareCanvasRef.current = canvas;
+      setShareImg(canvas.toDataURL('image/png'));
+      canvas.toBlob((b) => { shareBlobRef.current = b; }, 'image/png');
+    };
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(make);
+    else make();
+    return () => { cancelled = true; };
+  }, [stage, result]);
+
+  const shareUrl = () => (typeof window !== 'undefined' ? window.location.href : '');
+  const buildShareText = () => {
+    const s = result ? result.pct : null;
+    const scoreLine = s != null ? `קיבלתי ${s}/100 באבחון השיווק של Shift Up 🎯\n` : '';
+    return `${scoreLine}בדקתי איפה השיווק של העסק שלי דולף כסף — 10 שאלות, 3 דקות, תוצאה מיידית.\nשווה לכל בעל עסק. בדוק את שלך:`;
+  };
+  const shareCaption = () => buildShareText() + '\n' + shareUrl();
+
+  const shareNative = async () => {
+    const caption = shareCaption();
+    const blob = shareBlobRef.current;
+    if (blob && navigator.canShare) {
+      const file = new File([blob], 'shift-up-אבחון-שיווק.png', { type: 'image/png' });
+      if (navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], text: caption }); } catch { /* המשתמש ביטל */ }
+        return;
+      }
+    }
+    if (navigator.share) { try { await navigator.share({ text: caption, url: shareUrl() }); } catch { /* בוטל */ } }
+  };
+  const downloadShareImg = () => {
+    const c = shareCanvasRef.current; if (!c) return;
+    const a = document.createElement('a');
+    a.href = c.toDataURL('image/png');
+    a.download = 'shift-up-אבחון-שיווק.png';
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+  const copyCaption = async () => {
+    try { await navigator.clipboard.writeText(shareCaption()); setCopied(true); setTimeout(() => setCopied(false), 2200); } catch { /* דפדפן לא תומך */ }
+  };
 
   const nameValid = form.name.trim().length > 1;
   const phoneValid = /\d{7,}/.test(form.phone.replace(/\D/g, ''));
@@ -257,6 +394,11 @@ export default function DiagnosticPage() {
                   </button>
                 ))}
               </div>
+              {!q.seg && (
+                <button className={'dg-skip' + (answers[cur] === 'skip' ? ' active' : '')} onClick={skip}>
+                  {answers[cur] === 'skip' ? '✓ דילגת על השאלה הזו — לחץ כדי לבטל' : 'השאלה הזו לא רלוונטית לעסק שלי — דלג ←'}
+                </button>
+              )}
               <div className="dg-nav-row">
                 <button className="dg-btn dg-btn-ghost" style={{ visibility: cur === 0 ? 'hidden' : 'visible' }} onClick={goPrev}>← חזור</button>
                 <button className="dg-btn dg-btn-primary" onClick={goNext} disabled={answers[cur] == null}>
@@ -284,16 +426,22 @@ export default function DiagnosticPage() {
               </div>
               <div className="dg-verdict">{result.verdict}</div>
               <div className="dg-verdict-sub">{result.verdictSub}</div>
+              {result.skipped > 0 && (
+                <div className="dg-verdict-sub" style={{ fontSize: '.82rem', opacity: .75, marginTop: 6 }}>
+                  דילגת על {result.skipped} {result.skipped === 1 ? 'שאלה שלא רלוונטית' : 'שאלות שלא רלוונטיות'} לעסק שלך — הציון והתחומים מחושבים רק על מה שענית.
+                </div>
+              )}
             </div>
 
             <div className="dg-card">
               <div className="dg-qcat" style={{ marginBottom: 16 }}>פירוט לפי תחום</div>
               {result.catPcts.map(({ c, p }) => {
-                const col = p >= 67 ? 'var(--dg-green)' : p >= 34 ? 'var(--dg-warn)' : 'var(--dg-danger)';
+                const measured = p !== null;
+                const col = !measured ? 'var(--dg-text-dim)' : p >= 67 ? 'var(--dg-green)' : p >= 34 ? 'var(--dg-warn)' : 'var(--dg-danger)';
                 return (
                   <div className="dg-bar-row" key={c}>
-                    <div className="dg-bar-top"><b>{CATS[c]}</b><span style={{ color: col }}>{p}%</span></div>
-                    <div className="dg-bar-track"><div className="dg-bar-fill" style={{ width: anim ? p + '%' : 0, background: col }} /></div>
+                    <div className="dg-bar-top"><b>{CATS[c]}</b><span style={{ color: col }}>{measured ? p + '%' : 'דילגת'}</span></div>
+                    <div className="dg-bar-track"><div className="dg-bar-fill" style={{ width: measured && anim ? p + '%' : 0, background: col, opacity: measured ? 1 : .4 }} /></div>
                   </div>
                 );
               })}
@@ -382,7 +530,21 @@ export default function DiagnosticPage() {
               </div>
             )}
 
-            <button className="dg-btn dg-btn-ghost" style={{ marginTop: 8 }} onClick={() => { setStage('intro'); setCur(0); setAnswers(new Array(Q.length).fill(null)); setResult(null); setAnim(false); setDisplayScore(0); setForm({ name: '', business: '', email: '', phone: '' }); setConsent(false); setStatus('idle'); setTouched(false); savedRef.current = false; }}>↻ התחל אבחון מחדש</button>
+            {/* שיתוף — תמונה ממותגת + כיתוב, לסטטוס וואטסאפ ושליחה לחברים */}
+            <div className="dg-card">
+              <div className="dg-qcat" style={{ marginBottom: 8 }}>📣 שתף את התוצאה</div>
+              <p style={{ color: 'var(--dg-text-dim)', fontSize: '.92rem', marginBottom: 16 }}>שתף בסטטוס וואטסאפ או שלח לחבר בעל עסק. הטקסט והלינק מתלווים לתמונה:</p>
+              {shareImg && <div className="dg-share-img"><img src={shareImg} alt="תמונת התוצאה לשיתוף" /></div>}
+              <p style={{ fontSize: '.82rem', color: 'var(--dg-text-dim)', marginBottom: 8, fontWeight: 500 }}>הטקסט שילווה את התמונה:</p>
+              <div className="dg-share-cap">{shareCaption()}</div>
+              <div className="dg-share-btns">
+                {canNativeShare && <button className="dg-btn dg-share-wa" onClick={shareNative}>📲 שתף בוואטסאפ (תמונה + טקסט)</button>}
+                <button className="dg-btn dg-btn-ghost" onClick={downloadShareImg}>📸 הורד את התמונה</button>
+                <button className="dg-btn dg-btn-ghost" onClick={copyCaption}>{copied ? '✓ הועתק!' : '📋 העתק טקסט + לינק'}</button>
+              </div>
+            </div>
+
+            <button className="dg-btn dg-btn-ghost" style={{ marginTop: 8 }} onClick={() => { setStage('intro'); setCur(0); setAnswers(new Array(Q.length).fill(null)); setResult(null); setAnim(false); setDisplayScore(0); setForm({ name: '', business: '', email: '', phone: '' }); setConsent(false); setStatus('idle'); setTouched(false); savedRef.current = false; setShareImg(null); setCopied(false); }}>↻ התחל אבחון מחדש</button>
           </section>
         )}
 
@@ -472,6 +634,15 @@ const CSS = `
 .dg-thanks .dg-check{width:70px; height:70px; border-radius:50%; background:var(--dg-green-dim); border:2px solid var(--dg-green); display:grid; place-items:center; margin:0 auto 20px; font-size:2rem; color:var(--dg-green)}
 .dg-thanks h2{font-size:1.4rem; font-weight:900; margin-bottom:8px}
 .dg-thanks p{color:var(--dg-text-dim)}
+.dg-skip{background:none; border:none; font-family:inherit; color:var(--dg-text-dim); font-size:.88rem; cursor:pointer; margin-top:18px; padding:6px 2px; text-decoration:underline; text-underline-offset:3px; transition:.15s; display:block}
+.dg-skip:hover{color:var(--dg-green)}
+.dg-skip.active{color:var(--dg-green); font-weight:600; text-decoration:none}
+.dg-share-img{margin-bottom:18px; border-radius:14px; overflow:hidden; border:1px solid var(--dg-border); background:#070a0e}
+.dg-share-img img{display:block; width:100%; max-height:520px; object-fit:contain; margin:0 auto}
+.dg-share-cap{background:var(--dg-card-2); border:1px solid var(--dg-border); border-radius:12px; padding:14px 16px; font-size:.9rem; color:var(--dg-text-dim); white-space:pre-wrap; line-height:1.6; margin-bottom:18px}
+.dg-share-btns{display:flex; flex-direction:column; gap:10px}
+.dg-share-wa{background:#25d366; color:#04120a}
+.dg-share-wa:hover{transform:translateY(-2px); box-shadow:0 8px 24px rgba(37,211,102,.3)}
 .dg-footer{text-align:center; color:var(--dg-text-dim); font-size:.8rem; margin-top:40px; opacity:.7}
 .dg-btn:focus-visible,.dg-opt:focus-visible{outline:2px solid var(--dg-green); outline-offset:3px}
 .dg-field input:focus-visible{outline:2px solid var(--dg-green); outline-offset:1px}
