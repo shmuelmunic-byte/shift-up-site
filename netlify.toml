@@ -2,6 +2,14 @@
   command = "npm run build"
   publish = "dist"
 
+# פרוקסי ל-Supabase תחת אותו דומיין (עוקף חסימת supabase.co בסינון החרדי).
+# חייב לבוא לפני ה-catch-all של ה-SPA, אחרת הבקשה תיתפס ותוחזר index.html.
+[[redirects]]
+  from = "/sb/*"
+  to = "https://fsqstwlapiiqbnyjjzqx.supabase.co/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
