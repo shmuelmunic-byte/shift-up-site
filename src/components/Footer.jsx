@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { supabase } from '../lib/supabase';
 import { WhatsAppIcon } from './icons';
 
-const logoSrc = '/logo.svg';
+const logoSrc = '/logo.png';
 
 const DEFAULT_WA =
   'https://wa.me/972534673151?text=' +

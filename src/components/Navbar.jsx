@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 
-const logoSrc = '/logo.svg';
+const logoSrc = '/logo.png';
 
 const links = [
   { label: 'התהליך', id: 'strategy' },

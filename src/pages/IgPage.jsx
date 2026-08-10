@@ -121,7 +121,7 @@ export default function IgPage() {
       <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: 380, display: 'flex', flexDirection: 'column', alignItems: 'center', animation: 'ig-fade-up 0.65s ease-out both' }}>
 
         {/* Logo */}
-        <img src="/logo.svg" alt="Shift Up" style={{ height: 56, width: 'auto', marginBottom: 32, animation: 'hue-drift 8s ease-in-out infinite' }} />
+        <img src="/logo.png" alt="Shift Up" style={{ height: 56, width: 'auto', marginBottom: 32, animation: 'hue-drift 8s ease-in-out infinite' }} />
 
         {/* Profile photo with spinning ring */}
         <div style={{ position: 'relative', marginBottom: 22 }}>

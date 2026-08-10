@@ -24,7 +24,7 @@ export default function LegalLayout({ title, subtitle, updated, children }) {
       <header style={{ borderBottom: '1px solid var(--surface-1)', padding: '20px 28px' }}>
         <div style={{ maxWidth: 820, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
           <Link to="/" aria-label="חזרה לדף הבית של Shift Up" style={{ display: 'inline-flex', alignItems: 'center' }}>
-            <img src="/logo.svg" alt="Shift Up" style={{ height: 44, width: 'auto' }} />
+            <img src="/logo.png" alt="Shift Up" style={{ height: 44, width: 'auto' }} />
           </Link>
           <Link to="/" style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textDecoration: 'none' }}>
             ← חזרה לאתר
