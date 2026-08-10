@@ -74,8 +74,8 @@ function BentoCard({ reason, index }) {
           <div style={{
             width: 44, height: 44,
             borderRadius: 12,
-            background: `oklch(0.78 0.20 145 / 0.1)`,
-            border: `1px solid oklch(0.78 0.20 145 / 0.2)`,
+            background: `oklch(0.785 0.173 156.6 / 0.1)`,
+            border: `1px solid oklch(0.785 0.173 156.6 / 0.2)`,
             color: 'var(--brand-prime)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexShrink: 0,
@@ -166,13 +166,13 @@ export default function WhyMe() {
       <div className="aurora-orb" style={{
         width: 500, height: 500,
         top: '-10%', right: '-5%',
-        background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.08), transparent 70%)',
+        background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.08), transparent 70%)',
         '--dur': '18s',
       }} />
       <div className="aurora-orb" style={{
         width: 400, height: 400,
         bottom: '-5%', left: '-5%',
-        background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.07), transparent 70%)',
+        background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.07), transparent 70%)',
         '--dur': '22s', '--delay': '-7s',
       }} />
 

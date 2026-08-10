@@ -57,7 +57,7 @@ export default function Manifesto() {
           width: 600, height: 600,
           top: '50%', left: '50%',
           transform: 'translate(-50%, -50%)',
-          background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.06), transparent 70%)',
+          background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.06), transparent 70%)',
           '--dur': '30s',
         }}
       />

@@ -53,7 +53,7 @@ function OutcomeCard({ outcome, index }) {
       <span style={{
         flexShrink: 0, width: 46, height: 46, borderRadius: 12,
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        background: 'oklch(0.78 0.20 145 / 0.1)', border: '1px solid oklch(0.78 0.20 145 / 0.22)',
+        background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1px solid oklch(0.785 0.173 156.6 / 0.22)',
       }}>
         <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           {OUTCOME_ICONS[index] || OUTCOME_ICONS[0]}

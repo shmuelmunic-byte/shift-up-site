@@ -38,19 +38,19 @@ function FluidBg() {
     <div ref={containerRef} style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
       {/* Primary aurora — large green */}
       <div className="aurora-orb" style={{ width: 700, height: 700, top: '-15%', right: '-8%',
-        background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.20), transparent 65%)', '--dur': '20s' }} />
+        background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.20), transparent 65%)', '--dur': '20s' }} />
       {/* Secondary — green left */}
       <div className="aurora-orb" style={{ width: 550, height: 550, top: '25%', left: '-10%',
         background: 'radial-gradient(circle, oklch(0.65 0.22 145 / 0.13), transparent 70%)', '--dur': '26s', '--delay': '-6s' }} />
       {/* Accent — violet bottom */}
       <div className="aurora-orb" style={{ width: 450, height: 450, bottom: '-5%', right: '28%',
-        background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.15), transparent 70%)', '--dur': '30s', '--delay': '-11s' }} />
+        background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.15), transparent 70%)', '--dur': '30s', '--delay': '-11s' }} />
       {/* Cyan transition glow — gradient/aurora only, never on CTA */}
       <div className="aurora-orb" style={{ width: 520, height: 520, bottom: '8%', left: '6%',
         background: 'radial-gradient(circle, oklch(0.65 0.22 200 / 0.12), transparent 70%)', '--dur': '24s', '--delay': '-9s' }} />
       {/* Small highlight */}
       <div className="aurora-orb" style={{ width: 280, height: 280, top: '12%', right: '22%',
-        background: 'radial-gradient(circle, oklch(0.92 0.18 140 / 0.09), transparent 70%)', '--dur': '16s', '--delay': '-4s' }} />
+        background: 'radial-gradient(circle, oklch(0.876 0.148 155.7 / 0.09), transparent 70%)', '--dur': '16s', '--delay': '-4s' }} />
     </div>
   );
 }
@@ -203,7 +203,7 @@ export default function Hero({ onContact, onProcess }) {
                 padding: '15px 34px', background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)',
                 borderRadius: 999, fontWeight: 800, fontSize: '1.05rem', fontFamily: "'Heebo', sans-serif",
                 border: 'none', cursor: 'pointer',
-                boxShadow: '0 0 40px oklch(0.78 0.20 145 / 0.42)',
+                boxShadow: '0 0 40px oklch(0.785 0.173 156.6 / 0.42)',
                 transition: 'background 0.25s, box-shadow 0.25s',
               }}
             >
@@ -262,7 +262,7 @@ export default function Hero({ onContact, onProcess }) {
             {/* glow halo */}
             <div style={{
               position: 'absolute', inset: -16,
-              background: 'radial-gradient(circle at 40% 40%, oklch(0.78 0.20 145 / 0.25), oklch(0.50 0.20 285 / 0.18) 60%, transparent 80%)',
+              background: 'radial-gradient(circle at 40% 40%, oklch(0.785 0.173 156.6 / 0.25), oklch(0.508 0.155 292.2 / 0.18) 60%, transparent 80%)',
               borderRadius: 28, filter: 'blur(30px)',
             }} />
 
@@ -291,7 +291,7 @@ export default function Hero({ onContact, onProcess }) {
             {/* badge — top right */}
             <div className="float-badge float-badge-alt" style={{
               position: 'absolute', top: -20, right: -16,
-              border: '1px solid oklch(0.78 0.20 145 / 0.25)',
+              border: '1px solid oklch(0.785 0.173 156.6 / 0.25)',
               padding: '10px 16px',
               display: 'flex', alignItems: 'center', gap: 10,
             }}>

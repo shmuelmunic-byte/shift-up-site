@@ -83,10 +83,10 @@ function MagneticIcon({ children, href, label, target, emailBtn }) {
           textDecoration: 'none',
         }}
         onMouseEnter={e => {
-          e.currentTarget.style.background = 'oklch(0.78 0.20 145 / 0.15)';
+          e.currentTarget.style.background = 'oklch(0.785 0.173 156.6 / 0.15)';
           e.currentTarget.style.color = 'var(--brand-prime)';
-          e.currentTarget.style.borderColor = 'oklch(0.78 0.20 145 / 0.35)';
-          e.currentTarget.style.boxShadow = '0 0 16px oklch(0.78 0.20 145 / 0.2)';
+          e.currentTarget.style.borderColor = 'oklch(0.785 0.173 156.6 / 0.35)';
+          e.currentTarget.style.boxShadow = '0 0 16px oklch(0.785 0.173 156.6 / 0.2)';
         }}
         onMouseLeave={e => {
           e.currentTarget.style.background = 'var(--surface-1)';
@@ -168,7 +168,7 @@ export default function Footer() {
       {/* Gradient top border */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-        background: 'linear-gradient(to left, transparent, var(--brand-deep) 25%, oklch(0.78 0.20 145 / 0.35) 50%, var(--brand-deep) 75%, transparent)',
+        background: 'linear-gradient(to left, transparent, var(--brand-deep) 25%, oklch(0.785 0.173 156.6 / 0.35) 50%, var(--brand-deep) 75%, transparent)',
       }} />
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 

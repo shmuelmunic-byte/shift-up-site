@@ -41,8 +41,8 @@ export default function LoginPage() {
       <div className="noise-overlay" aria-hidden="true" />
       <Cursor />
 
-      <div className="fluid-blob" style={{ width: 560, height: 560, top: '-18%', left: '-8%', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.18), transparent 68%)', '--dur': '22s' }} />
-      <div className="fluid-blob" style={{ width: 460, height: 460, right: '-10%', bottom: '-16%', background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.16), transparent 70%)', '--dur': '26s', '--delay': '-8s' }} />
+      <div className="fluid-blob" style={{ width: 560, height: 560, top: '-18%', left: '-8%', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.18), transparent 68%)', '--dur': '22s' }} />
+      <div className="fluid-blob" style={{ width: 460, height: 460, right: '-10%', bottom: '-16%', background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.16), transparent 70%)', '--dur': '26s', '--delay': '-8s' }} />
 
       <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: '32px', position: 'relative', zIndex: 1 }}>
         <section
@@ -128,7 +128,7 @@ export default function LoginPage() {
                 borderRadius: 999,
                 background: loading ? 'oklch(0.55 0.15 145)' : 'var(--brand-prime)',
                 color: 'oklch(0.08 0.01 240)',
-                boxShadow: '0 0 36px oklch(0.78 0.20 145 / 0.38)',
+                boxShadow: '0 0 36px oklch(0.785 0.173 156.6 / 0.38)',
                 font: 'inherit',
                 fontWeight: 900,
                 fontSize: '1rem',

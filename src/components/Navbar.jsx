@@ -139,17 +139,17 @@ export default function Navbar({ onCta }) {
               fontWeight: 800,
               fontSize: '0.88rem',
               fontFamily: "'Heebo', sans-serif",
-              boxShadow: '0 0 28px oklch(0.78 0.20 145 / 0.35)',
+              boxShadow: '0 0 28px oklch(0.785 0.173 156.6 / 0.35)',
               transition: 'background 0.25s, box-shadow 0.25s, transform 0.2s',
             }}
             onMouseEnter={e => {
               e.target.style.background = 'var(--brand-glow)';
-              e.target.style.boxShadow = '0 0 44px oklch(0.78 0.20 145 / 0.6)';
+              e.target.style.boxShadow = '0 0 44px oklch(0.785 0.173 156.6 / 0.6)';
               e.target.style.transform = 'translateY(-1px)';
             }}
             onMouseLeave={e => {
               e.target.style.background = 'var(--brand-prime)';
-              e.target.style.boxShadow = '0 0 28px oklch(0.78 0.20 145 / 0.35)';
+              e.target.style.boxShadow = '0 0 28px oklch(0.785 0.173 156.6 / 0.35)';
               e.target.style.transform = 'translateY(0)';
             }}
           >

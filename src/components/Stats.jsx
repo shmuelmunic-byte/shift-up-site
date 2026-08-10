@@ -85,7 +85,7 @@ function StatCard({ stat, index }) {
         position: 'absolute',
         top: 0, left: 0, right: 0,
         height: 1,
-        background: 'linear-gradient(to right, transparent, oklch(0.78 0.20 145 / 0.3), transparent)',
+        background: 'linear-gradient(to right, transparent, oklch(0.785 0.173 156.6 / 0.3), transparent)',
       }} />
 
       {/* Main value */}
@@ -106,8 +106,8 @@ function StatCard({ stat, index }) {
           display: 'inline-flex',
           alignItems: 'center',
           gap: 6,
-          background: showOnline ? 'oklch(0.78 0.20 145 / 0.1)' : 'oklch(0.14 0.02 240)',
-          border: `1px solid ${showOnline ? 'oklch(0.78 0.20 145 / 0.3)' : 'oklch(0.22 0.02 240)'}`,
+          background: showOnline ? 'oklch(0.785 0.173 156.6 / 0.1)' : 'oklch(0.14 0.02 240)',
+          border: `1px solid ${showOnline ? 'oklch(0.785 0.173 156.6 / 0.3)' : 'oklch(0.22 0.02 240)'}`,
           borderRadius: 999,
           padding: '3px 10px',
           marginBottom: 8,

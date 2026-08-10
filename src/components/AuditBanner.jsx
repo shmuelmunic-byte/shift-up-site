@@ -84,19 +84,19 @@ export default function AuditBanner() {
               fontSize: '1.02rem',
               fontFamily: "'Heebo', sans-serif",
               textDecoration: 'none',
-              boxShadow: '0 0 32px oklch(0.78 0.20 145 / 0.35)',
+              boxShadow: '0 0 32px oklch(0.785 0.173 156.6 / 0.35)',
               transition: 'background 0.25s, box-shadow 0.25s, transform 0.2s',
               position: 'relative',
               zIndex: 1,
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = 'var(--brand-glow)';
-              e.currentTarget.style.boxShadow = '0 0 48px oklch(0.78 0.20 145 / 0.6)';
+              e.currentTarget.style.boxShadow = '0 0 48px oklch(0.785 0.173 156.6 / 0.6)';
               e.currentTarget.style.transform = 'translateY(-2px)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = 'var(--brand-prime)';
-              e.currentTarget.style.boxShadow = '0 0 32px oklch(0.78 0.20 145 / 0.35)';
+              e.currentTarget.style.boxShadow = '0 0 32px oklch(0.785 0.173 156.6 / 0.35)';
               e.currentTarget.style.transform = 'translateY(0)';
             }}
           >

@@ -114,8 +114,8 @@ export default function IgPage() {
       <Cursor />
       {/* Aurora blobs */}
       <div className="aurora-orb" style={{ width: 400, height: 400, top: '-8%', left: '50%', transform: 'translateX(-50%)', background: 'radial-gradient(circle, oklch(0.65 0.22 200 / 0.15), transparent 70%)', '--dur': '22s' }} />
-      <div className="aurora-orb" style={{ width: 320, height: 320, bottom: '3%', right: '-8%', background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.14), transparent 70%)', '--dur': '28s', '--delay': '-9s' }} />
-      <div className="aurora-orb" style={{ width: 240, height: 240, bottom: '8%', left: '-8%', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.09), transparent 70%)', '--dur': '20s', '--delay': '-5s' }} />
+      <div className="aurora-orb" style={{ width: 320, height: 320, bottom: '3%', right: '-8%', background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.14), transparent 70%)', '--dur': '28s', '--delay': '-9s' }} />
+      <div className="aurora-orb" style={{ width: 240, height: 240, bottom: '8%', left: '-8%', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.09), transparent 70%)', '--dur': '20s', '--delay': '-5s' }} />
 
       {/* Main content */}
       <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: 380, display: 'flex', flexDirection: 'column', alignItems: 'center', animation: 'ig-fade-up 0.65s ease-out both' }}>
@@ -125,7 +125,7 @@ export default function IgPage() {
 
         {/* Profile photo with spinning ring */}
         <div style={{ position: 'relative', marginBottom: 22 }}>
-          <div style={{ position: 'absolute', inset: -22, borderRadius: '50%', background: 'radial-gradient(circle at 35% 50%, oklch(0.65 0.22 200 / 0.35), transparent 55%), radial-gradient(circle at 65% 40%, oklch(0.50 0.20 285 / 0.3), transparent 55%)', filter: 'blur(18px)', zIndex: 0 }} />
+          <div style={{ position: 'absolute', inset: -22, borderRadius: '50%', background: 'radial-gradient(circle at 35% 50%, oklch(0.65 0.22 200 / 0.35), transparent 55%), radial-gradient(circle at 65% 40%, oklch(0.508 0.155 292.2 / 0.3), transparent 55%)', filter: 'blur(18px)', zIndex: 0 }} />
           <div style={{ position: 'relative', width: 118, height: 118 }}>
             <div className="photo-ring" style={{ borderRadius: '50%' }} />
             <img src="/shmuel.png" alt="שמואל מוניץ" style={{ position: 'absolute', top: 3, left: 3, width: 'calc(100% - 6px)', height: 'calc(100% - 6px)', borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', zIndex: 1 }} />
@@ -171,8 +171,8 @@ export default function IgPage() {
               fontFamily: "'Heebo', sans-serif",
               textDecoration: 'none',
               color: 'var(--text-primary)',
-              border: '1.5px solid oklch(0.78 0.20 145 / 0.45)',
-              boxShadow: '0 0 24px oklch(0.78 0.20 145 / 0.18)',
+              border: '1.5px solid oklch(0.785 0.173 156.6 / 0.45)',
+              boxShadow: '0 0 24px oklch(0.785 0.173 156.6 / 0.18)',
               position: 'relative',
               overflow: 'hidden',
             }}
@@ -183,7 +183,7 @@ export default function IgPage() {
               fontSize: '0.72rem',
               fontWeight: 700,
               color: 'var(--brand-prime)',
-              border: '1px solid oklch(0.78 0.20 145 / 0.35)',
+              border: '1px solid oklch(0.785 0.173 156.6 / 0.35)',
               borderRadius: 999,
               padding: '3px 9px',
               whiteSpace: 'nowrap',
@@ -217,10 +217,10 @@ export default function IgPage() {
                 ...(link.style === 'primary' ? {
                   background: 'var(--brand-prime)',
                   color: 'oklch(0.08 0.01 240)',
-                  boxShadow: '0 4px 40px oklch(0.78 0.20 145 / 0.45), 0 1px 0 oklch(0.92 0.18 140 / 0.3) inset',
+                  boxShadow: '0 4px 40px oklch(0.785 0.173 156.6 / 0.45), 0 1px 0 oklch(0.876 0.148 155.7 / 0.3) inset',
                 } : {
                   color: 'var(--text-primary)',
-                  border: '1.5px solid oklch(0.78 0.20 145 / 0.2)',
+                  border: '1.5px solid oklch(0.785 0.173 156.6 / 0.2)',
                 }),
               }}
             >

@@ -357,8 +357,7 @@ export default function DiagnosticPage() {
 
       <div className="dg-wrap">
         <div className="dg-brand">
-          <span className="dg-dot" />
-          <b>Shift Up</b>
+          <img src="/logo.png" alt="Shift Up" style={{ height: 24, width: 'auto' }} />
           <span>· אבחון שיווק</span>
         </div>
 

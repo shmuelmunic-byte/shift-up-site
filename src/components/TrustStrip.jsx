@@ -56,7 +56,7 @@ function Pillar({ pillar, index }) {
       <span style={{
         flexShrink: 0, width: 44, height: 44, borderRadius: 12,
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        background: 'oklch(0.78 0.20 145 / 0.1)', border: '1px solid oklch(0.78 0.20 145 / 0.22)',
+        background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1px solid oklch(0.785 0.173 156.6 / 0.22)',
       }}>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           {PILLAR_ICONS[index] || PILLAR_ICONS[0]}
@@ -111,8 +111,8 @@ export default function TrustStrip() {
         <div ref={headRef} style={{ textAlign: 'center', marginBottom: 'clamp(32px, 5vw, 48px)', opacity: 0 }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 7,
-            background: online ? 'oklch(0.78 0.20 145 / 0.1)' : 'oklch(0.14 0.02 240)',
-            border: `1px solid ${online ? 'oklch(0.78 0.20 145 / 0.3)' : 'oklch(0.22 0.02 240)'}`,
+            background: online ? 'oklch(0.785 0.173 156.6 / 0.1)' : 'oklch(0.14 0.02 240)',
+            border: `1px solid ${online ? 'oklch(0.785 0.173 156.6 / 0.3)' : 'oklch(0.22 0.02 240)'}`,
             borderRadius: 999, padding: '5px 14px', marginBottom: 20,
             transition: 'all 0.4s ease',
           }}>

@@ -36,7 +36,7 @@ export default function RequireAuth({ children }) {
       }}>
         <div style={{
           width: 32, height: 32,
-          border: '3px solid oklch(0.78 0.20 145 / 0.2)',
+          border: '3px solid oklch(0.785 0.173 156.6 / 0.2)',
           borderTopColor: 'var(--brand-prime)',
           borderRadius: '50%',
           animation: 'spin 0.7s linear infinite',

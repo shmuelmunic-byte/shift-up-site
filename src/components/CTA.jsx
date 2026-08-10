@@ -126,7 +126,7 @@ export default function CTA() {
           width: 700, height: 700,
           top: '50%', left: '50%',
           transform: 'translate(-50%, -50%)',
-          background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.10), transparent 65%)',
+          background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.10), transparent 65%)',
           '--dur': '20s',
         }}
       />
@@ -135,7 +135,7 @@ export default function CTA() {
         style={{
           width: 400, height: 400,
           top: '10%', right: '5%',
-          background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.12), transparent 70%)',
+          background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.12), transparent 70%)',
           '--dur': '26s', '--delay': '-7s',
         }}
       />
@@ -237,7 +237,7 @@ export default function CTA() {
                   position: 'absolute',
                   inset: 0,
                   borderRadius: 999,
-                  border: `1.5px solid oklch(0.78 0.20 145 / ${hovered || idlePulse ? 0.5 : 0.25})`,
+                  border: `1.5px solid oklch(0.785 0.173 156.6 / ${hovered || idlePulse ? 0.5 : 0.25})`,
                   animation: (hovered || idlePulse)
                     ? `pulse-ring ${1.4 + k * 0.5}s ease-out ${k * 0.35}s infinite`
                     : 'none',
@@ -270,8 +270,8 @@ export default function CTA() {
                   fontFamily: "'Heebo', sans-serif",
                   textDecoration: 'none',
                   boxShadow: hovered || idlePulse
-                    ? '0 0 60px oklch(0.78 0.20 145 / 0.65), 0 0 100px oklch(0.78 0.20 145 / 0.25)'
-                    : '0 0 40px oklch(0.78 0.20 145 / 0.35)',
+                    ? '0 0 60px oklch(0.785 0.173 156.6 / 0.65), 0 0 100px oklch(0.785 0.173 156.6 / 0.25)'
+                    : '0 0 40px oklch(0.785 0.173 156.6 / 0.35)',
                   transform: hovered ? 'translateY(-2px)' : 'translateY(0)',
                   transition: 'background 0.25s, box-shadow 0.35s, transform 0.3s',
                   position: 'relative',
@@ -306,7 +306,7 @@ export default function CTA() {
                 transition: 'border-color 0.25s, color 0.25s',
                 cursor: 'pointer',
               }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'oklch(0.78 0.20 145 / 0.4)'; e.currentTarget.style.color = 'var(--brand-prime)'; }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'oklch(0.785 0.173 156.6 / 0.4)'; e.currentTarget.style.color = 'var(--brand-prime)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--surface-2)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

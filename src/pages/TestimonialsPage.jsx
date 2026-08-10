@@ -26,8 +26,8 @@ function TestimonialCard({ t }) {
       transition: 'border-color 0.3s, box-shadow 0.3s',
     }}
       onMouseEnter={e => {
-        e.currentTarget.style.borderColor = 'oklch(0.78 0.20 145 / 0.35)';
-        e.currentTarget.style.boxShadow = '0 0 30px oklch(0.78 0.20 145 / 0.08)';
+        e.currentTarget.style.borderColor = 'oklch(0.785 0.173 156.6 / 0.35)';
+        e.currentTarget.style.boxShadow = '0 0 30px oklch(0.785 0.173 156.6 / 0.08)';
       }}
       onMouseLeave={e => {
         e.currentTarget.style.borderColor = 'oklch(0.22 0.02 240)';
@@ -37,7 +37,7 @@ function TestimonialCard({ t }) {
       {/* top accent */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-        background: 'linear-gradient(to right, transparent, oklch(0.78 0.20 145 / 0.4), transparent)',
+        background: 'linear-gradient(to right, transparent, oklch(0.785 0.173 156.6 / 0.4), transparent)',
       }} />
 
       {/* Stars */}
@@ -67,8 +67,8 @@ function TestimonialCard({ t }) {
         ) : (
           <div style={{
             width: 40, height: 40, borderRadius: '50%',
-            background: 'oklch(0.78 0.20 145 / 0.15)',
-            border: '1px solid oklch(0.78 0.20 145 / 0.25)',
+            background: 'oklch(0.785 0.173 156.6 / 0.15)',
+            border: '1px solid oklch(0.785 0.173 156.6 / 0.25)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             color: 'var(--brand-prime)', fontWeight: 800, fontSize: '1rem',
             flexShrink: 0,
@@ -191,7 +191,7 @@ export default function TestimonialsPage() {
               fontSize: '1rem',
               fontFamily: "'Heebo', sans-serif",
               textDecoration: 'none',
-              boxShadow: '0 0 40px oklch(0.78 0.20 145 / 0.35)',
+              boxShadow: '0 0 40px oklch(0.785 0.173 156.6 / 0.35)',
             }}
           >
             לשיחת היכרות חינם

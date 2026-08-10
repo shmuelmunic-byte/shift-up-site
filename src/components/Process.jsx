@@ -75,7 +75,7 @@ export default function Process() {
         style={{
           width: 500, height: 500,
           top: '10%', left: '-5%',
-          background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.07), transparent 70%)',
+          background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.07), transparent 70%)',
           '--dur': '22s',
         }}
       />
@@ -84,7 +84,7 @@ export default function Process() {
         style={{
           width: 400, height: 400,
           bottom: '0', right: '10%',
-          background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.08), transparent 70%)',
+          background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.08), transparent 70%)',
           '--dur': '26s', '--delay': '-8s',
         }}
       />
@@ -143,7 +143,7 @@ export default function Process() {
                   position: 'absolute',
                   top: -40, left: -40,
                   width: 220, height: 220,
-                  background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.10), transparent 70%)',
+                  background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.10), transparent 70%)',
                   transition: 'opacity 0.4s',
                   opacity: isActive ? 1 : 0,
                   pointerEvents: 'none',
@@ -154,8 +154,8 @@ export default function Process() {
                   <div style={{
                     width: 52, height: 52,
                     borderRadius: 14,
-                    background: isActive ? 'var(--brand-prime)' : 'oklch(0.78 0.20 145 / 0.12)',
-                    border: `1px solid ${isActive ? 'transparent' : 'oklch(0.78 0.20 145 / 0.2)'}`,
+                    background: isActive ? 'var(--brand-prime)' : 'oklch(0.785 0.173 156.6 / 0.12)',
+                    border: `1px solid ${isActive ? 'transparent' : 'oklch(0.785 0.173 156.6 / 0.2)'}`,
                     color: isActive ? 'oklch(0.08 0.01 240)' : 'var(--brand-prime)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     flexShrink: 0,
@@ -169,7 +169,7 @@ export default function Process() {
                     <div style={{
                       fontSize: '3.4rem', fontWeight: 900, lineHeight: 1,
                       fontFamily: "'Heebo', sans-serif",
-                      background: 'linear-gradient(135deg, oklch(0.78 0.20 145 / 0.22), oklch(0.50 0.20 285 / 0.15))',
+                      background: 'linear-gradient(135deg, oklch(0.785 0.173 156.6 / 0.22), oklch(0.508 0.155 292.2 / 0.15))',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
                       backgroundClip: 'text',

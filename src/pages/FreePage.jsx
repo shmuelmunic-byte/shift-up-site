@@ -40,7 +40,7 @@ const SOCIAL = [
     label: 'קהילת Shift Up',
     handle: 'WhatsApp Group',
     href: COMMUNITY_LINK,
-    hoverColor: 'oklch(0.78 0.20 145)',
+    hoverColor: 'oklch(0.785 0.173 156.6)',
     Icon: IconWhatsApp,
   },
 ];
@@ -146,7 +146,7 @@ function HighlightedText({ text }) {
             style={{
               color: 'var(--brand-prime)',
               fontWeight: 700,
-              background: 'oklch(0.78 0.20 145 / 0.13)',
+              background: 'oklch(0.785 0.173 156.6 / 0.13)',
               borderRadius: 4,
               padding: '1px 4px',
             }}
@@ -208,7 +208,7 @@ function PromptCard({ prompt }) {
         background: 'oklch(0.11 0.015 240)',
         border: '1.5px solid oklch(0.97 0.005 240 / 0.08)',
         overflow: 'hidden',
-        boxShadow: '0 0 60px oklch(0.78 0.20 145 / 0.05), 0 2px 20px oklch(0 0 0 / 0.4)',
+        boxShadow: '0 0 60px oklch(0.785 0.173 156.6 / 0.05), 0 2px 20px oklch(0 0 0 / 0.4)',
         position: 'relative',
       }}
     >
@@ -236,8 +236,8 @@ function PromptCard({ prompt }) {
             width: 36,
             height: 36,
             borderRadius: '50%',
-            background: 'oklch(0.78 0.20 145 / 0.12)',
-            border: '1.5px solid oklch(0.78 0.20 145 / 0.3)',
+            background: 'oklch(0.785 0.173 156.6 / 0.12)',
+            border: '1.5px solid oklch(0.785 0.173 156.6 / 0.3)',
             flexShrink: 0,
           }}>
             <span style={{
@@ -372,11 +372,11 @@ function PromptCard({ prompt }) {
             gap: 9,
             borderRadius: 12,
             border: `1.5px solid ${copied
-              ? 'oklch(0.78 0.20 145 / 0.6)'
-              : 'oklch(0.78 0.20 145 / 0.22)'}`,
+              ? 'oklch(0.785 0.173 156.6 / 0.6)'
+              : 'oklch(0.785 0.173 156.6 / 0.22)'}`,
             background: copied
-              ? 'oklch(0.78 0.20 145 / 0.14)'
-              : 'oklch(0.78 0.20 145 / 0.07)',
+              ? 'oklch(0.785 0.173 156.6 / 0.14)'
+              : 'oklch(0.785 0.173 156.6 / 0.07)',
             color: copied ? 'var(--brand-prime)' : 'var(--text-primary)',
             fontFamily: "'Heebo', sans-serif",
             fontWeight: 700,
@@ -387,14 +387,14 @@ function PromptCard({ prompt }) {
           }}
           onMouseEnter={e => {
             if (copied) return;
-            e.currentTarget.style.background = 'oklch(0.78 0.20 145 / 0.13)';
-            e.currentTarget.style.borderColor = 'oklch(0.78 0.20 145 / 0.4)';
+            e.currentTarget.style.background = 'oklch(0.785 0.173 156.6 / 0.13)';
+            e.currentTarget.style.borderColor = 'oklch(0.785 0.173 156.6 / 0.4)';
             e.currentTarget.style.color = 'var(--brand-prime)';
           }}
           onMouseLeave={e => {
             if (copied) return;
-            e.currentTarget.style.background = 'oklch(0.78 0.20 145 / 0.07)';
-            e.currentTarget.style.borderColor = 'oklch(0.78 0.20 145 / 0.22)';
+            e.currentTarget.style.background = 'oklch(0.785 0.173 156.6 / 0.07)';
+            e.currentTarget.style.borderColor = 'oklch(0.785 0.173 156.6 / 0.22)';
             e.currentTarget.style.color = 'var(--text-primary)';
           }}
         >
@@ -415,14 +415,14 @@ function PromptCard({ prompt }) {
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               width: '100%', minHeight: 44,
               borderRadius: 12, textDecoration: 'none',
-              border: '1.5px solid oklch(0.50 0.20 285 / 0.3)',
-              background: 'oklch(0.50 0.20 285 / 0.07)',
+              border: '1.5px solid oklch(0.508 0.155 292.2 / 0.3)',
+              background: 'oklch(0.508 0.155 292.2 / 0.07)',
               color: 'oklch(0.80 0.18 285)',
               fontFamily: "'Heebo', sans-serif", fontWeight: 700, fontSize: '0.88rem',
               transition: 'all 0.18s ease',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'oklch(0.50 0.20 285 / 0.14)'; e.currentTarget.style.borderColor = 'oklch(0.50 0.20 285 / 0.5)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'oklch(0.50 0.20 285 / 0.07)'; e.currentTarget.style.borderColor = 'oklch(0.50 0.20 285 / 0.3)'; }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'oklch(0.508 0.155 292.2 / 0.14)'; e.currentTarget.style.borderColor = 'oklch(0.508 0.155 292.2 / 0.5)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'oklch(0.508 0.155 292.2 / 0.07)'; e.currentTarget.style.borderColor = 'oklch(0.508 0.155 292.2 / 0.3)'; }}
           >
             {prompt.resource_type === 'file'  && '⬇ '}
             {prompt.resource_type === 'video' && '▶ '}
@@ -457,7 +457,7 @@ function SocialCard({ label, handle, href, hoverColor, Icon }) {
         padding: '13px 16px',
         borderRadius: 16,
         background: hovered ? 'oklch(0.15 0.02 240)' : 'oklch(0.12 0.015 240)',
-        border: `1.5px solid ${hovered ? 'oklch(0.78 0.20 145 / 0.28)' : 'oklch(0.97 0.005 240 / 0.08)'}`,
+        border: `1.5px solid ${hovered ? 'oklch(0.785 0.173 156.6 / 0.28)' : 'oklch(0.97 0.005 240 / 0.08)'}`,
         textDecoration: 'none',
         cursor: 'pointer',
         transition: 'background 0.2s ease, border-color 0.2s ease',
@@ -469,7 +469,7 @@ function SocialCard({ label, handle, href, hoverColor, Icon }) {
         width: 38,
         height: 38,
         borderRadius: 10,
-        background: hovered ? 'oklch(0.78 0.20 145 / 0.1)' : 'oklch(0.14 0.02 240)',
+        background: hovered ? 'oklch(0.785 0.173 156.6 / 0.1)' : 'oklch(0.14 0.02 240)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -524,11 +524,11 @@ function SocialCard({ label, handle, href, hoverColor, Icon }) {
 function SkeletonCard() {
   return (
     <div style={{ width: '100%', borderRadius: 22, background: 'oklch(0.11 0.015 240)', border: '1.5px solid oklch(0.97 0.005 240 / 0.08)', overflow: 'hidden', height: 220, animation: 'breathing 1.5s ease-in-out infinite' }}>
-      <div style={{ height: 3, background: 'oklch(0.78 0.20 145 / 0.2)' }} />
+      <div style={{ height: 3, background: 'oklch(0.785 0.173 156.6 / 0.2)' }} />
       <div style={{ padding: '22px 22px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div style={{ height: 14, width: '40%', borderRadius: 7, background: 'oklch(0.97 0.005 240 / 0.06)' }} />
         <div style={{ height: 22, width: '70%', borderRadius: 7, background: 'oklch(0.97 0.005 240 / 0.09)' }} />
-        <div style={{ height: 14, width: '50%', borderRadius: 7, background: 'oklch(0.78 0.20 145 / 0.08)' }} />
+        <div style={{ height: 14, width: '50%', borderRadius: 7, background: 'oklch(0.785 0.173 156.6 / 0.08)' }} />
         <div style={{ flex: 1, borderRadius: 10, background: 'oklch(0.07 0.008 240)' }} />
       </div>
     </div>
@@ -610,13 +610,13 @@ export default function FreePage() {
           width: 560, height: 560,
           top: '-12%', left: '50%',
           transform: 'translateX(-50%)',
-          background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.07), transparent 70%)',
+          background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.07), transparent 70%)',
           '--dur': '28s',
         }} />
         <div className="aurora-orb" style={{
           width: 400, height: 400,
           bottom: '0%', right: '-12%',
-          background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.10), transparent 70%)',
+          background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.10), transparent 70%)',
           '--dur': '35s', '--delay': '-12s',
         }} />
         <div className="aurora-orb" style={{
@@ -666,8 +666,8 @@ export default function FreePage() {
               gap: 7,
               padding: '6px 14px',
               borderRadius: 100,
-              background: 'oklch(0.78 0.20 145 / 0.08)',
-              border: '1px solid oklch(0.78 0.20 145 / 0.25)',
+              background: 'oklch(0.785 0.173 156.6 / 0.08)',
+              border: '1px solid oklch(0.785 0.173 156.6 / 0.25)',
               marginBottom: 18,
             }}>
               <span style={{
@@ -771,9 +771,9 @@ export default function FreePage() {
               marginBottom: 36,
               borderRadius: 20,
               overflow: 'hidden',
-              border: '1.5px solid oklch(0.78 0.20 145 / 0.3)',
+              border: '1.5px solid oklch(0.785 0.173 156.6 / 0.3)',
               background: 'oklch(0.11 0.015 240)',
-              boxShadow: '0 0 50px oklch(0.78 0.20 145 / 0.07)',
+              boxShadow: '0 0 50px oklch(0.785 0.173 156.6 / 0.07)',
             }}
           >
             <div style={{ height: 3, background: 'linear-gradient(90deg, var(--brand-deep) 0%, var(--brand-prime) 55%, var(--brand-glow) 100%)' }} />
@@ -781,7 +781,7 @@ export default function FreePage() {
               <div style={{
                 display: 'inline-flex', alignItems: 'center', gap: 7,
                 padding: '5px 12px', borderRadius: 100, marginBottom: 12,
-                background: 'oklch(0.78 0.20 145 / 0.1)', border: '1px solid oklch(0.78 0.20 145 / 0.25)',
+                background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1px solid oklch(0.785 0.173 156.6 / 0.25)',
               }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--brand-prime)', boxShadow: '0 0 6px var(--brand-prime)', display: 'block', animation: 'breathing 2s ease-in-out infinite' }} />
                 <span style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--brand-prime)', letterSpacing: '0.03em' }}>אבחון חינם · 3 דקות</span>
@@ -795,7 +795,7 @@ export default function FreePage() {
               <span style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
                 width: '100%', minHeight: 52, borderRadius: 14,
-                background: 'oklch(0.78 0.20 145 / 0.1)', border: '1.5px solid oklch(0.78 0.20 145 / 0.3)',
+                background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1.5px solid oklch(0.785 0.173 156.6 / 0.3)',
                 color: 'var(--brand-prime)', fontWeight: 800, fontSize: '0.98rem',
               }}>
                 עשה את האבחון ←
@@ -828,7 +828,7 @@ export default function FreePage() {
                   borderRadius: '50%',
                   objectFit: 'cover',
                   objectPosition: 'center top',
-                  border: '2px solid oklch(0.78 0.20 145 / 0.3)',
+                  border: '2px solid oklch(0.785 0.173 156.6 / 0.3)',
                   display: 'block',
                 }}
               />
@@ -896,16 +896,16 @@ export default function FreePage() {
                 textDecoration: 'none',
                 cursor: 'pointer',
                 boxShadow:
-                  '0 4px 45px oklch(0.78 0.20 145 / 0.4), 0 1px 0 oklch(0.92 0.18 140 / 0.3) inset',
+                  '0 4px 45px oklch(0.785 0.173 156.6 / 0.4), 0 1px 0 oklch(0.876 0.148 155.7 / 0.3) inset',
                 transition: 'transform 0.18s ease, box-shadow 0.18s ease',
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 8px 55px oklch(0.78 0.20 145 / 0.55), 0 1px 0 oklch(0.92 0.18 140 / 0.3) inset';
+                e.currentTarget.style.boxShadow = '0 8px 55px oklch(0.785 0.173 156.6 / 0.55), 0 1px 0 oklch(0.876 0.148 155.7 / 0.3) inset';
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 45px oklch(0.78 0.20 145 / 0.4), 0 1px 0 oklch(0.92 0.18 140 / 0.3) inset';
+                e.currentTarget.style.boxShadow = '0 4px 45px oklch(0.785 0.173 156.6 / 0.4), 0 1px 0 oklch(0.876 0.148 155.7 / 0.3) inset';
               }}
             >
               <IconWhatsApp size={20} />

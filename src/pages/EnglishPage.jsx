@@ -130,9 +130,9 @@ function EnNavbar() {
             onMouseLeave={e => { e.target.style.borderColor='var(--surface-2)'; e.target.style.color='var(--text-muted)'; }}
           >עב</a>
 
-          <button onClick={() => goto('en-contact')} style={{ background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', border: 'none', borderRadius: 999, padding: '10px 22px', fontWeight: 800, fontSize: '0.88rem', fontFamily: "'Heebo', sans-serif", boxShadow: '0 0 28px oklch(0.78 0.20 145 / 0.35)', transition: 'background 0.25s, box-shadow 0.25s' }}
-            onMouseEnter={e => { e.target.style.background='var(--brand-glow)'; e.target.style.boxShadow='0 0 44px oklch(0.78 0.20 145 / 0.6)'; }}
-            onMouseLeave={e => { e.target.style.background='var(--brand-prime)'; e.target.style.boxShadow='0 0 28px oklch(0.78 0.20 145 / 0.35)'; }}
+          <button onClick={() => goto('en-contact')} style={{ background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', border: 'none', borderRadius: 999, padding: '10px 22px', fontWeight: 800, fontSize: '0.88rem', fontFamily: "'Heebo', sans-serif", boxShadow: '0 0 28px oklch(0.785 0.173 156.6 / 0.35)', transition: 'background 0.25s, box-shadow 0.25s' }}
+            onMouseEnter={e => { e.target.style.background='var(--brand-glow)'; e.target.style.boxShadow='0 0 44px oklch(0.785 0.173 156.6 / 0.6)'; }}
+            onMouseLeave={e => { e.target.style.background='var(--brand-prime)'; e.target.style.boxShadow='0 0 28px oklch(0.785 0.173 156.6 / 0.35)'; }}
           >Let's Talk</button>
         </div>
 
@@ -188,10 +188,10 @@ function EnHero({ onProcess, onForm }) {
     <section id="en-hero" ref={ref} style={{ position: 'relative', paddingTop: 'clamp(100px, 18vw, 140px)', paddingBottom: 'clamp(60px, 10vw, 100px)', overflow: 'hidden', minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
       {/* Background */}
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
-        <FluidBlob style={{ width: 700, height: 700, top: '-15%', left: '-8%', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.20), transparent 65%)', '--dur': '20s' }} />
+        <FluidBlob style={{ width: 700, height: 700, top: '-15%', left: '-8%', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.20), transparent 65%)', '--dur': '20s' }} />
         <FluidBlob style={{ width: 550, height: 550, top: '25%', right: '-10%', background: 'radial-gradient(circle, oklch(0.65 0.22 145 / 0.13), transparent 70%)', '--dur': '26s', '--delay': '-6s' }} />
-        <FluidBlob style={{ width: 450, height: 450, bottom: '-5%', left: '28%', background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.15), transparent 70%)', '--dur': '30s', '--delay': '-11s' }} />
-        <FluidBlob style={{ width: 280, height: 280, top: '12%', left: '22%', background: 'radial-gradient(circle, oklch(0.92 0.18 140 / 0.09), transparent 70%)', '--dur': '16s', '--delay': '-4s' }} />
+        <FluidBlob style={{ width: 450, height: 450, bottom: '-5%', left: '28%', background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.15), transparent 70%)', '--dur': '30s', '--delay': '-11s' }} />
+        <FluidBlob style={{ width: 280, height: 280, top: '12%', left: '22%', background: 'radial-gradient(circle, oklch(0.876 0.148 155.7 / 0.09), transparent 70%)', '--dur': '16s', '--delay': '-4s' }} />
       </div>
       <div className="hero-layout" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 28px', position: 'relative', zIndex: 2, width: '100%' }}>
 
@@ -221,7 +221,7 @@ function EnHero({ onProcess, onForm }) {
           </p>
 
           <div className="en-hero-ctas hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 32, marginBottom: 32, opacity: 0 }}>
-            <MagneticWrap onClick={onForm} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 32px', background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', borderRadius: 999, fontWeight: 800, fontSize: '1rem', fontFamily: "'Heebo', sans-serif", textDecoration: 'none', border: 'none', boxShadow: '0 0 40px oklch(0.78 0.20 145 / 0.42)', transition: 'background 0.25s, box-shadow 0.25s' }}>
+            <MagneticWrap onClick={onForm} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 32px', background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', borderRadius: 999, fontWeight: 800, fontSize: '1rem', fontFamily: "'Heebo', sans-serif", textDecoration: 'none', border: 'none', boxShadow: '0 0 40px oklch(0.785 0.173 156.6 / 0.42)', transition: 'background 0.25s, box-shadow 0.25s' }}>
               Get a tailored proposal
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </MagneticWrap>
@@ -244,7 +244,7 @@ function EnHero({ onProcess, onForm }) {
         {/* Image */}
         <div className="en-hero-img" style={{ display: 'flex', justifyContent: 'center', opacity: 0 }}>
           <div style={{ position: 'relative', width: '100%', maxWidth: 340 }}>
-            <div style={{ position: 'absolute', inset: -16, background: 'radial-gradient(circle at 40% 40%, oklch(0.78 0.20 145 / 0.25), oklch(0.50 0.20 285 / 0.18) 60%, transparent 80%)', borderRadius: 28, filter: 'blur(30px)' }} />
+            <div style={{ position: 'absolute', inset: -16, background: 'radial-gradient(circle at 40% 40%, oklch(0.785 0.173 156.6 / 0.25), oklch(0.508 0.155 292.2 / 0.18) 60%, transparent 80%)', borderRadius: 28, filter: 'blur(30px)' }} />
             <div className="glow-border living-border" style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', aspectRatio: '4/5' }}>
               <img src={profileSrc} alt="Shmuel Munitz" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.45), transparent 50%)' }} />
@@ -259,7 +259,7 @@ function EnHero({ onProcess, onForm }) {
             </div>
 
             {/* badge — top left */}
-            <div className="float-badge float-badge-alt" style={{ position: 'absolute', top: -20, left: -16, border: '1px solid oklch(0.78 0.20 145 / 0.25)', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div className="float-badge float-badge-alt" style={{ position: 'absolute', top: -20, left: -16, border: '1px solid oklch(0.785 0.173 156.6 / 0.25)', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
               </svg>
@@ -309,7 +309,7 @@ function EnPillar({ pillar, index }) {
 
   return (
     <div ref={ref} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, flex: '1 1 240px', minWidth: 0, opacity: 0, textAlign: 'left' }}>
-      <span style={{ flexShrink: 0, width: 44, height: 44, borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'oklch(0.78 0.20 145 / 0.1)', border: '1px solid oklch(0.78 0.20 145 / 0.22)' }}>
+      <span style={{ flexShrink: 0, width: 44, height: 44, borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1px solid oklch(0.785 0.173 156.6 / 0.22)' }}>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           {EN_PILLAR_ICONS[index] || EN_PILLAR_ICONS[0]}
         </svg>
@@ -341,7 +341,7 @@ function EnTrustStrip() {
     <section style={{ padding: 'clamp(40px, 7vw, 72px) 28px', background: 'var(--surface-0)' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div ref={headRef} style={{ textAlign: 'center', marginBottom: 'clamp(32px, 5vw, 48px)', opacity: 0 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: online ? 'oklch(0.78 0.20 145 / 0.1)' : 'oklch(0.14 0.02 240)', border: `1px solid ${online ? 'oklch(0.78 0.20 145 / 0.3)' : 'oklch(0.22 0.02 240)'}`, borderRadius: 999, padding: '5px 14px', marginBottom: 20, transition: 'all 0.4s ease' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: online ? 'oklch(0.785 0.173 156.6 / 0.1)' : 'oklch(0.14 0.02 240)', border: `1px solid ${online ? 'oklch(0.785 0.173 156.6 / 0.3)' : 'oklch(0.22 0.02 240)'}`, borderRadius: 999, padding: '5px 14px', marginBottom: 20, transition: 'all 0.4s ease' }}>
             <span style={{ width: 7, height: 7, borderRadius: '50%', background: online ? 'var(--brand-prime)' : 'oklch(0.4 0.01 240)', display: 'block', flexShrink: 0, boxShadow: online ? '0 0 6px var(--brand-prime)' : 'none', animation: online ? 'pulse-ring 2s ease-out infinite' : 'none' }} />
             <span style={{ fontSize: '0.74rem', fontWeight: 700, color: online ? 'var(--brand-prime)' : 'var(--text-muted)', letterSpacing: '0.04em' }}>
               {online ? 'Available now' : 'Usually replies within an hour'}
@@ -452,7 +452,7 @@ function EnOutcomeCard({ outcome, index }) {
 
   return (
     <div ref={ref} style={{ display: 'flex', alignItems: 'flex-start', gap: 16, padding: '24px 24px', borderRadius: 16, background: 'oklch(0.11 0.015 240 / 0.6)', border: '1px solid oklch(0.20 0.02 240)', textAlign: 'left', opacity: 0 }}>
-      <span style={{ flexShrink: 0, width: 46, height: 46, borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'oklch(0.78 0.20 145 / 0.1)', border: '1px solid oklch(0.78 0.20 145 / 0.22)' }}>
+      <span style={{ flexShrink: 0, width: 46, height: 46, borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1px solid oklch(0.785 0.173 156.6 / 0.22)' }}>
         <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           {EN_OUTCOME_ICONS[index] || EN_OUTCOME_ICONS[0]}
         </svg>
@@ -560,7 +560,7 @@ function EnCaseCard({ item, index }) {
       </span>
       <h3 style={{ fontSize: 'clamp(1.4rem, 3vw, 1.9rem)', fontWeight: 900, letterSpacing: '-0.01em', color: 'var(--text-primary)', marginBottom: 4 }}>{item.title}</h3>
       <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 18 }}>{item.subtitle}</div>
-      <blockquote style={{ margin: '0 0 22px', padding: '12px 16px', borderRadius: 12, background: 'oklch(0.78 0.20 145 / 0.08)', borderLeft: '3px solid var(--brand-prime)', fontSize: '1.02rem', fontWeight: 800, color: 'var(--brand-glow)', textAlign: 'left' }}>
+      <blockquote style={{ margin: '0 0 22px', padding: '12px 16px', borderRadius: 12, background: 'oklch(0.785 0.173 156.6 / 0.08)', borderLeft: '3px solid var(--brand-prime)', fontSize: '1.02rem', fontWeight: 800, color: 'var(--brand-glow)', textAlign: 'left' }}>
         {item.quote}
       </blockquote>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -695,7 +695,7 @@ function EnProcess() {
 
   return (
     <section id="en-strategy" ref={ref} style={{ padding: 'clamp(80px, 10vw, 130px) 28px', background: 'var(--surface-0)', position: 'relative', overflow: 'hidden' }}>
-      <FluidBlob style={{ width: 500, height: 500, top: '10%', right: '-5%', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.07), transparent 70%)', '--dur': '22s' }} />
+      <FluidBlob style={{ width: 500, height: 500, top: '10%', right: '-5%', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.07), transparent 70%)', '--dur': '22s' }} />
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div className="en-process-header" style={{ textAlign: 'left', maxWidth: 680, marginBottom: 64, opacity: 0 }}>
           <div className="section-label">The Process</div>
@@ -717,12 +717,12 @@ function EnProcess() {
                 onMouseEnter={() => setActive(i)} onMouseLeave={() => setActive(null)}
                 style={{ opacity: 0, padding: 'clamp(24px,3vw,36px)' }}>
                 <div className="accent-bar" style={{ right: 'auto', left: 0, borderRadius: '20px 0 0 20px' }} />
-                <div style={{ position: 'absolute', top: -40, right: -40, width: 220, height: 220, background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.10), transparent 70%)', transition: 'opacity 0.4s', opacity: isActive ? 1 : 0, pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', top: -40, right: -40, width: 220, height: 220, background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.10), transparent 70%)', transition: 'opacity 0.4s', opacity: isActive ? 1 : 0, pointerEvents: 'none' }} />
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
-                  <div style={{ width: 52, height: 52, borderRadius: 14, background: isActive ? 'var(--brand-prime)' : 'oklch(0.78 0.20 145 / 0.12)', border: `1px solid ${isActive ? 'transparent' : 'oklch(0.78 0.20 145 / 0.2)'}`, color: isActive ? 'oklch(0.08 0.01 240)' : 'var(--brand-prime)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.35s, color 0.35s' }}>{step.icon}</div>
+                  <div style={{ width: 52, height: 52, borderRadius: 14, background: isActive ? 'var(--brand-prime)' : 'oklch(0.785 0.173 156.6 / 0.12)', border: `1px solid ${isActive ? 'transparent' : 'oklch(0.785 0.173 156.6 / 0.2)'}`, color: isActive ? 'oklch(0.08 0.01 240)' : 'var(--brand-prime)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.35s, color 0.35s' }}>{step.icon}</div>
                   <div style={{ textAlign: 'right' }}>
                     <div style={{ fontSize: '0.58rem', textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-muted)', fontWeight: 700 }}>Step</div>
-                    <div style={{ fontSize: '3.4rem', fontWeight: 900, lineHeight: 1, fontFamily: "'Heebo', sans-serif", background: 'linear-gradient(135deg, oklch(0.78 0.20 145 / 0.22), oklch(0.50 0.20 285 / 0.15))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{step.n}</div>
+                    <div style={{ fontSize: '3.4rem', fontWeight: 900, lineHeight: 1, fontFamily: "'Heebo', sans-serif", background: 'linear-gradient(135deg, oklch(0.785 0.173 156.6 / 0.22), oklch(0.508 0.155 292.2 / 0.15))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{step.n}</div>
                   </div>
                 </div>
                 <h3 style={{ fontSize: 'clamp(1.5rem,2.5vw,1.9rem)', fontWeight: 900, letterSpacing: '-0.01em', marginBottom: 4, fontFamily: "'Heebo', sans-serif", color: isActive ? 'var(--text-primary)' : 'oklch(0.90 0.005 240)', transition: 'color 0.3s' }}>{step.title}</h3>
@@ -769,7 +769,7 @@ function EnBentoCard({ reason, index }) {
       <div className="accent-number" style={{ position: 'absolute', bottom: -20, right: 12, fontSize: '7rem', zIndex: 0 }}>0{index + 1}</div>
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 12, background: 'oklch(0.78 0.20 145 / 0.1)', border: '1px solid oklch(0.78 0.20 145 / 0.2)', color: 'var(--brand-prime)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{reason.icon}</div>
+          <div style={{ width: 44, height: 44, borderRadius: 12, background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1px solid oklch(0.785 0.173 156.6 / 0.2)', color: 'var(--brand-prime)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{reason.icon}</div>
           <span style={{ fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.16em', color: 'var(--text-muted)', fontWeight: 700 }}>{reason.en}</span>
         </div>
         <h3 style={{ fontSize: reason.wide ? 'clamp(1.25rem, 2.5vw, 1.6rem)' : 'clamp(1.1rem, 2vw, 1.35rem)', fontWeight: 900, letterSpacing: '-0.01em', marginBottom: 10, fontFamily: "'Heebo', sans-serif", color: 'var(--text-primary)' }}>{reason.title}</h3>
@@ -792,8 +792,8 @@ function EnWhyMe() {
 
   return (
     <section id="en-why" ref={ref} style={{ padding: 'clamp(80px, 10vw, 130px) 28px', background: 'var(--bedrock)', position: 'relative', overflow: 'hidden' }}>
-      <div className="aurora-orb" style={{ width: 500, height: 500, top: '-10%', left: '-5%', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.08), transparent 70%)', '--dur': '18s' }} />
-      <div className="aurora-orb" style={{ width: 400, height: 400, bottom: '-5%', right: '-5%', background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.07), transparent 70%)', '--dur': '22s', '--delay': '-7s' }} />
+      <div className="aurora-orb" style={{ width: 500, height: 500, top: '-10%', left: '-5%', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.08), transparent 70%)', '--dur': '18s' }} />
+      <div className="aurora-orb" style={{ width: 400, height: 400, bottom: '-5%', right: '-5%', background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.07), transparent 70%)', '--dur': '22s', '--delay': '-7s' }} />
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div className="en-whyme-header" style={{ textAlign: 'left', maxWidth: 640, marginBottom: 52, opacity: 0 }}>
           <div className="section-label">Why Me</div>
@@ -838,7 +838,7 @@ function EnManifesto() {
 
   return (
     <section ref={ref} style={{ padding: 'clamp(80px, 12vw, 140px) 28px', background: 'var(--surface-0)', position: 'relative', overflow: 'hidden' }}>
-      <FluidBlob style={{ width: 600, height: 600, top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.06), transparent 70%)', '--dur': '30s' }} />
+      <FluidBlob style={{ width: 600, height: 600, top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.06), transparent 70%)', '--dur': '30s' }} />
       <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative', zIndex: 1, textAlign: 'center' }}>
         <div className="section-label" style={{ justifyContent: 'center', marginBottom: 32 }}>The Manifesto</div>
         <p translate="no" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.3em 0.5em', fontSize: 'clamp(2rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.25, letterSpacing: '-0.02em', fontFamily: "'Heebo', sans-serif" }} aria-label={enWords.join(' ')}>
@@ -887,13 +887,13 @@ function EnAbout() {
 
   return (
     <section id="en-about" ref={ref} style={{ padding: 'clamp(80px, 10vw, 130px) 28px', background: 'var(--surface-0)', position: 'relative', overflow: 'hidden' }}>
-      <FluidBlob style={{ width: 500, height: 500, top: '-5%', left: '-5%', background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.09), transparent 70%)', '--dur': '24s' }} />
+      <FluidBlob style={{ width: 500, height: 500, top: '-5%', left: '-5%', background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.09), transparent 70%)', '--dur': '24s' }} />
       <div className="about-layout" style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
         {/* Image */}
         <div className="en-about-img" style={{ opacity: 0, maxWidth: 320, margin: '0 auto', width: '100%' }}>
           <div ref={imgRef} style={{ position: 'relative', transformStyle: 'preserve-3d', perspective: 800 }}>
-            <div style={{ position: 'absolute', inset: -20, background: 'radial-gradient(circle at 50% 50%, oklch(0.78 0.20 145 / 0.2), oklch(0.50 0.20 285 / 0.12) 60%, transparent 80%)', borderRadius: 28, filter: 'blur(24px)', zIndex: 0 }} />
+            <div style={{ position: 'absolute', inset: -20, background: 'radial-gradient(circle at 50% 50%, oklch(0.785 0.173 156.6 / 0.2), oklch(0.508 0.155 292.2 / 0.12) 60%, transparent 80%)', borderRadius: 28, filter: 'blur(24px)', zIndex: 0 }} />
             <div className="glow-border living-border" style={{ position: 'relative', zIndex: 1, borderRadius: 20, overflow: 'hidden', aspectRatio: '4/5' }}>
               <img src={profileSrc} alt="Shmuel Munitz" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.4), transparent 55%)' }} />
@@ -966,9 +966,9 @@ function EnChatItem({ item, isActive, onOpen }) {
 
   return (
     <div style={{ marginBottom: 14, opacity: 0 }} className="en-faq-item">
-      <button onClick={onOpen} style={{ width: '100%', textAlign: 'left', background: isActive ? 'var(--surface-2)' : 'var(--surface-1)', border: `1px solid ${isActive ? 'oklch(0.78 0.20 145 / 0.3)' : 'oklch(0.22 0.02 240)'}`, borderRadius: isActive ? '16px 16px 16px 0' : 16, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, transition: 'background 0.3s, border-color 0.3s, border-radius 0.3s', fontFamily: "'Heebo', sans-serif" }} aria-expanded={isActive}>
+      <button onClick={onOpen} style={{ width: '100%', textAlign: 'left', background: isActive ? 'var(--surface-2)' : 'var(--surface-1)', border: `1px solid ${isActive ? 'oklch(0.785 0.173 156.6 / 0.3)' : 'oklch(0.22 0.02 240)'}`, borderRadius: isActive ? '16px 16px 16px 0' : 16, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, transition: 'background 0.3s, border-color 0.3s, border-radius 0.3s', fontFamily: "'Heebo', sans-serif" }} aria-expanded={isActive}>
         <span style={{ fontSize: 'clamp(0.9rem, 1.5vw, 1rem)', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.5, flex: 1 }}>{item.q}</span>
-        <span style={{ flexShrink: 0, width: 28, height: 28, borderRadius: '50%', background: isActive ? 'oklch(0.78 0.20 145 / 0.2)' : 'oklch(0.18 0.025 240)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.35s var(--ease-spring), background 0.3s', transform: isActive ? 'rotate(45deg)' : 'rotate(0deg)' }}>
+        <span style={{ flexShrink: 0, width: 28, height: 28, borderRadius: '50%', background: isActive ? 'oklch(0.785 0.173 156.6 / 0.2)' : 'oklch(0.18 0.025 240)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.35s var(--ease-spring), background 0.3s', transform: isActive ? 'rotate(45deg)' : 'rotate(0deg)' }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </span>
       </button>
@@ -1357,7 +1357,7 @@ function EnFooter() {
 
   return (
     <footer style={{ background: 'oklch(0.09 0.012 240)', borderTop: 'none', paddingTop: '56px', paddingBottom: '32px', paddingLeft: '28px', paddingRight: '28px', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(to right, transparent, var(--brand-deep) 25%, oklch(0.78 0.20 145 / 0.35) 50%, var(--brand-deep) 75%, transparent)' }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(to right, transparent, var(--brand-deep) 25%, oklch(0.785 0.173 156.6 / 0.35) 50%, var(--brand-deep) 75%, transparent)' }} />
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
         {/* Top row */}
@@ -1404,7 +1404,7 @@ function EnFooter() {
                   target={s.target || undefined} rel={s.target ? 'noopener noreferrer' : undefined}
                   onClick={s.emailBtn ? onEmailClick : undefined}
                   style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--surface-1)', border: '1px solid var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', textDecoration: 'none', transition: 'background 0.3s, color 0.3s, border-color 0.3s' }}
-                  onMouseEnter={e => { e.currentTarget.style.background='oklch(0.78 0.20 145 / 0.15)'; e.currentTarget.style.color='var(--brand-prime)'; e.currentTarget.style.borderColor='oklch(0.78 0.20 145 / 0.35)'; }}
+                  onMouseEnter={e => { e.currentTarget.style.background='oklch(0.785 0.173 156.6 / 0.15)'; e.currentTarget.style.color='var(--brand-prime)'; e.currentTarget.style.borderColor='oklch(0.785 0.173 156.6 / 0.35)'; }}
                   onMouseLeave={e => { e.currentTarget.style.background='var(--surface-1)'; e.currentTarget.style.color='var(--text-muted)'; e.currentTarget.style.borderColor='var(--surface-2)'; }}
                 >{EN_SOCIAL_ICONS[s.label]}</a>
               ))}

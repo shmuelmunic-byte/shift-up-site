@@ -91,7 +91,7 @@ export default function About() {
         style={{
           width: 500, height: 500,
           top: '-5%', right: '-5%',
-          background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.09), transparent 70%)',
+          background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.09), transparent 70%)',
           '--dur': '24s',
         }}
       />
@@ -138,7 +138,7 @@ export default function About() {
                   inset: -40,
                   background:
                     'radial-gradient(ellipse at 25% 50%, oklch(0.65 0.22 200 / 0.35) 0%, transparent 55%),' +
-                    'radial-gradient(ellipse at 75% 40%, oklch(0.50 0.20 285 / 0.30) 0%, transparent 55%)',
+                    'radial-gradient(ellipse at 75% 40%, oklch(0.508 0.155 292.2 / 0.30) 0%, transparent 55%)',
                   filter: 'blur(30px)',
                   zIndex: 0,
                   borderRadius: 40,
@@ -201,7 +201,7 @@ export default function About() {
                       top: 0,
                       height: 90,
                       background:
-                        'linear-gradient(to bottom, transparent, oklch(0.78 0.20 145 / 0.07) 50%, transparent)',
+                        'linear-gradient(to bottom, transparent, oklch(0.785 0.173 156.6 / 0.07) 50%, transparent)',
                       animation: 'scan-sweep 5s ease-in-out 3.5s infinite',
                       pointerEvents: 'none',
                     }}
@@ -250,7 +250,7 @@ export default function About() {
                   zIndex: 2,
                   background: 'oklch(0.14 0.02 240 / 0.92)',
                   backdropFilter: 'blur(16px)',
-                  border: '1px solid oklch(0.78 0.20 145 / 0.3)',
+                  border: '1px solid oklch(0.785 0.173 156.6 / 0.3)',
                   borderRadius: 999,
                   padding: '6px 14px',
                   display: 'flex',
@@ -299,7 +299,7 @@ export default function About() {
                   zIndex: 2,
                   background: 'oklch(0.13 0.02 240 / 0.88)',
                   backdropFilter: 'blur(16px)',
-                  border: '1px solid oklch(0.78 0.20 145 / 0.2)',
+                  border: '1px solid oklch(0.785 0.173 156.6 / 0.2)',
                   borderRadius: 10,
                   padding: '7px 11px',
                   transform: 'rotate(3deg)',

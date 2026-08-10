@@ -90,7 +90,7 @@ function CaseCard({ item, index }) {
 
       <blockquote style={{
         margin: '0 0 22px', padding: '12px 16px', borderRadius: 12,
-        background: 'oklch(0.78 0.20 145 / 0.08)', borderRight: '3px solid var(--brand-prime)',
+        background: 'oklch(0.785 0.173 156.6 / 0.08)', borderRight: '3px solid var(--brand-prime)',
         fontSize: '1.02rem', fontWeight: 800, color: 'var(--brand-glow)', direction: 'ltr', textAlign: 'right',
       }}>
         {item.quote}

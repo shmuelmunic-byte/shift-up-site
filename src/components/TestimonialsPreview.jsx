@@ -31,8 +31,8 @@ function Card({ t }) {
         transition: 'border-color 0.3s, box-shadow 0.3s',
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.borderColor = 'oklch(0.78 0.20 145 / 0.35)';
-        e.currentTarget.style.boxShadow = '0 0 30px oklch(0.78 0.20 145 / 0.07)';
+        e.currentTarget.style.borderColor = 'oklch(0.785 0.173 156.6 / 0.35)';
+        e.currentTarget.style.boxShadow = '0 0 30px oklch(0.785 0.173 156.6 / 0.07)';
       }}
       onMouseLeave={e => {
         e.currentTarget.style.borderColor = 'oklch(0.22 0.02 240)';
@@ -41,7 +41,7 @@ function Card({ t }) {
     >
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-        background: 'linear-gradient(to right, transparent, oklch(0.78 0.20 145 / 0.3), transparent)',
+        background: 'linear-gradient(to right, transparent, oklch(0.785 0.173 156.6 / 0.3), transparent)',
       }} />
 
       <div style={{ display: 'flex', gap: 2 }}>
@@ -62,8 +62,8 @@ function Card({ t }) {
         ) : (
           <div style={{
             width: 36, height: 36, borderRadius: '50%',
-            background: 'oklch(0.78 0.20 145 / 0.12)',
-            border: '1px solid oklch(0.78 0.20 145 / 0.2)',
+            background: 'oklch(0.785 0.173 156.6 / 0.12)',
+            border: '1px solid oklch(0.785 0.173 156.6 / 0.2)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             color: 'var(--brand-prime)', fontWeight: 800, fontSize: '0.9rem', flexShrink: 0,
           }}>
@@ -126,7 +126,7 @@ export default function TestimonialsPreview() {
     >
       <div className="aurora-orb" style={{
         width: 500, height: 500, top: '-10%', left: '5%',
-        background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.07), transparent 70%)',
+        background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.07), transparent 70%)',
         '--dur': '24s',
       }} />
 
@@ -168,7 +168,7 @@ export default function TestimonialsPreview() {
               display: 'inline-flex', alignItems: 'center', gap: 8,
               padding: '11px 28px',
               background: 'transparent',
-              border: '1px solid oklch(0.78 0.20 145 / 0.3)',
+              border: '1px solid oklch(0.785 0.173 156.6 / 0.3)',
               borderRadius: 999,
               color: 'var(--brand-prime)',
               fontSize: '0.9rem',
@@ -178,12 +178,12 @@ export default function TestimonialsPreview() {
               transition: 'background 0.25s, border-color 0.25s',
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.background = 'oklch(0.78 0.20 145 / 0.08)';
+              e.currentTarget.style.background = 'oklch(0.785 0.173 156.6 / 0.08)';
               e.currentTarget.style.borderColor = 'var(--brand-prime)';
             }}
             onMouseLeave={e => {
               e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.borderColor = 'oklch(0.78 0.20 145 / 0.3)';
+              e.currentTarget.style.borderColor = 'oklch(0.785 0.173 156.6 / 0.3)';
             }}
           >
             כל העדויות

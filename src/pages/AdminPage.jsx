@@ -48,7 +48,7 @@ function Toast({ msg, type, onClose }) {
       zIndex: 9999, display: 'flex', alignItems: 'center', gap: 10,
       padding: '12px 20px', borderRadius: 12,
       background: isErr ? 'oklch(0.15 0.02 25)' : 'oklch(0.13 0.02 145)',
-      border: `1.5px solid ${isErr ? 'oklch(0.65 0.22 25 / 0.5)' : 'oklch(0.78 0.20 145 / 0.4)'}`,
+      border: `1.5px solid ${isErr ? 'oklch(0.65 0.22 25 / 0.5)' : 'oklch(0.785 0.173 156.6 / 0.4)'}`,
       boxShadow: '0 8px 40px oklch(0 0 0 / 0.5)',
       color: isErr ? 'oklch(0.80 0.18 25)' : 'var(--brand-prime)',
       fontWeight: 700, fontSize: '0.9rem', whiteSpace: 'nowrap',
@@ -84,7 +84,7 @@ const S = {
     cursor: 'pointer', transition: 'all 0.18s ease',
     ...(variant === 'primary' ? {
       background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)',
-      boxShadow: '0 0 24px oklch(0.78 0.20 145 / 0.3)',
+      boxShadow: '0 0 24px oklch(0.785 0.173 156.6 / 0.3)',
     } : variant === 'danger' ? {
       background: 'oklch(0.65 0.22 25 / 0.12)',
       color: 'oklch(0.75 0.18 25)',
@@ -291,7 +291,7 @@ function PromptsTab({ toast }) {
                   {p.title}
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.73rem', color: 'var(--brand-prime)', fontWeight: 700, background: 'oklch(0.78 0.20 145 / 0.1)', padding: '2px 8px', borderRadius: 100 }}>
+                  <span style={{ fontSize: '0.73rem', color: 'var(--brand-prime)', fontWeight: 700, background: 'oklch(0.785 0.173 156.6 / 0.1)', padding: '2px 8px', borderRadius: 100 }}>
                     {p.tag}
                   </span>
                   {p.resource_type && (
@@ -480,7 +480,7 @@ function IgLinksTab({ toast }) {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 800, fontSize: '0.92rem', color: 'var(--text-primary)', marginBottom: 2 }}>{l.label}</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{ padding: '1px 7px', borderRadius: 100, background: l.style === 'primary' ? 'oklch(0.78 0.20 145 / 0.1)' : 'oklch(0.97 0.005 240 / 0.08)', color: l.style === 'primary' ? 'var(--brand-prime)' : 'var(--text-muted)', fontSize: '0.68rem', fontWeight: 700 }}>
+                  <span style={{ padding: '1px 7px', borderRadius: 100, background: l.style === 'primary' ? 'oklch(0.785 0.173 156.6 / 0.1)' : 'oklch(0.97 0.005 240 / 0.08)', color: l.style === 'primary' ? 'var(--brand-prime)' : 'var(--text-muted)', fontSize: '0.68rem', fontWeight: 700 }}>
                     {l.style === 'primary' ? 'ירוק' : 'לבן'}
                   </span>
                   <IconLink size={11} />
@@ -741,12 +741,12 @@ function GenericCrudTab({ toast, table, emptyForm, fields, itemTitle }) {
                   {itemTitle(item)}
                 </div>
                 {item.featured !== undefined && (
-                  <span style={{ fontSize: '0.7rem', padding: '1px 7px', borderRadius: 100, background: item.featured ? 'oklch(0.78 0.20 145 / 0.12)' : 'oklch(0.14 0.02 240)', color: item.featured ? 'var(--brand-prime)' : 'var(--text-muted)', fontWeight: 700 }}>
+                  <span style={{ fontSize: '0.7rem', padding: '1px 7px', borderRadius: 100, background: item.featured ? 'oklch(0.785 0.173 156.6 / 0.12)' : 'oklch(0.14 0.02 240)', color: item.featured ? 'var(--brand-prime)' : 'var(--text-muted)', fontWeight: 700 }}>
                     {item.featured ? '⭐ featured' : 'לא מוצג בדף הבית'}
                   </span>
                 )}
                 {item.is_live !== undefined && (
-                  <span style={{ fontSize: '0.7rem', padding: '1px 7px', borderRadius: 100, background: item.is_live ? 'oklch(0.78 0.20 145 / 0.12)' : 'oklch(0.14 0.02 240)', color: item.is_live ? 'var(--brand-prime)' : 'var(--text-muted)', fontWeight: 700 }}>
+                  <span style={{ fontSize: '0.7rem', padding: '1px 7px', borderRadius: 100, background: item.is_live ? 'oklch(0.785 0.173 156.6 / 0.12)' : 'oklch(0.14 0.02 240)', color: item.is_live ? 'var(--brand-prime)' : 'var(--text-muted)', fontWeight: 700 }}>
                     {item.is_live ? '🟢 live badge' : ''}
                   </span>
                 )}
@@ -1022,7 +1022,7 @@ function LeadsTab({ toast }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
         <span style={{ fontWeight: 800, fontSize: '1.05rem' }}>{leads.length} לידים</span>
         {unhandled > 0 && (
-          <span style={{ background: 'oklch(0.78 0.20 145 / 0.15)', color: 'var(--brand-prime)', border: '1px solid oklch(0.78 0.20 145 / 0.3)', borderRadius: 999, padding: '3px 12px', fontSize: '0.78rem', fontWeight: 700 }}>
+          <span style={{ background: 'oklch(0.785 0.173 156.6 / 0.15)', color: 'var(--brand-prime)', border: '1px solid oklch(0.785 0.173 156.6 / 0.3)', borderRadius: 999, padding: '3px 12px', fontSize: '0.78rem', fontWeight: 700 }}>
             {unhandled} חדשים
           </span>
         )}
@@ -1037,7 +1037,7 @@ function LeadsTab({ toast }) {
       ) : (
         <div style={{ display: 'grid', gap: 12 }}>
           {leads.map(l => (
-            <div key={l.id} className="admin-card" style={{ ...S.card, padding: 18, opacity: l.handled ? 0.6 : 1, borderColor: l.handled ? undefined : 'oklch(0.78 0.20 145 / 0.25)' }}>
+            <div key={l.id} className="admin-card" style={{ ...S.card, padding: 18, opacity: l.handled ? 0.6 : 1, borderColor: l.handled ? undefined : 'oklch(0.785 0.173 156.6 / 0.25)' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
                 <div style={{ flex: 1, minWidth: 200 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
@@ -1280,8 +1280,8 @@ export default function AdminPage() {
     <div className="admin-scope" dir="rtl" style={{ minHeight: '100dvh', background: 'var(--bedrock)', fontFamily: "'Heebo', sans-serif", color: 'var(--text-primary)', position: 'relative', overflowX: 'hidden' }}>
       <div className="noise-overlay" aria-hidden="true" />
       {/* ambient aurora */}
-      <div className="aurora-orb" style={{ width: 480, height: 480, top: '-12%', right: '-6%', background: 'radial-gradient(circle, oklch(0.78 0.20 145 / 0.10), transparent 70%)', '--dur': '24s' }} />
-      <div className="aurora-orb" style={{ width: 420, height: 420, top: '34%', left: '-12%', background: 'radial-gradient(circle, oklch(0.50 0.20 285 / 0.08), transparent 72%)', '--dur': '28s', '--delay': '-9s' }} />
+      <div className="aurora-orb" style={{ width: 480, height: 480, top: '-12%', right: '-6%', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.10), transparent 70%)', '--dur': '24s' }} />
+      <div className="aurora-orb" style={{ width: 420, height: 420, top: '34%', left: '-12%', background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.08), transparent 72%)', '--dur': '28s', '--delay': '-9s' }} />
       <Cursor />
 
       {/* ── Header ── */}
