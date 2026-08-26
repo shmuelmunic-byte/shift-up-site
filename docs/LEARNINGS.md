@@ -2,6 +2,42 @@
 
 ---
 
+# סשן: Voice + SEO + עיצוב v2 "de-AI" (2026-08-26)
+
+## מה בנינו
+סשן ארוך ואיטרטיבי בשלושה גלים, כולם על main (Vercel auto-deploy):
+1. **Voice pass** — הסרת מקף ארוך (—), "לא רק X אלא Y" ומרכאות מסולסלות מכל טקסט מול-אדם בכל העמודים + `index.html` (meta/OG/JSON-LD/pre-render) + מירורי AI-discovery. `docs/pivot-sync.sql` הורחב (DB דורס קוד → חייב הרצה).
+2. **SEO/canonical per-route** — `src/components/Seo.jsx` (רץ ב-`main.jsx` על כל route): מעדכן במקום את התג היחיד של canonical/og:url/title/description/robots + hint `rel="alternate" type="text/markdown"`. `/en` קיבל canonical נכון, `/login`+`/admin`+`/ig` → noindex.
+3. **עיצוב v2 (de-AI)** — לפי משוב חד מקבוצת vibe-coding + מחקר נישה: פונטים Space Grotesk (לטינית, כמו הלוגו) + Secular One (עברית), פינות חדות, ירוק ראשי + סגול אקסנט (מהלוגו), מוטיב מקבילית במקום אייקוני-קו גנריים, נטרול aurora/glass/glow/gradient-text (בלוק override גלובלי ב-`index.css`), CTA אבחון-ראשון, סקשן "מה מקבלים" בהיר (נקודת נשימה), מניפסט מ-scrub → חשיפה חד-פעמית.
+
+## הלקח הכי לא-מובן-מאליו: self-host פונטים לקהל מסונן
+המשתמש דיווח "הגוף נשאר Heebo" אחרי החלפת הפונט. הסיבה: **הפונטים נטענו מ-`fonts.gstatic.com`, שפילטר תוכן (נטפרי/כשר) חוסם** — אז העברית נפלה לפונט מערכת שנראה כמו Heebo. `document.fonts` הראה `Rubik/Secular One: unloaded`. הפתרון: **self-host** — הורדת ה-woff2 ל-`public/fonts/` + `src/fonts.css` מקומי, בלי תלות ב-Google CDN. **מסקנה קבועה: לכל אתר לקהל דתי/מסונן בישראל — self-host פונטים מהיום הראשון.** (טכניקה: `curl` את ה-Google CSS עם browser-UA → מוריד את ה-woff2 שהוא מפרט → `sed` מחליף URLs ל-`/fonts/`.)
+
+## טכניקות שעבדו
+- **בלוק override גלובלי ב-CSS מרגיע את כל האתר בבת אחת.** במקום לערוך N קומפוננטות, `.aurora-orb/.glass-panel/.text-gradient/.bento-card{...!important}` בתחתית `index.css` ניטרל את כל הגימיקים המבוססי-מחלקה. `!important` בגיליון **כן** דורס inline style.
+- **sed ממוקד לשינויים חוצי-קבצים** — `borderRadius: 999→3` (pills), `16/20/24→4` (כרטיסים), `'Heebo'→stack`, `'Rubik'→'Secular One'`. חד, עקבי, בלי לפספס.
+- **רפרנס-קודם.** במקום לבנות עיוור 12 סקשנים, בניתי את ה-Hero בכיוון החדש, המשתמש אישר, ואז גלגלתי. חסך churn בכיוון לא נכון.
+- **מחקר נישה עם מקורות** (WebSearch/WebFetch: nanoglobals, dev.to) אישש בדיוק את ה-AI-tells: גרדיאנט סגול-כחול, frosted glass, 4 כרטיסים, gradient-text. המשתמש ביקש מחקר "ונחליט לפי זה" — לא ניחוש.
+- **canonical אימפרטיבי > react-helmet.** `react-helmet-async@2` נכשל ב-peer-conflict עם React 19. מוטציה של התג הקיים במקום (ב-effect פר-route) עדיפה: אפס כפילויות, **שומרת על תגי ה-OG הסטטיים** לסורקים ללא-JS (וואטסאפ/פייסבוק). React 19 native metadata לא נבחר כי היה יוצר canonical כפול מול הסטטי.
+
+## מלכודות / מה לשים לב
+- **DB דורס קוד — שוב.** כל שינויי הטקסט (fallback בקוד) בלתי-נראים באתר החי עד `pivot-sync.sql` ב-Supabase. אימתתי בדפדפן שה-DB מציג נוסח ישן. דפוס קבוע: שינוי מסר = לעדכן קוד **וגם** SQL/admin.
+- **Secular One הוא פונט תצוגה (משקל אחד)** — המשתמש ביקש אותו גם לגוף. `fontWeight` לא משפיע עליו, וקריאות פסקאות ארוכות סובלת. יישמתי לפי בקשתו + התרעתי; אם ירגיש כבד → Secular One לכותרות + Assistant לגוף.
+- **`—` בהערות קוד ובדיווידרים (`/* ── */`) הוא box-drawing/דקורטיבי, לא prose.** grep מצא 215 מופעים; רק ~40 היו טקסט מול-אדם. לא לעשות strip עיוור — לתקן רק string literals נצפים.
+- **createRoot warning ב-preview** = ארטיפקט של `location.reload()` חוזר ב-dev/HMR, לא באג. `main.jsx` קורא createRoot פעם אחת.
+- **PowerShell here-string (`@'...'@`) ב-Bash tool** = הודעת commit מקולקלת (קידומת `@ `). ב-Git Bash להשתמש ב-heredoc אמיתי או `git commit -F file`.
+
+## מה עבד טוב (עסקית)
+- **המשוב "נראה AI גנרי" צודק ומדיד.** המחקר נתן רשימת tells קונקרטית; התיקון היה מכני ברובו (צבע/פונט/פינות/גרדיאנט), לא "טעם".
+- **הוכחה כנה מנצחת פוברוק.** הסרנו את הקייסים "המומצאים" (המשוב: "מרגיש מומצא") והשארנו פורטפוליו אמיתי — "עבודות שיצרתי" חזק יותר מ"קייס אסטרטגי" ללא תוצאות.
+- **CTA אחד דומיננטי (אבחון) > 3 CTA.** "מרגיש שעוד לא הבנתי מי אתה וכבר יש 3 הנעות לפעולה" → אבחון-ראשון בכל מקום.
+
+## Skills ששווה לשמור
+- **"de-AI design pass"** — מחקר tells + בלוק override גלובלי + sed לפונט/רדיוס + מוטיב-מותג במקום אייקונים גנריים + section variation. תהליך חוזר לכל אתר שנבנה ב-AI ו"צועק AI".
+- **"self-host Google Fonts (filter-safe)"** — סקריפט curl→sed→`public/fonts`. חובה לכל קהל מסונן.
+
+---
+
 # סשן: החלפת לוגו + סנכרון צבעים למותג החדש (2026-08-10)
 
 ## מה בנינו
