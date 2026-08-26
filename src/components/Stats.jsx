@@ -95,7 +95,7 @@ function StatCard({ stat, index }) {
         letterSpacing: '-0.03em',
         lineHeight: 1.1,
         marginBottom: 12,
-        fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+        fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
       }}>
         {renderMain()}
       </div>

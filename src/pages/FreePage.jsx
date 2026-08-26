@@ -245,7 +245,7 @@ function PromptCard({ prompt }) {
               fontWeight: 900,
               color: 'var(--brand-prime)',
               letterSpacing: '0.02em',
-              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
             }}>
               #{prompt.num}
             </span>
@@ -346,7 +346,7 @@ function PromptCard({ prompt }) {
             lineHeight: 1.8,
             color: 'var(--text-secondary)',
             whiteSpace: 'pre-wrap',
-            fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+            fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
             direction: 'rtl',
             textAlign: 'right',
             maxHeight: 210,
@@ -378,7 +378,7 @@ function PromptCard({ prompt }) {
               ? 'oklch(0.785 0.173 156.6 / 0.14)'
               : 'oklch(0.785 0.173 156.6 / 0.07)',
             color: copied ? 'var(--brand-prime)' : 'var(--text-primary)',
-            fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+            fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
             fontWeight: 700,
             fontSize: '0.95rem',
             cursor: 'pointer',
@@ -418,7 +418,7 @@ function PromptCard({ prompt }) {
               border: '1.5px solid oklch(0.508 0.155 292.2 / 0.3)',
               background: 'oklch(0.508 0.155 292.2 / 0.07)',
               color: 'oklch(0.80 0.18 285)',
-              fontFamily: "'Space Grotesk', 'Rubik', sans-serif", fontWeight: 700, fontSize: '0.88rem',
+              fontFamily: "'Space Grotesk', 'Secular One', sans-serif", fontWeight: 700, fontSize: '0.88rem',
               transition: 'all 0.18s ease',
             }}
             onMouseEnter={e => { e.currentTarget.style.background = 'oklch(0.508 0.155 292.2 / 0.14)'; e.currentTarget.style.borderColor = 'oklch(0.508 0.155 292.2 / 0.5)'; }}
@@ -598,7 +598,7 @@ export default function FreePage() {
       style={{
         minHeight: '100dvh',
         background: 'var(--bedrock)',
-        fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+        fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
         position: 'relative',
         overscrollBehavior: 'contain',
       }}
@@ -892,7 +892,7 @@ export default function FreePage() {
                 borderRadius: 4,
                 fontWeight: 800,
                 fontSize: '1.05rem',
-                fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
                 textDecoration: 'none',
                 cursor: 'pointer',
                 boxShadow:

@@ -68,7 +68,7 @@ const S = {
     border: '1.5px solid oklch(0.97 0.005 240 / 0.12)',
     background: 'oklch(0.08 0.01 240 / 0.8)',
     color: 'var(--text-primary)', padding: '0 14px',
-    fontFamily: "'Space Grotesk', 'Rubik', sans-serif", fontSize: '0.9rem',
+    fontFamily: "'Space Grotesk', 'Secular One', sans-serif", fontSize: '0.9rem',
     outline: 'none', boxSizing: 'border-box',
     transition: 'border-color 0.2s',
   },
@@ -80,7 +80,7 @@ const S = {
   btn: (variant = 'ghost') => ({
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
     gap: 7, padding: '8px 16px', borderRadius: 3, border: 'none',
-    fontFamily: "'Space Grotesk', 'Rubik', sans-serif", fontWeight: 700, fontSize: '0.85rem',
+    fontFamily: "'Space Grotesk', 'Secular One', sans-serif", fontWeight: 700, fontSize: '0.85rem',
     cursor: 'pointer', transition: 'all 0.18s ease',
     ...(variant === 'primary' ? {
       background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)',
@@ -1277,7 +1277,7 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="admin-scope" dir="rtl" style={{ minHeight: '100dvh', background: 'var(--bedrock)', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", color: 'var(--text-primary)', position: 'relative', overflowX: 'hidden' }}>
+    <div className="admin-scope" dir="rtl" style={{ minHeight: '100dvh', background: 'var(--bedrock)', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", color: 'var(--text-primary)', position: 'relative', overflowX: 'hidden' }}>
       <div className="noise-overlay" aria-hidden="true" />
       {/* ambient aurora */}
       <div className="aurora-orb" style={{ width: 480, height: 480, top: '-12%', right: '-6%', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.10), transparent 70%)', '--dur': '24s' }} />

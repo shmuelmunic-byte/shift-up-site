@@ -109,7 +109,7 @@ export default function IgPage() {
       padding: '48px 24px 72px',
       position: 'relative',
       overflow: 'hidden',
-      fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+      fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
     }}>
       <Cursor />
       {/* Aurora blobs */}
@@ -168,7 +168,7 @@ export default function IgPage() {
               borderRadius: 4,
               fontWeight: 800,
               fontSize: '1.05rem',
-              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
               textDecoration: 'none',
               color: 'var(--text-primary)',
               border: '1.5px solid oklch(0.785 0.173 156.6 / 0.45)',
@@ -210,7 +210,7 @@ export default function IgPage() {
                 borderRadius: 4,
                 fontWeight: link.style === 'primary' ? 800 : 700,
                 fontSize: '1.05rem',
-                fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
                 textDecoration: 'none',
                 position: 'relative',
                 overflow: 'hidden',

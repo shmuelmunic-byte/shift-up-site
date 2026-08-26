@@ -86,7 +86,7 @@ export default function Navbar({ onCta }) {
                   fontSize: '0.88rem',
                   fontWeight: isActive ? 700 : 600,
                   letterSpacing: '0.02em',
-                  fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                  fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
                   transition: 'color 0.25s',
                   position: 'relative',
                   cursor: 'pointer',
@@ -138,7 +138,7 @@ export default function Navbar({ onCta }) {
               padding: '10px 22px',
               fontWeight: 700,
               fontSize: '0.88rem',
-              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
               textDecoration: 'none',
               transition: 'background 0.2s',
             }}
@@ -185,7 +185,7 @@ export default function Navbar({ onCta }) {
                   fontSize: '1rem',
                   fontWeight: 600,
                   textAlign: 'right',
-                  fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                  fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
                   padding: '4px 0',
                 }}
               >
@@ -203,7 +203,7 @@ export default function Navbar({ onCta }) {
                 padding: '13px 0',
                 fontWeight: 700,
                 fontSize: '1rem',
-                fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
                 marginTop: 8,
                 textAlign: 'center',
                 textDecoration: 'none',

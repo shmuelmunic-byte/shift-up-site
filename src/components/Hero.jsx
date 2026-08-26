@@ -114,7 +114,10 @@ export default function Hero({ onContact }) {
 
           {/* eyebrow — Hebrew, sharp, green square echoing the logo mark */}
           <div className="hero-eyebrow" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 26, opacity: 0 }}>
-            <span style={{ width: 9, height: 9, background: 'var(--brand-prime)', display: 'block', transform: 'skewX(-14deg)' }} />
+            <span style={{ display: 'inline-flex' }} aria-hidden="true">
+              <span style={{ width: 9, height: 9, background: 'var(--brand-prime)', display: 'block', transform: 'skewX(-14deg)' }} />
+              <span style={{ width: 9, height: 9, background: 'var(--accent)', display: 'block', transform: 'skewX(-14deg)', marginInlineStart: 3 }} />
+            </span>
             <span style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', fontWeight: 600, letterSpacing: '0.02em' }}>
               אסטרטג שיווק דיגיטלי · מומחה AI
             </span>
@@ -188,10 +191,11 @@ export default function Hero({ onContact }) {
         {/* ── Image column — clean, sharp, one flat green accent block ── */}
         <div className="hero-image" style={{ display: 'flex', justifyContent: 'center', opacity: 0 }}>
           <div style={{ position: 'relative', width: '100%', maxWidth: 360 }}>
-            {/* flat offset accent (echoes the logo parallelograms) */}
+            {/* flat purple offset block (echoes the logo's purple parallelogram) */}
             <div aria-hidden="true" style={{
               position: 'absolute', inset: 0, transform: 'translate(14px, 14px)',
-              border: '1px solid oklch(0.785 0.173 156.6 / 0.4)', borderRadius: 'var(--radius-lg)', zIndex: 0,
+              background: 'oklch(0.62 0.19 292 / 0.16)', border: '1px solid oklch(0.62 0.19 292 / 0.4)',
+              borderRadius: 'var(--radius-lg)', zIndex: 0,
             }} />
             <div style={{ position: 'relative', zIndex: 1, borderRadius: 'var(--radius-lg)', overflow: 'hidden', border: '1px solid oklch(0.25 0.02 160)', aspectRatio: '4/5', animation: 'float 7s ease-in-out infinite' }}>
               <img src={profileSrc} alt="שמואל מוניץ, אסטרטג שיווק דיגיטלי ומומחה AI" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />

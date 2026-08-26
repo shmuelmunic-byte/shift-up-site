@@ -78,7 +78,7 @@ function ChatItem({ item, isActive, onOpen }) {
           justifyContent: 'space-between',
           gap: 12,
           transition: 'background 0.3s, border-color 0.3s, border-radius 0.3s',
-          fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+          fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
         }}
         aria-expanded={isActive}
       >
@@ -226,7 +226,7 @@ export default function FAQ() {
               letterSpacing: '-0.02em',
               lineHeight: 1.1,
               marginBottom: 14,
-              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
             }}
           >
             שאלות נפוצות

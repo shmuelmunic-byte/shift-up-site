@@ -101,7 +101,7 @@ export default function Process() {
               lineHeight: 1.05,
               letterSpacing: '-0.02em',
               marginBottom: 20,
-              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
             }}
           >
             זה לא ה-PPC,
@@ -159,7 +159,7 @@ export default function Process() {
                     <div style={{ fontSize: '0.58rem', textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-muted)', fontWeight: 700 }}>שלב</div>
                     <div style={{
                       fontSize: '3.2rem', fontWeight: 700, lineHeight: 1,
-                      fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                      fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
                       color: 'oklch(0.785 0.173 156.6 / 0.32)',
                       direction: 'ltr',
                     }}>
@@ -173,7 +173,7 @@ export default function Process() {
                   fontWeight: 900,
                   letterSpacing: '-0.01em',
                   marginBottom: 16,
-                  fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                  fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
                   color: isActive ? 'var(--text-primary)' : 'oklch(0.90 0.005 240)',
                   transition: 'color 0.3s',
                 }}>

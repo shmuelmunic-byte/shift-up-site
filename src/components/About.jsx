@@ -220,7 +220,7 @@ export default function About() {
                     boxShadow: '0 0 8px var(--brand-prime)',
                   }}
                 />
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: "'Space Grotesk', 'Rubik', sans-serif" }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}>
                   שמואל מוניץ
                 </span>
               </div>
@@ -259,7 +259,7 @@ export default function About() {
                     }}
                   />
                 </span>
-                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--brand-prime)', fontFamily: "'Space Grotesk', 'Rubik', sans-serif" }}>
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--brand-prime)', fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}>
                   זמין לפרויקטים
                 </span>
               </div>
@@ -282,7 +282,7 @@ export default function About() {
               >
                 <span
                   className="text-gradient"
-                  style={{ fontSize: '0.76rem', fontWeight: 900, fontFamily: "'Space Grotesk', 'Rubik', sans-serif" }}
+                  style={{ fontSize: '0.76rem', fontWeight: 900, fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}
                 >
                   Shift Up ↑
                 </span>
@@ -304,7 +304,7 @@ export default function About() {
               letterSpacing: '-0.02em',
               lineHeight: 1.1,
               marginBottom: 36,
-              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
             }}
           >
             מי מאחורי{' '}
@@ -365,7 +365,7 @@ export default function About() {
                 style={{
                   fontSize: 'clamp(1.1rem, 2vw, 1.35rem)',
                   fontWeight: 800,
-                  fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                  fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
                   color: 'var(--text-primary)',
                   lineHeight: 1.5,
                 }}

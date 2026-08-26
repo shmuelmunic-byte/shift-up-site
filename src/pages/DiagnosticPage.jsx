@@ -106,11 +106,11 @@ function drawShareImage(result) {
 
   x.direction = 'rtl'; x.textAlign = 'center'; x.textBaseline = 'middle';
 
-  x.fillStyle = '#e8edf2'; x.font = '700 46px Rubik';
+  x.fillStyle = '#e8edf2'; x.font = '700 46px "Secular One"';
   x.fillText('Shift Up · אבחון שיווק', W / 2, 160);
   x.fillStyle = '#36d98a'; x.beginPath(); x.arc(W / 2 + 235, 160, 10, 0, Math.PI * 2); x.fill();
 
-  x.fillStyle = '#e8edf2'; x.font = '900 68px Rubik';
+  x.fillStyle = '#e8edf2'; x.font = '900 68px "Secular One"';
   x.fillText('בדקתי איפה השיווק שלי דולף', W / 2, 330);
 
   const cx = W / 2, cy = 830, r = 300, lw = 46;
@@ -119,25 +119,25 @@ function drawShareImage(result) {
   x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.stroke();
   x.strokeStyle = col;
   x.beginPath(); x.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pct / 100); x.stroke();
-  x.fillStyle = col; x.font = '900 250px Rubik';
+  x.fillStyle = col; x.font = '900 250px "Secular One"';
   x.fillText(String(pct), cx, cy - 6);
-  x.fillStyle = '#8b97a3'; x.font = '400 52px Rubik';
+  x.fillStyle = '#8b97a3'; x.font = '400 52px "Secular One"';
   x.fillText('מתוך 100', cx, cy + 150);
 
-  x.fillStyle = '#e8edf2'; x.font = '800 56px Rubik';
+  x.fillStyle = '#e8edf2'; x.font = '800 56px "Secular One"';
   const vEnd = 1300 + wrapCanvasText(x, result.verdict, W / 2, 1300, W - 170, 68);
 
   let y = vEnd + 60;
   if (result.leaks && result.leaks.length) {
-    x.fillStyle = '#ff5c72'; x.font = '700 40px Rubik';
+    x.fillStyle = '#ff5c72'; x.font = '700 40px "Secular One"';
     x.fillText('הדליפה הכי דחופה שלי:', W / 2, y); y += 60;
-    x.fillStyle = '#e8edf2'; x.font = '600 46px Rubik';
+    x.fillStyle = '#e8edf2'; x.font = '600 46px "Secular One"';
     wrapCanvasText(x, result.leaks[0].fb.t, W / 2, y, W - 170, 58);
   }
 
-  x.fillStyle = '#8b97a3'; x.font = '500 44px Rubik';
+  x.fillStyle = '#8b97a3'; x.font = '500 44px "Secular One"';
   x.fillText('אבחון שיווק חינמי לבעלי עסקים', W / 2, 1800);
-  x.fillStyle = '#36d98a'; x.font = '800 54px Rubik';
+  x.fillStyle = '#36d98a'; x.font = '800 54px "Secular One"';
   x.fillText('Shift Up', W / 2, 1862);
 
   return c;
@@ -579,7 +579,7 @@ const CSS = `
   --dg-purple:#6a4fb5; --dg-text:#e8edf2; --dg-text-dim:#8b97a3;
   --dg-border:rgba(255,255,255,.08); --dg-danger:#ff5c72; --dg-warn:#ffb454;
   position:relative; min-height:100vh; background:var(--dg-bg); color:var(--dg-text);
-  font-family:'Space Grotesk','Rubik',sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  font-family:'Space Grotesk','Secular One',sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden;
 }
 .dg-root::before{
   content:''; position:fixed; inset:0; z-index:0; pointer-events:none;

@@ -80,7 +80,7 @@ export default function Manifesto() {
             fontWeight: 900,
             lineHeight: 1.25,
             letterSpacing: '-0.02em',
-            fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+            fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
           }}
           aria-label={words.join(' ')}
         >
@@ -93,7 +93,7 @@ export default function Manifesto() {
                 style={{
                   display: 'inline-block',
                   opacity: 0.08,
-                  color: isHighlight ? 'var(--brand-prime)' : 'var(--text-primary)',
+                  color: isHighlight ? 'var(--accent)' : 'var(--text-primary)',
                   willChange: 'opacity, transform, filter',
                 }}
               >

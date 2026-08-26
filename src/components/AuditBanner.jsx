@@ -46,7 +46,7 @@ export default function AuditBanner() {
               fontWeight: 900,
               letterSpacing: '-0.02em',
               lineHeight: 1.18,
-              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
               marginBottom: 12,
             }}>
               מזהה את עצמך? גלה איפה השיווק שלך <span className="text-gradient">דולף</span>.
@@ -73,7 +73,7 @@ export default function AuditBanner() {
               borderRadius: 3,
               fontWeight: 700,
               fontSize: '1.02rem',
-              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
               textDecoration: 'none',
               transition: 'background 0.2s',
               position: 'relative',

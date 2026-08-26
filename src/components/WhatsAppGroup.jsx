@@ -119,7 +119,7 @@ export default function WhatsAppGroup() {
                   fontWeight: 900,
                   letterSpacing: '-0.02em',
                   lineHeight: 1.15,
-                  fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                  fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
                 }}
               >
                 החדר האחורי{' '}
@@ -216,7 +216,7 @@ export default function WhatsAppGroup() {
                 borderRadius: 3,
                 fontWeight: 800,
                 fontSize: '1rem',
-                fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
                 textDecoration: 'none',
                 boxShadow: '0 0 32px oklch(0.55 0.22 145 / 0.35)',
                 transition: 'background 0.25s, box-shadow 0.25s, transform 0.2s',

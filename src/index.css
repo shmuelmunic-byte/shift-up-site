@@ -1,5 +1,6 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Rubik:wght@300;400;500;600;700;800;900&display=swap');
+/* Self-hosted fonts (same-origin, filter-safe — no dependency on Google CDN) */
+@import './fonts.css';
 
 /* ── Color System ── */
 :root {
@@ -11,6 +12,7 @@
   --brand-glow:   oklch(0.876 0.148 155.7);
   --brand-deep:   oklch(0.63 0.154 154.2);
   --accent-void:  oklch(0.508 0.155 292.2);
+  --accent:       oklch(0.62 0.19 292);   /* סגול מותג (מהלוגו) — אקסנט שטוח, לא ל-CTA */
   --accent-cyan:  oklch(0.65 0.22 200);   /* מעברי גרדיאנט / aurora בלבד — לא ל-CTA */
   --text-primary: oklch(0.97 0.005 240);
   --text-secondary: oklch(0.70 0.01 240);
@@ -23,8 +25,13 @@
   /* Sharp-corner design language (v2): near-zero radius, no liquid-glass */
   --radius:    3px;
   --radius-lg: 4px;
-  --font:      'Space Grotesk', 'Rubik', sans-serif;
+  --font:      'Space Grotesk', 'Secular One', sans-serif;
+  /* Headings: Secular One (Hebrew display) with Space Grotesk for Latin/brand */
+  --font-display: 'Space Grotesk', 'Secular One', sans-serif;
 }
+
+/* All headings use the display face (overrides inline font-family) */
+h1, h2, h3 { font-family: var(--font-display) !important; letter-spacing: -0.01em; }
 
 /* ── Reset ── */
 *, *::before, *::after {
@@ -432,7 +439,7 @@ body {
   gap: 7px;
   padding: 9px 16px;
   border-radius: 11px;
-  font-family: 'Space Grotesk', 'Rubik', sans-serif;
+  font-family: 'Space Grotesk', 'Secular One', sans-serif;
   font-weight: 700;
   font-size: 0.88rem;
   cursor: pointer;
@@ -1083,7 +1090,7 @@ html[lang]:not([lang=""]):not([lang^="he"]):not([lang^="iw"]) .section-label::be
   background: var(--brand-prime);
   color: #04120a;
   font-weight: 800;
-  font-family: 'Space Grotesk', 'Rubik', sans-serif;
+  font-family: 'Space Grotesk', 'Secular One', sans-serif;
   padding: 12px 20px;
   border-radius: 10px;
   text-decoration: none;
@@ -1156,7 +1163,7 @@ html[lang]:not([lang=""]):not([lang^="he"]):not([lang^="iw"]) .section-label::be
   border: 1.5px solid var(--surface-2);
   border-radius: 12px;
   color: var(--text-secondary);
-  font-family: 'Space Grotesk', 'Rubik', sans-serif;
+  font-family: 'Space Grotesk', 'Secular One', sans-serif;
   cursor: pointer !important;
   padding: 8px 4px;
   transition: border-color 0.15s, background 0.15s, color 0.15s;
@@ -1170,7 +1177,7 @@ html[lang]:not([lang=""]):not([lang^="he"]):not([lang^="iw"]) .section-label::be
 .a11y-reset {
   width: 100%; margin-top: 14px;
   background: none; border: 1px solid var(--surface-2); color: var(--text-secondary);
-  border-radius: 10px; padding: 10px; font-family: 'Space Grotesk', 'Rubik', sans-serif; font-weight: 600;
+  border-radius: 10px; padding: 10px; font-family: 'Space Grotesk', 'Secular One', sans-serif; font-weight: 600;
   cursor: pointer !important; transition: border-color 0.15s, color 0.15s;
 }
 .a11y-reset:hover { border-color: var(--brand-prime); color: var(--text-primary); }
@@ -1234,7 +1241,7 @@ html.a11y-big-cursor .cursor-ring { display: none !important; }
 .cookie-link { color: var(--brand-prime); text-decoration: underline; }
 .cookie-actions { display: flex; gap: 10px; flex-shrink: 0; }
 .cookie-btn {
-  padding: 10px 22px; border-radius: 10px; font-family: 'Space Grotesk', 'Rubik', sans-serif;
+  padding: 10px 22px; border-radius: 10px; font-family: 'Space Grotesk', 'Secular One', sans-serif;
   font-weight: 700; font-size: 0.9rem; cursor: pointer !important; border: 1.5px solid transparent;
   transition: opacity 0.15s, border-color 0.15s;
 }

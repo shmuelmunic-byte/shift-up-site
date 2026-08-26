@@ -105,7 +105,7 @@ export default function TestimonialsPage() {
         minHeight: '100vh',
         background: 'var(--bedrock)',
         color: 'var(--text-primary)',
-        fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+        fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
         padding: 'clamp(60px, 10vw, 100px) 28px clamp(80px, 12vw, 120px)',
       }}
     >
@@ -139,7 +139,7 @@ export default function TestimonialsPage() {
             letterSpacing: '-0.025em',
             lineHeight: 1.05,
             marginBottom: 20,
-            fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+            fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
           }}>
             מה אומרים{' '}
             <span style={{
@@ -189,7 +189,7 @@ export default function TestimonialsPage() {
               borderRadius: 3,
               fontWeight: 800,
               fontSize: '1rem',
-              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
               textDecoration: 'none',
               boxShadow: '0 0 40px oklch(0.785 0.173 156.6 / 0.35)',
             }}

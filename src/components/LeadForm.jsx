@@ -91,7 +91,7 @@ export default function LeadForm() {
   const inputStyle = {
     width: '100%', padding: '13px 16px', borderRadius: 3,
     border: '1px solid #cdd7e3', background: '#fff', color: '#0c1118',
-    fontSize: '1rem', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", outline: 'none',
+    fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", outline: 'none',
     transition: 'border-color 0.2s, box-shadow 0.2s',
   };
   const errorInputStyle = { ...inputStyle, borderColor: '#c0392b' };
@@ -204,7 +204,7 @@ export default function LeadForm() {
                 <button type="submit" disabled={status === 'sending'} style={{
                   width: '100%', padding: '15px', borderRadius: 3, border: 'none',
                   background: status === 'sending' ? '#7fc89e' : '#1f9d57', color: '#fff',
-                  fontSize: '1.08rem', fontWeight: 800, fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                  fontSize: '1.08rem', fontWeight: 800, fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
                   cursor: status === 'sending' ? 'default' : 'pointer',
                   boxShadow: '0 8px 24px rgba(31,157,87,0.35)', transition: 'background 0.2s, transform 0.15s',
                 }}>
@@ -244,7 +244,7 @@ export default function LeadForm() {
 const waBtnStyle = {
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%',
   padding: '13px 22px', borderRadius: 3, background: '#25955a', color: '#fff',
-  fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", textDecoration: 'none',
+  fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", textDecoration: 'none',
   boxShadow: '0 6px 20px rgba(37,149,90,0.3)',
 };
 

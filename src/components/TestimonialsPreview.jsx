@@ -139,7 +139,7 @@ export default function TestimonialsPreview() {
             lineHeight: 1.05,
             letterSpacing: '-0.02em',
             marginBottom: 16,
-            fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+            fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
           }}>
             מה אומרים{' '}
             <span className="text-gradient">הלקוחות?</span>
@@ -173,7 +173,7 @@ export default function TestimonialsPreview() {
               color: 'var(--brand-prime)',
               fontSize: '0.9rem',
               fontWeight: 700,
-              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
               textDecoration: 'none',
               transition: 'background 0.25s, border-color 0.25s',
             }}

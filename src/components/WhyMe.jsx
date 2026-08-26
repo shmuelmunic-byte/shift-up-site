@@ -13,7 +13,7 @@ const REASON_ICONS = [
 ];
 const REASON_EN    = ['Research-Based', 'AI-First', 'Performance Guarantee', 'Eye-Level Partner'];
 const REASON_WIDE  = [true, false, false, true];
-const REASON_ACCENT = ['var(--brand-prime)', 'var(--brand-prime)', 'var(--brand-prime)', 'var(--brand-prime)'];
+const REASON_ACCENT = ['var(--brand-prime)', 'var(--accent)', 'var(--brand-prime)', 'var(--accent)'];
 
 const FALLBACK_REASONS = [
   { title: 'מבוסס מחקר',        description: 'אני לא מריץ קמפיין על תחושת בטן. קהל, מתחרים, מסר, הכל נחקר ומזוקק לפני ששקל אחד נכנס לממומן.' },
@@ -79,7 +79,7 @@ function BentoCard({ reason, index }) {
           fontWeight: 900,
           letterSpacing: '-0.01em',
           marginBottom: 10,
-          fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+          fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
           color: 'var(--text-primary)',
         }}>
           {reason.title}
@@ -166,7 +166,7 @@ export default function WhyMe() {
             lineHeight: 1.05,
             letterSpacing: '-0.02em',
             marginBottom: 18,
-            fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+            fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
           }}>
             למה לעבוד דווקא{' '}
             <span className="text-gradient">איתי?</span>

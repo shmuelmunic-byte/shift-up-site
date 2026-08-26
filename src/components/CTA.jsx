@@ -182,7 +182,7 @@ export default function CTA() {
             letterSpacing: '-0.025em',
             lineHeight: 1.05,
             marginBottom: 20,
-            fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+            fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
           }}
         >
           מוכנים לעשות{' '}
@@ -267,7 +267,7 @@ export default function CTA() {
                   borderRadius: 3,
                   fontWeight: 800,
                   fontSize: 'clamp(1rem, 2vw, 1.1rem)',
-                  fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                  fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
                   textDecoration: 'none',
                   boxShadow: hovered || idlePulse
                     ? '0 0 60px oklch(0.785 0.173 156.6 / 0.65), 0 0 100px oklch(0.785 0.173 156.6 / 0.25)'
@@ -301,7 +301,7 @@ export default function CTA() {
                 color: 'var(--text-secondary)',
                 fontSize: '0.88rem',
                 fontWeight: 600,
-                fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
                 textDecoration: 'none',
                 transition: 'border-color 0.25s, color 0.25s',
                 cursor: 'pointer',

@@ -114,7 +114,7 @@ function EnNavbar() {
             const isActive = activeId === l.id;
             return (
               <button key={l.id} onClick={() => goto(l.id)}
-                style={{ background: 'none', border: 'none', color: isActive ? 'var(--brand-prime)' : 'var(--text-secondary)', fontSize: '0.88rem', fontWeight: isActive ? 700 : 600, letterSpacing: '0.02em', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", transition: 'color 0.25s', position: 'relative', cursor: 'pointer', padding: '4px 0' }}
+                style={{ background: 'none', border: 'none', color: isActive ? 'var(--brand-prime)' : 'var(--text-secondary)', fontSize: '0.88rem', fontWeight: isActive ? 700 : 600, letterSpacing: '0.02em', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", transition: 'color 0.25s', position: 'relative', cursor: 'pointer', padding: '4px 0' }}
                 onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = 'var(--brand-prime)'; }}
                 onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = 'var(--text-secondary)'; }}
               >
@@ -130,7 +130,7 @@ function EnNavbar() {
             onMouseLeave={e => { e.target.style.borderColor='var(--surface-2)'; e.target.style.color='var(--text-muted)'; }}
           >עב</a>
 
-          <button onClick={() => goto('en-contact')} style={{ background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', border: 'none', borderRadius: 3, padding: '10px 22px', fontWeight: 800, fontSize: '0.88rem', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", boxShadow: '0 0 28px oklch(0.785 0.173 156.6 / 0.35)', transition: 'background 0.25s, box-shadow 0.25s' }}
+          <button onClick={() => goto('en-contact')} style={{ background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', border: 'none', borderRadius: 3, padding: '10px 22px', fontWeight: 800, fontSize: '0.88rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", boxShadow: '0 0 28px oklch(0.785 0.173 156.6 / 0.35)', transition: 'background 0.25s, box-shadow 0.25s' }}
             onMouseEnter={e => { e.target.style.background='var(--brand-glow)'; e.target.style.boxShadow='0 0 44px oklch(0.785 0.173 156.6 / 0.6)'; }}
             onMouseLeave={e => { e.target.style.background='var(--brand-prime)'; e.target.style.boxShadow='0 0 28px oklch(0.785 0.173 156.6 / 0.35)'; }}
           >Let's Talk</button>
@@ -148,10 +148,10 @@ function EnNavbar() {
         <div className="mobile-menu-enter" style={{ position: 'absolute', top: '100%', width: '100%', background: 'oklch(0.11 0.015 240 / 0.97)', backdropFilter: 'blur(24px)', borderBottom: '1px solid var(--surface-2)' }}>
           <div style={{ padding: '20px 28px', display: 'flex', flexDirection: 'column', gap: 16 }}>
             {navLinks.map(l => (
-              <button key={l.id} onClick={() => goto(l.id)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', fontSize: '1rem', fontWeight: 600, textAlign: 'left', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", padding: '4px 0' }}>{l.label}</button>
+              <button key={l.id} onClick={() => goto(l.id)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', fontSize: '1rem', fontWeight: 600, textAlign: 'left', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", padding: '4px 0' }}>{l.label}</button>
             ))}
             <a href="/" style={{ color: 'var(--text-muted)', fontSize: '0.88rem', fontWeight: 700 }}>עברית →</a>
-            <button onClick={() => { goto('en-contact'); setOpen(false); }} style={{ background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', border: 'none', borderRadius: 3, padding: '13px 0', fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", marginTop: 8 }}>Let's Talk</button>
+            <button onClick={() => { goto('en-contact'); setOpen(false); }} style={{ background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', border: 'none', borderRadius: 3, padding: '13px 0', fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", marginTop: 8 }}>Let's Talk</button>
           </div>
         </div>
       )}
@@ -202,7 +202,7 @@ function EnHero({ onProcess, onForm }) {
             <span style={{ color: 'var(--brand-prime)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Strategy First. Budget Second.</span>
           </div>
 
-          <h1 className="en-hero-h1" style={{ fontSize: 'clamp(1.9rem, 7vw, 5.2rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 28, fontFamily: "'Space Grotesk', 'Rubik', sans-serif", opacity: 0 }}>
+          <h1 className="en-hero-h1" style={{ fontSize: 'clamp(1.9rem, 7vw, 5.2rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 28, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", opacity: 0 }}>
             <span style={{ color: 'var(--text-primary)' }}>Get back to running your business.</span>
             <br />
             <span style={{ color: 'var(--text-primary)' }}>Leave the </span>
@@ -221,11 +221,11 @@ function EnHero({ onProcess, onForm }) {
           </p>
 
           <div className="en-hero-ctas hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 32, marginBottom: 32, opacity: 0 }}>
-            <MagneticWrap onClick={onForm} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 32px', background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', borderRadius: 3, fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", textDecoration: 'none', border: 'none', boxShadow: '0 0 40px oklch(0.785 0.173 156.6 / 0.42)', transition: 'background 0.25s, box-shadow 0.25s' }}>
+            <MagneticWrap onClick={onForm} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 32px', background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', borderRadius: 3, fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", textDecoration: 'none', border: 'none', boxShadow: '0 0 40px oklch(0.785 0.173 156.6 / 0.42)', transition: 'background 0.25s, box-shadow 0.25s' }}>
               Get a tailored proposal
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </MagneticWrap>
-            <MagneticWrap href={WA_LINK} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', background: 'oklch(0.14 0.02 240 / 0.7)', color: 'var(--text-primary)', borderRadius: 3, fontWeight: 600, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", border: '1px solid oklch(0.25 0.02 240)', backdropFilter: 'blur(12px)', transition: 'background 0.25s, border-color 0.25s' }}>
+            <MagneticWrap href={WA_LINK} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', background: 'oklch(0.14 0.02 240 / 0.7)', color: 'var(--text-primary)', borderRadius: 3, fontWeight: 600, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", border: '1px solid oklch(0.25 0.02 240)', backdropFilter: 'blur(12px)', transition: 'background 0.25s, border-color 0.25s' }}>
               {WA_ICON} Got a question? Message me
             </MagneticWrap>
           </div>
@@ -632,7 +632,7 @@ function EnProof() {
       <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div ref={headRef} className="en-proof-head" style={{ textAlign: 'left', maxWidth: 680, marginBottom: 'clamp(32px, 5vw, 48px)', opacity: 0 }}>
           <div className="section-label">Work</div>
-          <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.4rem)', fontWeight: 700, lineHeight: 1.08, letterSpacing: '-0.02em', marginBottom: 16, fontFamily: "'Space Grotesk', 'Rubik', sans-serif" }}>
+          <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.4rem)', fontWeight: 700, lineHeight: 1.08, letterSpacing: '-0.02em', marginBottom: 16, fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}>
             Creative I've made, <span style={{ color: 'var(--brand-prime)' }}>every field.</span>
           </h2>
           <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
@@ -689,7 +689,7 @@ function EnProcess() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div className="en-process-header" style={{ textAlign: 'left', maxWidth: 680, marginBottom: 64, opacity: 0 }}>
           <div className="section-label">The Process</div>
-          <h2 style={{ fontSize: 'clamp(2.2rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 20, fontFamily: "'Space Grotesk', 'Rubik', sans-serif" }}>
+          <h2 style={{ fontSize: 'clamp(2.2rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 20, fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}>
             It's not the PPC,
             <br /><span className="text-gradient">it's the message.</span>
           </h2>
@@ -712,10 +712,10 @@ function EnProcess() {
                   <div style={{ width: 52, height: 52, borderRadius: 3, background: isActive ? 'var(--brand-prime)' : 'oklch(0.785 0.173 156.6 / 0.12)', border: `1px solid ${isActive ? 'transparent' : 'oklch(0.785 0.173 156.6 / 0.2)'}`, color: isActive ? 'oklch(0.08 0.01 240)' : 'var(--brand-prime)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.35s, color 0.35s' }}>{step.icon}</div>
                   <div style={{ textAlign: 'right' }}>
                     <div style={{ fontSize: '0.58rem', textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-muted)', fontWeight: 700 }}>Step</div>
-                    <div style={{ fontSize: '3.4rem', fontWeight: 900, lineHeight: 1, fontFamily: "'Space Grotesk', 'Rubik', sans-serif", background: 'linear-gradient(135deg, oklch(0.785 0.173 156.6 / 0.22), oklch(0.508 0.155 292.2 / 0.15))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{step.n}</div>
+                    <div style={{ fontSize: '3.4rem', fontWeight: 900, lineHeight: 1, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", background: 'linear-gradient(135deg, oklch(0.785 0.173 156.6 / 0.22), oklch(0.508 0.155 292.2 / 0.15))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{step.n}</div>
                   </div>
                 </div>
-                <h3 style={{ fontSize: 'clamp(1.5rem,2.5vw,1.9rem)', fontWeight: 900, letterSpacing: '-0.01em', marginBottom: 4, fontFamily: "'Space Grotesk', 'Rubik', sans-serif", color: isActive ? 'var(--text-primary)' : 'oklch(0.90 0.005 240)', transition: 'color 0.3s' }}>{step.title}</h3>
+                <h3 style={{ fontSize: 'clamp(1.5rem,2.5vw,1.9rem)', fontWeight: 900, letterSpacing: '-0.01em', marginBottom: 4, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", color: isActive ? 'var(--text-primary)' : 'oklch(0.90 0.005 240)', transition: 'color 0.3s' }}>{step.title}</h3>
                 <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.18em', color: isActive ? 'var(--brand-prime)' : 'var(--text-muted)', fontWeight: 700, marginBottom: 18, transition: 'color 0.3s' }}>{step.sub}</div>
                 <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: 24 }}>{step.desc}</p>
                 <div style={{ borderTop: '1px solid oklch(0.22 0.02 240 / 0.5)', paddingTop: 18, display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -762,7 +762,7 @@ function EnBentoCard({ reason, index }) {
           <div style={{ width: 44, height: 44, borderRadius: 3, background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1px solid oklch(0.785 0.173 156.6 / 0.2)', color: 'var(--brand-prime)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{reason.icon}</div>
           <span style={{ fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.16em', color: 'var(--text-muted)', fontWeight: 700 }}>{reason.en}</span>
         </div>
-        <h3 style={{ fontSize: reason.wide ? 'clamp(1.25rem, 2.5vw, 1.6rem)' : 'clamp(1.1rem, 2vw, 1.35rem)', fontWeight: 900, letterSpacing: '-0.01em', marginBottom: 10, fontFamily: "'Space Grotesk', 'Rubik', sans-serif", color: 'var(--text-primary)' }}>{reason.title}</h3>
+        <h3 style={{ fontSize: reason.wide ? 'clamp(1.25rem, 2.5vw, 1.6rem)' : 'clamp(1.1rem, 2vw, 1.35rem)', fontWeight: 900, letterSpacing: '-0.01em', marginBottom: 10, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", color: 'var(--text-primary)' }}>{reason.title}</h3>
         <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: reason.wide ? 480 : '100%' }}>{reason.desc}</p>
       </div>
     </div>
@@ -787,7 +787,7 @@ function EnWhyMe() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div className="en-whyme-header" style={{ textAlign: 'left', maxWidth: 640, marginBottom: 52, opacity: 0 }}>
           <div className="section-label">Why Me</div>
-          <h2 style={{ fontSize: 'clamp(2.2rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 18, fontFamily: "'Space Grotesk', 'Rubik', sans-serif" }}>
+          <h2 style={{ fontSize: 'clamp(2.2rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 18, fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}>
             Why work with <span className="text-gradient">me?</span>
           </h2>
           <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
@@ -831,7 +831,7 @@ function EnManifesto() {
       <FluidBlob style={{ width: 600, height: 600, top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.06), transparent 70%)', '--dur': '30s' }} />
       <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative', zIndex: 1, textAlign: 'center' }}>
         <div className="section-label" style={{ justifyContent: 'center', marginBottom: 32 }}>The Manifesto</div>
-        <p translate="no" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.3em 0.5em', fontSize: 'clamp(2rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.25, letterSpacing: '-0.02em', fontFamily: "'Space Grotesk', 'Rubik', sans-serif" }} aria-label={enWords.join(' ')}>
+        <p translate="no" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.3em 0.5em', fontSize: 'clamp(2rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.25, letterSpacing: '-0.02em', fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }} aria-label={enWords.join(' ')}>
           {enWords.map((word, i) => (
             <span key={i} className="en-manifesto-word" style={{ display: 'inline-block', opacity: 0.08, color: highlights.includes(word) ? 'var(--brand-prime)' : 'var(--text-primary)', willChange: 'opacity, transform, filter' }}>{word}</span>
           ))}
@@ -898,7 +898,7 @@ function EnAbout() {
         {/* Text */}
         <div className="en-about-header" style={{ textAlign: 'left', opacity: 0 }}>
           <div className="section-label">About Me</div>
-          <h2 style={{ fontSize: 'clamp(2rem, 4.5vw, 3.5rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 36, fontFamily: "'Space Grotesk', 'Rubik', sans-serif" }}>
+          <h2 style={{ fontSize: 'clamp(2rem, 4.5vw, 3.5rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 36, fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}>
             Who's behind <span className="text-gradient">Shift Up?</span>
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
@@ -914,7 +914,7 @@ function EnAbout() {
               </div>
             ))}
             <div className="en-about-para" style={{ opacity: 0, marginTop: 10, padding: '20px 24px', background: 'var(--surface-1)', borderRadius: 4, borderLeft: '3px solid var(--brand-prime)' }}>
-              <p className="text-gradient" style={{ fontSize: 'clamp(1.1rem, 2vw, 1.35rem)', fontWeight: 800, fontFamily: "'Space Grotesk', 'Rubik', sans-serif", lineHeight: 1.5 }}>People are the goal.</p>
+              <p className="text-gradient" style={{ fontSize: 'clamp(1.1rem, 2vw, 1.35rem)', fontWeight: 800, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", lineHeight: 1.5 }}>People are the goal.</p>
               <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: 4 }}>Your businesses are the way there.</p>
             </div>
           </div>
@@ -956,7 +956,7 @@ function EnChatItem({ item, isActive, onOpen }) {
 
   return (
     <div style={{ marginBottom: 14, opacity: 0 }} className="en-faq-item">
-      <button onClick={onOpen} style={{ width: '100%', textAlign: 'left', background: isActive ? 'var(--surface-2)' : 'var(--surface-1)', border: `1px solid ${isActive ? 'oklch(0.785 0.173 156.6 / 0.3)' : 'oklch(0.22 0.02 240)'}`, borderRadius: isActive ? '16px 16px 16px 0' : 16, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, transition: 'background 0.3s, border-color 0.3s, border-radius 0.3s', fontFamily: "'Space Grotesk', 'Rubik', sans-serif" }} aria-expanded={isActive}>
+      <button onClick={onOpen} style={{ width: '100%', textAlign: 'left', background: isActive ? 'var(--surface-2)' : 'var(--surface-1)', border: `1px solid ${isActive ? 'oklch(0.785 0.173 156.6 / 0.3)' : 'oklch(0.22 0.02 240)'}`, borderRadius: isActive ? '16px 16px 16px 0' : 16, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, transition: 'background 0.3s, border-color 0.3s, border-radius 0.3s', fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }} aria-expanded={isActive}>
         <span style={{ fontSize: 'clamp(0.9rem, 1.5vw, 1rem)', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.5, flex: 1 }}>{item.q}</span>
         <span style={{ flexShrink: 0, width: 28, height: 28, borderRadius: '50%', background: isActive ? 'oklch(0.785 0.173 156.6 / 0.2)' : 'oklch(0.18 0.025 240)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.35s var(--ease-spring), background 0.3s', transform: isActive ? 'rotate(45deg)' : 'rotate(0deg)' }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -999,7 +999,7 @@ function EnFAQ() {
       <div style={{ maxWidth: 760, margin: '0 auto' }}>
         <div className="en-faq-header" style={{ textAlign: 'left', marginBottom: 52, opacity: 0 }}>
           <div className="section-label">FAQ</div>
-          <h2 style={{ fontSize: 'clamp(2rem, 4.5vw, 3.4rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 14, fontFamily: "'Space Grotesk', 'Rubik', sans-serif" }}>Frequently Asked Questions</h2>
+          <h2 style={{ fontSize: 'clamp(2rem, 4.5vw, 3.4rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 14, fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}>Frequently Asked Questions</h2>
         </div>
         <div className="en-faq-list">
           {enFaqs.map((item, i) => (
@@ -1057,7 +1057,7 @@ function EnWhatsAppGroup() {
             </div>
             <div style={{ flex: 1 }}>
               <div className="section-label" style={{ marginBottom: 6 }}>WhatsApp Community</div>
-              <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.6rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.15, fontFamily: "'Space Grotesk', 'Rubik', sans-serif" }}>
+              <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.6rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.15, fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}>
                 The marketing{' '}<span className="text-gradient">back room</span>{' '}🚀
               </h2>
             </div>
@@ -1090,7 +1090,7 @@ function EnWhatsAppGroup() {
             </div>
 
             <a href={WA_GROUP} target="_blank" rel="noopener noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 28px', background: 'oklch(0.55 0.22 145)', color: 'white', borderRadius: 3, fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", textDecoration: 'none', boxShadow: '0 0 32px oklch(0.55 0.22 145 / 0.35)', transition: 'background 0.25s, box-shadow 0.25s, transform 0.2s' }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 28px', background: 'oklch(0.55 0.22 145)', color: 'white', borderRadius: 3, fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", textDecoration: 'none', boxShadow: '0 0 32px oklch(0.55 0.22 145 / 0.35)', transition: 'background 0.25s, box-shadow 0.25s, transform 0.2s' }}
               onMouseEnter={e => { e.currentTarget.style.background = 'oklch(0.62 0.22 145)'; e.currentTarget.style.boxShadow = '0 0 48px oklch(0.55 0.22 145 / 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.currentTarget.style.background = 'oklch(0.55 0.22 145)'; e.currentTarget.style.boxShadow = '0 0 32px oklch(0.55 0.22 145 / 0.35)'; e.currentTarget.style.transform = 'translateY(0)'; }}
             >
@@ -1128,7 +1128,7 @@ function enFireLead() {
 const enWaBtnStyle = {
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%',
   padding: '13px 22px', borderRadius: 3, background: '#25955a', color: '#fff',
-  fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", textDecoration: 'none',
+  fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", textDecoration: 'none',
   boxShadow: '0 6px 20px rgba(37,149,90,0.3)',
 };
 
@@ -1183,7 +1183,7 @@ function EnLeadForm() {
   const inputStyle = {
     width: '100%', padding: '13px 16px', borderRadius: 3,
     border: '1px solid #cdd7e3', background: '#fff', color: '#0c1118',
-    fontSize: '1rem', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", outline: 'none',
+    fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", outline: 'none',
     transition: 'border-color 0.2s, box-shadow 0.2s',
   };
   const labelStyle = { display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#3a4757', marginBottom: 6 };
@@ -1269,7 +1269,7 @@ function EnLeadForm() {
                 <button type="submit" disabled={status === 'sending'} style={{
                   width: '100%', padding: '15px', borderRadius: 3, border: 'none',
                   background: status === 'sending' ? '#7fc89e' : '#1f9d57', color: '#fff',
-                  fontSize: '1.08rem', fontWeight: 800, fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                  fontSize: '1.08rem', fontWeight: 800, fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
                   cursor: status === 'sending' ? 'default' : 'pointer',
                   boxShadow: '0 8px 24px rgba(31,157,87,0.35)', transition: 'background 0.2s, transform 0.15s',
                 }}>
@@ -1366,7 +1366,7 @@ function EnFooter() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {enNavLinks.map(l => (
                 <button key={l.id} onClick={() => goto(l.id)}
-                  style={{ background: 'none', border: 'none', textAlign: 'left', color: 'var(--text-secondary)', fontSize: '0.88rem', fontWeight: 500, fontFamily: "'Space Grotesk', 'Rubik', sans-serif", cursor: 'pointer', transition: 'color 0.2s', padding: 0 }}
+                  style={{ background: 'none', border: 'none', textAlign: 'left', color: 'var(--text-secondary)', fontSize: '0.88rem', fontWeight: 500, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", cursor: 'pointer', transition: 'color 0.2s', padding: 0 }}
                   onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
                   onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
                 >{l.label}</button>
@@ -1453,7 +1453,7 @@ export default function EnglishPage() {
   const scrollToForm = () => document.getElementById('en-contact')?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <div ref={rootRef} dir="ltr" style={{ minHeight: '100vh', background: 'var(--bedrock)', color: 'var(--text-primary)', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", overflowX: 'hidden', position: 'relative' }}>
+    <div ref={rootRef} dir="ltr" style={{ minHeight: '100vh', background: 'var(--bedrock)', color: 'var(--text-primary)', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", overflowX: 'hidden', position: 'relative' }}>
       <ScrollProgress />
       <div className="noise-overlay" aria-hidden="true" />
       <Cursor />
