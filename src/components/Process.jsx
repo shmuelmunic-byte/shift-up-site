@@ -12,9 +12,9 @@ const STEP_ICONS = [
 ];
 
 const FALLBACK_STEPS = [
-  { title: 'המחקר',   description: 'חופרים פנימה: מי הקהל שבאמת משלם, מה המתחרים עושים, ולמה שיבחרו בך. מזקקים מסר מדויק ובונים תוכנית עבודה — על דאטה, לא על ניחוש.', bullets: ['מחקר קהל ומתחרים', 'זיקוק מסר והצעת ערך', 'תוכנית עבודה ברורה'] },
-  { title: 'השיפט',   description: 'לפני שקל אחד נכנס לממומן — בונים את המגרש. איזה משפך מביא לידים, איזה תוכן מניע לפעולה, ובאילו ערוצים משחקים. מפת דרכים, לא הימור.', bullets: ['בניית משפך שיווקי', 'תוכנית תוכן ומסרים', 'בחירת הערוצים הנכונים'] },
-  { title: 'האקשן',   description: 'קמפיין מוכן להרצה יוצא לדרך: מקים ומנהל את הקמפיינים ב-Meta וב-Google, מייצר קריאייטיב שמוכר — ואם בחודש הניהול הראשון אין פניות, ממשיך לנהל בחינם עד שיש.', bullets: ['קמפיינים ב-Meta + Google', 'קריאייטיב שמוכר', 'הבטחת ביצוע על החודש הראשון'] },
+  { title: 'המחקר',   description: 'חופרים פנימה: מי הקהל שבאמת משלם, מה המתחרים עושים, ולמה שיבחרו בך. מזקקים מסר מדויק ובונים תוכנית עבודה על דאטה, לא על ניחוש.', bullets: ['מחקר קהל ומתחרים', 'זיקוק מסר והצעת ערך', 'תוכנית עבודה ברורה'] },
+  { title: 'השיפט',   description: 'לפני שקל אחד נכנס לממומן בונים את המגרש. איזה משפך מביא לידים, איזה תוכן מניע לפעולה, ובאילו ערוצים משחקים. מפת דרכים, לא הימור.', bullets: ['בניית משפך שיווקי', 'תוכנית תוכן ומסרים', 'בחירת הערוצים הנכונים'] },
+  { title: 'האקשן',   description: 'קמפיין מוכן להרצה יוצא לדרך: מקים ומנהל את הקמפיינים ב-Meta וב-Google, מייצר קריאייטיב שמוכר. ואם בחודש הניהול הראשון אין פניות, ממשיך לנהל בחינם עד שיש.', bullets: ['קמפיינים ב-Meta + Google', 'קריאייטיב שמוכר', 'הבטחת ביצוע על החודש הראשון'] },
 ];
 
 export default function Process() {
@@ -63,7 +63,7 @@ export default function Process() {
       id="strategy"
       ref={sectionRef}
       style={{
-        padding: 'clamp(80px, 10vw, 130px) 28px',
+        padding: 'clamp(52px, 7vw, 88px) 28px',
         background: 'var(--surface-0)',
         position: 'relative',
         overflow: 'hidden',
@@ -93,7 +93,7 @@ export default function Process() {
 
         {/* Header */}
         <div className="process-header" style={{ textAlign: 'right', maxWidth: 680, marginBottom: 64, opacity: 0 }}>
-          <div className="section-label">The Process</div>
+          <div className="section-label">התהליך</div>
           <h2
             style={{
               fontSize: 'clamp(2.2rem, 5vw, 4rem)',
@@ -101,7 +101,7 @@ export default function Process() {
               lineHeight: 1.05,
               letterSpacing: '-0.02em',
               marginBottom: 20,
-              fontFamily: "'Heebo', sans-serif",
+              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
             }}
           >
             זה לא ה-PPC,
@@ -110,7 +110,7 @@ export default function Process() {
           </h2>
           <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 520 }}>
             רוב העסקים רצים לעשות קמפיין לפני שהבינו מה הם מוכרים ולמי.
-            התהליך שלי מתחיל בחדר הניתוח — לא במערכת המודעות.
+            התהליך שלי מתחיל בחדר הניתוח, לא במערכת המודעות.
           </p>
         </div>
 
@@ -151,29 +151,16 @@ export default function Process() {
 
                 {/* Header row */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
-                  <div style={{
-                    width: 52, height: 52,
-                    borderRadius: 14,
-                    background: isActive ? 'var(--brand-prime)' : 'oklch(0.785 0.173 156.6 / 0.12)',
-                    border: `1px solid ${isActive ? 'transparent' : 'oklch(0.785 0.173 156.6 / 0.2)'}`,
-                    color: isActive ? 'oklch(0.08 0.01 240)' : 'var(--brand-prime)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    flexShrink: 0,
-                    transition: 'background 0.35s ease, color 0.35s ease',
-                  }}>
-                    {STEP_ICONS[i] || STEP_ICONS[0]}
+                  <div style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }} aria-hidden="true">
+                    <span style={{ width: 20, height: 20, background: isActive ? 'var(--brand-prime)' : 'oklch(0.785 0.173 156.6 / 0.5)', transform: 'skewX(-12deg)', transition: 'background 0.35s ease' }} />
                   </div>
 
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '0.58rem', textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-muted)', fontWeight: 700 }}>Step</div>
+                    <div style={{ fontSize: '0.58rem', textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-muted)', fontWeight: 700 }}>שלב</div>
                     <div style={{
-                      fontSize: '3.4rem', fontWeight: 900, lineHeight: 1,
-                      fontFamily: "'Heebo', sans-serif",
-                      background: 'linear-gradient(135deg, oklch(0.785 0.173 156.6 / 0.22), oklch(0.508 0.155 292.2 / 0.15))',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                      transition: 'opacity 0.3s',
+                      fontSize: '3.2rem', fontWeight: 700, lineHeight: 1,
+                      fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+                      color: 'oklch(0.785 0.173 156.6 / 0.32)',
                       direction: 'ltr',
                     }}>
                       {num}
@@ -185,25 +172,13 @@ export default function Process() {
                   fontSize: 'clamp(1.5rem, 2.5vw, 1.9rem)',
                   fontWeight: 900,
                   letterSpacing: '-0.01em',
-                  marginBottom: 4,
-                  fontFamily: "'Heebo', sans-serif",
+                  marginBottom: 16,
+                  fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
                   color: isActive ? 'var(--text-primary)' : 'oklch(0.90 0.005 240)',
                   transition: 'color 0.3s',
                 }}>
                   {step.title}
                 </h3>
-
-                <div dir="ltr" style={{
-                  fontSize: '0.65rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.18em',
-                  color: isActive ? 'var(--brand-prime)' : 'var(--text-muted)',
-                  fontWeight: 700,
-                  marginBottom: 18,
-                  transition: 'color 0.3s',
-                }}>
-                  {['The Research', 'The Shift', 'The Action'][i] || ''}
-                </div>
 
                 <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: 24 }}>
                   {step.description}

@@ -9,10 +9,10 @@ gsap.registerPlugin(ScrollTrigger);
 /* ── סקשן 3 — הכאב ("מבינים אותי?") — fallback ──
    ירוק שמור לפעולה בלבד; הכאב ניטרלי/כהה, וההקלה (ירוק) רק בסוף. */
 const FALLBACK_PAINS = [
-  { text: 'שורף תקציב על ממומן — והלידים פשוט לא מגיעים.' },
+  { text: 'שורף תקציב על ממומן, והלידים פשוט לא מגיעים.' },
   { text: 'מפרסם, אבל לא באמת בטוח מה המסר שעובד, ולמי.' },
   { text: 'במקום לנהל את העסק, אתה רודף אחרי הקמפיינים והפוסטים.' },
-  { text: 'כבר נכווית מסוכנות שהבטיחה הרים — והעבירה אותך למתמחה.' },
+  { text: 'עבדת עם מישהו שהבטיח הרבה, ובסוף התוצאות לא הגיעו.' },
 ];
 
 function PainCard({ text, index }) {
@@ -36,7 +36,7 @@ function PainCard({ text, index }) {
       ref={ref}
       style={{
         display: 'flex', alignItems: 'flex-start', gap: 14,
-        padding: '20px 22px', borderRadius: 16,
+        padding: '20px 22px', borderRadius: 4,
         background: 'oklch(0.11 0.015 240 / 0.6)',
         border: '1px solid oklch(0.20 0.02 240)',
         textAlign: 'right', opacity: 0,
@@ -65,7 +65,7 @@ export default function PainSection() {
   const [pains, setPains] = useState(FALLBACK_PAINS);
   const t = useContent({
     'pain.kicker': 'רגע של אמת',
-    'pain.title': 'נמאס לרדוף אחרי השיווק — ולא לראות תוצאה?',
+    'pain.title': 'נמאס לרדוף אחרי השיווק, בלי לראות תוצאה?',
     'pain.bridge': 'זה לא חייב להיות ככה.',
     'pain.bridge_accent': 'יש דרך אחת מסודרת.',
   });
@@ -90,7 +90,7 @@ export default function PainSection() {
   }, []);
 
   return (
-    <section style={{ padding: 'clamp(64px, 10vw, 110px) 28px', background: 'var(--bedrock)' }}>
+    <section style={{ padding: 'clamp(48px, 7vw, 84px) 28px', background: 'var(--bedrock)' }}>
       <div style={{ maxWidth: 920, margin: '0 auto' }}>
 
         {/* כותרת — הוק הכאב */}

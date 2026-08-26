@@ -11,7 +11,7 @@ const perks = [
   {
     Icon: Brain,
     title: 'אסטרטגיה',
-    desc: 'למה לקוחות קונים — ואיך לגרום להם לבחור בך.',
+    desc: 'למה לקוחות קונים, ואיך לגרום להם לבחור בך.',
   },
   {
     Icon: Bot,
@@ -58,7 +58,7 @@ export default function WhatsAppGroup() {
     <section
       ref={sectionRef}
       style={{
-        padding: 'clamp(80px, 10vw, 120px) 28px',
+        padding: 'clamp(52px, 7vw, 84px) 28px',
         background: 'var(--surface-0)',
         position: 'relative',
         overflow: 'hidden',
@@ -84,7 +84,7 @@ export default function WhatsAppGroup() {
             opacity: 0,
             background: 'var(--surface-1)',
             border: '1px solid oklch(0.55 0.20 145 / 0.25)',
-            borderRadius: 28,
+            borderRadius: 4,
             padding: 'clamp(32px, 5vw, 52px)',
             boxShadow: '0 0 60px oklch(0.55 0.20 145 / 0.07)',
             position: 'relative',
@@ -103,7 +103,7 @@ export default function WhatsAppGroup() {
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 18, marginBottom: 28, flexWrap: 'wrap' }}>
             {/* WA icon */}
             <div style={{
-              width: 56, height: 56, borderRadius: 16, flexShrink: 0,
+              width: 56, height: 56, borderRadius: 4, flexShrink: 0,
               background: 'oklch(0.55 0.22 145)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               boxShadow: '0 0 24px oklch(0.55 0.22 145 / 0.4)',
@@ -112,14 +112,14 @@ export default function WhatsAppGroup() {
             </div>
 
             <div style={{ flex: 1 }}>
-              <div className="section-label" style={{ marginBottom: 6 }}>WhatsApp Community</div>
+              <div className="section-label" style={{ marginBottom: 6 }}>קהילת וואטסאפ</div>
               <h2
                 style={{
                   fontSize: 'clamp(1.6rem, 3.5vw, 2.6rem)',
                   fontWeight: 900,
                   letterSpacing: '-0.02em',
                   lineHeight: 1.15,
-                  fontFamily: "'Heebo', sans-serif",
+                  fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
                 }}
               >
                 החדר האחורי{' '}
@@ -136,7 +136,7 @@ export default function WhatsAppGroup() {
             marginBottom: 32,
             maxWidth: 560,
           }}>
-            לבעלי עסקים שרוצים להבין איך המשחק עובד באמת — בלי סיסמאות, בלי תיאוריות.
+            לבעלי עסקים שרוצים להבין איך המשחק עובד באמת, בלי סיסמאות ובלי תיאוריות.
             רק פרקטיקה עסקית, פסיכולוגיה של מכירות ושימוש חכם ב-AI.
           </p>
 
@@ -161,12 +161,12 @@ export default function WhatsAppGroup() {
                   gap: 14,
                   padding: '14px 18px',
                   background: 'var(--surface-2)',
-                  borderRadius: 14,
+                  borderRadius: 3,
                   border: '1px solid oklch(0.22 0.02 240)',
                 }}
               >
                 <span style={{
-                  flexShrink: 0, width: 32, height: 32, borderRadius: 9,
+                  flexShrink: 0, width: 32, height: 32, borderRadius: 3,
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                   background: 'oklch(0.55 0.22 145 / 0.14)', color: 'var(--brand-prime)',
                 }}>
@@ -177,7 +177,7 @@ export default function WhatsAppGroup() {
                     {p.title}
                   </span>
                   <span style={{ color: 'var(--text-secondary)', fontSize: '0.92rem' }}>
-                    {' '}— {p.desc}
+                    {': '}{p.desc}
                   </span>
                 </div>
               </div>
@@ -196,7 +196,7 @@ export default function WhatsAppGroup() {
               display: 'inline-flex', alignItems: 'center', gap: 8,
               background: 'oklch(0.55 0.22 145 / 0.1)',
               border: '1px solid oklch(0.55 0.22 145 / 0.25)',
-              borderRadius: 999, padding: '8px 16px',
+              borderRadius: 3, padding: '8px 16px',
             }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'oklch(0.65 0.22 145)', display: 'block', boxShadow: '0 0 6px oklch(0.65 0.22 145)' }} />
               <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'oklch(0.75 0.18 145)' }}>
@@ -213,10 +213,10 @@ export default function WhatsAppGroup() {
                 padding: '14px 28px',
                 background: 'oklch(0.55 0.22 145)',
                 color: 'white',
-                borderRadius: 999,
+                borderRadius: 3,
                 fontWeight: 800,
                 fontSize: '1rem',
-                fontFamily: "'Heebo', sans-serif",
+                fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
                 textDecoration: 'none',
                 boxShadow: '0 0 32px oklch(0.55 0.22 145 / 0.35)',
                 transition: 'background 0.25s, box-shadow 0.25s, transform 0.2s',
@@ -233,7 +233,7 @@ export default function WhatsAppGroup() {
               }}
             >
               <WhatsAppIcon size={20} />
-              הצטרף לקבוצה — בחינם
+              הצטרף לקבוצה, בחינם
             </a>
           </div>
         </div>

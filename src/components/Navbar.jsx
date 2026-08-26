@@ -86,7 +86,7 @@ export default function Navbar({ onCta }) {
                   fontSize: '0.88rem',
                   fontWeight: isActive ? 700 : 600,
                   letterSpacing: '0.02em',
-                  fontFamily: "'Heebo', sans-serif",
+                  fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
                   transition: 'color 0.25s',
                   position: 'relative',
                   cursor: 'pointer',
@@ -99,7 +99,7 @@ export default function Navbar({ onCta }) {
                 {isActive && (
                   <span style={{
                     position: 'absolute', bottom: -2, right: 0, left: 0,
-                    height: 2, borderRadius: 999,
+                    height: 2, borderRadius: 3,
                     background: 'var(--brand-prime)',
                   }} />
                 )}
@@ -113,7 +113,7 @@ export default function Navbar({ onCta }) {
             style={{
               background: 'none',
               border: '1px solid var(--surface-2)',
-              borderRadius: 999,
+              borderRadius: 3,
               padding: '8px 16px',
               color: 'var(--text-muted)',
               fontSize: '0.8rem',
@@ -128,33 +128,25 @@ export default function Navbar({ onCta }) {
             EN
           </a>
 
-          <button
-            onClick={onCta}
+          <a
+            href="/audit"
             style={{
               background: 'var(--brand-prime)',
-              color: 'oklch(0.08 0.01 240)',
+              color: 'oklch(0.12 0.02 160)',
               border: 'none',
-              borderRadius: 999,
+              borderRadius: 3,
               padding: '10px 22px',
-              fontWeight: 800,
+              fontWeight: 700,
               fontSize: '0.88rem',
-              fontFamily: "'Heebo', sans-serif",
-              boxShadow: '0 0 28px oklch(0.785 0.173 156.6 / 0.35)',
-              transition: 'background 0.25s, box-shadow 0.25s, transform 0.2s',
+              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
+              textDecoration: 'none',
+              transition: 'background 0.2s',
             }}
-            onMouseEnter={e => {
-              e.target.style.background = 'var(--brand-glow)';
-              e.target.style.boxShadow = '0 0 44px oklch(0.785 0.173 156.6 / 0.6)';
-              e.target.style.transform = 'translateY(-1px)';
-            }}
-            onMouseLeave={e => {
-              e.target.style.background = 'var(--brand-prime)';
-              e.target.style.boxShadow = '0 0 28px oklch(0.785 0.173 156.6 / 0.35)';
-              e.target.style.transform = 'translateY(0)';
-            }}
+            onMouseEnter={e => { e.target.style.background = 'var(--brand-glow)'; }}
+            onMouseLeave={e => { e.target.style.background = 'var(--brand-prime)'; }}
           >
-            בוא נדבר תכלס
-          </button>
+            אבחון שיווק חינם
+          </a>
         </div>
 
         {/* Mobile hamburger */}
@@ -193,29 +185,32 @@ export default function Navbar({ onCta }) {
                   fontSize: '1rem',
                   fontWeight: 600,
                   textAlign: 'right',
-                  fontFamily: "'Heebo', sans-serif",
+                  fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
                   padding: '4px 0',
                 }}
               >
                 {l.label}
               </button>
             ))}
-            <button
-              onClick={() => { onCta(); setOpen(false); }}
+            <a
+              href="/audit"
+              onClick={() => setOpen(false)}
               style={{
                 background: 'var(--brand-prime)',
-                color: 'oklch(0.08 0.01 240)',
+                color: 'oklch(0.12 0.02 160)',
                 border: 'none',
-                borderRadius: 999,
+                borderRadius: 3,
                 padding: '13px 0',
-                fontWeight: 800,
+                fontWeight: 700,
                 fontSize: '1rem',
-                fontFamily: "'Heebo', sans-serif",
+                fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
                 marginTop: 8,
+                textAlign: 'center',
+                textDecoration: 'none',
               }}
             >
-              בוא נדבר תכלס
-            </button>
+              אבחון שיווק חינם
+            </a>
 
             <a
               href="/en"
@@ -225,7 +220,7 @@ export default function Navbar({ onCta }) {
                 display: 'block',
                 textAlign: 'center',
                 border: '1px solid var(--surface-2)',
-                borderRadius: 999,
+                borderRadius: 3,
                 padding: '12px 0',
                 color: 'var(--text-muted)',
                 fontSize: '0.9rem',
@@ -234,7 +229,7 @@ export default function Navbar({ onCta }) {
                 textDecoration: 'none',
               }}
             >
-              EN — English Version
+              EN · English Version
             </a>
           </div>
         </div>

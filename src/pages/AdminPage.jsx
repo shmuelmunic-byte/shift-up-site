@@ -46,7 +46,7 @@ function Toast({ msg, type, onClose }) {
     <div style={{
       position: 'fixed', bottom: 28, left: '50%', transform: 'translateX(-50%)',
       zIndex: 9999, display: 'flex', alignItems: 'center', gap: 10,
-      padding: '12px 20px', borderRadius: 12,
+      padding: '12px 20px', borderRadius: 3,
       background: isErr ? 'oklch(0.15 0.02 25)' : 'oklch(0.13 0.02 145)',
       border: `1.5px solid ${isErr ? 'oklch(0.65 0.22 25 / 0.5)' : 'oklch(0.785 0.173 156.6 / 0.4)'}`,
       boxShadow: '0 8px 40px oklch(0 0 0 / 0.5)',
@@ -64,11 +64,11 @@ function Toast({ msg, type, onClose }) {
 
 const S = {
   input: {
-    width: '100%', minHeight: 44, borderRadius: 10,
+    width: '100%', minHeight: 44, borderRadius: 3,
     border: '1.5px solid oklch(0.97 0.005 240 / 0.12)',
     background: 'oklch(0.08 0.01 240 / 0.8)',
     color: 'var(--text-primary)', padding: '0 14px',
-    fontFamily: "'Heebo', sans-serif", fontSize: '0.9rem',
+    fontFamily: "'Space Grotesk', 'Rubik', sans-serif", fontSize: '0.9rem',
     outline: 'none', boxSizing: 'border-box',
     transition: 'border-color 0.2s',
   },
@@ -79,8 +79,8 @@ const S = {
   },
   btn: (variant = 'ghost') => ({
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-    gap: 7, padding: '8px 16px', borderRadius: 10, border: 'none',
-    fontFamily: "'Heebo', sans-serif", fontWeight: 700, fontSize: '0.85rem',
+    gap: 7, padding: '8px 16px', borderRadius: 3, border: 'none',
+    fontFamily: "'Space Grotesk', 'Rubik', sans-serif", fontWeight: 700, fontSize: '0.85rem',
     cursor: 'pointer', transition: 'all 0.18s ease',
     ...(variant === 'primary' ? {
       background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)',
@@ -98,7 +98,7 @@ const S = {
   card: {
     background: 'oklch(0.11 0.015 240)',
     border: '1.5px solid oklch(0.97 0.005 240 / 0.08)',
-    borderRadius: 18, overflow: 'hidden',
+    borderRadius: 4, overflow: 'hidden',
   },
 };
 
@@ -1022,7 +1022,7 @@ function LeadsTab({ toast }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
         <span style={{ fontWeight: 800, fontSize: '1.05rem' }}>{leads.length} לידים</span>
         {unhandled > 0 && (
-          <span style={{ background: 'oklch(0.785 0.173 156.6 / 0.15)', color: 'var(--brand-prime)', border: '1px solid oklch(0.785 0.173 156.6 / 0.3)', borderRadius: 999, padding: '3px 12px', fontSize: '0.78rem', fontWeight: 700 }}>
+          <span style={{ background: 'oklch(0.785 0.173 156.6 / 0.15)', color: 'var(--brand-prime)', border: '1px solid oklch(0.785 0.173 156.6 / 0.3)', borderRadius: 3, padding: '3px 12px', fontSize: '0.78rem', fontWeight: 700 }}>
             {unhandled} חדשים
           </span>
         )}
@@ -1042,7 +1042,7 @@ function LeadsTab({ toast }) {
                 <div style={{ flex: 1, minWidth: 200 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
                     <span style={{ fontWeight: 800, fontSize: '1.02rem' }}>{l.name}</span>
-                    {l.business && <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', background: 'oklch(0.16 0.02 240)', borderRadius: 999, padding: '2px 10px' }}>{l.business}</span>}
+                    {l.business && <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', background: 'oklch(0.16 0.02 240)', borderRadius: 3, padding: '2px 10px' }}>{l.business}</span>}
                   </div>
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{fmtDate(l.created_at)} · {l.source || 'form'}</div>
                   {l.message && <p style={{ marginTop: 10, fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{l.message}</p>}
@@ -1277,7 +1277,7 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="admin-scope" dir="rtl" style={{ minHeight: '100dvh', background: 'var(--bedrock)', fontFamily: "'Heebo', sans-serif", color: 'var(--text-primary)', position: 'relative', overflowX: 'hidden' }}>
+    <div className="admin-scope" dir="rtl" style={{ minHeight: '100dvh', background: 'var(--bedrock)', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", color: 'var(--text-primary)', position: 'relative', overflowX: 'hidden' }}>
       <div className="noise-overlay" aria-hidden="true" />
       {/* ambient aurora */}
       <div className="aurora-orb" style={{ width: 480, height: 480, top: '-12%', right: '-6%', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.10), transparent 70%)', '--dur': '24s' }} />
@@ -1313,7 +1313,7 @@ export default function AdminPage() {
       <div style={{ maxWidth: 920, margin: '0 auto', padding: 'clamp(20px, 4vw, 32px) clamp(16px, 4vw, 24px)', position: 'relative', zIndex: 1 }}>
 
         {/* Tab nav */}
-        <div className="admin-tabs" style={{ marginBottom: 26, background: 'oklch(0.11 0.015 240)', borderRadius: 14, padding: 6, border: '1px solid oklch(0.97 0.005 240 / 0.06)' }}>
+        <div className="admin-tabs" style={{ marginBottom: 26, background: 'oklch(0.11 0.015 240)', borderRadius: 3, padding: 6, border: '1px solid oklch(0.97 0.005 240 / 0.06)' }}>
           {TABS.map(t => (
             <button
               key={t.id}

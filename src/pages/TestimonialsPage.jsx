@@ -16,7 +16,7 @@ function TestimonialCard({ t }) {
     <div style={{
       background: 'var(--surface-1)',
       border: '1px solid oklch(0.22 0.02 240)',
-      borderRadius: 20,
+      borderRadius: 4,
       padding: 'clamp(24px, 3vw, 36px)',
       display: 'flex',
       flexDirection: 'column',
@@ -105,7 +105,7 @@ export default function TestimonialsPage() {
         minHeight: '100vh',
         background: 'var(--bedrock)',
         color: 'var(--text-primary)',
-        fontFamily: "'Heebo', sans-serif",
+        fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
         padding: 'clamp(60px, 10vw, 100px) 28px clamp(80px, 12vw, 120px)',
       }}
     >
@@ -139,7 +139,7 @@ export default function TestimonialsPage() {
             letterSpacing: '-0.025em',
             lineHeight: 1.05,
             marginBottom: 20,
-            fontFamily: "'Heebo', sans-serif",
+            fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
           }}>
             מה אומרים{' '}
             <span style={{
@@ -150,7 +150,7 @@ export default function TestimonialsPage() {
             }}>הלקוחות</span>
           </h1>
           <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', maxWidth: 500, margin: '0 auto', lineHeight: 1.7 }}>
-            שיטה מבוססת-מחקר, הבטחת ביצוע, תוצאות שמדברות. הלקוחות שלי יספרו — פה תוכל לקרוא.
+            שיטה מבוססת-מחקר, הבטחת ביצוע, תוצאות שמדברות. הלקוחות שלי יספרו, פה תוכל לקרוא.
           </p>
         </div>
 
@@ -175,7 +175,7 @@ export default function TestimonialsPage() {
         {/* CTA */}
         <div style={{ textAlign: 'center', marginTop: 80 }}>
           <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: 20 }}>
-            רוצה להיות בין הראשונים? מקום קייס מייסדים אחד פנוי — ואם בחודש הניהול הראשון אין פניות, ממשיך לנהל בחינם עד שיש.
+            רוצה להיות בין הראשונים? מקום קייס מייסדים אחד פנוי. ואם בחודש הניהול הראשון אין פניות, ממשיך לנהל בחינם עד שיש.
           </p>
           <a
             href="https://wa.me/972534673151"
@@ -186,10 +186,10 @@ export default function TestimonialsPage() {
               padding: '14px 32px',
               background: 'var(--brand-prime)',
               color: 'oklch(0.08 0.01 240)',
-              borderRadius: 999,
+              borderRadius: 3,
               fontWeight: 800,
               fontSize: '1rem',
-              fontFamily: "'Heebo', sans-serif",
+              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
               textDecoration: 'none',
               boxShadow: '0 0 40px oklch(0.785 0.173 156.6 / 0.35)',
             }}

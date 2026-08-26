@@ -20,7 +20,7 @@ function Card({ t }) {
       style={{
         background: 'var(--surface-1)',
         border: '1px solid oklch(0.22 0.02 240)',
-        borderRadius: 18,
+        borderRadius: 4,
         padding: 'clamp(20px, 2.5vw, 30px)',
         display: 'flex',
         flexDirection: 'column',
@@ -118,7 +118,7 @@ export default function TestimonialsPreview() {
       id="testimonials"
       ref={sectionRef}
       style={{
-        padding: 'clamp(80px, 10vw, 120px) 28px',
+        padding: 'clamp(52px, 7vw, 84px) 28px',
         background: 'var(--surface-0)',
         position: 'relative',
         overflow: 'hidden',
@@ -139,7 +139,7 @@ export default function TestimonialsPreview() {
             lineHeight: 1.05,
             letterSpacing: '-0.02em',
             marginBottom: 16,
-            fontFamily: "'Heebo', sans-serif",
+            fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
           }}>
             מה אומרים{' '}
             <span className="text-gradient">הלקוחות?</span>
@@ -169,11 +169,11 @@ export default function TestimonialsPreview() {
               padding: '11px 28px',
               background: 'transparent',
               border: '1px solid oklch(0.785 0.173 156.6 / 0.3)',
-              borderRadius: 999,
+              borderRadius: 3,
               color: 'var(--brand-prime)',
               fontSize: '0.9rem',
               fontWeight: 700,
-              fontFamily: "'Heebo', sans-serif",
+              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
               textDecoration: 'none',
               transition: 'background 0.25s, border-color 0.25s',
             }}

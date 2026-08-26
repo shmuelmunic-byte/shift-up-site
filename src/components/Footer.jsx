@@ -202,7 +202,7 @@ export default function Footer() {
                   style={{
                     background: 'none', border: 'none', textAlign: 'right',
                     color: 'var(--text-secondary)', fontSize: '0.88rem', fontWeight: 500,
-                    fontFamily: "'Heebo', sans-serif", cursor: 'pointer',
+                    fontFamily: "'Space Grotesk', 'Rubik', sans-serif", cursor: 'pointer',
                     transition: 'color 0.2s', padding: 0,
                   }}
                   onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}

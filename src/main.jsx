@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App.jsx'
 import Analytics from './components/Analytics.jsx'
+import Seo from './components/Seo.jsx'
 import RequireAuth from './components/RequireAuth.jsx'
 import A11yWidget from './components/A11yWidget.jsx'
 import CookieBanner from './components/CookieBanner.jsx'
@@ -24,6 +25,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <Analytics />
+      <Seo />
       <div className="grid-bg-fixed" aria-hidden="true" />
       <Suspense fallback={<div style={{ minHeight: '100vh', background: 'var(--bedrock)' }} aria-hidden="true" />}>
         <Routes>

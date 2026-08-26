@@ -49,8 +49,8 @@ const SOCIAL = [
 const FALLBACK_PROMPTS = [
   {
     id: 'brand-hijack', num: '02',
-    title: 'חטיפת מותג — Trigger Marketing',
-    subtitle: 'השתלטות על הרגלי הקהל שלך — בחינם',
+    title: 'חטיפת מותג · Trigger Marketing',
+    subtitle: 'השתלטות על הרגלי הקהל שלך, בחינם',
     tag: 'שיווק פסיכולוגי',
     text: `אתה פועל כפסיכולוג התנהגותי ואסטרטג שיווקי מוביל.\n\nהעסק שלי: [תאר את העסק שלך — מה אתה עושה ולמי]\nקהל היעד שלי: [תאר בפירוט — גיל, עיסוק, כאב עיקרי, חלום עיקרי]\n\nשלב 1 — מיפוי טריגרים:\nזהה 5 דברים ספציפיים שהקהל שלי נתקל בהם כל יום — הרגלים, חפצים, מקומות, מילים או חוויות שחוזרים ברמה יומיומית.\n\nשלב 2 — השתלטות יצירתית:\nלכל טריגר, הצע שיטה חינמית, מעשית ויצירתית שבה אוכל לקשר אותו למותג שלי.\n\nפורמט הפלט:\nלכל טריגר (1–5):\n🎯 הטריגר: [שם ותיאור קצר]\n💡 ההשתלטות: [הפעולה הספציפית שתעשה]\n🔗 הקשר למותג: [למה זה ייצור אסוציאציה חזקה]\n⚡ קשיי יישום: [מה הכי חשוב לשים לב אליו]`,
   },
@@ -204,7 +204,7 @@ function PromptCard({ prompt }) {
     <article
       style={{
         width: '100%',
-        borderRadius: 22,
+        borderRadius: 4,
         background: 'oklch(0.11 0.015 240)',
         border: '1.5px solid oklch(0.97 0.005 240 / 0.08)',
         overflow: 'hidden',
@@ -245,7 +245,7 @@ function PromptCard({ prompt }) {
               fontWeight: 900,
               color: 'var(--brand-prime)',
               letterSpacing: '0.02em',
-              fontFamily: "'Heebo', sans-serif",
+              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
             }}>
               #{prompt.num}
             </span>
@@ -303,7 +303,7 @@ function PromptCard({ prompt }) {
 
         {/* Prompt text box */}
         <div style={{
-          borderRadius: 14,
+          borderRadius: 3,
           overflow: 'hidden',
           border: '1px solid oklch(0.97 0.005 240 / 0.07)',
           marginBottom: 14,
@@ -346,7 +346,7 @@ function PromptCard({ prompt }) {
             lineHeight: 1.8,
             color: 'var(--text-secondary)',
             whiteSpace: 'pre-wrap',
-            fontFamily: "'Heebo', sans-serif",
+            fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
             direction: 'rtl',
             textAlign: 'right',
             maxHeight: 210,
@@ -370,7 +370,7 @@ function PromptCard({ prompt }) {
             alignItems: 'center',
             justifyContent: 'center',
             gap: 9,
-            borderRadius: 12,
+            borderRadius: 3,
             border: `1.5px solid ${copied
               ? 'oklch(0.785 0.173 156.6 / 0.6)'
               : 'oklch(0.785 0.173 156.6 / 0.22)'}`,
@@ -378,7 +378,7 @@ function PromptCard({ prompt }) {
               ? 'oklch(0.785 0.173 156.6 / 0.14)'
               : 'oklch(0.785 0.173 156.6 / 0.07)',
             color: copied ? 'var(--brand-prime)' : 'var(--text-primary)',
-            fontFamily: "'Heebo', sans-serif",
+            fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
             fontWeight: 700,
             fontSize: '0.95rem',
             cursor: 'pointer',
@@ -414,11 +414,11 @@ function PromptCard({ prompt }) {
               marginTop: 8,
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               width: '100%', minHeight: 44,
-              borderRadius: 12, textDecoration: 'none',
+              borderRadius: 3, textDecoration: 'none',
               border: '1.5px solid oklch(0.508 0.155 292.2 / 0.3)',
               background: 'oklch(0.508 0.155 292.2 / 0.07)',
               color: 'oklch(0.80 0.18 285)',
-              fontFamily: "'Heebo', sans-serif", fontWeight: 700, fontSize: '0.88rem',
+              fontFamily: "'Space Grotesk', 'Rubik', sans-serif", fontWeight: 700, fontSize: '0.88rem',
               transition: 'all 0.18s ease',
             }}
             onMouseEnter={e => { e.currentTarget.style.background = 'oklch(0.508 0.155 292.2 / 0.14)'; e.currentTarget.style.borderColor = 'oklch(0.508 0.155 292.2 / 0.5)'; }}
@@ -455,7 +455,7 @@ function SocialCard({ label, handle, href, hoverColor, Icon }) {
         alignItems: 'center',
         gap: 11,
         padding: '13px 16px',
-        borderRadius: 16,
+        borderRadius: 4,
         background: hovered ? 'oklch(0.15 0.02 240)' : 'oklch(0.12 0.015 240)',
         border: `1.5px solid ${hovered ? 'oklch(0.785 0.173 156.6 / 0.28)' : 'oklch(0.97 0.005 240 / 0.08)'}`,
         textDecoration: 'none',
@@ -468,7 +468,7 @@ function SocialCard({ label, handle, href, hoverColor, Icon }) {
       <div style={{
         width: 38,
         height: 38,
-        borderRadius: 10,
+        borderRadius: 3,
         background: hovered ? 'oklch(0.785 0.173 156.6 / 0.1)' : 'oklch(0.14 0.02 240)',
         display: 'flex',
         alignItems: 'center',
@@ -523,13 +523,13 @@ function SocialCard({ label, handle, href, hoverColor, Icon }) {
 
 function SkeletonCard() {
   return (
-    <div style={{ width: '100%', borderRadius: 22, background: 'oklch(0.11 0.015 240)', border: '1.5px solid oklch(0.97 0.005 240 / 0.08)', overflow: 'hidden', height: 220, animation: 'breathing 1.5s ease-in-out infinite' }}>
+    <div style={{ width: '100%', borderRadius: 4, background: 'oklch(0.11 0.015 240)', border: '1.5px solid oklch(0.97 0.005 240 / 0.08)', overflow: 'hidden', height: 220, animation: 'breathing 1.5s ease-in-out infinite' }}>
       <div style={{ height: 3, background: 'oklch(0.785 0.173 156.6 / 0.2)' }} />
       <div style={{ padding: '22px 22px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div style={{ height: 14, width: '40%', borderRadius: 7, background: 'oklch(0.97 0.005 240 / 0.06)' }} />
         <div style={{ height: 22, width: '70%', borderRadius: 7, background: 'oklch(0.97 0.005 240 / 0.09)' }} />
         <div style={{ height: 14, width: '50%', borderRadius: 7, background: 'oklch(0.785 0.173 156.6 / 0.08)' }} />
-        <div style={{ flex: 1, borderRadius: 10, background: 'oklch(0.07 0.008 240)' }} />
+        <div style={{ flex: 1, borderRadius: 3, background: 'oklch(0.07 0.008 240)' }} />
       </div>
     </div>
   );
@@ -598,7 +598,7 @@ export default function FreePage() {
       style={{
         minHeight: '100dvh',
         background: 'var(--bedrock)',
-        fontFamily: "'Heebo', sans-serif",
+        fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
         position: 'relative',
         overscrollBehavior: 'contain',
       }}
@@ -715,7 +715,7 @@ export default function FreePage() {
               maxWidth: 340,
               margin: '0 auto',
             }}>
-              כלי AI שאני משתמש בהם כל יום — לך, ממני, בלי עלות.
+              כלי AI שאני משתמש בהם כל יום. לך, ממני, בלי עלות.
               <br />
               הספרייה גדלה עם כל פוסט חדש.
             </p>
@@ -769,7 +769,7 @@ export default function FreePage() {
               display: 'block',
               textDecoration: 'none',
               marginBottom: 36,
-              borderRadius: 20,
+              borderRadius: 4,
               overflow: 'hidden',
               border: '1.5px solid oklch(0.785 0.173 156.6 / 0.3)',
               background: 'oklch(0.11 0.015 240)',
@@ -794,7 +794,7 @@ export default function FreePage() {
               </p>
               <span style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
-                width: '100%', minHeight: 52, borderRadius: 14,
+                width: '100%', minHeight: 52, borderRadius: 3,
                 background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1.5px solid oklch(0.785 0.173 156.6 / 0.3)',
                 color: 'var(--brand-prime)', fontWeight: 800, fontSize: '0.98rem',
               }}>
@@ -814,7 +814,7 @@ export default function FreePage() {
             width: '100%',
             marginBottom: 16,
             padding: '16px 18px',
-            borderRadius: 18,
+            borderRadius: 4,
             background: 'oklch(0.12 0.015 240 / 0.7)',
             border: '1px solid oklch(0.97 0.005 240 / 0.07)',
           }}>
@@ -859,7 +859,7 @@ export default function FreePage() {
                 lineHeight: 1.5,
               }}>
                 אסטרטג שיווק + מומחה AI. קמפיינים מבוססי-מחקר,
-                קריאייטיב שמוכר — עם הבטחת ביצוע.
+                קריאייטיב שמוכר, עם הבטחת ביצוע.
               </div>
             </div>
           </div>
@@ -873,7 +873,7 @@ export default function FreePage() {
               marginBottom: 10,
               fontWeight: 600,
             }}>
-              רוצה קמפיין שנבנה על מחקר — לא על ניחוש?
+              רוצה קמפיין שנבנה על מחקר, לא על ניחוש?
             </p>
             <a
               href={WA_LINK}
@@ -889,10 +889,10 @@ export default function FreePage() {
                 minHeight: 60,
                 background: 'var(--brand-prime)',
                 color: 'oklch(0.07 0.01 240)',
-                borderRadius: 18,
+                borderRadius: 4,
                 fontWeight: 800,
                 fontSize: '1.05rem',
-                fontFamily: "'Heebo', sans-serif",
+                fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
                 textDecoration: 'none',
                 cursor: 'pointer',
                 boxShadow:
@@ -909,7 +909,7 @@ export default function FreePage() {
               }}
             >
               <IconWhatsApp size={20} />
-              לשיחת היכרות — חינם, ללא התחייבות
+              לשיחת היכרות. חינם, ללא התחייבות
             </a>
           </div>
 

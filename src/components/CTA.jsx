@@ -113,7 +113,7 @@ export default function CTA() {
       ref={sectionRef}
       className="cta-bg"
       style={{
-        padding: 'clamp(80px, 12vw, 140px) 28px',
+        padding: 'clamp(56px, 8vw, 96px) 28px',
         position: 'relative',
         overflow: 'hidden',
         textAlign: 'center',
@@ -182,7 +182,7 @@ export default function CTA() {
             letterSpacing: '-0.025em',
             lineHeight: 1.05,
             marginBottom: 20,
-            fontFamily: "'Heebo', sans-serif",
+            fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
           }}
         >
           מוכנים לעשות{' '}
@@ -236,7 +236,7 @@ export default function CTA() {
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  borderRadius: 999,
+                  borderRadius: 3,
                   border: `1.5px solid oklch(0.785 0.173 156.6 / ${hovered || idlePulse ? 0.5 : 0.25})`,
                   animation: (hovered || idlePulse)
                     ? `pulse-ring ${1.4 + k * 0.5}s ease-out ${k * 0.35}s infinite`
@@ -264,10 +264,10 @@ export default function CTA() {
                     ? 'var(--brand-glow)'
                     : 'var(--brand-prime)',
                   color: 'oklch(0.08 0.01 240)',
-                  borderRadius: 999,
+                  borderRadius: 3,
                   fontWeight: 800,
                   fontSize: 'clamp(1rem, 2vw, 1.1rem)',
-                  fontFamily: "'Heebo', sans-serif",
+                  fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
                   textDecoration: 'none',
                   boxShadow: hovered || idlePulse
                     ? '0 0 60px oklch(0.785 0.173 156.6 / 0.65), 0 0 100px oklch(0.785 0.173 156.6 / 0.25)'
@@ -297,11 +297,11 @@ export default function CTA() {
                 padding: '10px 24px',
                 background: 'transparent',
                 border: '1px solid var(--surface-2)',
-                borderRadius: 999,
+                borderRadius: 3,
                 color: 'var(--text-secondary)',
                 fontSize: '0.88rem',
                 fontWeight: 600,
-                fontFamily: "'Heebo', sans-serif",
+                fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
                 textDecoration: 'none',
                 transition: 'border-color 0.25s, color 0.25s',
                 cursor: 'pointer',
@@ -349,7 +349,7 @@ export default function CTA() {
                 }}
               />
             </span>
-            זמין לשיחת היכרות קצרה — חינם, ללא התחייבות.
+            זמין לשיחת היכרות קצרה. חינם, ללא התחייבות.
           </div>
         </div>
       </div>

@@ -18,23 +18,17 @@ export default function Manifesto() {
     const wordEls = section.querySelectorAll('.manifesto-word');
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: 'top 70%',
-          end: 'bottom 30%',
-          scrub: 0.8,
-        },
-      });
-
-      wordEls.forEach((el, i) => {
-        tl.fromTo(
-          el,
-          { opacity: 0.08, y: 14, filter: 'blur(3px)' },
-          { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.4, ease: 'power2.out' },
-          i * 0.12
-        );
-      });
+      // One-time reveal (not scroll-scrubbed): the manifesto becomes fully
+      // readable when it enters and stays complete — no vanishing on scroll.
+      gsap.fromTo(
+        wordEls,
+        { opacity: 0.12, y: 12, filter: 'blur(2px)' },
+        {
+          opacity: 1, y: 0, filter: 'blur(0px)',
+          duration: 0.5, ease: 'power2.out', stagger: 0.05,
+          scrollTrigger: { trigger: section, start: 'top 78%', once: true },
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -44,7 +38,7 @@ export default function Manifesto() {
     <section
       ref={sectionRef}
       style={{
-        padding: 'clamp(80px, 12vw, 140px) 28px',
+        padding: 'clamp(56px, 8vw, 96px) 28px',
         background: 'var(--surface-0)',
         position: 'relative',
         overflow: 'hidden',
@@ -72,7 +66,7 @@ export default function Manifesto() {
         }}
       >
         <div className="section-label" style={{ justifyContent: 'center', marginBottom: 32 }}>
-          The Manifesto
+          האני מאמין
         </div>
 
         <p
@@ -86,7 +80,7 @@ export default function Manifesto() {
             fontWeight: 900,
             lineHeight: 1.25,
             letterSpacing: '-0.02em',
-            fontFamily: "'Heebo', sans-serif",
+            fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
           }}
           aria-label={words.join(' ')}
         >

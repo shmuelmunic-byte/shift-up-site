@@ -95,7 +95,7 @@ function StatCard({ stat, index }) {
         letterSpacing: '-0.03em',
         lineHeight: 1.1,
         marginBottom: 12,
-        fontFamily: "'Heebo', sans-serif",
+        fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
       }}>
         {renderMain()}
       </div>
@@ -108,7 +108,7 @@ function StatCard({ stat, index }) {
           gap: 6,
           background: showOnline ? 'oklch(0.785 0.173 156.6 / 0.1)' : 'oklch(0.14 0.02 240)',
           border: `1px solid ${showOnline ? 'oklch(0.785 0.173 156.6 / 0.3)' : 'oklch(0.22 0.02 240)'}`,
-          borderRadius: 999,
+          borderRadius: 3,
           padding: '3px 10px',
           marginBottom: 8,
           transition: 'all 0.4s ease',
@@ -130,7 +130,7 @@ function StatCard({ stat, index }) {
 
       {/* Accent line */}
       {!stat.live && (
-        <div style={{ height: 2, width: 32, background: 'var(--brand-prime)', borderRadius: 999, marginBottom: 10, opacity: 0.5 }} />
+        <div style={{ height: 2, width: 32, background: 'var(--brand-prime)', borderRadius: 3, marginBottom: 10, opacity: 0.5 }} />
       )}
 
       {/* Label */}

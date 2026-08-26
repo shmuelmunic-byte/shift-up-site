@@ -32,7 +32,7 @@ export default function MarqueeSection() {
               fontWeight: 900,
               letterSpacing: '-0.01em',
               color: word === '↑' ? 'var(--brand-prime)' : 'oklch(0.55 0.01 240)',
-              fontFamily: "'Heebo', sans-serif",
+              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
               whiteSpace: 'nowrap',
             }}
           >

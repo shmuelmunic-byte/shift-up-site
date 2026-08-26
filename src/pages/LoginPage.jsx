@@ -33,7 +33,7 @@ export default function LoginPage() {
         minHeight: '100vh',
         background: 'var(--bedrock)',
         color: 'var(--text-primary)',
-        fontFamily: "'Heebo', sans-serif",
+        fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
         overflow: 'hidden',
         position: 'relative',
       }}
@@ -125,7 +125,7 @@ export default function LoginPage() {
                 gap: 10,
                 marginTop: 10,
                 border: 'none',
-                borderRadius: 999,
+                borderRadius: 3,
                 background: loading ? 'oklch(0.55 0.15 145)' : 'var(--brand-prime)',
                 color: 'oklch(0.08 0.01 240)',
                 boxShadow: '0 0 36px oklch(0.785 0.173 156.6 / 0.38)',

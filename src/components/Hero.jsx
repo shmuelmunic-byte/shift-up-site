@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, Fragment } from 'react';
 import { gsap } from 'gsap';
 import { supabase } from '../lib/supabase';
 import { WhatsAppIcon } from './icons';
@@ -8,76 +8,26 @@ const DEFAULT_WA =
   encodeURIComponent('היי שמואל, יש לי שאלה על השירות');
 
 const DEFAULT_SUBTITLE =
-  'קמפיינים מבוססי-מחקר שמחזירים לעסק פניות ושקט — לעסקים שכבר מבינים שיווק, עם הבטחת ביצוע על חודש הניהול הראשון.';
+  'קמפיינים מבוססי-מחקר שמחזירים לעסק פניות ושקט. לעסקים שכבר מבינים שיווק, עם הבטחת ביצוע על חודש הניהול הראשון.';
 
 const profileSrc = '/shmuel.png';
 
-/* ── Fluid animated background ── */
-function FluidBg() {
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const blobs = container.querySelectorAll('.fluid-blob');
-
-    const onMove = (e) => {
-      const nx = (e.clientX / window.innerWidth  - 0.5) * 2;
-      const ny = (e.clientY / window.innerHeight - 0.5) * 2;
-      blobs.forEach((blob, i) => {
-        const f = (i + 1) * 14;
-        gsap.to(blob, { x: nx * f, y: ny * f, duration: 1.8, ease: 'power2.out', overwrite: 'auto' });
-      });
-    };
-
-    window.addEventListener('mousemove', onMove, { passive: true });
-    return () => window.removeEventListener('mousemove', onMove);
-  }, []);
-
-  return (
-    <div ref={containerRef} style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
-      {/* Primary aurora — large green */}
-      <div className="aurora-orb" style={{ width: 700, height: 700, top: '-15%', right: '-8%',
-        background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.20), transparent 65%)', '--dur': '20s' }} />
-      {/* Secondary — green left */}
-      <div className="aurora-orb" style={{ width: 550, height: 550, top: '25%', left: '-10%',
-        background: 'radial-gradient(circle, oklch(0.65 0.22 145 / 0.13), transparent 70%)', '--dur': '26s', '--delay': '-6s' }} />
-      {/* Accent — violet bottom */}
-      <div className="aurora-orb" style={{ width: 450, height: 450, bottom: '-5%', right: '28%',
-        background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.15), transparent 70%)', '--dur': '30s', '--delay': '-11s' }} />
-      {/* Cyan transition glow — gradient/aurora only, never on CTA */}
-      <div className="aurora-orb" style={{ width: 520, height: 520, bottom: '8%', left: '6%',
-        background: 'radial-gradient(circle, oklch(0.65 0.22 200 / 0.12), transparent 70%)', '--dur': '24s', '--delay': '-9s' }} />
-      {/* Small highlight */}
-      <div className="aurora-orb" style={{ width: 280, height: 280, top: '12%', right: '22%',
-        background: 'radial-gradient(circle, oklch(0.876 0.148 155.7 / 0.09), transparent 70%)', '--dur': '16s', '--delay': '-4s' }} />
-    </div>
-  );
-}
-
-/* ── Word-level kinetic reveal ──
-   Uses CSS animation (not GSAP) so background-clip:text on inline-block spans
-   works reliably — no JS opacity/transform conflict with gradient rendering. */
-function KineticWords({ text, gradient = false, delay = 0 }) {
-  const cls = gradient ? 'kword-gradient' : 'kword-plain';
-
+/* ── Word-level kinetic reveal (motion kept — CSS-driven so it's cheap) ── */
+function KineticWords({ text, delay = 0 }) {
   return (
     <span translate="no" style={{ display: 'inline' }} aria-label={text}>
       {text.split(' ').map((word, i, arr) => (
-        <span
-          key={i}
-          className={cls}
-          style={{ '--word-delay': `${delay + i * 0.075}s` }}
-        >
-          {word}{i < arr.length - 1 ? ' ' : ''}
-        </span>
+        <Fragment key={i}>
+          <span className="kword-plain" style={{ '--word-delay': `${delay + i * 0.075}s` }}>{word}</span>
+          {i < arr.length - 1 ? ' ' : ''}
+        </Fragment>
       ))}
     </span>
   );
 }
 
-/* ── Magnetic button wrapper ── */
-function MagneticBtn({ children, href, onClick, style }) {
+/* ── Magnetic button (motion kept) ── */
+function MagneticBtn({ children, href, onClick, style, newTab = true }) {
   const wrapRef = useRef(null);
 
   const onMove = (e) => {
@@ -87,13 +37,15 @@ function MagneticBtn({ children, href, onClick, style }) {
     const dx = e.clientX - (rect.left + rect.width  / 2);
     const dy = e.clientY - (rect.top  + rect.height / 2);
     if (Math.sqrt(dx * dx + dy * dy) < 90) {
-      gsap.to(el, { x: dx * 0.38, y: dy * 0.38, duration: 0.4, ease: 'power2.out' });
+      gsap.to(el, { x: dx * 0.3, y: dy * 0.3, duration: 0.4, ease: 'power2.out' });
     }
   };
   const onLeave = () => gsap.to(wrapRef.current, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.6)' });
 
   const Tag = href ? 'a' : 'button';
-  const extra = href ? { href, target: '_blank', rel: 'noopener noreferrer' } : { onClick };
+  const extra = href
+    ? { href, onClick, ...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}) }
+    : { onClick };
 
   return (
     <div ref={wrapRef} className="magnetic-outer" onMouseMove={onMove} onMouseLeave={onLeave}>
@@ -102,8 +54,8 @@ function MagneticBtn({ children, href, onClick, style }) {
   );
 }
 
-/* ── Hero section ── */
-export default function Hero({ onContact, onProcess }) {
+/* ── Hero (v2: sharp corners, green-only, no glass/aurora, motion kept) ── */
+export default function Hero({ onContact }) {
   const sectionRef = useRef(null);
   const [whatsappLink, setWhatsappLink] = useState(DEFAULT_WA);
   const [subtitle, setSubtitle] = useState(DEFAULT_SUBTITLE);
@@ -121,25 +73,23 @@ export default function Hero({ onContact, onProcess }) {
       });
   }, []);
 
-  // WhatsApp = פנייה משנית. אירוע ה-Lead "הכבד" נשמר לשליחת הטופס.
   const trackWhatsApp = () => {
     if (typeof window.fbq === 'function') window.fbq('track', 'Contact', { content_name: 'Hero WhatsApp' });
     if (typeof window.gtag === 'function') window.gtag('event', 'contact', { method: 'whatsapp', location: 'hero' });
   };
 
-  // הכפתור הראשי גולל לטופס — מסמן כוונה, לא המרה מלאה.
   const handlePrimary = () => {
-    if (typeof window.gtag === 'function') window.gtag('event', 'cta_click', { location: 'hero', target: 'lead_form' });
-    onContact?.();
+    if (typeof window.gtag === 'function') window.gtag('event', 'cta_click', { location: 'hero', target: 'audit' });
   };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo('.hero-sub',    { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', delay: 0.95 });
-      gsap.fromTo('.hero-anchor', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 1.25 });
-      gsap.fromTo('.hero-trust',  { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 1.4  });
-      gsap.fromTo('.hero-ctas',   { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 1.05 });
-      gsap.fromTo('.hero-image',  { y: 40, opacity: 0, scale: 0.96 }, { y: 0, opacity: 1, scale: 1, duration: 1.1, ease: 'expo.out', delay: 0.35 });
+      gsap.fromTo('.hero-eyebrow', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'expo.out', delay: 0.15 });
+      gsap.fromTo('.hero-sub',     { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', delay: 0.9 });
+      gsap.fromTo('.hero-ctas',    { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 1.05 });
+      gsap.fromTo('.hero-anchor',  { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 1.2 });
+      gsap.fromTo('.hero-trust',   { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 1.35 });
+      gsap.fromTo('.hero-image',   { y: 32, opacity: 0 }, { y: 0, opacity: 1, duration: 1.0, ease: 'expo.out', delay: 0.35 });
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -148,159 +98,108 @@ export default function Hero({ onContact, onProcess }) {
     <section
       id="hero"
       ref={sectionRef}
-      style={{ position: 'relative', paddingTop: 'clamp(100px, 18vw, 140px)', paddingBottom: 'clamp(60px, 10vw, 100px)', overflow: 'hidden', minHeight: '100vh', display: 'flex', alignItems: 'center' }}
+      style={{ position: 'relative', paddingTop: 'clamp(110px, 18vw, 150px)', paddingBottom: 'clamp(60px, 10vw, 100px)', overflow: 'hidden', minHeight: '100vh', display: 'flex', alignItems: 'center' }}
     >
-      <FluidBg />
+      {/* one static, restrained green wash (no multi-color aurora) */}
+      <div aria-hidden="true" style={{
+        position: 'absolute', top: '-20%', insetInlineEnd: '-10%', width: 620, height: 620,
+        background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.10), transparent 68%)',
+        pointerEvents: 'none', zIndex: 0,
+      }} />
 
-      <div
-        className="hero-layout"
-        style={{ maxWidth: 1200, margin: '0 auto', padding: '0 28px', position: 'relative', zIndex: 2, width: '100%' }}
-      >
+      <div className="hero-layout" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 28px', position: 'relative', zIndex: 2, width: '100%' }}>
+
         {/* ── Copy column ── */}
         <div style={{ textAlign: 'right' }}>
 
-          {/* eyebrow */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28, direction: 'ltr' }}>
-            <span style={{ height: 1, width: 36, background: 'var(--brand-prime)', opacity: 0.6, display: 'block' }} />
-            <span style={{ color: 'var(--brand-prime)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
-              Strategy First. Budget Second.
+          {/* eyebrow — Hebrew, sharp, green square echoing the logo mark */}
+          <div className="hero-eyebrow" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 26, opacity: 0 }}>
+            <span style={{ width: 9, height: 9, background: 'var(--brand-prime)', display: 'block', transform: 'skewX(-14deg)' }} />
+            <span style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', fontWeight: 600, letterSpacing: '0.02em' }}>
+              אסטרטג שיווק דיגיטלי · מומחה AI
             </span>
           </div>
 
-          {/* headline — נעול */}
+          {/* headline — locked copy, solid green accent (no gradient text) */}
           <h1
             translate="no"
             style={{
-              fontSize: 'clamp(2rem, 7vw, 5rem)',
-              fontWeight: 900,
-              lineHeight: 1.08,
+              fontSize: 'clamp(2.1rem, 7vw, 5rem)',
+              fontWeight: 700,
+              lineHeight: 1.06,
               letterSpacing: '-0.02em',
-              marginBottom: 26,
-              fontFamily: "'Heebo', sans-serif",
+              marginBottom: 24,
             }}
           >
             <span style={{ color: 'var(--text-primary)' }}>תחזור לנהל את העסק.</span>
             <br />
             <span style={{ color: 'var(--text-primary)' }}>את השיווק </span>
-            <KineticWords text="תשאיר לי" gradient delay={0.2} />
-            <span style={{ color: 'var(--brand-prime)' }}>.</span>
+            <span style={{ color: 'var(--brand-prime)' }}><KineticWords text="תשאיר לי" delay={0.2} />.</span>
           </h1>
 
-          {/* subtext — נעול */}
-          <p
-            className="hero-sub"
-            style={{ fontSize: 'clamp(1rem, 2.5vw, 1.18rem)', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 540, marginBottom: 8, opacity: 0 }}
-          >
+          {/* subtext */}
+          <p className="hero-sub" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.16rem)', color: 'var(--text-secondary)', lineHeight: 1.7, maxWidth: 520, opacity: 0 }}>
             {subtitle}
           </p>
 
-          {/* CTAs — ראשי: טופס · משני: וואטסאפ */}
-          <div className="hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 36, marginBottom: 18, opacity: 0 }}>
+          {/* CTA — one dominant action: the free audit (low-commitment entry) */}
+          <div className="hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16, marginTop: 32, marginBottom: 20, opacity: 0 }}>
             <MagneticBtn
+              href="/audit"
+              newTab={false}
               onClick={handlePrimary}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 10,
-                padding: '15px 34px', background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)',
-                borderRadius: 999, fontWeight: 800, fontSize: '1.05rem', fontFamily: "'Heebo', sans-serif",
-                border: 'none', cursor: 'pointer',
-                boxShadow: '0 0 40px oklch(0.785 0.173 156.6 / 0.42)',
-                transition: 'background 0.25s, box-shadow 0.25s',
+                padding: '15px 30px', background: 'var(--brand-prime)', color: 'oklch(0.12 0.02 160)',
+                borderRadius: 'var(--radius)', fontWeight: 700, fontSize: '1.02rem',
+                border: 'none', cursor: 'pointer', textDecoration: 'none', transition: 'background 0.2s',
               }}
             >
-              לקבלת הצעה מותאמת
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
-              </svg>
+              אבחון שיווק חינם
+              <span style={{ fontSize: '0.72rem', fontWeight: 600, background: 'oklch(0.12 0.02 160 / 0.18)', borderRadius: 2, padding: '2px 7px' }}>3 דקות</span>
             </MagneticBtn>
 
-            <MagneticBtn
+            <a
               href={whatsappLink}
               onClick={trackWhatsApp}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 10,
-                padding: '15px 28px', background: 'oklch(0.14 0.02 240 / 0.7)', color: 'var(--text-primary)',
-                borderRadius: 999, fontWeight: 600, fontSize: '1rem', fontFamily: "'Heebo', sans-serif",
-                border: '1px solid oklch(0.25 0.02 240)', backdropFilter: 'blur(12px)',
-                textDecoration: 'none',
-                transition: 'background 0.25s, border-color 0.25s',
-              }}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: 'var(--text-secondary)', fontSize: '0.95rem', fontWeight: 500, textDecoration: 'none' }}
             >
-              <WhatsAppIcon size={19} />
-              שאלה? דבר איתי בוואטסאפ
-            </MagneticBtn>
+              <WhatsAppIcon size={17} />
+              יש לי שאלה
+            </a>
           </div>
 
-          {/* price anchor + free call */}
-          <p className="hero-anchor" style={{ fontSize: '0.92rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 38, opacity: 0 }}>
-            הבטחת ביצוע: אם בחודש הניהול הראשון אין פניות — <span style={{ color: 'var(--brand-prime)', fontWeight: 800 }}>ממשיך לנהל בחינם עד שיש</span>
-          </p>
-
-          {/* trust chips — מיצוב */}
-          <div className="hero-trust" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, opacity: 0 }}>
-            {['מבוסס מחקר', 'הבטחת ביצוע', 'קריאייטיב שמוכר', 'שותף ביצוע — בגובה העיניים'].map((chip) => (
-              <span
-                key={chip}
-                style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 7,
-                  padding: '7px 14px', borderRadius: 999,
-                  background: 'oklch(0.14 0.02 240 / 0.55)', border: '1px solid oklch(0.25 0.02 240)',
-                  fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)',
-                }}
-              >
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M20 6 9 17l-5-5"/>
-                </svg>
-                {chip}
-              </span>
+          {/* fast 3-step — the whole offer at a glance */}
+          <div className="hero-trust" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, opacity: 0 }}>
+            {[['1', 'אבחון'], ['2', 'ניתוח העסק'], ['3', 'תוצאות, בהבטחה']].map(([n, label], i, arr) => (
+              <Fragment key={n}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ width: 22, height: 22, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'oklch(0.785 0.173 156.6 / 0.14)', color: 'var(--brand-prime)', fontSize: '0.72rem', fontWeight: 700, transform: 'skewX(-10deg)' }}>{n}</span>
+                  <span style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{label}</span>
+                </span>
+                {i < arr.length - 1 && <span style={{ color: 'var(--text-muted)', fontWeight: 300 }}>←</span>}
+              </Fragment>
             ))}
           </div>
         </div>
 
-        {/* ── Image column ── */}
+        {/* ── Image column — clean, sharp, one flat green accent block ── */}
         <div className="hero-image" style={{ display: 'flex', justifyContent: 'center', opacity: 0 }}>
-          <div style={{ position: 'relative', width: '100%', maxWidth: 340 }}>
-            {/* glow halo */}
-            <div style={{
-              position: 'absolute', inset: -16,
-              background: 'radial-gradient(circle at 40% 40%, oklch(0.785 0.173 156.6 / 0.25), oklch(0.508 0.155 292.2 / 0.18) 60%, transparent 80%)',
-              borderRadius: 28, filter: 'blur(30px)',
+          <div style={{ position: 'relative', width: '100%', maxWidth: 360 }}>
+            {/* flat offset accent (echoes the logo parallelograms) */}
+            <div aria-hidden="true" style={{
+              position: 'absolute', inset: 0, transform: 'translate(14px, 14px)',
+              border: '1px solid oklch(0.785 0.173 156.6 / 0.4)', borderRadius: 'var(--radius-lg)', zIndex: 0,
             }} />
-
-            {/* image */}
-            <div className="glow-border living-border" style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', aspectRatio: '4/5' }}>
-              <img src={profileSrc} alt="שמואל מוניץ - מומחה שיווק דיגיטלי ואסטרטגיה מבוססת AI" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.45), transparent 50%)' }} />
-            </div>
-
-            {/* badge — bottom left */}
-            <div className="float-badge" style={{
-              position: 'absolute', bottom: -24, left: -16,
-              padding: '10px 16px',
-              display: 'flex', alignItems: 'center', gap: 10,
-            }}>
-              <span style={{
-                width: 8, height: 8, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block',
-                boxShadow: '0 0 10px var(--brand-prime)', flexShrink: 0, animation: 'pulse-ring 1.8s ease-out infinite',
-              }} />
-              <div>
-                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>זמינות</div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>מקום קייס מייסדים אחד</div>
-              </div>
-            </div>
-
-            {/* badge — top right */}
-            <div className="float-badge float-badge-alt" style={{
-              position: 'absolute', top: -20, right: -16,
-              border: '1px solid oklch(0.785 0.173 156.6 / 0.25)',
-              padding: '10px 16px',
-              display: 'flex', alignItems: 'center', gap: 10,
-            }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-              </svg>
-              <div>
-                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>התמחות</div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>AI + שיווק</div>
+            <div style={{ position: 'relative', zIndex: 1, borderRadius: 'var(--radius-lg)', overflow: 'hidden', border: '1px solid oklch(0.25 0.02 160)', aspectRatio: '4/5', animation: 'float 7s ease-in-out infinite' }}>
+              <img src={profileSrc} alt="שמואל מוניץ, אסטרטג שיווק דיגיטלי ומומחה AI" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, oklch(0.08 0.01 160 / 0.5), transparent 55%)' }} />
+              {/* one small flat caption chip, sharp */}
+              <div style={{ position: 'absolute', bottom: 0, insetInlineStart: 0, padding: '10px 14px' }}>
+                <div style={{ fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 700 }}>שמואל מוניץ</div>
+                <div style={{ fontSize: '0.74rem', color: 'var(--brand-glow)', fontWeight: 500 }}>Shift Up</div>
               </div>
             </div>
           </div>

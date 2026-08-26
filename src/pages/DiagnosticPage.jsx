@@ -106,11 +106,11 @@ function drawShareImage(result) {
 
   x.direction = 'rtl'; x.textAlign = 'center'; x.textBaseline = 'middle';
 
-  x.fillStyle = '#e8edf2'; x.font = '700 46px Heebo';
+  x.fillStyle = '#e8edf2'; x.font = '700 46px Rubik';
   x.fillText('Shift Up · אבחון שיווק', W / 2, 160);
   x.fillStyle = '#36d98a'; x.beginPath(); x.arc(W / 2 + 235, 160, 10, 0, Math.PI * 2); x.fill();
 
-  x.fillStyle = '#e8edf2'; x.font = '900 68px Heebo';
+  x.fillStyle = '#e8edf2'; x.font = '900 68px Rubik';
   x.fillText('בדקתי איפה השיווק שלי דולף', W / 2, 330);
 
   const cx = W / 2, cy = 830, r = 300, lw = 46;
@@ -119,25 +119,25 @@ function drawShareImage(result) {
   x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.stroke();
   x.strokeStyle = col;
   x.beginPath(); x.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pct / 100); x.stroke();
-  x.fillStyle = col; x.font = '900 250px Heebo';
+  x.fillStyle = col; x.font = '900 250px Rubik';
   x.fillText(String(pct), cx, cy - 6);
-  x.fillStyle = '#8b97a3'; x.font = '400 52px Heebo';
+  x.fillStyle = '#8b97a3'; x.font = '400 52px Rubik';
   x.fillText('מתוך 100', cx, cy + 150);
 
-  x.fillStyle = '#e8edf2'; x.font = '800 56px Heebo';
+  x.fillStyle = '#e8edf2'; x.font = '800 56px Rubik';
   const vEnd = 1300 + wrapCanvasText(x, result.verdict, W / 2, 1300, W - 170, 68);
 
   let y = vEnd + 60;
   if (result.leaks && result.leaks.length) {
-    x.fillStyle = '#ff5c72'; x.font = '700 40px Heebo';
+    x.fillStyle = '#ff5c72'; x.font = '700 40px Rubik';
     x.fillText('הדליפה הכי דחופה שלי:', W / 2, y); y += 60;
-    x.fillStyle = '#e8edf2'; x.font = '600 46px Heebo';
+    x.fillStyle = '#e8edf2'; x.font = '600 46px Rubik';
     wrapCanvasText(x, result.leaks[0].fb.t, W / 2, y, W - 170, 58);
   }
 
-  x.fillStyle = '#8b97a3'; x.font = '500 44px Heebo';
+  x.fillStyle = '#8b97a3'; x.font = '500 44px Rubik';
   x.fillText('אבחון שיווק חינמי לבעלי עסקים', W / 2, 1800);
-  x.fillStyle = '#36d98a'; x.font = '800 54px Heebo';
+  x.fillStyle = '#36d98a'; x.font = '800 54px Rubik';
   x.fillText('Shift Up', W / 2, 1862);
 
   return c;
@@ -283,7 +283,7 @@ export default function DiagnosticPage() {
   const buildShareText = () => {
     const s = result ? result.pct : null;
     const scoreLine = s != null ? `קיבלתי ${s}/100 באבחון השיווק של Shift Up 🎯\n` : '';
-    return `${scoreLine}בדקתי איפה השיווק של העסק שלי דולף כסף — 10 שאלות, 3 דקות, תוצאה מיידית.\nשווה לכל בעל עסק. בדוק את שלך:`;
+    return `${scoreLine}בדקתי איפה השיווק של העסק שלי דולף כסף. 10 שאלות, 3 דקות, תוצאה מיידית.\nשווה לכל בעל עסק. בדוק את שלך:`;
   };
   const shareCaption = () => buildShareText() + '\n' + shareUrl();
 
@@ -356,9 +356,15 @@ export default function DiagnosticPage() {
       <style>{CSS}</style>
 
       <div className="dg-wrap">
-        <div className="dg-brand">
-          <img src="/logo.png" alt="Shift Up" style={{ height: 24, width: 'auto' }} />
-          <span>· אבחון שיווק</span>
+        <div className="dg-brand" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+          <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none', color: 'inherit' }}>
+            <img src="/logo.png" alt="Shift Up" style={{ height: 24, width: 'auto' }} />
+            <span>· אבחון שיווק</span>
+          </a>
+          <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#8b97a3', fontSize: '0.82rem', fontWeight: 600, textDecoration: 'none' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+            חזרה לאתר
+          </a>
         </div>
 
         {/* ── INTRO ── */}
@@ -402,7 +408,7 @@ export default function DiagnosticPage() {
               </div>
               {!q.seg && (
                 <button className={'dg-skip' + (answers[cur] === 'skip' ? ' active' : '')} onClick={skip}>
-                  {answers[cur] === 'skip' ? '✓ דילגת על השאלה הזו — לחץ כדי לבטל' : 'השאלה הזו לא רלוונטית לעסק שלי — דלג ←'}
+                  {answers[cur] === 'skip' ? '✓ דילגת על השאלה הזו, לחץ כדי לבטל' : 'השאלה הזו לא רלוונטית לעסק שלי, דלג ←'}
                 </button>
               )}
               <div className="dg-nav-row">
@@ -434,7 +440,7 @@ export default function DiagnosticPage() {
               <div className="dg-verdict-sub">{result.verdictSub}</div>
               {result.skipped > 0 && (
                 <div className="dg-verdict-sub" style={{ fontSize: '.82rem', opacity: .75, marginTop: 6 }}>
-                  דילגת על {result.skipped} {result.skipped === 1 ? 'שאלה שלא רלוונטית' : 'שאלות שלא רלוונטיות'} לעסק שלך — הציון והתחומים מחושבים רק על מה שענית.
+                  דילגת על {result.skipped} {result.skipped === 1 ? 'שאלה שלא רלוונטית' : 'שאלות שלא רלוונטיות'} לעסק שלך. הציון והתחומים מחושבים רק על מה שענית.
                 </div>
               )}
             </div>
@@ -573,7 +579,7 @@ const CSS = `
   --dg-purple:#6a4fb5; --dg-text:#e8edf2; --dg-text-dim:#8b97a3;
   --dg-border:rgba(255,255,255,.08); --dg-danger:#ff5c72; --dg-warn:#ffb454;
   position:relative; min-height:100vh; background:var(--dg-bg); color:var(--dg-text);
-  font-family:'Heebo',sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  font-family:'Space Grotesk','Rubik',sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden;
 }
 .dg-root::before{
   content:''; position:fixed; inset:0; z-index:0; pointer-events:none;

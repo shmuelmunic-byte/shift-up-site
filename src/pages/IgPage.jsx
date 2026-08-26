@@ -109,7 +109,7 @@ export default function IgPage() {
       padding: '48px 24px 72px',
       position: 'relative',
       overflow: 'hidden',
-      fontFamily: "'Heebo', sans-serif",
+      fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
     }}>
       <Cursor />
       {/* Aurora blobs */}
@@ -165,10 +165,10 @@ export default function IgPage() {
               gap: 10,
               padding: '0 24px',
               minHeight: 64,
-              borderRadius: 18,
+              borderRadius: 4,
               fontWeight: 800,
               fontSize: '1.05rem',
-              fontFamily: "'Heebo', sans-serif",
+              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
               textDecoration: 'none',
               color: 'var(--text-primary)',
               border: '1.5px solid oklch(0.785 0.173 156.6 / 0.45)',
@@ -184,7 +184,7 @@ export default function IgPage() {
               fontWeight: 700,
               color: 'var(--brand-prime)',
               border: '1px solid oklch(0.785 0.173 156.6 / 0.35)',
-              borderRadius: 999,
+              borderRadius: 3,
               padding: '3px 9px',
               whiteSpace: 'nowrap',
             }}>
@@ -207,10 +207,10 @@ export default function IgPage() {
                 gap: 10,
                 padding: '0 24px',
                 minHeight: 64,
-                borderRadius: 18,
+                borderRadius: 4,
                 fontWeight: link.style === 'primary' ? 800 : 700,
                 fontSize: '1.05rem',
-                fontFamily: "'Heebo', sans-serif",
+                fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
                 textDecoration: 'none',
                 position: 'relative',
                 overflow: 'hidden',

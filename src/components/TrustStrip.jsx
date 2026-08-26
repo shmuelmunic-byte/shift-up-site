@@ -24,9 +24,9 @@ const PILLAR_ICONS = [
 
 /* ── עמודי אמון (סקשן 2 — "אפשר לסמוך?") — fallback ── */
 const FALLBACK_PILLARS = [
-  { title: 'מבוסס מחקר', text: 'אף שקל לא נכנס לקמפיין לפני מחקר: קהל, מתחרים, מסר. החלטות על דאטה — לא על תחושת בטן.' },
-  { title: 'הבטחת ביצוע', text: 'לא "חודש ראשון חינם" — אחריות: אם בחודש הניהול הראשון אין פניות, אני ממשיך לנהל בחינם עד שיש.' },
-  { title: 'בגובה העיניים', text: 'שותף ביצוע, לא מוכר. שיחת היכרות חינם — נבדוק התאמה בלי לחץ ובלי באזוורדז.' },
+  { title: 'מבוסס מחקר', text: 'אף שקל לא נכנס לקמפיין לפני מחקר: קהל, מתחרים, מסר. החלטות על דאטה, לא על תחושת בטן.' },
+  { title: 'הבטחת ביצוע', text: 'זו לא "חודש ראשון חינם", זו אחריות: אם בחודש הניהול הראשון אין פניות, אני ממשיך לנהל בחינם עד שיש.' },
+  { title: 'בגובה העיניים', text: 'שותף ביצוע, לא מוכר. שיחת היכרות חינם, נבדוק התאמה בלי לחץ ובלי באזוורדז.' },
 ];
 
 function Pillar({ pillar, index }) {
@@ -53,14 +53,8 @@ function Pillar({ pillar, index }) {
         flex: '1 1 240px', minWidth: 0, opacity: 0, textAlign: 'right',
       }}
     >
-      <span style={{
-        flexShrink: 0, width: 44, height: 44, borderRadius: 12,
-        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1px solid oklch(0.785 0.173 156.6 / 0.22)',
-      }}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          {PILLAR_ICONS[index] || PILLAR_ICONS[0]}
-        </svg>
+      <span style={{ flexShrink: 0, width: 34, height: 34, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginTop: 2 }} aria-hidden="true">
+        <span style={{ width: 15, height: 15, background: 'var(--brand-prime)', transform: 'skewX(-12deg)' }} />
       </span>
       <div>
         <div style={{ fontSize: '1.02rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 4 }}>
@@ -113,7 +107,7 @@ export default function TrustStrip() {
             display: 'inline-flex', alignItems: 'center', gap: 7,
             background: online ? 'oklch(0.785 0.173 156.6 / 0.1)' : 'oklch(0.14 0.02 240)',
             border: `1px solid ${online ? 'oklch(0.785 0.173 156.6 / 0.3)' : 'oklch(0.22 0.02 240)'}`,
-            borderRadius: 999, padding: '5px 14px', marginBottom: 20,
+            borderRadius: 3, padding: '5px 14px', marginBottom: 20,
             transition: 'all 0.4s ease',
           }}>
             <span style={{
@@ -121,7 +115,6 @@ export default function TrustStrip() {
               background: online ? 'var(--brand-prime)' : 'oklch(0.4 0.01 240)',
               display: 'block', flexShrink: 0,
               boxShadow: online ? '0 0 6px var(--brand-prime)' : 'none',
-              animation: online ? 'pulse-ring 2s ease-out infinite' : 'none',
             }} />
             <span style={{ fontSize: '0.74rem', fontWeight: 700, color: online ? 'var(--brand-prime)' : 'var(--text-muted)', letterSpacing: '0.04em' }}>
               {online ? 'זמין עכשיו' : 'מענה בד״כ תוך שעה'}

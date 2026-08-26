@@ -33,13 +33,13 @@ export default function LeadForm() {
   const sectionRef = useRef(null);
   const { whatsapp_url: waLinkRaw } = useSiteLinks();
   const c = useContent({
-    'leadform.scarcity': 'מקום קייס מייסדים אחד פנוי — בתנאים מיוחדים',
+    'leadform.scarcity': 'מקום קייס מייסדים אחד פנוי · בתנאים מיוחדים',
     'leadform.title': 'בוא נעשה לעסק שלך',
     'leadform.title_accent': 'Shift Up.',
-    'leadform.subtitle': 'השאר פרטים ואחזור אליך לשיחת היכרות קצרה — נבדוק יחד אם יש התאמה.',
-    'leadform.price_note': 'מחיר סגור וברור בשיחת ההיכרות · אם בחודש הניהול הראשון אין פניות — ממשיך לנהל בחינם עד שיש.',
+    'leadform.subtitle': 'השאר פרטים ואחזור אליך לשיחת היכרות קצרה. נבדוק יחד אם יש התאמה.',
+    'leadform.price_note': 'מחיר סגור וברור בשיחת ההיכרות · אם בחודש הניהול הראשון אין פניות, ממשיך לנהל בחינם עד שיש.',
     'leadform.wa_title': 'מעדיף לדבר עכשיו?',
-    'leadform.soft_door': 'עוד לא בשל? זה בסדר. תוכל פשוט לעקוב ולקבל ערך — גלול מטה לקהילת ה-WhatsApp השקטה.',
+    'leadform.soft_door': 'עוד לא בשל? זה בסדר. תוכל פשוט לעקוב ולקבל ערך. גלול מטה לקהילת ה-WhatsApp השקטה.',
   });
   const [form, setForm] = useState({ name: '', phone: '', business: '', message: '' });
   const [consent, setConsent] = useState(false);
@@ -89,9 +89,9 @@ export default function LeadForm() {
   };
 
   const inputStyle = {
-    width: '100%', padding: '13px 16px', borderRadius: 12,
+    width: '100%', padding: '13px 16px', borderRadius: 3,
     border: '1px solid #cdd7e3', background: '#fff', color: '#0c1118',
-    fontSize: '1rem', fontFamily: "'Heebo', sans-serif", outline: 'none',
+    fontSize: '1rem', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", outline: 'none',
     transition: 'border-color 0.2s, box-shadow 0.2s',
   };
   const errorInputStyle = { ...inputStyle, borderColor: '#c0392b' };
@@ -110,7 +110,7 @@ export default function LeadForm() {
     <section
       id="contact"
       ref={sectionRef}
-      style={{ padding: 'clamp(70px, 10vw, 120px) 28px', background: 'linear-gradient(180deg, #eef3f8 0%, #e6edf5 100%)', position: 'relative', overflow: 'hidden' }}
+      style={{ padding: 'clamp(52px, 7vw, 88px) 28px', background: 'linear-gradient(180deg, #eef3f8 0%, #e6edf5 100%)', position: 'relative', overflow: 'hidden' }}
     >
       <div className="lf-inner" style={{ maxWidth: 920, margin: '0 auto', opacity: 0 }}>
 
@@ -119,9 +119,9 @@ export default function LeadForm() {
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             background: 'rgba(52,217,123,0.12)', border: '1px solid rgba(31,157,87,0.35)',
-            borderRadius: 999, padding: '6px 16px', fontSize: '0.82rem', fontWeight: 700, color: '#117a41',
+            borderRadius: 3, padding: '6px 16px', fontSize: '0.82rem', fontWeight: 700, color: '#117a41',
           }}>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#1f9d57', display: 'block', boxShadow: '0 0 6px #1f9d57', animation: 'pulse-ring 2s ease-out infinite' }} />
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#1f9d57', display: 'block', boxShadow: '0 0 6px #1f9d57' }} />
             {c['leadform.scarcity']}
           </span>
         </div>
@@ -139,7 +139,7 @@ export default function LeadForm() {
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.3fr) minmax(0, 1fr)', gap: 'clamp(20px, 3vw, 36px)', alignItems: 'start' }} className="lf-grid">
 
           {/* ── טופס (דלת ראשית) ── */}
-          <div style={{ background: '#fff', borderRadius: 20, padding: 'clamp(24px, 3vw, 36px)', boxShadow: '0 10px 40px rgba(12,17,24,0.08)', border: '1px solid #e1e8f0' }}>
+          <div style={{ background: '#fff', borderRadius: 4, padding: 'clamp(24px, 3vw, 36px)', boxShadow: '0 10px 40px rgba(12,17,24,0.08)', border: '1px solid #e1e8f0' }}>
             {status === 'done' ? (
               <div style={{ textAlign: 'center', padding: '20px 0' }}>
                 <div style={{ width: 60, height: 60, borderRadius: '50%', background: 'rgba(52,217,123,0.15)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
@@ -154,7 +154,7 @@ export default function LeadForm() {
             ) : status === 'error' ? (
               <div style={{ textAlign: 'center', padding: '20px 0' }}>
                 <h3 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0c1118', marginBottom: 8 }}>כמעט שם</h3>
-                <p style={{ color: '#4a5868', lineHeight: 1.6, marginBottom: 20 }}>הכי מהיר להמשיך בוואטסאפ — הפרטים שלך כבר מוכנים בהודעה.</p>
+                <p style={{ color: '#4a5868', lineHeight: 1.6, marginBottom: 20 }}>הכי מהיר להמשיך בוואטסאפ, הפרטים שלך כבר מוכנים בהודעה.</p>
                 <a href={buildWaLink(form)} target="_blank" rel="noopener noreferrer" style={waBtnStyle}>
                   {waIcon}המשך בוואטסאפ
                 </a>
@@ -202,9 +202,9 @@ export default function LeadForm() {
                 </div>
 
                 <button type="submit" disabled={status === 'sending'} style={{
-                  width: '100%', padding: '15px', borderRadius: 12, border: 'none',
+                  width: '100%', padding: '15px', borderRadius: 3, border: 'none',
                   background: status === 'sending' ? '#7fc89e' : '#1f9d57', color: '#fff',
-                  fontSize: '1.08rem', fontWeight: 800, fontFamily: "'Heebo', sans-serif",
+                  fontSize: '1.08rem', fontWeight: 800, fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
                   cursor: status === 'sending' ? 'default' : 'pointer',
                   boxShadow: '0 8px 24px rgba(31,157,87,0.35)', transition: 'background 0.2s, transform 0.15s',
                 }}>
@@ -219,7 +219,7 @@ export default function LeadForm() {
 
           {/* ── דלת משנית (וואטסאפ) + שלישית רכה ── */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div style={{ background: '#fff', borderRadius: 20, padding: 'clamp(22px, 3vw, 30px)', border: '1px solid #e1e8f0', boxShadow: '0 10px 40px rgba(12,17,24,0.05)' }}>
+            <div style={{ background: '#fff', borderRadius: 4, padding: 'clamp(22px, 3vw, 30px)', border: '1px solid #e1e8f0', boxShadow: '0 10px 40px rgba(12,17,24,0.05)' }}>
               <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0c1118', marginBottom: 8 }}>{c['leadform.wa_title']}</h3>
               <p style={{ fontSize: '0.92rem', color: '#4a5868', lineHeight: 1.6, marginBottom: 18 }}>
                 שלח לי הודעה בוואטסאפ ואחזור אליך מהר.
@@ -229,7 +229,7 @@ export default function LeadForm() {
               </a>
             </div>
 
-            <div style={{ background: 'rgba(12,17,24,0.04)', borderRadius: 16, padding: '20px 22px', border: '1px dashed #c3cedb' }}>
+            <div style={{ background: 'rgba(12,17,24,0.04)', borderRadius: 4, padding: '20px 22px', border: '1px dashed #c3cedb' }}>
               <p style={{ fontSize: '0.92rem', color: '#3a4757', lineHeight: 1.6 }}>
                 {c['leadform.soft_door']}
               </p>
@@ -243,8 +243,8 @@ export default function LeadForm() {
 
 const waBtnStyle = {
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%',
-  padding: '13px 22px', borderRadius: 12, background: '#25955a', color: '#fff',
-  fontWeight: 800, fontSize: '1rem', fontFamily: "'Heebo', sans-serif", textDecoration: 'none',
+  padding: '13px 22px', borderRadius: 3, background: '#25955a', color: '#fff',
+  fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Rubik', sans-serif", textDecoration: 'none',
   boxShadow: '0 6px 20px rgba(37,149,90,0.3)',
 };
 

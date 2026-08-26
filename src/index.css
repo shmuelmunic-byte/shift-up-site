@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Rubik:wght@300;400;500;600;700;800;900&display=swap');
 
 /* ── Color System ── */
 :root {
@@ -19,6 +19,11 @@
   --ease-entrance: cubic-bezier(0.6, 0.01, 0.05, 0.95);
   --ease-exit:     cubic-bezier(0.43, 0.13, 0.23, 0.96);
   --ease-spring:   cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Sharp-corner design language (v2): near-zero radius, no liquid-glass */
+  --radius:    3px;
+  --radius-lg: 4px;
+  --font:      'Space Grotesk', 'Rubik', sans-serif;
 }
 
 /* ── Reset ── */
@@ -35,7 +40,7 @@ html {
 body {
   background: var(--bedrock);
   color: var(--text-primary);
-  font-family: 'Heebo', sans-serif;
+  font-family: var(--font);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -427,7 +432,7 @@ body {
   gap: 7px;
   padding: 9px 16px;
   border-radius: 11px;
-  font-family: 'Heebo', sans-serif;
+  font-family: 'Space Grotesk', 'Rubik', sans-serif;
   font-weight: 700;
   font-size: 0.88rem;
   cursor: pointer;
@@ -1078,7 +1083,7 @@ html[lang]:not([lang=""]):not([lang^="he"]):not([lang^="iw"]) .section-label::be
   background: var(--brand-prime);
   color: #04120a;
   font-weight: 800;
-  font-family: 'Heebo', sans-serif;
+  font-family: 'Space Grotesk', 'Rubik', sans-serif;
   padding: 12px 20px;
   border-radius: 10px;
   text-decoration: none;
@@ -1151,7 +1156,7 @@ html[lang]:not([lang=""]):not([lang^="he"]):not([lang^="iw"]) .section-label::be
   border: 1.5px solid var(--surface-2);
   border-radius: 12px;
   color: var(--text-secondary);
-  font-family: 'Heebo', sans-serif;
+  font-family: 'Space Grotesk', 'Rubik', sans-serif;
   cursor: pointer !important;
   padding: 8px 4px;
   transition: border-color 0.15s, background 0.15s, color 0.15s;
@@ -1165,7 +1170,7 @@ html[lang]:not([lang=""]):not([lang^="he"]):not([lang^="iw"]) .section-label::be
 .a11y-reset {
   width: 100%; margin-top: 14px;
   background: none; border: 1px solid var(--surface-2); color: var(--text-secondary);
-  border-radius: 10px; padding: 10px; font-family: 'Heebo', sans-serif; font-weight: 600;
+  border-radius: 10px; padding: 10px; font-family: 'Space Grotesk', 'Rubik', sans-serif; font-weight: 600;
   cursor: pointer !important; transition: border-color 0.15s, color 0.15s;
 }
 .a11y-reset:hover { border-color: var(--brand-prime); color: var(--text-primary); }
@@ -1229,7 +1234,7 @@ html.a11y-big-cursor .cursor-ring { display: none !important; }
 .cookie-link { color: var(--brand-prime); text-decoration: underline; }
 .cookie-actions { display: flex; gap: 10px; flex-shrink: 0; }
 .cookie-btn {
-  padding: 10px 22px; border-radius: 10px; font-family: 'Heebo', sans-serif;
+  padding: 10px 22px; border-radius: 10px; font-family: 'Space Grotesk', 'Rubik', sans-serif;
   font-weight: 700; font-size: 0.9rem; cursor: pointer !important; border: 1.5px solid transparent;
   transition: opacity 0.15s, border-color 0.15s;
 }
@@ -1256,3 +1261,74 @@ html.a11y-big-cursor .cursor-ring { display: none !important; }
   html[class*="a11y-"] { filter: none !important; }
   .a11y-trigger, .a11y-panel, .a11y-overlay, .cookie-banner { display: none !important; }
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   DESIGN v2 — flat / sharp / green-only overrides (2026-08-26)
+   Calms the whole site at once: kills the multi-color aurora, frosted
+   glass, gradient-text, glow/living/animated borders, shimmer sweep and
+   the cyan/purple photo ring. Motion (GSAP reveals, magnetic, float) kept.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Multi-color gradient background blobs — gone everywhere */
+.aurora-orb, .fluid-blob { display: none !important; }
+
+/* Gradient text → solid green */
+.text-gradient, .kword-gradient {
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+  color: var(--brand-prime) !important;
+}
+
+/* Frosted glass panels → flat solid, sharp */
+.glass-panel {
+  background: var(--surface-0) !important;
+  border: 1px solid oklch(0.22 0.015 160) !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: none !important;
+}
+
+/* Bento cards → flat, sharp, no spotlight/glow/lift */
+.bento-card {
+  background: var(--surface-0) !important;
+  border: 1px solid oklch(0.22 0.015 160) !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  border-radius: var(--radius-lg) !important;
+}
+.bento-card::before { display: none !important; }
+.bento-card:hover {
+  border-color: oklch(0.785 0.173 156.6 / 0.4) !important;
+  transform: none !important; box-shadow: none !important;
+}
+
+/* Glow / living / animated conic borders → plain sharp */
+.glow-border::before, .living-border::before, .animated-border::before { display: none !important; }
+.animated-border {
+  border: 1px solid oklch(0.785 0.173 156.6 / 0.3) !important;
+  border-radius: var(--radius-lg) !important;
+}
+.shimmer-card { border-radius: var(--radius-lg) !important; }
+.shimmer-card::after { display: none !important; }
+
+/* Floating badges → flat sharp (no glass) */
+.float-badge, .float-badge-alt {
+  background: var(--surface-1) !important;
+  border: 1px solid oklch(0.24 0.015 160) !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  border-radius: var(--radius) !important;
+  box-shadow: none !important;
+}
+.float-badge-alt { animation: none !important; }
+
+/* Spinning cyan/purple photo ring — gone */
+.photo-ring { display: none !important; }
+
+/* Process accent bar → solid green, sharp */
+.process-card .accent-bar { background: var(--brand-prime) !important; border-radius: 0 !important; }
+
+/* Bento number watermark: calmer */
+.accent-number { opacity: 0.05 !important; }
+
+/* Section label: keep as a small green tick-label, drop the long rule line */
+.section-label { color: var(--brand-prime); text-transform: none; letter-spacing: 0.06em; }
+.section-label::before { width: 14px !important; }

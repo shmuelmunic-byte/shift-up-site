@@ -79,7 +79,7 @@ export default function About() {
       id="about"
       ref={sectionRef}
       style={{
-        padding: 'clamp(80px, 10vw, 130px) 28px',
+        padding: 'clamp(52px, 7vw, 88px) 28px',
         background: 'var(--surface-0)',
         position: 'relative',
         overflow: 'hidden',
@@ -131,27 +131,12 @@ export default function About() {
                 perspective: 900,
               }}
             >
-              {/* Ambient glow matching photo (teal left, purple right) */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: -40,
-                  background:
-                    'radial-gradient(ellipse at 25% 50%, oklch(0.65 0.22 200 / 0.35) 0%, transparent 55%),' +
-                    'radial-gradient(ellipse at 75% 40%, oklch(0.508 0.155 292.2 / 0.30) 0%, transparent 55%)',
-                  filter: 'blur(30px)',
-                  zIndex: 0,
-                  borderRadius: 40,
-                  pointerEvents: 'none',
-                }}
-              />
-
               {/* Spinning border ring wrapper */}
               <div
                 style={{
                   position: 'relative',
                   zIndex: 1,
-                  borderRadius: 24,
+                  borderRadius: 4,
                   padding: 2,
                   overflow: 'hidden',
                   aspectRatio: '1 / 1',
@@ -165,7 +150,7 @@ export default function About() {
                   style={{
                     position: 'relative',
                     zIndex: 1,
-                    borderRadius: 22,
+                    borderRadius: 4,
                     overflow: 'hidden',
                     height: '100%',
                     background: 'var(--surface-0)',
@@ -217,9 +202,9 @@ export default function About() {
                   left: 14,
                   zIndex: 2,
                   background: 'oklch(0.14 0.02 240 / 0.92)',
-                  backdropFilter: 'blur(16px)',
+                  
                   border: '1px solid oklch(0.28 0.03 240)',
-                  borderRadius: 999,
+                  borderRadius: 3,
                   padding: '6px 14px',
                   display: 'flex',
                   alignItems: 'center',
@@ -233,10 +218,9 @@ export default function About() {
                     background: 'var(--brand-prime)',
                     display: 'block',
                     boxShadow: '0 0 8px var(--brand-prime)',
-                    animation: 'breathing 2s ease-in-out infinite',
                   }}
                 />
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: "'Heebo', sans-serif" }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: "'Space Grotesk', 'Rubik', sans-serif" }}>
                   שמואל מוניץ
                 </span>
               </div>
@@ -249,9 +233,9 @@ export default function About() {
                   right: 14,
                   zIndex: 2,
                   background: 'oklch(0.14 0.02 240 / 0.92)',
-                  backdropFilter: 'blur(16px)',
+                  
                   border: '1px solid oklch(0.785 0.173 156.6 / 0.3)',
-                  borderRadius: 999,
+                  borderRadius: 3,
                   padding: '6px 14px',
                   display: 'flex',
                   alignItems: 'center',
@@ -267,16 +251,6 @@ export default function About() {
                 >
                   <span
                     style={{
-                      position: 'absolute',
-                      inset: 0,
-                      borderRadius: '50%',
-                      background: 'var(--brand-prime)',
-                      opacity: 0.6,
-                      animation: 'pulse-ring 1.8s ease-out infinite',
-                    }}
-                  />
-                  <span
-                    style={{
                       position: 'relative',
                       width: 8, height: 8,
                       borderRadius: '50%',
@@ -285,7 +259,7 @@ export default function About() {
                     }}
                   />
                 </span>
-                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--brand-prime)', fontFamily: "'Heebo', sans-serif" }}>
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--brand-prime)', fontFamily: "'Space Grotesk', 'Rubik', sans-serif" }}>
                   זמין לפרויקטים
                 </span>
               </div>
@@ -298,9 +272,9 @@ export default function About() {
                   right: -22,
                   zIndex: 2,
                   background: 'oklch(0.13 0.02 240 / 0.88)',
-                  backdropFilter: 'blur(16px)',
+                  
                   border: '1px solid oklch(0.785 0.173 156.6 / 0.2)',
-                  borderRadius: 10,
+                  borderRadius: 3,
                   padding: '7px 11px',
                   transform: 'rotate(3deg)',
                   animation: 'float 9s 2s ease-in-out infinite',
@@ -308,7 +282,7 @@ export default function About() {
               >
                 <span
                   className="text-gradient"
-                  style={{ fontSize: '0.76rem', fontWeight: 900, fontFamily: "'Heebo', sans-serif" }}
+                  style={{ fontSize: '0.76rem', fontWeight: 900, fontFamily: "'Space Grotesk', 'Rubik', sans-serif" }}
                 >
                   Shift Up ↑
                 </span>
@@ -322,7 +296,7 @@ export default function About() {
           className="about-header"
           style={{ textAlign: 'right', opacity: 0 }}
         >
-          <div className="section-label">About Me</div>
+          <div className="section-label">מי אני</div>
           <h2
             style={{
               fontSize: 'clamp(2rem, 4.5vw, 3.5rem)',
@@ -330,7 +304,7 @@ export default function About() {
               letterSpacing: '-0.02em',
               lineHeight: 1.1,
               marginBottom: 36,
-              fontFamily: "'Heebo', sans-serif",
+              fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
             }}
           >
             מי מאחורי{' '}
@@ -340,9 +314,9 @@ export default function About() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             {[
               <>נעים מאוד, אני <strong style={{ color: 'var(--text-primary)' }}>שמואל מוניץ</strong>.</>,
-              <>אני לא אשקר לכם — אני לא מגיע ממשרד פרסום עם ותק של 20 שנה. וזה בדיוק <strong style={{ color: 'var(--brand-prime)' }}>היתרון שלכם</strong>.</>,
+              <>אני לא אשקר לכם, אני לא מגיע ממשרד פרסום עם ותק של 20 שנה. וזה בדיוק <strong style={{ color: 'var(--brand-prime)' }}>היתרון שלכם</strong>.</>,
               <>בזמן שאחרים נחים על זרי הדפנה, אני חוקר את כלי ה-<strong style={{ color: 'var(--brand-prime)' }}>AI</strong> החדשים ביותר ומוצא דרכים חדשניות להביא לידים. כל לקוח הוא פרויקט הדגל שלי.</>,
-              <>אני יזם בנשמה. אני מבין שעסק צריך <strong style={{ color: 'var(--text-primary)' }}>החזר השקעה (ROI)</strong> ולא רק "לייקים". כאן כדי לבנות מערכת שיווקית שעובדת — ולהוציא אותה לפועל.</>,
+              <>אני יזם בנשמה. אני מבין שעסק צריך <strong style={{ color: 'var(--text-primary)' }}>החזר השקעה (ROI)</strong> ולא רק "לייקים". כאן כדי לבנות מערכת שיווקית שעובדת, ולהוציא אותה לפועל.</>,
             ].map((para, i) => (
               <div
                 key={i}
@@ -359,7 +333,7 @@ export default function About() {
                     width: 2,
                     minHeight: 48,
                     background: i === 0 ? 'var(--brand-prime)' : 'oklch(0.22 0.02 240)',
-                    borderRadius: 999,
+                    borderRadius: 3,
                     flexShrink: 0,
                     marginTop: 4,
                     transition: 'background 0.3s',
@@ -383,7 +357,7 @@ export default function About() {
                 marginTop: 10,
                 padding: '20px 24px',
                 background: 'var(--surface-1)',
-                borderRadius: 16,
+                borderRadius: 4,
                 borderRight: '3px solid var(--brand-prime)',
               }}
             >
@@ -391,7 +365,7 @@ export default function About() {
                 style={{
                   fontSize: 'clamp(1.1rem, 2vw, 1.35rem)',
                   fontWeight: 800,
-                  fontFamily: "'Heebo', sans-serif",
+                  fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
                   color: 'var(--text-primary)',
                   lineHeight: 1.5,
                 }}

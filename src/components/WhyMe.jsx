@@ -13,13 +13,13 @@ const REASON_ICONS = [
 ];
 const REASON_EN    = ['Research-Based', 'AI-First', 'Performance Guarantee', 'Eye-Level Partner'];
 const REASON_WIDE  = [true, false, false, true];
-const REASON_ACCENT = ['var(--brand-prime)', 'var(--accent-void)', 'var(--brand-prime)', 'var(--brand-prime)'];
+const REASON_ACCENT = ['var(--brand-prime)', 'var(--brand-prime)', 'var(--brand-prime)', 'var(--brand-prime)'];
 
 const FALLBACK_REASONS = [
-  { title: 'מבוסס מחקר',        description: 'אני לא מריץ קמפיין על תחושת בטן. קהל, מתחרים, מסר — הכל נחקר ומזוקק לפני ששקל אחד נכנס לממומן.' },
-  { title: 'AI ראשון',           description: 'מה שלוקח לאחרים שבוע קורה אצלך בשעות — יותר גרסאות נבדקות, פחות תקציב מתבזבז, והעסק שלך באוויר מהר יותר.' },
-  { title: 'הבטחת ביצוע',       description: 'אם בחודש הניהול הראשון אין פניות — אני ממשיך לנהל בחינם עד שיש. הסיכון עליי, לא עליך.' },
-  { title: 'בגובה העיניים',     description: 'שותף ביצוע, לא מוכר. בלי באזוורדז ובלי מצגות מנופחות — תכל׳ס: מה עושים, למה, וכמה זה עולה.' },
+  { title: 'מבוסס מחקר',        description: 'אני לא מריץ קמפיין על תחושת בטן. קהל, מתחרים, מסר, הכל נחקר ומזוקק לפני ששקל אחד נכנס לממומן.' },
+  { title: 'AI ראשון',           description: 'מה שלוקח לאחרים שבוע קורה אצלך בשעות: יותר גרסאות נבדקות, פחות תקציב מתבזבז, והעסק שלך באוויר מהר יותר.' },
+  { title: 'הבטחת ביצוע',       description: 'אם בחודש הניהול הראשון אין פניות, אני ממשיך לנהל בחינם עד שיש. הסיכון עליי, לא עליך.' },
+  { title: 'בגובה העיניים',     description: 'שותף ביצוע, לא מוכר. בלי באזוורדז ובלי מצגות מנופחות. תכל׳ס: מה עושים, למה, וכמה זה עולה.' },
 ];
 
 function BentoCard({ reason, index }) {
@@ -69,29 +69,9 @@ function BentoCard({ reason, index }) {
       </div>
 
       <div style={{ position: 'relative', zIndex: 1 }}>
-        {/* Icon + EN label row */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-          <div style={{
-            width: 44, height: 44,
-            borderRadius: 12,
-            background: `oklch(0.785 0.173 156.6 / 0.1)`,
-            border: `1px solid oklch(0.785 0.173 156.6 / 0.2)`,
-            color: 'var(--brand-prime)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0,
-          }}>
-            {icon}
-          </div>
-          <span style={{
-            fontSize: '0.62rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.16em',
-            color: 'var(--text-muted)',
-            fontWeight: 700,
-            direction: 'ltr',
-          }}>
-            {en}
-          </span>
+        {/* brand mark (logo parallelogram) — no generic icons */}
+        <div style={{ marginBottom: 18 }} aria-hidden="true">
+          <span style={{ display: 'inline-block', width: 16, height: 16, background: 'var(--brand-prime)', transform: 'skewX(-12deg)' }} />
         </div>
 
         <h3 style={{
@@ -99,7 +79,7 @@ function BentoCard({ reason, index }) {
           fontWeight: 900,
           letterSpacing: '-0.01em',
           marginBottom: 10,
-          fontFamily: "'Heebo', sans-serif",
+          fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
           color: 'var(--text-primary)',
         }}>
           {reason.title}
@@ -156,7 +136,7 @@ export default function WhyMe() {
       id="why"
       ref={sectionRef}
       style={{
-        padding: 'clamp(80px, 10vw, 130px) 28px',
+        padding: 'clamp(52px, 7vw, 88px) 28px',
         background: 'var(--bedrock)',
         position: 'relative',
         overflow: 'hidden',
@@ -179,14 +159,14 @@ export default function WhyMe() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
         <div className="whyme-header" style={{ textAlign: 'right', maxWidth: 640, marginBottom: 52, opacity: 0 }}>
-          <div className="section-label">Why Me</div>
+          <div className="section-label">למה אני</div>
           <h2 style={{
             fontSize: 'clamp(2.2rem, 5vw, 4rem)',
             fontWeight: 900,
             lineHeight: 1.05,
             letterSpacing: '-0.02em',
             marginBottom: 18,
-            fontFamily: "'Heebo', sans-serif",
+            fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
           }}>
             למה לעבוד דווקא{' '}
             <span className="text-gradient">איתי?</span>

@@ -99,7 +99,7 @@ export default function App() {
         minHeight: '100vh',
         background: 'var(--bedrock)',
         color: 'var(--text-primary)',
-        fontFamily: "'Heebo', sans-serif",
+        fontFamily: "'Space Grotesk', 'Rubik', sans-serif",
         overflowX: 'hidden',
         position: 'relative',
       }}
