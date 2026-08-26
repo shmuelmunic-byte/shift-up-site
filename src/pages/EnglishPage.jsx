@@ -130,7 +130,7 @@ function EnNavbar() {
             onMouseLeave={e => { e.target.style.borderColor='var(--surface-2)'; e.target.style.color='var(--text-muted)'; }}
           >עב</a>
 
-          <button onClick={() => goto('en-contact')} style={{ background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', border: 'none', borderRadius: 3, padding: '10px 22px', fontWeight: 800, fontSize: '0.88rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", boxShadow: '0 0 28px oklch(0.785 0.173 156.6 / 0.35)', transition: 'background 0.25s, box-shadow 0.25s' }}
+          <button onClick={() => goto('en-contact')} style={{ background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', border: 'none', borderRadius: 3, padding: '10px 22px', fontWeight: 800, fontSize: '0.88rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", boxShadow: 'none', transition: 'background 0.25s, box-shadow 0.25s' }}
             onMouseEnter={e => { e.target.style.background='var(--brand-glow)'; e.target.style.boxShadow='0 0 44px oklch(0.785 0.173 156.6 / 0.6)'; }}
             onMouseLeave={e => { e.target.style.background='var(--brand-prime)'; e.target.style.boxShadow='0 0 28px oklch(0.785 0.173 156.6 / 0.35)'; }}
           >Let's Talk</button>
@@ -145,7 +145,7 @@ function EnNavbar() {
       </div>
 
       {open && (
-        <div className="mobile-menu-enter" style={{ position: 'absolute', top: '100%', width: '100%', background: 'oklch(0.11 0.015 240 / 0.97)', backdropFilter: 'blur(24px)', borderBottom: '1px solid var(--surface-2)' }}>
+        <div className="mobile-menu-enter" style={{ position: 'absolute', top: '100%', width: '100%', background: 'oklch(0.11 0.015 240 / 0.97)',  borderBottom: '1px solid var(--surface-2)' }}>
           <div style={{ padding: '20px 28px', display: 'flex', flexDirection: 'column', gap: 16 }}>
             {navLinks.map(l => (
               <button key={l.id} onClick={() => goto(l.id)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', fontSize: '1rem', fontWeight: 600, textAlign: 'left', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", padding: '4px 0' }}>{l.label}</button>
@@ -221,11 +221,11 @@ function EnHero({ onProcess, onForm }) {
           </p>
 
           <div className="en-hero-ctas hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 32, marginBottom: 32, opacity: 0 }}>
-            <MagneticWrap onClick={onForm} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 32px', background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', borderRadius: 3, fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", textDecoration: 'none', border: 'none', boxShadow: '0 0 40px oklch(0.785 0.173 156.6 / 0.42)', transition: 'background 0.25s, box-shadow 0.25s' }}>
+            <MagneticWrap onClick={onForm} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 32px', background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', borderRadius: 3, fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", textDecoration: 'none', border: 'none', boxShadow: 'none', transition: 'background 0.25s, box-shadow 0.25s' }}>
               Get a tailored proposal
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </MagneticWrap>
-            <MagneticWrap href={WA_LINK} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', background: 'oklch(0.14 0.02 240 / 0.7)', color: 'var(--text-primary)', borderRadius: 3, fontWeight: 600, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", border: '1px solid oklch(0.25 0.02 240)', backdropFilter: 'blur(12px)', transition: 'background 0.25s, border-color 0.25s' }}>
+            <MagneticWrap href={WA_LINK} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', background: 'oklch(0.14 0.02 240 / 0.7)', color: 'var(--text-primary)', borderRadius: 3, fontWeight: 600, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", border: '1px solid oklch(0.25 0.02 240)',  transition: 'background 0.25s, border-color 0.25s' }}>
               {WA_ICON} Got a question? Message me
             </MagneticWrap>
           </div>
@@ -244,14 +244,14 @@ function EnHero({ onProcess, onForm }) {
         {/* Image */}
         <div className="en-hero-img" style={{ display: 'flex', justifyContent: 'center', opacity: 0 }}>
           <div style={{ position: 'relative', width: '100%', maxWidth: 340 }}>
-            <div style={{ position: 'absolute', inset: -16, background: 'radial-gradient(circle at 40% 40%, oklch(0.785 0.173 156.6 / 0.25), oklch(0.508 0.155 292.2 / 0.18) 60%, transparent 80%)', borderRadius: 4, filter: 'blur(30px)' }} />
-            <div className="glow-border living-border" style={{ position: 'relative', borderRadius: 4, overflow: 'hidden', aspectRatio: '4/5' }}>
+            <div aria-hidden="true" style={{ position: 'absolute', inset: 0, transform: 'translate(14px, 14px)', background: 'oklch(0.62 0.19 292 / 0.16)', border: '1px solid oklch(0.62 0.19 292 / 0.4)', borderRadius: 4, zIndex: 0 }} />
+            <div style={{ position: 'relative', zIndex: 1, borderRadius: 4, overflow: 'hidden', border: '1px solid oklch(0.25 0.02 160)', aspectRatio: '4/5' }}>
               <img src={profileSrc} alt="Shmuel Munitz" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.45), transparent 50%)' }} />
             </div>
             {/* badge — bottom right */}
             <div className="float-badge" style={{ position: 'absolute', bottom: -24, right: -16, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', boxShadow: '0 0 10px var(--brand-prime)', flexShrink: 0, animation: 'pulse-ring 1.8s ease-out infinite' }} />
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', boxShadow: 'none', flexShrink: 0, animation: 'pulse-ring 1.8s ease-out infinite' }} />
               <div>
                 <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>AVAILABILITY</div>
                 <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>1 founding case-study spot</div>
@@ -603,7 +603,7 @@ function EnGridTile({ item, index, onOpen }) {
 function EnLightbox({ item, onClose }) {
   if (!item) return null;
   return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'oklch(0.05 0.01 240 / 0.9)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'oklch(0.05 0.01 240 / 0.9)',  display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <button onClick={onClose} aria-label="Close" style={{ position: 'absolute', top: 20, right: 20, width: 44, height: 44, borderRadius: '50%', background: 'oklch(0.14 0.02 240)', border: '1px solid oklch(0.3 0.02 240)', color: 'var(--text-primary)', fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}>×</button>
       <img src={`/portfolio/${item.file}`} alt={`${item.client} creative — ${item.field}`} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '92vw', maxHeight: '88vh', borderRadius: 3, objectFit: 'contain', boxShadow: '0 20px 80px oklch(0 0 0 / 0.6)' }} />
     </div>
@@ -712,7 +712,7 @@ function EnProcess() {
                   <div style={{ width: 52, height: 52, borderRadius: 3, background: isActive ? 'var(--brand-prime)' : 'oklch(0.785 0.173 156.6 / 0.12)', border: `1px solid ${isActive ? 'transparent' : 'oklch(0.785 0.173 156.6 / 0.2)'}`, color: isActive ? 'oklch(0.08 0.01 240)' : 'var(--brand-prime)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.35s, color 0.35s' }}>{step.icon}</div>
                   <div style={{ textAlign: 'right' }}>
                     <div style={{ fontSize: '0.58rem', textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-muted)', fontWeight: 700 }}>Step</div>
-                    <div style={{ fontSize: '3.4rem', fontWeight: 900, lineHeight: 1, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", background: 'linear-gradient(135deg, oklch(0.785 0.173 156.6 / 0.22), oklch(0.508 0.155 292.2 / 0.15))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{step.n}</div>
+                    <div style={{ fontSize: '3.2rem', fontWeight: 700, lineHeight: 1, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", color: 'oklch(0.785 0.173 156.6 / 0.32)' }}>{step.n}</div>
                   </div>
                 </div>
                 <h3 style={{ fontSize: 'clamp(1.5rem,2.5vw,1.9rem)', fontWeight: 900, letterSpacing: '-0.01em', marginBottom: 4, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", color: isActive ? 'var(--text-primary)' : 'oklch(0.90 0.005 240)', transition: 'color 0.3s' }}>{step.title}</h3>
@@ -888,8 +888,8 @@ function EnAbout() {
               <img src={profileSrc} alt="Shmuel Munitz" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.4), transparent 55%)' }} />
             </div>
-            <div style={{ position: 'absolute', top: -14, right: 16, zIndex: 2, background: 'var(--surface-1)', backdropFilter: 'blur(16px)', border: '1px solid var(--surface-2)', borderRadius: 3, padding: '6px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', boxShadow: '0 0 6px var(--brand-prime)' }} />
+            <div style={{ position: 'absolute', top: -14, right: 16, zIndex: 2, background: 'var(--surface-1)',  border: '1px solid var(--surface-2)', borderRadius: 3, padding: '6px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', boxShadow: 'none' }} />
               <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>Shmuel Munitz</span>
             </div>
           </div>
@@ -1045,12 +1045,12 @@ function EnWhatsAppGroup() {
       <div className="aurora-orb" style={{ width: 500, height: 500, bottom: '-10%', left: '-5%', background: 'radial-gradient(circle, oklch(0.55 0.20 145 / 0.10), transparent 70%)', '--dur': '22s' }} />
 
       <div style={{ maxWidth: 760, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        <div className="en-wag-card animated-border glass-panel" style={{ opacity: 0, border: '1px solid oklch(0.55 0.20 145 / 0.25)', borderRadius: 4, padding: 'clamp(32px, 5vw, 52px)', boxShadow: '0 0 60px oklch(0.55 0.20 145 / 0.07)', position: 'relative', overflow: 'hidden' }}>
+        <div className="en-wag-card animated-border glass-panel" style={{ opacity: 0, border: '1px solid oklch(0.55 0.20 145 / 0.25)', borderRadius: 4, padding: 'clamp(32px, 5vw, 52px)', boxShadow: 'none', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: -60, right: -60, width: 280, height: 280, background: 'radial-gradient(circle, oklch(0.65 0.22 145 / 0.13), transparent 70%)', pointerEvents: 'none' }} />
 
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 18, marginBottom: 28, flexWrap: 'wrap' }}>
-            <div style={{ width: 56, height: 56, borderRadius: 4, flexShrink: 0, background: 'oklch(0.55 0.22 145)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 24px oklch(0.55 0.22 145 / 0.4)' }}>
+            <div style={{ width: 56, height: 56, borderRadius: 4, flexShrink: 0, background: 'oklch(0.55 0.22 145)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'none' }}>
               <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
               </svg>
@@ -1085,12 +1085,12 @@ function EnWhatsAppGroup() {
           {/* Dosage badge + CTA */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'oklch(0.55 0.22 145 / 0.1)', border: '1px solid oklch(0.55 0.22 145 / 0.25)', borderRadius: 3, padding: '8px 16px' }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'oklch(0.65 0.22 145)', display: 'block', boxShadow: '0 0 6px oklch(0.65 0.22 145)' }} />
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'oklch(0.65 0.22 145)', display: 'block', boxShadow: 'none' }} />
               <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'oklch(0.75 0.18 145)' }}>2 messages a week · short, sharp, to the point</span>
             </div>
 
             <a href={WA_GROUP} target="_blank" rel="noopener noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 28px', background: 'oklch(0.55 0.22 145)', color: 'white', borderRadius: 3, fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", textDecoration: 'none', boxShadow: '0 0 32px oklch(0.55 0.22 145 / 0.35)', transition: 'background 0.25s, box-shadow 0.25s, transform 0.2s' }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 28px', background: 'oklch(0.55 0.22 145)', color: 'white', borderRadius: 3, fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", textDecoration: 'none', boxShadow: 'none', transition: 'background 0.25s, box-shadow 0.25s, transform 0.2s' }}
               onMouseEnter={e => { e.currentTarget.style.background = 'oklch(0.62 0.22 145)'; e.currentTarget.style.boxShadow = '0 0 48px oklch(0.55 0.22 145 / 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.currentTarget.style.background = 'oklch(0.55 0.22 145)'; e.currentTarget.style.boxShadow = '0 0 32px oklch(0.55 0.22 145 / 0.35)'; e.currentTarget.style.transform = 'translateY(0)'; }}
             >
@@ -1197,7 +1197,7 @@ function EnLeadForm() {
         {/* scarcity pill */}
         <div style={{ textAlign: 'center', marginBottom: 18 }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(52,217,123,0.12)', border: '1px solid rgba(31,157,87,0.35)', borderRadius: 3, padding: '6px 16px', fontSize: '0.82rem', fontWeight: 700, color: '#117a41' }}>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#1f9d57', display: 'block', boxShadow: '0 0 6px #1f9d57', animation: 'pulse-ring 2s ease-out infinite' }} />
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#1f9d57', display: 'block', boxShadow: 'none', animation: 'pulse-ring 2s ease-out infinite' }} />
             1 founding case-study spot open · special founding terms
           </span>
         </div>

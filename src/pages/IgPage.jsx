@@ -125,7 +125,7 @@ export default function IgPage() {
 
         {/* Profile photo with spinning ring */}
         <div style={{ position: 'relative', marginBottom: 22 }}>
-          <div style={{ position: 'absolute', inset: -22, borderRadius: '50%', background: 'radial-gradient(circle at 35% 50%, oklch(0.65 0.22 200 / 0.35), transparent 55%), radial-gradient(circle at 65% 40%, oklch(0.508 0.155 292.2 / 0.3), transparent 55%)', filter: 'blur(18px)', zIndex: 0 }} />
+          <div style={{ position: 'absolute', inset: -22, borderRadius: '50%', background: 'radial-gradient(circle at 45% 50%, oklch(0.785 0.173 156.6 / 0.22), transparent 60%)', filter: 'blur(18px)', zIndex: 0 }} />
           <div style={{ position: 'relative', width: 118, height: 118 }}>
             <div className="photo-ring" style={{ borderRadius: '50%' }} />
             <img src="/shmuel.png" alt="שמואל מוניץ" style={{ position: 'absolute', top: 3, left: 3, width: 'calc(100% - 6px)', height: 'calc(100% - 6px)', borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', zIndex: 1 }} />
@@ -144,7 +144,7 @@ export default function IgPage() {
 
         {/* Brand chip */}
         <div className="chip" style={{ marginBottom: 36 }}>
-          <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', animation: 'breathing 2s ease-in-out infinite', boxShadow: '0 0 6px var(--brand-prime)' }} />
+          <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', animation: 'breathing 2s ease-in-out infinite', boxShadow: 'none' }} />
           Shift Up · שיווק מבוסס-מחקר
         </div>
 
@@ -172,7 +172,7 @@ export default function IgPage() {
               textDecoration: 'none',
               color: 'var(--text-primary)',
               border: '1.5px solid oklch(0.785 0.173 156.6 / 0.45)',
-              boxShadow: '0 0 24px oklch(0.785 0.173 156.6 / 0.18)',
+              boxShadow: 'none',
               position: 'relative',
               overflow: 'hidden',
             }}
@@ -232,7 +232,7 @@ export default function IgPage() {
 
         {/* Trust line */}
         <div style={{ marginTop: 28, display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--brand-prime)', boxShadow: '0 0 6px var(--brand-prime)', animation: 'pulse-ring 2s ease-out infinite', display: 'block', flexShrink: 0 }} />
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--brand-prime)', boxShadow: 'none', animation: 'pulse-ring 2s ease-out infinite', display: 'block', flexShrink: 0 }} />
           שיחת היכרות חינם · הבטחת ביצוע על חודש הניהול הראשון
         </div>
 

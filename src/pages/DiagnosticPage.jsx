@@ -593,26 +593,26 @@ const CSS = `
 .dg-brand b{font-weight:800; letter-spacing:.5px}
 .dg-brand span{color:var(--dg-text-dim); font-weight:400; font-size:.9rem}
 .dg-hero{text-align:center; margin-bottom:36px}
-.dg-pill{display:inline-block; font-size:.8rem; font-weight:600; color:var(--dg-green); background:var(--dg-green-dim); border:1px solid rgba(54,217,138,.25); padding:6px 14px; border-radius:100px; margin-bottom:20px}
+.dg-pill{display:inline-block; font-size:.8rem; font-weight:600; color:var(--dg-green); background:var(--dg-green-dim); border:1px solid rgba(54,217,138,.25); padding:6px 14px; border-radius:3px; margin-bottom:20px}
 .dg-root h1{font-size:clamp(1.9rem,6vw,2.8rem); font-weight:900; line-height:1.15; margin-bottom:16px; letter-spacing:-.5px}
 .dg-root h1 em{color:var(--dg-green); font-style:normal}
 .dg-sub{color:var(--dg-text-dim); font-size:1.05rem; max-width:520px; margin:0 auto 28px}
 .dg-benefit{display:flex; align-items:center; gap:10px; justify-content:flex-start; margin-bottom:14px; color:var(--dg-text-dim); font-size:.92rem}
 .dg-benefit i{color:var(--dg-green); font-style:normal; font-weight:700}
-.dg-btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:inherit; font-size:1.05rem; font-weight:700; cursor:pointer; padding:16px 32px; border-radius:14px; border:none; transition:.2s; width:100%}
+.dg-btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:inherit; font-size:1.05rem; font-weight:700; cursor:pointer; padding:16px 32px; border-radius:4px; border:none; transition:.2s; width:100%}
 .dg-btn-primary{background:var(--dg-green); color:#04120a; box-shadow:0 8px 30px rgba(54,217,138,.3)}
 .dg-btn-primary:hover{transform:translateY(-2px); box-shadow:0 12px 40px rgba(54,217,138,.45)}
 .dg-btn-primary:disabled{opacity:.35; cursor:not-allowed; transform:none; box-shadow:none}
 .dg-btn-ghost{background:transparent; color:var(--dg-text); border:1px solid var(--dg-border)}
 .dg-btn-ghost:hover{border-color:var(--dg-green); color:var(--dg-green)}
-.dg-card{background:var(--dg-card); border:1px solid var(--dg-border); border-radius:20px; padding:28px 24px; margin-bottom:20px}
+.dg-card{background:var(--dg-card); border:1px solid var(--dg-border); border-radius:4px; padding:28px 24px; margin-bottom:20px}
 .dg-progress-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:.85rem; color:var(--dg-text-dim)}
-.dg-progress-bar{height:6px; background:var(--dg-card-2); border-radius:100px; overflow:hidden; margin-bottom:28px}
-.dg-progress-fill{height:100%; background:linear-gradient(90deg,var(--dg-purple),var(--dg-green)); transition:width .35s ease; border-radius:100px}
+.dg-progress-bar{height:6px; background:var(--dg-card-2); border-radius:3px; overflow:hidden; margin-bottom:28px}
+.dg-progress-fill{height:100%; background:linear-gradient(90deg,var(--dg-purple),var(--dg-green)); transition:width .35s ease; border-radius:3px}
 .dg-qcat{font-size:.8rem; color:var(--dg-green); font-weight:700; letter-spacing:.5px; margin-bottom:8px}
 .dg-qtext{font-size:1.35rem; font-weight:700; line-height:1.35; margin-bottom:24px}
 .dg-opts{display:flex; flex-direction:column; gap:12px}
-.dg-opt{text-align:right; font-family:inherit; font-size:1rem; color:var(--dg-text); background:var(--dg-card-2); border:1.5px solid var(--dg-border); border-radius:14px; padding:16px 18px; cursor:pointer; transition:.15s; display:flex; align-items:center; gap:14px}
+.dg-opt{text-align:right; font-family:inherit; font-size:1rem; color:var(--dg-text); background:var(--dg-card-2); border:1.5px solid var(--dg-border); border-radius:4px; padding:16px 18px; cursor:pointer; transition:.15s; display:flex; align-items:center; gap:14px}
 .dg-opt:hover{border-color:rgba(54,217,138,.4); background:#161d26}
 .dg-opt.sel{border-color:var(--dg-green); background:var(--dg-green-dim)}
 .dg-mark{width:22px; height:22px; border-radius:50%; border:2px solid var(--dg-text-dim); flex-shrink:0; display:grid; place-items:center; transition:.15s}
@@ -631,9 +631,9 @@ const CSS = `
 .dg-bar-top{display:flex; justify-content:space-between; font-size:.92rem; margin-bottom:6px}
 .dg-bar-top b{font-weight:600}
 .dg-bar-top span{font-weight:700}
-.dg-bar-track{height:8px; background:var(--dg-card-2); border-radius:100px; overflow:hidden}
-.dg-bar-fill{height:100%; border-radius:100px; transition:width .8s ease}
-.dg-leak{display:flex; gap:14px; align-items:flex-start; background:var(--dg-card-2); border:1px solid var(--dg-border); border-right:3px solid var(--dg-danger); border-radius:12px; padding:16px; margin-bottom:12px}
+.dg-bar-track{height:8px; background:var(--dg-card-2); border-radius:3px; overflow:hidden}
+.dg-bar-fill{height:100%; border-radius:3px; transition:width .8s ease}
+.dg-leak{display:flex; gap:14px; align-items:flex-start; background:var(--dg-card-2); border:1px solid var(--dg-border); border-right:3px solid var(--dg-danger); border-radius:4px; padding:16px; margin-bottom:12px}
 .dg-leak-n{font-weight:900; color:var(--dg-danger); font-size:1.1rem; flex-shrink:0}
 .dg-leak h4{font-size:1.02rem; margin-bottom:4px}
 .dg-leak p{color:var(--dg-text-dim); font-size:.92rem}
@@ -643,7 +643,7 @@ const CSS = `
 .dg-lead-p{color:var(--dg-text-dim); margin-bottom:24px}
 .dg-field{margin-bottom:14px; text-align:right}
 .dg-field label{display:block; font-size:.85rem; color:var(--dg-text-dim); margin-bottom:6px; font-weight:500}
-.dg-field input{width:100%; font-family:inherit; font-size:1rem; color:var(--dg-text); background:var(--dg-card-2); border:1.5px solid var(--dg-border); border-radius:12px; padding:14px 16px; transition:.15s}
+.dg-field input{width:100%; font-family:inherit; font-size:1rem; color:var(--dg-text); background:var(--dg-card-2); border:1.5px solid var(--dg-border); border-radius:4px; padding:14px 16px; transition:.15s}
 .dg-field input:focus{outline:none; border-color:var(--dg-green)}
 .dg-field input::placeholder{color:#4a5560}
 .dg-consent{font-size:.78rem; color:var(--dg-text-dim); margin-top:14px}
@@ -655,10 +655,10 @@ const CSS = `
 .dg-skip{background:none; border:none; font-family:inherit; color:var(--dg-text-dim); font-size:.88rem; cursor:pointer; margin-top:18px; padding:6px 2px; text-decoration:underline; text-underline-offset:3px; transition:.15s; display:block}
 .dg-skip:hover{color:var(--dg-green)}
 .dg-skip.active{color:var(--dg-green); font-weight:600; text-decoration:none}
-.dg-share-img{margin-bottom:18px; border-radius:14px; overflow:hidden; border:1px solid var(--dg-border); background:#070a0e}
+.dg-share-img{margin-bottom:18px; border-radius:4px; overflow:hidden; border:1px solid var(--dg-border); background:#070a0e}
 .dg-share-img img{display:block; width:100%; max-height:520px; object-fit:contain; margin:0 auto}
-.dg-share-cap{background:var(--dg-card-2); border:1px solid var(--dg-border); border-radius:12px; padding:14px 16px; font-size:.9rem; color:var(--dg-text-dim); white-space:pre-wrap; line-height:1.6; margin-bottom:18px}
-.dg-share-mini{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; background:var(--dg-card); border:1px solid var(--dg-border); border-radius:16px; padding:14px 18px; margin-bottom:20px}
+.dg-share-cap{background:var(--dg-card-2); border:1px solid var(--dg-border); border-radius:4px; padding:14px 16px; font-size:.9rem; color:var(--dg-text-dim); white-space:pre-wrap; line-height:1.6; margin-bottom:18px}
+.dg-share-mini{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; background:var(--dg-card); border:1px solid var(--dg-border); border-radius:4px; padding:14px 18px; margin-bottom:20px}
 .dg-share-mini span{font-weight:600; font-size:.95rem}
 .dg-share-mini .dg-btn{width:auto; padding:11px 20px; font-size:.95rem; white-space:nowrap; flex-shrink:0}
 .dg-share-btns{display:flex; flex-direction:column; gap:10px}

@@ -208,7 +208,7 @@ function PromptCard({ prompt }) {
         background: 'oklch(0.11 0.015 240)',
         border: '1.5px solid oklch(0.97 0.005 240 / 0.08)',
         overflow: 'hidden',
-        boxShadow: '0 0 60px oklch(0.785 0.173 156.6 / 0.05), 0 2px 20px oklch(0 0 0 / 0.4)',
+        boxShadow: 'none',
         position: 'relative',
       }}
     >
@@ -270,7 +270,7 @@ function PromptCard({ prompt }) {
               width: 5, height: 5,
               borderRadius: '50%',
               background: 'var(--brand-prime)',
-              boxShadow: '0 0 5px var(--brand-prime)',
+              boxShadow: 'none',
               flexShrink: 0,
               animation: 'breathing 2.5s ease-in-out infinite',
             }} />
@@ -674,7 +674,7 @@ export default function FreePage() {
                 width: 6, height: 6,
                 borderRadius: '50%',
                 background: 'var(--brand-prime)',
-                boxShadow: '0 0 6px var(--brand-prime)',
+                boxShadow: 'none',
                 display: 'block',
                 animation: 'breathing 2s ease-in-out infinite',
                 flexShrink: 0,
@@ -773,7 +773,7 @@ export default function FreePage() {
               overflow: 'hidden',
               border: '1.5px solid oklch(0.785 0.173 156.6 / 0.3)',
               background: 'oklch(0.11 0.015 240)',
-              boxShadow: '0 0 50px oklch(0.785 0.173 156.6 / 0.07)',
+              boxShadow: 'none',
             }}
           >
             <div style={{ height: 3, background: 'linear-gradient(90deg, var(--brand-deep) 0%, var(--brand-prime) 55%, var(--brand-glow) 100%)' }} />
@@ -783,7 +783,7 @@ export default function FreePage() {
                 padding: '5px 12px', borderRadius: 100, marginBottom: 12,
                 background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1px solid oklch(0.785 0.173 156.6 / 0.25)',
               }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--brand-prime)', boxShadow: '0 0 6px var(--brand-prime)', display: 'block', animation: 'breathing 2s ease-in-out infinite' }} />
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--brand-prime)', boxShadow: 'none', display: 'block', animation: 'breathing 2s ease-in-out infinite' }} />
                 <span style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--brand-prime)', letterSpacing: '0.03em' }}>אבחון חינם · 3 דקות</span>
               </div>
               <h2 style={{ fontSize: 'clamp(1.35rem, 5.5vw, 1.6rem)', fontWeight: 900, color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.15, marginBottom: 8 }}>
@@ -840,7 +840,7 @@ export default function FreePage() {
                 borderRadius: '50%',
                 background: 'var(--brand-prime)',
                 border: '2px solid oklch(0.12 0.015 240)',
-                boxShadow: '0 0 6px var(--brand-prime)',
+                boxShadow: 'none',
               }} />
             </div>
             <div style={{ textAlign: 'right', minWidth: 0 }}>
