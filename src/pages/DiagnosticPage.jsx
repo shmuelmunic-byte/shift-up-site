@@ -25,6 +25,16 @@ const SEG_LINE_CLEAN = {
   none:  'עדיין כמעט לא השקעת בשיווק, ובכל זאת הבסיס שלך מסודר. ',
 };
 
+// חוזקה לכל תחום שקיבל ציון גבוה - כדי לפתוח את התוצאה בחיובי, במה שכבר עובד.
+// מוצג רק כשהתחום באמת חזק, אז הניסוח נשאר כן.
+const CAT_WIN = {
+  offer:    { t: 'ההצעה שלך חדה', b: 'אתה יודע למה בוחרים בך ולמי אתה מתאים. זה הבסיס שכל השיווק נשען עליו, ואצלך הוא מסודר.' },
+  funnel:   { t: 'המסע ללקוח ברור', b: 'מי שמתעניין יודע מה הצעד הבא ואתה לא מאבד אותו בדרך. ככה תנועה הופכת למכירות.' },
+  measure:  { t: 'אתה יודע מה עובד', b: 'אתה מנווט על נתונים ולא על תחושה, ולכן כל שקל וכל שעה הולכים למקום הנכון.' },
+  presence: { t: 'הנוכחות שלך יציבה', b: 'אתה שם באופן עקבי, והקהל לא שוכח אותך בין מגע למגע. עקביות בונה אמון שמבשיל למכירות.' },
+  retain:   { t: 'לקוחות חוזרים אליך', b: 'יש לך מנוע של לקוחות חוזרים והפניות, הערוץ הזול והחם ביותר. זה משאיר לך יותר רווח על כל לקוח.' },
+};
+
 function computeResult(answers) {
   const segIdx = Q.findIndex((q) => q.seg);
   const seg = segIdx >= 0 && answers[segIdx] != null && answers[segIdx] !== 'skip' ? Q[segIdx].o[answers[segIdx]][1] : null;
@@ -58,6 +68,21 @@ function computeResult(answers) {
   const leaks = weak.slice(0, 3);
   const moreLeaks = weak.length > leaks.length;
 
+  // חוזקות = תחומים שנמדדו וקיבלו ציון גבוה, ממוינים מהחזק לפחות. מובילים בתוצאה כדי לפתוח בחיובי.
+  // תמיד מחזירים לפחות חוזקה אחת - גם למי שקיבל ציון נמוך יש נקודת פתיחה כנה.
+  const measuredCats = catPcts.filter((cp) => cp.p !== null).sort((a, b) => b.p - a.p);
+  let strengths = measuredCats.filter((cp) => cp.p >= 67).slice(0, 3).map((cp) => ({ cat: cp.c, p: cp.p, ...CAT_WIN[cp.c] }));
+  if (strengths.length === 0 && measuredCats.length) {
+    const top = measuredCats[0];
+    if (top.p >= 45) {
+      // אין תחום "ירוק" - מציגים את החזק ביותר כחוזקה יחסית, בלי להגזים.
+      strengths = [{ cat: top.c, p: top.p, t: `הכי חזק אצלך: ${CATS[top.c]}`, b: 'זה התחום שבו אתה במצב הכי טוב יחסית. יש על מה לבנות, ומכאן מחזקים גם את השאר.' }];
+    }
+  }
+  if (strengths.length === 0) {
+    strengths = [{ cat: null, p: null, t: 'עצם זה שעצרת לבדוק', b: 'רוב בעלי העסקים לא עוצרים לבדוק איפה השיווק דולף. שעשית את זה אומר שאתה מוכן לתקן, וזו נקודת הפתיחה של כל שיפור.' }];
+  }
+
   // ללא דליפות (כל התשובות חזקות) — ניסוח נפרד, אחרת מדברים על דליפות שלא קיימות.
   let v, vs, prefix;
   if (leaks.length === 0) {
@@ -71,10 +96,12 @@ function computeResult(answers) {
     prefix = seg && SEG_LINE[seg] ? SEG_LINE[seg] : '';
   }
 
-  return { seg, pct, catPcts, leaks, moreLeaks, skipped, verdict: v, verdictSub: prefix + vs };
+  return { seg, pct, catPcts, leaks, moreLeaks, strengths, skipped, verdict: v, verdictSub: prefix + vs };
 }
 
-/* ── תמונת תוצאה לשיתוף (1080×1920, פורמט סטטוס/מובייל) ──
+/* ── תמונת תוצאה לשיתוף (1080×1527, A4 פורטרט) ──
+   מובילה במה שכבר עובד (חוזקות) ורק אז מה כדאי לחדד — כי אנשים משתפים
+   תמונה שמראה במה הם טובים, ובלי לוותר על מה שצריך תיקון.
    נקייה מלינק — הטקסט והלינק נשלחים ככיתוב שמתלווה לתמונה. */
 function wrapCanvasText(ctx, text, cx, y, maxW, lh) {
   const words = String(text).split(' ');
@@ -89,56 +116,95 @@ function wrapCanvasText(ctx, text, cx, y, maxW, lh) {
   return lines.length * lh;
 }
 
-function drawShareImage(result) {
-  const W = 1080, H = 1920;
+/* טעינת הלוגו (דיו כהה על שקוף) פעם אחת, לשילוב בתמונת השיתוף. */
+let _shareLogo = null, _shareLogoPromise = null;
+function loadShareLogo() {
+  if (_shareLogo) return Promise.resolve(_shareLogo);
+  if (!_shareLogoPromise) _shareLogoPromise = new Promise((res) => {
+    const im = new Image();
+    im.onload = () => { _shareLogo = im; res(im); };
+    im.onerror = () => res(null);
+    im.src = '/logo-onlight.png';
+  });
+  return _shareLogoPromise;
+}
+
+function drawShareImage(result, logo) {
+  const W = 1080, H = 1527;               // A4 פורטרט (יחס 1:√2)
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const x = c.getContext('2d');
   const pct = result.pct != null ? result.pct : 0;
-  const col = pct >= 70 ? '#36d98a' : pct >= 45 ? '#ffb454' : '#ff5c72';
+  // צבעי "דיו" כהים מספיק כדי להיקרא על רקע בהיר, לכל רמת ציון.
+  const col = pct >= 70 ? '#12a163' : pct >= 45 ? '#d68a1c' : '#e0455e';
+  const INK = '#0e1319', DIM = '#5a6674', GREEN = '#0f9a5b';
 
-  x.fillStyle = '#070a0e'; x.fillRect(0, 0, W, H);
-  let g = x.createRadialGradient(W * 0.85, H * 0.03, 0, W * 0.85, H * 0.03, 760);
-  g.addColorStop(0, 'rgba(54,217,138,.20)'); g.addColorStop(1, 'rgba(54,217,138,0)');
+  // רקע בהיר + נגיעות צבע עדינות בפינות
+  x.fillStyle = '#ffffff'; x.fillRect(0, 0, W, H);
+  let g = x.createRadialGradient(W * 0.85, H * 0.05, 0, W * 0.85, H * 0.05, 680);
+  g.addColorStop(0, 'rgba(54,217,138,.12)'); g.addColorStop(1, 'rgba(54,217,138,0)');
   x.fillStyle = g; x.fillRect(0, 0, W, H);
-  g = x.createRadialGradient(W * 0.08, H * 0.34, 0, W * 0.08, H * 0.34, 760);
-  g.addColorStop(0, 'rgba(106,79,181,.20)'); g.addColorStop(1, 'rgba(106,79,181,0)');
+  g = x.createRadialGradient(W * 0.10, H * 0.45, 0, W * 0.10, H * 0.45, 680);
+  g.addColorStop(0, 'rgba(106,79,181,.10)'); g.addColorStop(1, 'rgba(106,79,181,0)');
   x.fillStyle = g; x.fillRect(0, 0, W, H);
 
   x.direction = 'rtl'; x.textAlign = 'center'; x.textBaseline = 'middle';
 
-  x.fillStyle = '#e8edf2'; x.font = '700 46px "Secular One"';
-  x.fillText('Shift Up · אבחון שיווק', W / 2, 160);
-  x.fillStyle = '#36d98a'; x.beginPath(); x.arc(W / 2 + 235, 160, 10, 0, Math.PI * 2); x.fill();
+  // לוגו למעלה (דיו כהה על שקוף). נפילה לטקסט אם לא נטען.
+  if (logo && logo.width) {
+    const lw = 380, lh = lw * logo.height / logo.width;
+    x.drawImage(logo, (W - lw) / 2, 70, lw, lh);
+  } else {
+    x.fillStyle = INK; x.font = '800 46px "Secular One"';
+    x.fillText('Shift Up · אבחון שיווק', W / 2, 130);
+  }
 
-  x.fillStyle = '#e8edf2'; x.font = '900 68px "Secular One"';
-  x.fillText('בדקתי איפה השיווק שלי דולף', W / 2, 330);
+  // כותרת חיובית - לא ממוקדת דליפה
+  x.fillStyle = INK; x.font = '900 58px "Secular One"';
+  x.fillText('ככה נראה השיווק של העסק שלי', W / 2, 276);
 
-  const cx = W / 2, cy = 830, r = 300, lw = 46;
+  // מד ציון
+  const cx = W / 2, cy = 536, r = 188, lw2 = 38;
   x.lineCap = 'round';
-  x.strokeStyle = '#131a22'; x.lineWidth = lw;
+  x.strokeStyle = '#e4e9ef'; x.lineWidth = lw2;
   x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.stroke();
   x.strokeStyle = col;
   x.beginPath(); x.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pct / 100); x.stroke();
-  x.fillStyle = col; x.font = '900 250px "Secular One"';
-  x.fillText(String(pct), cx, cy - 6);
-  x.fillStyle = '#8b97a3'; x.font = '400 52px "Secular One"';
-  x.fillText('מתוך 100', cx, cy + 150);
+  x.fillStyle = col; x.font = '900 160px "Secular One"';
+  x.fillText(String(pct), cx, cy - 4);
+  x.fillStyle = DIM; x.font = '400 38px "Secular One"';
+  x.fillText('מתוך 100', cx, cy + 104);
 
-  x.fillStyle = '#e8edf2'; x.font = '800 56px "Secular One"';
-  const vEnd = 1300 + wrapCanvasText(x, result.verdict, W / 2, 1300, W - 170, 68);
+  // ורדיקט
+  let y = 812;
+  x.fillStyle = INK; x.font = '800 46px "Secular One"';
+  y += wrapCanvasText(x, result.verdict, W / 2, y, W - 150, 58);
 
-  let y = vEnd + 60;
+  // מה שכבר עובד - מוביל בחיובי
+  y += 42;
+  x.fillStyle = GREEN; x.font = '700 38px "Secular One"';
+  x.fillText('מה שכבר עובד לי 💪', W / 2, y); y += 58;
+  x.fillStyle = INK; x.font = '600 42px "Secular One"';
+  (result.strengths || []).slice(0, 2).forEach((s) => {
+    y += wrapCanvasText(x, '✓ ' + s.t, W / 2, y, W - 150, 52) + 14;
+  });
+
+  // מה כדאי לחדד - נשמר, בניסוח רך
+  y += 34;
   if (result.leaks && result.leaks.length) {
-    x.fillStyle = '#ff5c72'; x.font = '700 40px "Secular One"';
-    x.fillText('הדליפה הכי דחופה שלי:', W / 2, y); y += 60;
-    x.fillStyle = '#e8edf2'; x.font = '600 46px "Secular One"';
-    wrapCanvasText(x, result.leaks[0].fb.t, W / 2, y, W - 170, 58);
+    x.fillStyle = '#b9741a'; x.font = '700 36px "Secular One"';
+    x.fillText('ומה כדאי לחדד:', W / 2, y); y += 52;
+    x.fillStyle = INK; x.font = '600 40px "Secular One"';
+    wrapCanvasText(x, result.leaks[0].fb.t, W / 2, y, W - 150, 50);
+  } else {
+    x.fillStyle = GREEN; x.font = '600 40px "Secular One"';
+    wrapCanvasText(x, 'אין דליפות גדולות - הבסיס שלך חזק 🎯', W / 2, y, W - 150, 50);
   }
 
-  x.fillStyle = '#8b97a3'; x.font = '500 44px "Secular One"';
-  x.fillText('אבחון שיווק חינמי לבעלי עסקים', W / 2, 1800);
-  x.fillStyle = '#36d98a'; x.font = '800 54px "Secular One"';
-  x.fillText('Shift Up', W / 2, 1862);
+  // פוטר CTA
+  x.fillStyle = DIM; x.font = '500 40px "Secular One"';
+  x.fillText('אבחון שיווק חינמי לבעלי עסקים', W / 2, H - 96);
+  x.fillStyle = GREEN; x.font = '800 46px "Secular One"';
+  x.fillText('shiftup.marketing', W / 2, H - 44);
 
   return c;
 }
@@ -267,15 +333,16 @@ export default function DiagnosticPage() {
   useEffect(() => {
     if (stage !== 'result' || !result) return;
     let cancelled = false;
-    const make = () => {
+    const make = (logo) => {
       if (cancelled) return;
-      const canvas = drawShareImage(result);
+      const canvas = drawShareImage(result, logo);
       shareCanvasRef.current = canvas;
       setShareImg(canvas.toDataURL('image/png'));
       canvas.toBlob((b) => { shareBlobRef.current = b; }, 'image/png');
     };
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(make);
-    else make();
+    // ממתינים גם לפונטים וגם ללוגו לפני שמציירים, כדי שהתמונה תצא שלמה.
+    const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    Promise.all([fontsReady, loadShareLogo()]).then(([, logo]) => make(logo));
     return () => { cancelled = true; };
   }, [stage, result]);
 
@@ -283,7 +350,7 @@ export default function DiagnosticPage() {
   const buildShareText = () => {
     const s = result ? result.pct : null;
     const scoreLine = s != null ? `קיבלתי ${s}/100 באבחון השיווק של Shift Up 🎯\n` : '';
-    return `${scoreLine}בדקתי איפה השיווק של העסק שלי דולף כסף. 10 שאלות, 3 דקות, תוצאה מיידית.\nשווה לכל בעל עסק. בדוק את שלך:`;
+    return `${scoreLine}יש דברים שכבר עובדים לי טוב בשיווק, וגם כמה שכדאי לחדד. 10 שאלות, 3 דקות, תוצאה מיידית.\nשווה לכל בעל עסק. בדוק את שלך:`;
   };
   const shareCaption = () => buildShareText() + '\n' + shareUrl();
 
@@ -347,7 +414,7 @@ export default function DiagnosticPage() {
     setStatus('done');
   };
 
-  const gaugeColor = result ? (result.pct >= 70 ? 'var(--dg-green)' : result.pct >= 45 ? 'var(--dg-warn)' : 'var(--dg-danger)') : 'var(--dg-green)';
+  const gaugeColor = result ? (result.pct >= 70 ? 'var(--dg-green-ink)' : result.pct >= 45 ? 'var(--dg-warn-ink)' : 'var(--dg-danger-ink)') : 'var(--dg-green-ink)';
   const CIRC = 553;
 
   return (
@@ -358,7 +425,7 @@ export default function DiagnosticPage() {
       <div className="dg-wrap">
         <div className="dg-brand" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
           <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none', color: 'inherit' }}>
-            <img src="/logo.png" alt="Shift Up" style={{ height: 24, width: 'auto' }} />
+            <img src="/logo-onlight.png" alt="Shift Up" style={{ height: 24, width: 'auto' }} />
             <span>· אבחון שיווק</span>
           </a>
           <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#8b97a3', fontSize: '0.82rem', fontWeight: 600, textDecoration: 'none' }}>
@@ -451,15 +518,35 @@ export default function DiagnosticPage() {
               <button className="dg-btn dg-share-wa" onClick={miniShare}>{canNativeShare ? '📲 שתף' : '📸 תמונה לשיתוף'}</button>
             </div>
 
+            {/* מובילים בחיובי — מה שכבר עובד — לפני מה שצריך תיקון */}
+            {result.strengths && result.strengths.length > 0 && (
+              <div className="dg-card">
+                <div className="dg-qcat" style={{ marginBottom: 6, color: 'var(--dg-green-ink)' }}>
+                  {result.strengths.length === 1 ? 'מה שכבר עובד לך 💪' : `מה שכבר עובד לך 💪 (${result.strengths.length})`}
+                </div>
+                <p style={{ color: 'var(--dg-text-dim)', fontSize: '.9rem', marginBottom: 18 }}>
+                  לפני מה שכדאי לחדד — זה מה שכבר חזק אצלך:
+                </p>
+                {result.strengths.map((s, i) => (
+                  <div className="dg-win" key={s.cat || i}>
+                    <span className="dg-win-i">✓</span>
+                    <div><h4>{s.t}</h4><p>{s.b}</p></div>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <div className="dg-card">
               <div className="dg-qcat" style={{ marginBottom: 16 }}>פירוט לפי תחום</div>
               {result.catPcts.map(({ c, p }) => {
                 const measured = p !== null;
-                const col = !measured ? 'var(--dg-text-dim)' : p >= 67 ? 'var(--dg-green)' : p >= 34 ? 'var(--dg-warn)' : 'var(--dg-danger)';
+                // מילוי הבר בצבע המותגי המלא, אבל תווית האחוז ב"דיו" כהה יותר שקריא על רקע בהיר.
+                const fill = !measured ? 'var(--dg-text-dim)' : p >= 67 ? 'var(--dg-green)' : p >= 34 ? 'var(--dg-warn)' : 'var(--dg-danger)';
+                const ink = !measured ? 'var(--dg-text-dim)' : p >= 67 ? 'var(--dg-green-ink)' : p >= 34 ? 'var(--dg-warn-ink)' : 'var(--dg-danger-ink)';
                 return (
                   <div className="dg-bar-row" key={c}>
-                    <div className="dg-bar-top"><b>{CATS[c]}</b><span style={{ color: col }}>{measured ? p + '%' : 'דילגת'}</span></div>
-                    <div className="dg-bar-track"><div className="dg-bar-fill" style={{ width: measured && anim ? p + '%' : 0, background: col, opacity: measured ? 1 : .4 }} /></div>
+                    <div className="dg-bar-top"><b>{CATS[c]}</b><span style={{ color: ink }}>{measured ? p + '%' : 'דילגת'}</span></div>
+                    <div className="dg-bar-track"><div className="dg-bar-fill" style={{ width: measured && anim ? p + '%' : 0, background: fill, opacity: measured ? 1 : .4 }} /></div>
                   </div>
                 );
               })}
@@ -467,7 +554,7 @@ export default function DiagnosticPage() {
 
             {result.leaks.length > 0 ? (
               <div className="dg-card">
-                <div className="dg-qcat" style={{ marginBottom: 6, color: 'var(--dg-danger)' }}>
+                <div className="dg-qcat" style={{ marginBottom: 6, color: 'var(--dg-danger-ink)' }}>
                   {result.leaks.length === 1
                     ? 'הדליפה הגדולה שלך'
                     : `${result.leaks.length} הדליפות ${result.moreLeaks ? 'הכי דחופות' : 'הגדולות'} שלך`}
@@ -484,7 +571,7 @@ export default function DiagnosticPage() {
               </div>
             ) : (
               <div className="dg-card" style={{ textAlign: 'center' }}>
-                <div className="dg-qcat" style={{ marginBottom: 8, color: 'var(--dg-green)' }}>אין דליפות גדולות 🎯</div>
+                <div className="dg-qcat" style={{ marginBottom: 8, color: 'var(--dg-green-ink)' }}>אין דליפות גדולות 🎯</div>
                 <p style={{ color: 'var(--dg-text-dim)' }}>כל התחומים שלך במצב טוב, וזה נדיר. סימן שהבסיס חזק. אם נדבר, זה יהיה על דיוק ואופטימיזציה, לא כיבוי שריפות.</p>
               </div>
             )}
@@ -522,13 +609,13 @@ export default function DiagnosticPage() {
                         onChange={(e) => setConsent(e.target.checked)}
                         style={{ width: 18, height: 18, marginTop: 2, flexShrink: 0, accentColor: 'var(--dg-green)', cursor: 'pointer' }} />
                       <span style={{ fontSize: '.85rem', lineHeight: 1.5 }}>
-                        קראתי ואני מסכים/ה ל<a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--dg-green)', fontWeight: 600 }}>מדיניות הפרטיות</a> ולכך שתיצרו איתי קשר. *
+                        קראתי ואני מסכים/ה ל<a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--dg-green-ink)', fontWeight: 600 }}>מדיניות הפרטיות</a> ולכך שתיצרו איתי קשר. *
                       </span>
                     </label>
                   </div>
-                  {touched && !nameValid && <p style={{ color: 'var(--dg-danger)', fontSize: '.82rem', marginBottom: 8 }}>נא למלא שם.</p>}
-                  {touched && nameValid && !phoneValid && <p style={{ color: 'var(--dg-danger)', fontSize: '.82rem', marginBottom: 8 }}>נא למלא מספר טלפון תקין.</p>}
-                  {touched && nameValid && phoneValid && !consent && <p style={{ color: 'var(--dg-danger)', fontSize: '.82rem', marginBottom: 8 }}>יש לאשר את מדיניות הפרטיות כדי להמשיך.</p>}
+                  {touched && !nameValid && <p style={{ color: 'var(--dg-danger-ink)', fontSize: '.82rem', marginBottom: 8 }}>נא למלא שם.</p>}
+                  {touched && nameValid && !phoneValid && <p style={{ color: 'var(--dg-danger-ink)', fontSize: '.82rem', marginBottom: 8 }}>נא למלא מספר טלפון תקין.</p>}
+                  {touched && nameValid && phoneValid && !consent && <p style={{ color: 'var(--dg-danger-ink)', fontSize: '.82rem', marginBottom: 8 }}>יש לאשר את מדיניות הפרטיות כדי להמשיך.</p>}
                   <button type="submit" className="dg-btn dg-btn-primary" disabled={status === 'sending'}>
                     {status === 'sending' ? 'שולח…' : 'בוא נדבר - שלח לי את הצעדים ←'}
                   </button>
@@ -574,46 +661,47 @@ export default function DiagnosticPage() {
 
 const CSS = `
 .dg-root{
-  --dg-green:#36d98a; --dg-green-dim:rgba(54,217,138,.15);
-  --dg-bg:#070a0e; --dg-card:#0e1319; --dg-card-2:#131a22;
-  --dg-purple:#6a4fb5; --dg-text:#e8edf2; --dg-text-dim:#8b97a3;
-  --dg-border:rgba(255,255,255,.08); --dg-danger:#ff5c72; --dg-warn:#ffb454;
+  --dg-green:#36d98a; --dg-green-ink:#0f9a5b; --dg-green-dim:rgba(54,217,138,.16);
+  --dg-bg:#f4f6f9; --dg-card:#ffffff; --dg-card-2:#eef2f6;
+  --dg-purple:#6a4fb5; --dg-text:#0e1319; --dg-text-dim:#5a6674;
+  --dg-border:rgba(14,19,25,.10);
+  --dg-danger:#ff5c72; --dg-danger-ink:#d83a54; --dg-warn:#f0a12a; --dg-warn-ink:#b9741a;
   position:relative; min-height:100vh; background:var(--dg-bg); color:var(--dg-text);
   font-family:'Space Grotesk','Secular One',sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden;
 }
 .dg-root::before{
   content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
   background:
-    radial-gradient(600px 400px at 80% -5%, rgba(54,217,138,.10), transparent 60%),
+    radial-gradient(600px 400px at 80% -5%, rgba(54,217,138,.12), transparent 60%),
     radial-gradient(500px 400px at 10% 20%, rgba(106,79,181,.10), transparent 60%);
 }
 .dg-wrap{position:relative; z-index:1; max-width:720px; margin:0 auto; padding:24px 20px 80px}
-.dg-brand{display:flex; align-items:center; gap:10px; justify-content:center; margin-bottom:40px; opacity:.9}
+.dg-brand{display:flex; align-items:center; gap:10px; justify-content:center; margin-bottom:40px; opacity:.95}
 .dg-brand .dg-dot{width:10px; height:10px; border-radius:50%; background:var(--dg-green); box-shadow:0 0 16px var(--dg-green)}
 .dg-brand b{font-weight:800; letter-spacing:.5px}
 .dg-brand span{color:var(--dg-text-dim); font-weight:400; font-size:.9rem}
 .dg-hero{text-align:center; margin-bottom:36px}
-.dg-pill{display:inline-block; font-size:.8rem; font-weight:600; color:var(--dg-green); background:var(--dg-green-dim); border:1px solid rgba(54,217,138,.25); padding:6px 14px; border-radius:3px; margin-bottom:20px}
+.dg-pill{display:inline-block; font-size:.8rem; font-weight:600; color:var(--dg-green-ink); background:var(--dg-green-dim); border:1px solid rgba(54,217,138,.30); padding:6px 14px; border-radius:3px; margin-bottom:20px}
 .dg-root h1{font-size:clamp(1.9rem,6vw,2.8rem); font-weight:900; line-height:1.15; margin-bottom:16px; letter-spacing:-.5px}
-.dg-root h1 em{color:var(--dg-green); font-style:normal}
+.dg-root h1 em{color:var(--dg-green-ink); font-style:normal}
 .dg-sub{color:var(--dg-text-dim); font-size:1.05rem; max-width:520px; margin:0 auto 28px}
 .dg-benefit{display:flex; align-items:center; gap:10px; justify-content:flex-start; margin-bottom:14px; color:var(--dg-text-dim); font-size:.92rem}
-.dg-benefit i{color:var(--dg-green); font-style:normal; font-weight:700}
+.dg-benefit i{color:var(--dg-green-ink); font-style:normal; font-weight:700}
 .dg-btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:inherit; font-size:1.05rem; font-weight:700; cursor:pointer; padding:16px 32px; border-radius:4px; border:none; transition:.2s; width:100%}
-.dg-btn-primary{background:var(--dg-green); color:#04120a; box-shadow:0 8px 30px rgba(54,217,138,.3)}
-.dg-btn-primary:hover{transform:translateY(-2px); box-shadow:0 12px 40px rgba(54,217,138,.45)}
-.dg-btn-primary:disabled{opacity:.35; cursor:not-allowed; transform:none; box-shadow:none}
-.dg-btn-ghost{background:transparent; color:var(--dg-text); border:1px solid var(--dg-border)}
-.dg-btn-ghost:hover{border-color:var(--dg-green); color:var(--dg-green)}
-.dg-card{background:var(--dg-card); border:1px solid var(--dg-border); border-radius:4px; padding:28px 24px; margin-bottom:20px}
+.dg-btn-primary{background:var(--dg-green); color:#04120a; box-shadow:0 8px 26px rgba(54,217,138,.35)}
+.dg-btn-primary:hover{transform:translateY(-2px); box-shadow:0 12px 34px rgba(54,217,138,.5)}
+.dg-btn-primary:disabled{opacity:.4; cursor:not-allowed; transform:none; box-shadow:none}
+.dg-btn-ghost{background:var(--dg-card); color:var(--dg-text); border:1px solid var(--dg-border)}
+.dg-btn-ghost:hover{border-color:var(--dg-green); color:var(--dg-green-ink)}
+.dg-card{background:var(--dg-card); border:1px solid var(--dg-border); border-radius:4px; padding:28px 24px; margin-bottom:20px; box-shadow:0 1px 3px rgba(14,19,25,.05), 0 8px 24px rgba(14,19,25,.04)}
 .dg-progress-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:.85rem; color:var(--dg-text-dim)}
 .dg-progress-bar{height:6px; background:var(--dg-card-2); border-radius:3px; overflow:hidden; margin-bottom:28px}
 .dg-progress-fill{height:100%; background:linear-gradient(90deg,var(--dg-purple),var(--dg-green)); transition:width .35s ease; border-radius:3px}
-.dg-qcat{font-size:.8rem; color:var(--dg-green); font-weight:700; letter-spacing:.5px; margin-bottom:8px}
+.dg-qcat{font-size:.8rem; color:var(--dg-green-ink); font-weight:700; letter-spacing:.5px; margin-bottom:8px}
 .dg-qtext{font-size:1.35rem; font-weight:700; line-height:1.35; margin-bottom:24px}
 .dg-opts{display:flex; flex-direction:column; gap:12px}
 .dg-opt{text-align:right; font-family:inherit; font-size:1rem; color:var(--dg-text); background:var(--dg-card-2); border:1.5px solid var(--dg-border); border-radius:4px; padding:16px 18px; cursor:pointer; transition:.15s; display:flex; align-items:center; gap:14px}
-.dg-opt:hover{border-color:rgba(54,217,138,.4); background:#161d26}
+.dg-opt:hover{border-color:rgba(54,217,138,.5); background:#e6edf4}
 .dg-opt.sel{border-color:var(--dg-green); background:var(--dg-green-dim)}
 .dg-mark{width:22px; height:22px; border-radius:50%; border:2px solid var(--dg-text-dim); flex-shrink:0; display:grid; place-items:center; transition:.15s}
 .dg-opt.sel .dg-mark{border-color:var(--dg-green); background:var(--dg-green)}
@@ -634,28 +722,32 @@ const CSS = `
 .dg-bar-track{height:8px; background:var(--dg-card-2); border-radius:3px; overflow:hidden}
 .dg-bar-fill{height:100%; border-radius:3px; transition:width .8s ease}
 .dg-leak{display:flex; gap:14px; align-items:flex-start; background:var(--dg-card-2); border:1px solid var(--dg-border); border-right:3px solid var(--dg-danger); border-radius:4px; padding:16px; margin-bottom:12px}
-.dg-leak-n{font-weight:900; color:var(--dg-danger); font-size:1.1rem; flex-shrink:0}
+.dg-leak-n{font-weight:900; color:var(--dg-danger-ink); font-size:1.1rem; flex-shrink:0}
 .dg-leak h4{font-size:1.02rem; margin-bottom:4px}
 .dg-leak p{color:var(--dg-text-dim); font-size:.92rem}
+.dg-win{display:flex; gap:14px; align-items:flex-start; background:var(--dg-card-2); border:1px solid var(--dg-border); border-right:3px solid var(--dg-green); border-radius:4px; padding:16px; margin-bottom:12px}
+.dg-win-i{font-weight:900; color:var(--dg-green-ink); font-size:1.1rem; flex-shrink:0; line-height:1.4}
+.dg-win h4{font-size:1.02rem; margin-bottom:4px}
+.dg-win p{color:var(--dg-text-dim); font-size:.92rem}
 .dg-lead{text-align:center}
 .dg-lead h2{font-size:1.5rem; font-weight:900; margin-bottom:8px}
-.dg-lead h2 em{color:var(--dg-green); font-style:normal}
+.dg-lead h2 em{color:var(--dg-green-ink); font-style:normal}
 .dg-lead-p{color:var(--dg-text-dim); margin-bottom:24px}
 .dg-field{margin-bottom:14px; text-align:right}
 .dg-field label{display:block; font-size:.85rem; color:var(--dg-text-dim); margin-bottom:6px; font-weight:500}
 .dg-field input{width:100%; font-family:inherit; font-size:1rem; color:var(--dg-text); background:var(--dg-card-2); border:1.5px solid var(--dg-border); border-radius:4px; padding:14px 16px; transition:.15s}
 .dg-field input:focus{outline:none; border-color:var(--dg-green)}
-.dg-field input::placeholder{color:#4a5560}
+.dg-field input::placeholder{color:#9aa5b1}
 .dg-consent{font-size:.78rem; color:var(--dg-text-dim); margin-top:14px}
 .dg-trust{margin-top:22px; padding-top:20px; border-top:1px solid var(--dg-border); color:var(--dg-text-dim); font-size:.85rem; line-height:1.7}
 .dg-thanks{text-align:center; padding:20px 0}
-.dg-thanks .dg-check{width:70px; height:70px; border-radius:50%; background:var(--dg-green-dim); border:2px solid var(--dg-green); display:grid; place-items:center; margin:0 auto 20px; font-size:2rem; color:var(--dg-green)}
+.dg-thanks .dg-check{width:70px; height:70px; border-radius:50%; background:var(--dg-green-dim); border:2px solid var(--dg-green); display:grid; place-items:center; margin:0 auto 20px; font-size:2rem; color:var(--dg-green-ink)}
 .dg-thanks h2{font-size:1.4rem; font-weight:900; margin-bottom:8px}
 .dg-thanks p{color:var(--dg-text-dim)}
 .dg-skip{background:none; border:none; font-family:inherit; color:var(--dg-text-dim); font-size:.88rem; cursor:pointer; margin-top:18px; padding:6px 2px; text-decoration:underline; text-underline-offset:3px; transition:.15s; display:block}
-.dg-skip:hover{color:var(--dg-green)}
-.dg-skip.active{color:var(--dg-green); font-weight:600; text-decoration:none}
-.dg-share-img{margin-bottom:18px; border-radius:4px; overflow:hidden; border:1px solid var(--dg-border); background:#070a0e}
+.dg-skip:hover{color:var(--dg-green-ink)}
+.dg-skip.active{color:var(--dg-green-ink); font-weight:600; text-decoration:none}
+.dg-share-img{margin-bottom:18px; border-radius:4px; overflow:hidden; border:1px solid var(--dg-border); background:var(--dg-card-2)}
 .dg-share-img img{display:block; width:100%; max-height:520px; object-fit:contain; margin:0 auto}
 .dg-share-cap{background:var(--dg-card-2); border:1px solid var(--dg-border); border-radius:4px; padding:14px 16px; font-size:.9rem; color:var(--dg-text-dim); white-space:pre-wrap; line-height:1.6; margin-bottom:18px}
 .dg-share-mini{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; background:var(--dg-card); border:1px solid var(--dg-border); border-radius:4px; padding:14px 18px; margin-bottom:20px}
