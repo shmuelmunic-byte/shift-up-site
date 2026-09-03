@@ -537,7 +537,7 @@ export default function DiagnosticPage() {
                 </form>
                 <div className="dg-trust">
                   <b style={{ color: 'var(--dg-text)' }}>מי עומד מאחורי זה?</b><br />
-                  Shift Up - אסטרטגיית שיווק מבוססת-מחקר לעסקים בוגרים. מבוסס מחקר · הבטחת ביצוע · בגובה העיניים.
+                  Shift Up - אסטרטגיית שיווק מבוססת-מחקר לעסקים שמוכנים להשקיע בשיווק. מבוסס מחקר · הבטחת ביצוע · בגובה העיניים.
                 </div>
               </div>
             ) : (
