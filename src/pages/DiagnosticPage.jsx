@@ -190,17 +190,19 @@ function drawShareImage(result, logo, stats) {
   x.fillStyle = DIM; x.font = '400 38px "Secular One"';
   x.fillText('מתוך 100', cx, cy + 104);
 
-  // תג "מעל הממוצע" - רק כשזה חיובי, כדי לתת סטטוס שמשתפים בגאווה.
+  // תג "מעל הממוצע" - רק כשזה חיובי. יושב מתחת לטבעת המד (תחתית הטבעת ~y743),
+  // והוורדיקט נדחף למטה כדי שלא יהיה חפיפה. סטטוס שמשתפים בגאווה.
+  let y = 812;
   if (aboveAvg) {
-    const pillW = 340, pillH = 66, pillY = cy + 146;
+    const pillW = 340, pillH = 62, pillY = 772;
     x.fillStyle = 'rgba(15,154,91,.12)';
     roundRectPath(x, cx - pillW / 2, pillY, pillW, pillH, pillH / 2); x.fill();
-    x.fillStyle = GREEN; x.font = '700 36px "Secular One"';
+    x.fillStyle = GREEN; x.font = '700 34px "Secular One"';
     x.fillText('🎯 מעל הממוצע', cx, pillY + pillH / 2 + 2);
+    y = 900; // מפנה מקום לתג בין הטבעת לוורדיקט
   }
 
   // ורדיקט
-  let y = 812;
   x.fillStyle = INK; x.font = '800 46px "Secular One"';
   y += wrapCanvasText(x, result.verdict, W / 2, y, W - 150, 58);
 
