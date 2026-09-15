@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { supabase } from '../lib/supabase';
@@ -31,6 +32,7 @@ function fireLead() {
 
 export default function LeadForm() {
   const sectionRef = useRef(null);
+  const navigate = useNavigate();
   const { whatsapp_url: waLinkRaw } = useSiteLinks();
   const c = useContent({
     'leadform.scarcity': 'מקום קייס מייסדים אחד פנוי · בתנאים מיוחדים',
@@ -78,8 +80,9 @@ export default function LeadForm() {
         source: 'landing_form',
       });
       if (error) throw error;
-      fireLead();
-      setStatus('done');
+      // מעבר לעמוד תודה ייעודי (URL נפרד) - שם יורה אירוע ההמרה (Lead + generate_lead).
+      // מדידה נקייה + מומנטום, במקום הודעה אינליין.
+      navigate('/thank-you');
     } catch (err) {
       // DB save failed (schema/RLS/offline) — don't lose the lead: push to WhatsApp prefilled
       console.warn('[LeadForm] supabase insert failed, falling back to WhatsApp:', err?.message);

@@ -26,6 +26,7 @@ const ROUTES = {
   '/privacy':     { canonical: '/privacy',     title: 'מדיניות פרטיות | Shift Up', description: 'מדיניות הפרטיות של Shift Up בהתאם לחוק הגנת הפרטיות ותיקון 13.' },
   '/login':       { noindex: true },
   '/admin':       { noindex: true },
+  '/thank-you':   { noindex: true, title: 'קיבלתי! | Shift Up' },
 };
 
 function upsert(selector, make, attr, value) {
