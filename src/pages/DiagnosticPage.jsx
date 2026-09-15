@@ -129,11 +129,26 @@ function loadShareLogo() {
   return _shareLogoPromise;
 }
 
-function drawShareImage(result, logo) {
+function roundRectPath(ctx, x0, y0, w, h, r) {
+  if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x0, y0, w, h, r); return; }
+  ctx.beginPath();
+  ctx.moveTo(x0 + r, y0);
+  ctx.arcTo(x0 + w, y0, x0 + w, y0 + h, r);
+  ctx.arcTo(x0 + w, y0 + h, x0, y0 + h, r);
+  ctx.arcTo(x0, y0 + h, x0, y0, r);
+  ctx.arcTo(x0, y0, x0 + w, y0, r);
+  ctx.closePath();
+}
+
+function drawShareImage(result, logo, stats) {
   const W = 1080, H = 1527;               // A4 פורטרט (יחס 1:√2)
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const x = c.getContext('2d');
   const pct = result.pct != null ? result.pct : 0;
+  // ממוצע חי (מגיע מ-audit_stats). aboveAvg קובע מסגור חיובי לשיתוף.
+  const avg = stats && typeof stats.avg === 'number' ? stats.avg : null;
+  const aboveAvg = avg != null && pct >= avg;
+  const belowAvg = avg != null && pct < avg;
   // צבעי "דיו" כהים מספיק כדי להיקרא על רקע בהיר, לכל רמת ציון.
   const col = pct >= 70 ? '#12a163' : pct >= 45 ? '#d68a1c' : '#e0455e';
   const INK = '#0e1319', DIM = '#5a6674', GREEN = '#0f9a5b';
@@ -158,9 +173,10 @@ function drawShareImage(result, logo) {
     x.fillText('Shift Up · אבחון שיווק', W / 2, 130);
   }
 
-  // כותרת חיובית - לא ממוקדת דליפה
+  // כותרת חיובית - לא ממוקדת דליפה. מתחת לממוצע = מסגור של פעולה ("יצאתי לתקן"),
+  // כדי שגם ציון נמוך יהיה שווה שיתוף ולא ייראה כדוח ציונים.
   x.fillStyle = INK; x.font = '900 58px "Secular One"';
-  x.fillText('ככה נראה השיווק של העסק שלי', W / 2, 276);
+  x.fillText(belowAvg ? 'יצאתי לתקן את השיווק של העסק' : 'ככה נראה השיווק של העסק שלי', W / 2, 276);
 
   // מד ציון
   const cx = W / 2, cy = 536, r = 188, lw2 = 38;
@@ -173,6 +189,15 @@ function drawShareImage(result, logo) {
   x.fillText(String(pct), cx, cy - 4);
   x.fillStyle = DIM; x.font = '400 38px "Secular One"';
   x.fillText('מתוך 100', cx, cy + 104);
+
+  // תג "מעל הממוצע" - רק כשזה חיובי, כדי לתת סטטוס שמשתפים בגאווה.
+  if (aboveAvg) {
+    const pillW = 340, pillH = 66, pillY = cy + 146;
+    x.fillStyle = 'rgba(15,154,91,.12)';
+    roundRectPath(x, cx - pillW / 2, pillY, pillW, pillH, pillH / 2); x.fill();
+    x.fillStyle = GREEN; x.font = '700 36px "Secular One"';
+    x.fillText('🎯 מעל הממוצע', cx, pillY + pillH / 2 + 2);
+  }
 
   // ורדיקט
   let y = 812;
@@ -192,7 +217,7 @@ function drawShareImage(result, logo) {
   y += 34;
   if (result.leaks && result.leaks.length) {
     x.fillStyle = '#b9741a'; x.font = '700 36px "Secular One"';
-    x.fillText('ומה כדאי לחדד:', W / 2, y); y += 52;
+    x.fillText(belowAvg ? 'מה שאני משפר עכשיו:' : 'ומה כדאי לחדד:', W / 2, y); y += 52;
     x.fillStyle = INK; x.font = '600 40px "Secular One"';
     wrapCanvasText(x, result.leaks[0].fb.t, W / 2, y, W - 150, 50);
   } else {
@@ -216,6 +241,7 @@ export default function DiagnosticPage() {
   const [result, setResult] = useState(null);
   const [anim, setAnim] = useState(false);
   const [displayScore, setDisplayScore] = useState(0);
+  const [stats, setStats] = useState(null); // { avg, better_than } — חי מ-audit_stats, מתעדכן בכל מילוי
 
   /* סדר תצוגה מעורבב לכל שאלה מדורגת (Fisher-Yates), פעם אחת לכל סשן.
      בלי זה התשובה הטובה תמיד ראשונה - מי שלוחץ "הכי למעלה" בלי לקרוא מקבל 100,
@@ -310,6 +336,18 @@ export default function DiagnosticPage() {
     });
   };
 
+  // ממוצע ואחוזון חיים — נמשכים בכל הצגת תוצאה, כך שהמידע תמיד עדכני
+  // (audit_stats מחשב מחדש בזמן אמת). נכשל בשקט: בלי נתון פשוט לא מציגים בנצ'מארק.
+  useEffect(() => {
+    if (stage !== 'result' || !result) return;
+    let cancelled = false;
+    supabase.rpc('audit_stats', { p_score: result.pct }).then(({ data, error }) => {
+      if (cancelled || error || !data) return;
+      setStats(data);
+    });
+    return () => { cancelled = true; };
+  }, [stage, result]);
+
   // animate gauge + bars + count-up once result is shown
   useEffect(() => {
     if (stage !== 'result' || !result) return;
@@ -345,7 +383,7 @@ export default function DiagnosticPage() {
     let cancelled = false;
     const make = (logo) => {
       if (cancelled) return;
-      const canvas = drawShareImage(result, logo);
+      const canvas = drawShareImage(result, logo, stats);
       shareCanvasRef.current = canvas;
       setShareImg(canvas.toDataURL('image/png'));
       canvas.toBlob((b) => { shareBlobRef.current = b; }, 'image/png');
@@ -354,7 +392,7 @@ export default function DiagnosticPage() {
     const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
     Promise.all([fontsReady, loadShareLogo()]).then(([, logo]) => make(logo));
     return () => { cancelled = true; };
-  }, [stage, result]);
+  }, [stage, result, stats]);
 
   // לינק שיתוף עם ייחוס: מי שמגיע דרכו נספר ב-GA כ-source=audit_share (מודד "כמה הגיעו משיתוף")
   const shareUrl = () => (typeof window !== 'undefined'
@@ -367,8 +405,15 @@ export default function DiagnosticPage() {
   };
   const buildShareText = () => {
     const s = result ? result.pct : null;
-    const scoreLine = s != null ? `קיבלתי ${s}/100 באבחון השיווק של Shift Up 🎯\n` : '';
-    return `${scoreLine}יש דברים שכבר עובדים לי טוב בשיווק, וגם כמה שכדאי לחדד. 10 שאלות, 3 דקות, תוצאה מיידית.\nשווה לכל בעל עסק. בדוק את שלך:`;
+    const avg = stats && typeof stats.avg === 'number' ? stats.avg : null;
+    const aboveAvg = s != null && avg != null && s >= avg;
+    if (aboveAvg) {
+      return `קיבלתי ${s}/100 באבחון השיווק של Shift Up, מעל הממוצע 🎯\n` +
+        `10 שאלות, 3 דקות, תוצאה מיידית. שווה לכל בעל עסק. בדוק איפה אתה:`;
+    }
+    // מתחת לממוצע או בלי נתון: ממסגרים את האירוע, בלי להוביל עם ציון שנראה פחות טוב.
+    return `עשיתי אבחון שיווק לעסק שלי, גיליתי מה שכבר עובד לי וגם כמה דברים ששווה לתקן.\n` +
+      `10 שאלות, 3 דקות, תוצאה מיידית. שווה לכל בעל עסק. בדוק את שלך:`;
   };
   const shareCaption = () => buildShareText() + '\n' + shareUrl();
 
@@ -531,9 +576,22 @@ export default function DiagnosticPage() {
               )}
             </div>
 
+            {/* בנצ'מרק חי — מוצג רק כשהוא חיובי (מעל הממוצע). מתחת לממוצע לא מציגים
+                כלום כאן, כדי לא להבליט מה שנראה פחות טוב. המידע מתעדכן בכל מילוי. */}
+            {stats && typeof stats.avg === 'number' && result.pct >= stats.avg && (
+              <div className="dg-card" style={{ textAlign: 'center', borderColor: 'var(--dg-green)' }}>
+                <div style={{ color: 'var(--dg-green-ink)', fontWeight: 800, fontSize: '1.1rem' }}>🎯 מעל הממוצע</div>
+                <p style={{ color: 'var(--dg-text-dim)', fontSize: '.92rem', marginTop: 6 }}>
+                  {typeof stats.better_than === 'number' && stats.better_than > 0
+                    ? `התוצאה שלך גבוהה מ-${stats.better_than}% מבעלי העסקים שעשו את האבחון. אתה בחצי החזק.`
+                    : 'התוצאה שלך מעל הציון הממוצע של בעלי העסקים שעשו את האבחון.'}
+                </p>
+              </div>
+            )}
+
             {/* רמז שיתוף קומפקטי בשיא הרגש — הכרטיס המלא נשאר למטה, אחרי הטופס */}
             <div className="dg-share-mini">
-              <span>אהבת את התוצאה? קח אותה איתך 👇</span>
+              <span>מכיר עוד בעל עסק שזה יעזור לו? שלח לו 👇</span>
               <button className="dg-btn dg-share-wa" onClick={miniShare}>{canNativeShare ? '📲 שתף' : '📸 תמונה לשיתוף'}</button>
             </div>
 
@@ -657,7 +715,7 @@ export default function DiagnosticPage() {
             {/* שיתוף — תמונה ממותגת + כיתוב, לסטטוס וואטסאפ ושליחה לחברים */}
             <div className="dg-card" ref={shareCardRef}>
               <div className="dg-qcat" style={{ marginBottom: 8 }}>📣 שתף את התוצאה</div>
-              <p style={{ color: 'var(--dg-text-dim)', fontSize: '.92rem', marginBottom: 16 }}>שתף בסטטוס וואטסאפ או שלח לחבר בעל עסק. הטקסט והלינק מתלווים לתמונה:</p>
+              <p style={{ color: 'var(--dg-text-dim)', fontSize: '.92rem', marginBottom: 16 }}>מכיר עוד בעל עסק שמנחש בשיווק? שלח לו את זה, ייקח לו 3 דקות. או שתף בסטטוס. הטקסט והלינק מתלווים לתמונה:</p>
               {shareImg && <div className="dg-share-img"><img src={shareImg} alt="תמונת התוצאה לשיתוף" /></div>}
               <p style={{ fontSize: '.82rem', color: 'var(--dg-text-dim)', marginBottom: 8, fontWeight: 500 }}>הטקסט שילווה את התמונה:</p>
               <div className="dg-share-cap">{shareCaption()}</div>
@@ -668,7 +726,7 @@ export default function DiagnosticPage() {
               </div>
             </div>
 
-            <button className="dg-btn dg-btn-ghost" style={{ marginTop: 8 }} onClick={() => { setStage('intro'); setCur(0); setAnswers(new Array(Q.length).fill(null)); setResult(null); setAnim(false); setDisplayScore(0); setForm({ name: '', business: '', email: '', phone: '' }); setConsent(false); setStatus('idle'); setTouched(false); savedRef.current = false; setShareImg(null); setCopied(false); }}>↻ התחל אבחון מחדש</button>
+            <button className="dg-btn dg-btn-ghost" style={{ marginTop: 8 }} onClick={() => { setStage('intro'); setCur(0); setAnswers(new Array(Q.length).fill(null)); setResult(null); setAnim(false); setDisplayScore(0); setForm({ name: '', business: '', email: '', phone: '' }); setConsent(false); setStatus('idle'); setTouched(false); savedRef.current = false; setShareImg(null); setCopied(false); setStats(null); }}>↻ התחל אבחון מחדש</button>
           </section>
         )}
 
