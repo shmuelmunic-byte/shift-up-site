@@ -244,6 +244,14 @@ export default function DiagnosticPage() {
     // תחילת שאלון - נמדד בשני הפיקסלים (מטא ViewContent + GA view_item), כדי ש-GA יראה גם הוא כמה התחילו
     if (typeof window.fbq === 'function') window.fbq('track', 'ViewContent', { content_name: 'Marketing Audit', content_category: 'lead_magnet' });
     if (typeof window.gtag === 'function') window.gtag('event', 'view_item', { item_id: 'marketing_audit', item_name: 'Marketing Audit' });
+    // הגעה משיתוף: מי שנחת דרך לינק ששותף (utm_source=audit_share) - אירוע ייעודי בשני הפיקסלים.
+    // בנוסף GA4 סופר אותו אוטומטית כמקור תנועה (Traffic acquisition, source=audit_share).
+    try {
+      if (new URLSearchParams(window.location.search).get('utm_source') === 'audit_share') {
+        if (typeof window.gtag === 'function') window.gtag('event', 'audit_from_share');
+        if (typeof window.fbq === 'function') window.fbq('trackCustom', 'AuditFromShare');
+      }
+    } catch { /* אין URLSearchParams */ }
   }, []);
 
   const q = Q[cur];
@@ -348,7 +356,15 @@ export default function DiagnosticPage() {
     return () => { cancelled = true; };
   }, [stage, result]);
 
-  const shareUrl = () => (typeof window !== 'undefined' ? window.location.href : '');
+  // לינק שיתוף עם ייחוס: מי שמגיע דרכו נספר ב-GA כ-source=audit_share (מודד "כמה הגיעו משיתוף")
+  const shareUrl = () => (typeof window !== 'undefined'
+    ? `${window.location.origin}/audit?utm_source=audit_share&utm_medium=social&utm_campaign=marketing_audit`
+    : '');
+  // מדידת פעולת שיתוף (מי שיתף) - בשני הפיקסלים
+  const trackShare = (method) => {
+    if (typeof window.gtag === 'function') window.gtag('event', 'share', { method, content_type: 'audit_result', item_id: 'marketing_audit' });
+    if (typeof window.fbq === 'function') window.fbq('trackCustom', 'ShareAudit', { method });
+  };
   const buildShareText = () => {
     const s = result ? result.pct : null;
     const scoreLine = s != null ? `קיבלתי ${s}/100 באבחון השיווק של Shift Up 🎯\n` : '';
@@ -362,11 +378,11 @@ export default function DiagnosticPage() {
     if (blob && navigator.canShare) {
       const file = new File([blob], 'shift-up-אבחון-שיווק.png', { type: 'image/png' });
       if (navigator.canShare({ files: [file] })) {
-        try { await navigator.share({ files: [file], text: caption }); } catch { /* המשתמש ביטל */ }
+        try { await navigator.share({ files: [file], text: caption }); trackShare('native_image'); } catch { /* המשתמש ביטל */ }
         return;
       }
     }
-    if (navigator.share) { try { await navigator.share({ text: caption, url: shareUrl() }); } catch { /* בוטל */ } }
+    if (navigator.share) { try { await navigator.share({ text: caption, url: shareUrl() }); trackShare('native_link'); } catch { /* בוטל */ } }
   };
   const downloadShareImg = () => {
     const c = shareCanvasRef.current; if (!c) return;
@@ -374,9 +390,10 @@ export default function DiagnosticPage() {
     a.href = c.toDataURL('image/png');
     a.download = 'shift-up-אבחון-שיווק.png';
     document.body.appendChild(a); a.click(); a.remove();
+    trackShare('download_image');
   };
   const copyCaption = async () => {
-    try { await navigator.clipboard.writeText(shareCaption()); setCopied(true); setTimeout(() => setCopied(false), 2200); } catch { /* דפדפן לא תומך */ }
+    try { await navigator.clipboard.writeText(shareCaption()); setCopied(true); setTimeout(() => setCopied(false), 2200); trackShare('copy_link'); } catch { /* דפדפן לא תומך */ }
   };
 
   const nameValid = form.name.trim().length > 1;
