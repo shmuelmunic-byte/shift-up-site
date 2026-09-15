@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const profileSrc = '/shmuel.png';
+const profileSrc = '/shmuel.jpg';
 
 export default function About() {
   const sectionRef = useRef(null);
@@ -159,6 +159,8 @@ export default function About() {
                   <img
                     src={profileSrc}
                     alt="שמואל מוניץ - אסטרטג שיווק דיגיטלי ומומחה AI"
+                    loading="lazy"
+                    decoding="async"
                     style={{
                       width: '100%',
                       height: '100%',

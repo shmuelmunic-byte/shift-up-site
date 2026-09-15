@@ -128,7 +128,7 @@ export default function IgPage() {
           <div style={{ position: 'absolute', inset: -22, borderRadius: '50%', background: 'radial-gradient(circle at 45% 50%, oklch(0.785 0.173 156.6 / 0.22), transparent 60%)', filter: 'blur(18px)', zIndex: 0 }} />
           <div style={{ position: 'relative', width: 118, height: 118 }}>
             <div className="photo-ring" style={{ borderRadius: '50%' }} />
-            <img src="/shmuel.png" alt="שמואל מוניץ" style={{ position: 'absolute', top: 3, left: 3, width: 'calc(100% - 6px)', height: 'calc(100% - 6px)', borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', zIndex: 1 }} />
+            <img src="/shmuel.jpg" alt="שמואל מוניץ" style={{ position: 'absolute', top: 3, left: 3, width: 'calc(100% - 6px)', height: 'calc(100% - 6px)', borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', zIndex: 1 }} />
           </div>
         </div>
 

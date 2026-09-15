@@ -820,7 +820,7 @@ export default function FreePage() {
           }}>
             <div style={{ position: 'relative', flexShrink: 0 }}>
               <img
-                src="/shmuel.png"
+                src="/shmuel.jpg"
                 alt="שמואל מוניץ"
                 style={{
                   width: 54,

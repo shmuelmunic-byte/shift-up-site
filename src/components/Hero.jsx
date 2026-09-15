@@ -10,7 +10,7 @@ const DEFAULT_WA =
 const DEFAULT_SUBTITLE =
   'קמפיינים מבוססי-מחקר שמחזירים לעסק פניות ושקט. לעסקים שכבר מבינים שיווק, עם הבטחת ביצוע על חודש הניהול הראשון.';
 
-const profileSrc = '/shmuel.png';
+const profileSrc = '/shmuel.jpg';
 
 /* ── Word-level kinetic reveal (motion kept — CSS-driven so it's cheap) ── */
 function KineticWords({ text, delay = 0 }) {

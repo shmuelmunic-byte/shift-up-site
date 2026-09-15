@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 gsap.defaults({ ease: 'expo.out', duration: 0.8 });
 
 const WA_TEXT = encodeURIComponent("Hi Shmuel, I'd like to learn more about your services");
-const profileSrc = '/shmuel.png';
+const profileSrc = '/shmuel.jpg';
 const logoSrc    = '/logo.png';
 
 /* ─── Shared helpers ─────────────────────────────────────────────────── */
