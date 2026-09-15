@@ -241,7 +241,9 @@ export default function DiagnosticPage() {
 
   useEffect(() => {
     document.title = 'אבחון שיווק ב-10 דקות | Shift Up';
+    // תחילת שאלון - נמדד בשני הפיקסלים (מטא ViewContent + GA view_item), כדי ש-GA יראה גם הוא כמה התחילו
     if (typeof window.fbq === 'function') window.fbq('track', 'ViewContent', { content_name: 'Marketing Audit', content_category: 'lead_magnet' });
+    if (typeof window.gtag === 'function') window.gtag('event', 'view_item', { item_id: 'marketing_audit', item_name: 'Marketing Audit' });
   }, []);
 
   const q = Q[cur];
