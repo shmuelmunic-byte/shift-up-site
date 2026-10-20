@@ -746,7 +746,7 @@ const CSS = `
   --dg-border:rgba(14,19,25,.10);
   --dg-danger:#ff5c72; --dg-danger-ink:#d83a54; --dg-warn:#f0a12a; --dg-warn-ink:#b9741a;
   position:relative; min-height:100vh; background:var(--dg-bg); color:var(--dg-text);
-  font-family:'Space Grotesk','Secular One',sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  font-family:'Space Grotesk','Rubik',sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden;
 }
 .dg-root::before{
   content:''; position:fixed; inset:0; z-index:0; pointer-events:none;

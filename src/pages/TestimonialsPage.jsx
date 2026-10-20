@@ -114,7 +114,7 @@ export default function TestimonialsPage() {
         minHeight: '100vh',
         background: 'var(--bedrock)',
         color: 'var(--text-primary)',
-        fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
+        fontFamily: 'var(--font)',
         padding: 'clamp(60px, 10vw, 100px) 28px clamp(80px, 12vw, 120px)',
       }}
     >

@@ -598,7 +598,7 @@ export default function FreePage() {
       style={{
         minHeight: '100dvh',
         background: 'var(--bedrock)',
-        fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
+        fontFamily: 'var(--font)',
         position: 'relative',
         overscrollBehavior: 'contain',
       }}

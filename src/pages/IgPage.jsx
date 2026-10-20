@@ -109,7 +109,7 @@ export default function IgPage() {
       padding: '48px 24px 72px',
       position: 'relative',
       overflow: 'hidden',
-      fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
+      fontFamily: 'var(--font)',
     }}>
       <Cursor />
       {/* Aurora blobs */}

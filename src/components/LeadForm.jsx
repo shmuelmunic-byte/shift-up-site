@@ -102,7 +102,7 @@ export default function LeadForm() {
   const inputStyle = {
     width: '100%', padding: '13px 16px', borderRadius: 3,
     border: '1px solid #cdd7e3', background: '#fff', color: '#0c1118',
-    fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", outline: 'none',
+    fontSize: '1rem', fontFamily: 'var(--font)', outline: 'none',
     transition: 'border-color 0.2s, box-shadow 0.2s',
   };
   const errorInputStyle = { ...inputStyle, borderColor: '#c0392b' };

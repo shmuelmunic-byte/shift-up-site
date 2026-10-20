@@ -25,7 +25,7 @@
   /* Sharp-corner design language (v2): near-zero radius, no liquid-glass */
   --radius:    3px;
   --radius-lg: 4px;
-  --font:      'Space Grotesk', 'Secular One', sans-serif;
+  --font:      'Space Grotesk', 'Rubik', sans-serif;   /* body: Rubik for Hebrew (20.10) */
   /* Headings: Secular One (Hebrew display) with Space Grotesk for Latin/brand */
   --font-display: 'Space Grotesk', 'Secular One', sans-serif;
 }

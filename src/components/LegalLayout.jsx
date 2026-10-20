@@ -15,7 +15,7 @@ export default function LegalLayout({ title, subtitle, updated, children }) {
       minHeight: '100vh',
       background: 'var(--bedrock)',
       color: 'var(--text-primary)',
-      fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
+      fontFamily: 'var(--font)',
       position: 'relative',
     }}>
       <a href="#legal-main" className="skip-link">דלג לתוכן הראשי</a>

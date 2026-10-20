@@ -1453,7 +1453,7 @@ export default function EnglishPage() {
   const scrollToForm = () => document.getElementById('en-contact')?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <div ref={rootRef} dir="ltr" style={{ minHeight: '100vh', background: 'var(--bedrock)', color: 'var(--text-primary)', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", overflowX: 'hidden', position: 'relative' }}>
+    <div ref={rootRef} dir="ltr" style={{ minHeight: '100vh', background: 'var(--bedrock)', color: 'var(--text-primary)', fontFamily: 'var(--font)', overflowX: 'hidden', position: 'relative' }}>
       <ScrollProgress />
       <div className="noise-overlay" aria-hidden="true" />
       <Cursor />

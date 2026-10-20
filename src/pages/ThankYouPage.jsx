@@ -25,7 +25,7 @@ export default function ThankYouPage() {
   return (
     <div dir="rtl" style={{
       minHeight: '100vh', background: 'var(--bedrock)', color: 'var(--text-primary)',
-      fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
+      fontFamily: 'var(--font)',
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       textAlign: 'center', padding: '40px 24px',
     }}>

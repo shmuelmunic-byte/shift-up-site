@@ -33,7 +33,7 @@ export default function LoginPage() {
         minHeight: '100vh',
         background: 'var(--bedrock)',
         color: 'var(--text-primary)',
-        fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
+        fontFamily: 'var(--font)',
         overflow: 'hidden',
         position: 'relative',
       }}
