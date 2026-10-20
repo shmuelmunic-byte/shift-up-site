@@ -1,7 +1,16 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
-const FALLBACK = [];
+// עדות אמיתית, מילה במילה מהודעה קולית של מנהל מכינת אורות (15.10.2026). שם המכינה עוד לא אושר לפרסום, לכן בלי שם.
+// אם יתווספו עדויות בטבלת testimonials ב-Supabase, הן יחליפו את זו.
+const FALLBACK = [
+  {
+    id: 'orot-2026-10',
+    quote: 'לעבוד עם שמואל זה ממש באווירה טובה, הכל בשקיפות, בכיף, הוא זמין ממש... ואתה רואה שהוא עושה את זה מכל הלב ומכל הנשמה',
+    name: 'מנהל המכינה',
+    company: 'מכינה קדם-צבאית',
+  },
+];
 
 function StarIcon() {
   return (
@@ -150,7 +159,7 @@ export default function TestimonialsPage() {
             }}>הלקוחות</span>
           </h1>
           <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', maxWidth: 500, margin: '0 auto', lineHeight: 1.7 }}>
-            שיטה מבוססת-מחקר, הבטחת ביצוע, תוצאות שמדברות. הלקוחות שלי יספרו, פה תוכל לקרוא.
+            שיטה מבוססת-מחקר, הבטחת ביצוע ותוצאות שמדברות, ופה הלקוחות מספרים במילים שלהם.
           </p>
         </div>
 
@@ -158,7 +167,7 @@ export default function TestimonialsPage() {
         {testimonials.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--text-muted)' }}>
             <div style={{ fontSize: '3rem', marginBottom: 20 }}>⭐</div>
-            <p style={{ fontSize: '1.1rem' }}>אני לוקח מעט לקוחות במקביל, בכוונה. הבאים יהיו הראשונים לספר.</p>
+            <p style={{ fontSize: '1.1rem' }}>אני לוקח מעט לקוחות במקביל, בכוונה, והבאים יהיו הראשונים לספר.</p>
           </div>
         ) : (
           <div style={{
@@ -175,7 +184,7 @@ export default function TestimonialsPage() {
         {/* CTA */}
         <div style={{ textAlign: 'center', marginTop: 80 }}>
           <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: 20 }}>
-            רוצה להיות בין הראשונים? מקום קייס מייסדים אחד פנוי. ואם בחודש הניהול הראשון אין פניות, ממשיך לנהל בחינם עד שיש.
+            רוצה להיות בין הראשונים? יש מקום קייס מייסדים אחד פנוי, ואם בחודש הניהול הראשון אין פניות, ממשיך לנהל בחינם עד שיש.
           </p>
           <a
             href="https://wa.me/972534673151"

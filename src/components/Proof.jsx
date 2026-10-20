@@ -99,8 +99,11 @@ export default function Proof() {
     'proof.kicker': 'עבודות',
     'proof.title': 'קריאייטיב שיצרתי,',
     'proof.title_accent': 'בכל תחום.',
-    'proof.lead': 'מודעות אמיתיות שהעליתי לאוויר לעסקים בתחומים שונים. לחץ על מודעה כדי להגדיל.',
+    'proof.lead': 'מודעות אמיתיות שהעליתי לאוויר לעסקים בתחומים שונים, לחץ על מודעה כדי להגדיל.',
   });
+
+  const [showAll, setShowAll] = useState(false);
+  const PREVIEW = 4; // כמה עבודות רואים לפני "לכל העבודות"
 
   useEffect(() => {
     supabase.from('proof_grid').select('*').order('position')
@@ -139,9 +142,24 @@ export default function Proof() {
         </div>
 
         {/* גריד קריאייטיב */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14 }}>
-          {grid.map((g, i) => <GridTile key={g.id || g.file} item={g} index={i} onOpen={setOpen} />)}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(180px, 44%), 1fr))', gap: 14 }}>
+          {(showAll ? grid : grid.slice(0, PREVIEW)).map((g, i) => <GridTile key={g.id || g.file} item={g} index={i} onOpen={setOpen} />)}
         </div>
+        {grid.length > PREVIEW && (
+          <div style={{ textAlign: 'center', marginTop: 22 }}>
+            <button
+              type="button"
+              onClick={() => setShowAll(v => !v)}
+              aria-expanded={showAll}
+              style={{
+                background: 'transparent', color: 'var(--text-primary)', border: '1px solid oklch(0.35 0.02 240)',
+                borderRadius: 3, padding: '11px 26px', fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
+              }}
+            >
+              {showAll ? 'להציג פחות' : `לכל ${grid.length} העבודות`}
+            </button>
+          </div>
+        )}
       </div>
 
       <Lightbox item={open} onClose={() => setOpen(null)} />

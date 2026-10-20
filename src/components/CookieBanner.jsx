@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 /* ──────────────────────────────────────────────────────────────────────────
    הודעת עוגיות / מעקב — חוק הגנת הפרטיות (תיקון 13, אוגוסט 2025)
@@ -21,8 +22,23 @@ function applyRejection() {
   try { window[`ga-disable-${GA_ID}`] = true; } catch { /* noop */ }
 }
 
+const TEXT = {
+  he: {
+    dir: 'rtl', aria: 'הודעת עוגיות ומעקב',
+    body: 'אני משתמש בעוגיות ובכלי מדידה (Google Analytics ו-Meta Pixel) כדי להבין איך משתמשים באתר ולשפר אותו, ופרטים מלאים יש במדיניות הפרטיות.',
+    link: 'למדיניות הפרטיות', reject: 'דחייה', accept: 'אישור',
+  },
+  en: {
+    dir: 'ltr', aria: 'Cookie notice',
+    body: 'I use cookies and analytics tools (Google Analytics and Meta Pixel) to understand how the site is used and improve it. Full details are in the privacy policy.',
+    link: 'Privacy policy', reject: 'Decline', accept: 'Accept',
+  },
+};
+
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
+  const { pathname } = useLocation();
+  const L = TEXT[pathname === '/en' || pathname.startsWith('/en/') ? 'en' : 'he'];
 
   useEffect(() => {
     const c = readConsent();
@@ -39,19 +55,18 @@ export default function CookieBanner() {
   if (!visible) return null;
 
   return (
-    <div className="cookie-banner" role="region" aria-label="הודעת עוגיות ומעקב" dir="rtl">
+    <div className="cookie-banner" role="region" aria-label={L.aria} dir={L.dir}>
       <div className="cookie-inner">
         <p className="cookie-text">
-          אני משתמש בעוגיות ובכלי מדידה (Google Analytics ו-Meta Pixel) כדי להבין
-          איך משתמשים באתר ולשפר אותו. פרטים מלאים במדיניות הפרטיות.{' '}
-          <a href="/privacy" className="cookie-link">למדיניות הפרטיות</a>
+          {L.body}{' '}
+          <a href="/privacy" className="cookie-link">{L.link}</a>
         </p>
         <div className="cookie-actions">
           <button type="button" className="cookie-btn cookie-btn-ghost" onClick={() => decide('rejected')}>
-            דחייה
+            {L.reject}
           </button>
           <button type="button" className="cookie-btn cookie-btn-primary" onClick={() => decide('accepted')}>
-            אישור
+            {L.accept}
           </button>
         </div>
       </div>

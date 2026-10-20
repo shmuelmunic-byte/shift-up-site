@@ -715,7 +715,7 @@ export default function FreePage() {
               maxWidth: 340,
               margin: '0 auto',
             }}>
-              כלי AI שאני משתמש בהם כל יום. לך, ממני, בלי עלות.
+              כלי AI שאני משתמש בהם כל יום, לך, ממני, בלי עלות.
               <br />
               הספרייה גדלה עם כל פוסט חדש.
             </p>
@@ -790,7 +790,7 @@ export default function FreePage() {
                 רוצה משהו מותאם <span className="text-gradient">לך</span>?
               </h2>
               <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 18 }}>
-                הפרומפטים כלליים. האבחון האישי אומר לך בדיוק איפה השיווק שלך דולף - הציון שלך ו-3 הדברים לתקן קודם. בלי להשאיר פרטים.
+                הפרומפטים כלליים, והאבחון האישי אומר לך בדיוק איפה השיווק שלך דולף: הציון שלך ו-3 הדברים לתקן קודם, בלי להשאיר פרטים.
               </p>
               <span style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,

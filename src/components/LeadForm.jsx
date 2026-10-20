@@ -46,10 +46,10 @@ export default function LeadForm() {
     'leadform.scarcity': 'מקום קייס מייסדים אחד פנוי · בתנאים מיוחדים',
     'leadform.title': 'בוא נעשה לעסק שלך',
     'leadform.title_accent': 'Shift Up.',
-    'leadform.subtitle': 'השאר פרטים ואחזור אליך לשיחת היכרות קצרה. נבדוק יחד אם יש התאמה.',
+    'leadform.subtitle': 'השאר פרטים ואחזור אליך לשיחת היכרות קצרה, שבה נבדוק יחד אם יש התאמה.',
     'leadform.price_note': 'מחיר סגור וברור בשיחת ההיכרות · אם בחודש הניהול הראשון אין פניות, ממשיך לנהל בחינם עד שיש.',
     'leadform.wa_title': 'מעדיף לדבר עכשיו?',
-    'leadform.soft_door': 'עוד לא בשל? זה בסדר. תוכל פשוט לעקוב ולקבל ערך. גלול מטה לקהילת ה-WhatsApp השקטה.',
+    'leadform.soft_door': 'עוד לא בשל? זה בסדר, תוכל פשוט לעקוב ולקבל ערך בקהילת ה-WhatsApp השקטה למטה.',
   });
   const [form, setForm] = useState({ name: '', phone: '', business: '', message: '' });
   const [consent, setConsent] = useState(false);
@@ -222,7 +222,7 @@ export default function LeadForm() {
                   {status === 'sending' ? 'שולח…' : 'קבל הצעה מותאמת'}
                 </button>
                 <p style={{ textAlign: 'center', fontSize: '0.76rem', color: '#8190a3', marginTop: 12 }}>
-                  הפרטים נשמרים אצלי בלבד. בלי ספאם, בלי שיתוף.
+                  הפרטים נשמרים אצלי בלבד, בלי ספאם ובלי שיתוף.
                 </p>
               </form>
             )}

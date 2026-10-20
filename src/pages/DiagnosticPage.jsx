@@ -506,7 +506,7 @@ export default function DiagnosticPage() {
             <div className="dg-hero">
               <span className="dg-pill">בדיקה חינמית · 10 שאלות · 3 דקות</span>
               <h1>איפה השיווק שלך <em>דולף</em>?</h1>
-              <p className="dg-sub">לא משנה אם אתה משקיע בשיווק כסף או שעות של עבודה - רוב העסקים מבזבזים חלק גדול מההשקעה בלי לראות. ענה על כמה שאלות קצרות וקבל אבחון אישי: הציון שלך, האזורים החלשים, ו-3 הדברים לתקן קודם.</p>
+              <p className="dg-sub">לא משנה אם אתה משקיע בשיווק כסף או שעות של עבודה - רוב העסקים מבזבזים חלק גדול מההשקעה בלי לראות, ובכמה שאלות קצרות תקבל אבחון אישי: הציון שלך, האזורים החלשים, ו-3 הדברים לתקן קודם.</p>
               <div className="dg-card" style={{ textAlign: 'right', padding: '22px 24px' }}>
                 <div className="dg-benefit"><i>✓</i><span>מבוסס על שיטת האבחון של Shift Up</span></div>
                 <div className="dg-benefit"><i>✓</i><span>תוצאה מיידית, מותאמת לעסק שלך</span></div>

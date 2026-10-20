@@ -20,7 +20,7 @@ const ROUTES = {
   '/en':          { canonical: '/en',          title: 'Shift Up | Research-based marketing with a performance guarantee - Shmuel Munitz', description: 'Get back to running your business. Leave the marketing to me. Research-based Meta & Google campaigns with a performance guarantee on the first month. Free intro call.', markdown: '/en.md' },
   '/testimonials':{ canonical: '/testimonials', title: 'עדויות לקוחות | Shift Up - שמואל מוניץ', description: 'עדויות ולקוחות של שמואל מוניץ (Shift Up). שיטה מבוססת-מחקר, הבטחת ביצוע, ותוצאות שמדברות בעצמן.' },
   '/freebies':    { canonical: '/freebies',    title: 'ספריית פרומפטים חינמית ל-AI | Shift Up', description: 'ספריית פרומפטים חינמית של Shift Up: כלי AI מוכנים לשיווק, תוכן ומכירות לעסקים קטנים. העתק, הדבק, תרוויח זמן.' },
-  '/audit':       { canonical: '/audit',       title: 'אבחון שיווק חינם ב-3 דקות | Shift Up', description: '10 שאלות קצרות, ואתה מקבל אבחון אישי: הציון שלך, האזורים החלשים, ו-3 הדברים לתקן קודם. בחינם, בלי להשאיר פרטים.' },
+  '/audit':       { canonical: '/audit',       title: 'אבחון שיווק חינם ב-3 דקות | Shift Up', description: '10 שאלות קצרות, ואתה מקבל אבחון אישי: הציון שלך, האזורים החלשים, ו-3 הדברים לתקן קודם, בחינם ובלי להשאיר פרטים.' },
   '/ig':          { canonical: '/ig',          noindex: true },
   '/accessibility':{ canonical: '/accessibility', title: 'הצהרת נגישות | Shift Up', description: 'הצהרת הנגישות של אתר Shift Up לפי ת"י 5568 וחוק שוויון זכויות לאנשים עם מוגבלות.' },
   '/privacy':     { canonical: '/privacy',     title: 'מדיניות פרטיות | Shift Up', description: 'מדיניות הפרטיות של Shift Up בהתאם לחוק הגנת הפרטיות ותיקון 13.' },
