@@ -591,7 +591,7 @@ function EnGridTile({ item, index, onOpen }) {
 
   return (
     <button ref={ref} onClick={() => onOpen(item)} style={{ opacity: 0, position: 'relative', display: 'block', width: '100%', aspectRatio: '4 / 5', borderRadius: 3, overflow: 'hidden', border: '1px solid oklch(0.22 0.02 240)', background: 'var(--surface-1)', cursor: 'pointer', padding: 0, textAlign: 'left' }} aria-label={`Enlarge ad — ${item.client}`}>
-      <img src={`/portfolio/${item.file}`} alt={`${item.client} creative — ${item.field}`} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+      <img src={`/portfolio/${item.file}`} alt={`${item.client} creative · ${item.field}`} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
       <div style={{ position: 'absolute', insetInline: 0, bottom: 0, padding: '28px 14px 12px', background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.92), transparent)' }}>
         <div style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-primary)' }}>{item.client}</div>
         <div style={{ fontSize: '0.74rem', color: 'var(--brand-glow)', fontWeight: 600 }}>{item.field}</div>
@@ -605,7 +605,7 @@ function EnLightbox({ item, onClose }) {
   return (
     <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'oklch(0.05 0.01 240 / 0.9)',  display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <button onClick={onClose} aria-label="Close" style={{ position: 'absolute', top: 20, right: 20, width: 44, height: 44, borderRadius: '50%', background: 'oklch(0.14 0.02 240)', border: '1px solid oklch(0.3 0.02 240)', color: 'var(--text-primary)', fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}>×</button>
-      <img src={`/portfolio/${item.file}`} alt={`${item.client} creative — ${item.field}`} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '92vw', maxHeight: '88vh', borderRadius: 3, objectFit: 'contain', boxShadow: '0 20px 80px oklch(0 0 0 / 0.6)' }} />
+      <img src={`/portfolio/${item.file}`} alt={`${item.client} creative · ${item.field}`} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '92vw', maxHeight: '88vh', borderRadius: 3, objectFit: 'contain', boxShadow: '0 20px 80px oklch(0 0 0 / 0.6)' }} />
     </div>
   );
 }
@@ -653,13 +653,13 @@ function EnProof() {
 const enSteps = [
   {
     n: '01', title: 'The Research', sub: 'Discovery',
-    desc: "We dig deep. Who's actually paying, what competitors are doing, and why they'd choose you. We distill a precise message and a clear work plan, on data, not guesswork.",
+    desc: "I dig deep. Who's actually paying, what competitors are doing, and why they'd choose you. I distill a precise message and a clear work plan, on data, not guesswork.",
     bullets: ['Audience + competitor research', 'Sharp value proposition', 'Clear work plan'],
     icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>,
   },
   {
     n: '02', title: 'The Shift', sub: 'Strategy',
-    desc: 'We turn the insights into a clear plan and creative that sells: the funnel that fits you, the message that drives action, and where the money goes, all locked in before a single shekel goes in.',
+    desc: 'I turn the insights into a clear plan and creative that sells: the funnel that fits you, the message that drives action, and where the money goes, all locked in before a single shekel goes in.',
     bullets: ['Marketing funnel design', 'Creative that sells', 'Channel-specific messaging'],
     icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>,
   },

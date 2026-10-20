@@ -12,7 +12,7 @@ import { useLocation } from 'react-router-dom';
 
 const BASE = 'https://www.shiftup.marketing';
 
-const HE_TITLE = 'Shift Up | אסטרטגיה ושיווק דיגיטלי מבוסס AI - שמואל מוניץ';
+const HE_TITLE = 'Shift Up | קמפיינים מבוססי-מחקר עם הבטחת ביצוע - שמואל מוניץ';
 const HE_DESC  = 'תחזור לנהל את העסק. את השיווק תשאיר לי. קמפיינים מבוססי-מחקר ב-Meta וב-Google עם הבטחת ביצוע על חודש הניהול הראשון. שיחת היכרות חינם.';
 
 const ROUTES = {
@@ -43,6 +43,10 @@ export default function Seo() {
     const canonical = BASE + (cfg.canonical || pathname);
 
     if (cfg.title) document.title = cfg.title;
+    // שפה וכיוון לפי העמוד: /en באנגלית משמאל לימין, כל השאר עברית
+    const isEn = pathname === '/en' || pathname.startsWith('/en/');
+    document.documentElement.lang = isEn ? 'en' : 'he';
+    document.documentElement.dir = isEn ? 'ltr' : 'rtl';
 
     if (cfg.description) {
       upsert('meta[name="description"]',

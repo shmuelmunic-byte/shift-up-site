@@ -604,7 +604,7 @@ export default function DiagnosticPage() {
                   {result.strengths.length === 1 ? 'מה שכבר עובד לך 💪' : `מה שכבר עובד לך 💪 (${result.strengths.length})`}
                 </div>
                 <p style={{ color: 'var(--dg-text-dim)', fontSize: '.9rem', marginBottom: 18 }}>
-                  לפני מה שכדאי לחדד — זה מה שכבר חזק אצלך:
+                  לפני מה שכדאי לחדד, זה מה שכבר חזק אצלך:
                 </p>
                 {result.strengths.map((s, i) => (
                   <div className="dg-win" key={s.cat || i}>

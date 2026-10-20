@@ -909,7 +909,7 @@ export default function FreePage() {
               }}
             >
               <IconWhatsApp size={20} />
-              לשיחת היכרות. חינם, ללא התחייבות
+              לשיחת היכרות חינם
             </a>
           </div>
 

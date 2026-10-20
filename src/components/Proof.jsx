@@ -42,11 +42,11 @@ function GridTile({ item, index, onOpen }) {
         border: '1px solid oklch(0.22 0.015 160)', background: 'var(--surface-1)',
         cursor: 'pointer', padding: 0, textAlign: 'right',
       }}
-      aria-label={`הגדל מודעה — ${item.client}`}
+      aria-label={`הגדל מודעה · ${item.client}`}
     >
       <img
         src={`/portfolio/${item.file}`}
-        alt={`קריאייטיב ${item.client} — ${item.field}`}
+        alt={`קריאייטיב ${item.client} · ${item.field}`}
         loading="lazy"
         style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
       />
@@ -83,7 +83,7 @@ function Lightbox({ item, onClose }) {
       >×</button>
       <img
         src={`/portfolio/${item.file}`}
-        alt={`קריאייטיב ${item.client} — ${item.field}`}
+        alt={`קריאייטיב ${item.client} · ${item.field}`}
         onClick={(e) => e.stopPropagation()}
         style={{ maxWidth: '92vw', maxHeight: '88vh', borderRadius: 'var(--radius-lg)', objectFit: 'contain' }}
       />

@@ -42,7 +42,7 @@ export default function CookieBanner() {
     <div className="cookie-banner" role="region" aria-label="הודעת עוגיות ומעקב" dir="rtl">
       <div className="cookie-inner">
         <p className="cookie-text">
-          אנחנו משתמשים בעוגיות ובכלי מדידה (Google Analytics ו-Meta Pixel) כדי להבין
+          אני משתמש בעוגיות ובכלי מדידה (Google Analytics ו-Meta Pixel) כדי להבין
           איך משתמשים באתר ולשפר אותו. פרטים מלאים במדיניות הפרטיות.{' '}
           <a href="/privacy" className="cookie-link">למדיניות הפרטיות</a>
         </p>

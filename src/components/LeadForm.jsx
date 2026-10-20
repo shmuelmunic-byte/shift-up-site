@@ -11,6 +11,14 @@ gsap.registerPlugin(ScrollTrigger);
 
 const PHONE = '972534673151';
 
+// נרמול טלפון לפני שמירה: ספרות בלבד, +972/972 → 0, 5XXXXXXXX → 05XXXXXXXX (מילוי אוטומטי בנייד)
+const normalizePhone = (v) => {
+  let d = String(v || '').replace(/\D/g, '');
+  if (d.startsWith('972')) d = '0' + d.slice(3);
+  if (d.length === 9 && d[0] === '5') d = '0' + d;
+  return d || String(v || '').trim();
+};
+
 /* ── סקשן 11 — טופס + וואטסאפ + scarcity ("מה עכשיו?") ──
    רקע בהיר (ניגוד ונקודת מיקוד). טופס = דלת ראשית, וואטסאפ = דלת משנית.
    עמיד-לתקלות: אם השמירה ב-Supabase נכשלת, הליד עדיין נלכד דרך וואטסאפ עם פרטים ממולאים. */
@@ -74,7 +82,7 @@ export default function LeadForm() {
     try {
       const { error } = await supabase.from('leads').insert({
         name: form.name.trim(),
-        phone: form.phone.trim(),
+        phone: normalizePhone(form.phone),
         business: form.business.trim() || null,
         message: form.message.trim() || null,
         source: 'landing_form',
