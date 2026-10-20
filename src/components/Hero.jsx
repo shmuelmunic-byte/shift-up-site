@@ -119,7 +119,7 @@ export default function Hero({ onContact }) {
               <span style={{ width: 9, height: 9, background: 'var(--accent)', display: 'block', transform: 'skewX(-14deg)', marginInlineStart: 3 }} />
             </span>
             <span style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', fontWeight: 600, letterSpacing: '0.02em' }}>
-              אסטרטג שיווק דיגיטלי · מומחה AI
+              אסטרטג שיווק · קמפיינים מבוססי-מחקר
             </span>
           </div>
 
@@ -198,7 +198,7 @@ export default function Hero({ onContact }) {
               borderRadius: 'var(--radius-lg)', zIndex: 0,
             }} />
             <div style={{ position: 'relative', zIndex: 1, borderRadius: 'var(--radius-lg)', overflow: 'hidden', border: '1px solid oklch(0.25 0.02 160)', aspectRatio: '4/5', animation: 'float 7s ease-in-out infinite' }}>
-              <img src={profileSrc} alt="שמואל מוניץ, אסטרטג שיווק דיגיטלי ומומחה AI" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <img src={profileSrc} alt="שמואל מוניץ, אסטרטג שיווק דיגיטלי" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, oklch(0.08 0.01 160 / 0.5), transparent 55%)' }} />
               {/* one small flat caption chip, sharp */}
               <div style={{ position: 'absolute', bottom: 0, insetInlineStart: 0, padding: '10px 14px' }}>
