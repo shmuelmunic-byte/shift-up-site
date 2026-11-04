@@ -9,6 +9,14 @@
       "destination": "/s/maitzim/index.html"
     },
     {
+      "source": "/s/coach",
+      "destination": "/s/coach/index.html"
+    },
+    {
+      "source": "/s/coach/en",
+      "destination": "/s/coach/en/index.html"
+    },
+    {
       "source": "/((?!assets|.*\\..*).*)",
       "destination": "/index.html"
     }

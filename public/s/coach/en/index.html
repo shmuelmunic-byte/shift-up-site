@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coach Mode for Claude Code | Shift Up</title>
+<meta name="description" content="One block of text in Claude's settings, and from then on it does the work and teaches you along the way. Shmuel Munitz's edition, with what two months of daily use taught him.">
+<meta property="og:title" content="Coach Mode for Claude Code">
+<meta property="og:description" content="You don't need to be technical. You need to know what to ask. Install with one paste.">
+<meta property="og:image" content="https://www.shiftup.marketing/shiftup-og.png">
+<link rel="alternate" hreflang="he" href="https://www.shiftup.marketing/s/coach">
+<link rel="icon" href="/favicon.png">
+<style>
+@font-face{font-family:"Secular";src:url(/s/coach/fonts/secular-one-hebrew-400.woff2) format("woff2");unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:"Secular";src:url(/s/coach/fonts/secular-one-latin-400.woff2) format("woff2")}
+@font-face{font-family:"Heebo";font-weight:400;src:url(/s/coach/fonts/heebo-hebrew-400.woff2) format("woff2");unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:"Heebo";font-weight:400;src:url(/s/coach/fonts/heebo-latin-400.woff2) format("woff2")}
+@font-face{font-family:"Heebo";font-weight:700;src:url(/s/coach/fonts/heebo-hebrew-700.woff2) format("woff2");unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:"Heebo";font-weight:700;src:url(/s/coach/fonts/heebo-latin-700.woff2) format("woff2")}
+@font-face{font-family:"Grotesk";font-weight:700;src:url(/s/coach/fonts/space-grotesk-latin-700.woff2) format("woff2")}
+
+:root{--bg:#070a0e;--green:#36d98a;--mint:#7bf3ac;--purple:#6a4fb5;--teal:#2eb2cc;--white:#f5f7f8;--mute:#aab4c0;--line:rgba(123,243,172,.22)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:"Heebo",system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  background:radial-gradient(900px 700px at 50% 20%,rgba(46,60,84,.30),rgba(7,10,14,0) 70%),linear-gradient(160deg,#0b1118 0%,#070a0e 45%,#090b14 100%) fixed}
+a{color:inherit}
+.beam{position:fixed;pointer-events:none;z-index:0}
+.beam.tl{left:0;top:0;width:min(46vw,440px);height:min(46vw,440px)}
+.beam.br{right:0;bottom:0;width:min(50vw,480px);height:min(50vw,480px)}
+.grain{position:fixed;inset:0;opacity:.05;pointer-events:none;mix-blend-mode:overlay;z-index:0;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>")}
+main{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 16px 80px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+.top img{height:34px;width:auto;display:block}
+.lang{font-family:"Grotesk";font-size:14px;letter-spacing:.06em;text-decoration:none;color:var(--mint);border:1px solid var(--line);padding:6px 14px;border-radius:99px}
+.h{font-family:"Secular","Heebo";font-weight:400;line-height:1.18}
+.g{background:linear-gradient(90deg,#7bf3ac,#36d98a 55%,#2eb2cc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.rule{width:180px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--purple),var(--teal),var(--green));margin:34px auto}
+.hero{text-align:center;padding:70px 0 30px}
+.kicker{font-size:15px;color:var(--mint);letter-spacing:.04em;margin-bottom:22px}
+.kicker span{display:inline-block;border:1px solid var(--line);padding:5px 14px;border-radius:99px}
+.hero h1{font-size:clamp(36px,7.4vw,64px)}
+.hero h1 .g{display:block;margin-top:6px}
+.hero p{font-size:clamp(17px,2.6vw,21px);color:#dfe5ea;max-width:580px;margin:0 auto}
+.btn{display:inline-flex;align-items:center;gap:10px;margin-top:34px;font:700 18px "Heebo";color:#06130c;text-decoration:none;
+  background:linear-gradient(135deg,#7bf3ac,#36d98a);padding:15px 30px;border-radius:99px;box-shadow:0 0 0 8px rgba(54,217,138,.08),0 20px 60px rgba(54,217,138,.22);border:0;cursor:pointer}
+section{padding:56px 0 0}
+h2{font-family:"Secular","Heebo";font-weight:400;font-size:clamp(28px,5vw,40px);line-height:1.2;margin-bottom:10px}
+.lead{color:var(--mute);font-size:17px;margin-bottom:26px}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.trio div{padding:22px 18px}
+.trio div+div{border-left:1px solid var(--line)}
+.trio b{display:block;font-family:"Secular","Heebo";font-weight:400;font-size:22px;color:var(--mint);margin-bottom:4px}
+.trio p{font-size:15.5px;color:#d2d9df}
+.adds{list-style:none;counter-reset:a}
+.adds li{counter-increment:a;display:grid;grid-template-columns:62px 1fr;gap:4px 14px;padding:22px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.adds li::before{content:counter(a,decimal-leading-zero);grid-row:span 2;font-family:"Grotesk";font-weight:700;font-size:34px;line-height:1;
+  background:linear-gradient(180deg,#7bf3ac,#6a4fb5);-webkit-background-clip:text;background-clip:text;color:transparent}
+.adds h3{font-family:"Secular","Heebo";font-weight:400;font-size:21px;line-height:1.3}
+.adds p{color:#cfd6dc;font-size:16px}
+.adds q{color:var(--mint);quotes:none}
+.credit{margin-top:22px;font-size:15px;color:var(--mute)}
+.steps{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.steps span{font-size:15px;color:#dfe5ea;border:1px solid var(--line);padding:6px 14px;border-radius:99px}
+.steps span b{color:var(--green);font-family:"Grotesk";margin-right:6px}
+.code{position:relative;background:#0c1219;border:1.5px solid rgba(123,243,172,.4);border-radius:14px;box-shadow:0 30px 80px rgba(54,217,138,.10)}
+.code .bar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.07);font-size:13px;color:var(--mute)}
+.code button{font:700 14px "Heebo";color:#06130c;background:var(--green);border:0;border-radius:99px;padding:7px 16px;cursor:pointer}
+.code pre{margin:0;padding:18px 16px 20px;white-space:pre-wrap;word-break:break-word;font:15px/1.75 "Heebo",monospace;color:#e8edf1;direction:ltr;text-align:left}
+.code pre .u{color:var(--mint)}
+.note{margin-top:16px;font-size:15px;color:#cfd6dc;border-left:3px solid var(--purple);padding:4px 0 4px 14px}
+footer{margin-top:70px;padding-top:26px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--mute)}
+footer img{height:26px;width:auto}
+@media (max-width:640px){
+  .hero{padding-top:40px}
+  .trio{grid-template-columns:1fr}
+  .trio div+div{border-left:0;border-top:1px solid var(--line)}
+  .adds li{grid-template-columns:46px 1fr}
+  .adds li::before{font-size:26px}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#36d98a" stop-opacity=".95"/><stop offset=".55" stop-color="#1c7f55" stop-opacity=".55"/><stop offset="1" stop-color="#0b1a14" stop-opacity="0"/></linearGradient>
+    <linearGradient id="gB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7bf3ac" stop-opacity="0"/><stop offset=".5" stop-color="#b9ffd6" stop-opacity=".95"/><stop offset="1" stop-color="#7bf3ac" stop-opacity="0"/></linearGradient>
+    <linearGradient id="pA" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#6a4fb5" stop-opacity=".98"/><stop offset=".5" stop-color="#3b2a78" stop-opacity=".6"/><stop offset="1" stop-color="#120d24" stop-opacity="0"/></linearGradient>
+    <linearGradient id="pB" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#7a4dff"/><stop offset="1" stop-color="#3a22a8" stop-opacity=".15"/></linearGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="26"/></filter>
+  </defs>
+</svg>
+<svg class="beam tl" viewBox="0 0 560 560" aria-hidden="true">
+  <polygon points="0,0 420,0 0,420" fill="url(#gA)" filter="url(#blur)" opacity=".45"/>
+  <polygon points="0,0 300,0 0,300" fill="url(#gA)" opacity=".75"/>
+  <polygon points="330,0 372,0 0,372 0,330" fill="#36d98a" opacity=".14"/>
+  <polygon points="300,0 306,0 0,306 0,300" fill="url(#gB)"/>
+  <polygon points="440,0 443,0 0,443 0,440" fill="#7bf3ac" opacity=".25"/>
+</svg>
+<svg class="beam br" viewBox="0 0 620 620" aria-hidden="true">
+  <polygon points="620,620 120,620 620,120" fill="url(#pA)" filter="url(#blur)" opacity=".5"/>
+  <polygon points="620,620 300,620 620,300" fill="url(#pA)" opacity=".8"/>
+  <polygon points="620,620 470,620 540,550 620,550" fill="url(#pB)"/>
+  <polygon points="620,240 620,244 244,620 240,620" fill="#8f73ff" opacity=".5"/>
+</svg>
+<div class="grain"></div>
+
+<main>
+  <div class="top">
+    <a href="https://www.shiftup.marketing"><img src="/s/coach/logo.png" alt="Shift Up"></a>
+    <a class="lang" href="/s/coach" lang="he">עברית</a>
+  </div>
+
+  <div class="hero">
+    <p class="kicker"><span>💡 Coach Mode for Claude Code</span></p>
+    <h1 class="h">You don't need to be technical.<span class="g">You need to know what to ask.</span></h1>
+    <div class="rule"></div>
+    <p>One block of text in Claude's settings. From then on it does the work and teaches you to use it better along the way, in every project, without you asking</p>
+    <a class="btn" href="#install">Install with one paste ↓</a>
+  </div>
+
+  <section>
+    <h2>What it does</h2>
+    <p class="lead">Install once and work as usual. Claude drops a short note at the right moment</p>
+    <div class="trio">
+      <div><b>💡 Works and teaches</b><p>One line when you could have asked smarter, or when there's a feature you haven't met yet</p></div>
+      <div><b>⚡ Set once</b><p>Lives in your global instructions and loads by itself in every chat and every project</p></div>
+      <div><b>📋 "Done"</b><p>Say one word and get what you learned and what's worth keeping</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What I added after two months of daily use</h2>
+    <p class="lead">The base is Jay Margaliot's Coach Mode. I worked with it every day, and every time something blew up on me I added a rule</p>
+    <ol class="adds">
+      <li><h3>Asks before deleting in bulk</h3><p>Claude deleted 23 events from my calendar when I meant my tasks. Now any delete of more than 3 items comes to me as a list first</p></li>
+      <li><h3>Big tasks become a checklist</h3><p>I asked for a lot of changes at once and only saw half of them. Now anything over 5 changes runs off a numbered list and ends with a done / not done table</p></li>
+      <li><h3>New topic = new chat</h3><p>One chat with four topics burned my usage by midday. Now it tells me when to open a fresh one</p></li>
+      <li><h3>Short "done", full "project done"</h3><p>I said "done" 13 times in one week and got a huge summary every time. Now a plain "done" logs only what's actually new</p></li>
+      <li><h3>Answers in your language</h3><p>Even after a long technical output and after /compact shortens the chat</p></li>
+      <li><h3>Corrected it twice? It becomes a rule</h3><p>When I repeat the same correction it offers to write it into the instructions, so I never say it again</p></li>
+    </ol>
+    <p class="credit">The original: <a href="https://jaygptpro.com/claude/coach.html" rel="noopener">Jay Margaliot's Coach Mode</a></p>
+  </section>
+
+  <section id="install">
+    <h2>Install with <span class="g">one paste</span></h2>
+    <p class="lead">No files to open, Claude installs it for you</p>
+    <div class="steps"><span><b>1</b>Copy</span><span><b>2</b>Paste into a Claude Code chat</span><span><b>3</b>Enter</span></div>
+    <div class="code">
+      <div class="bar"><span>Install request</span><button type="button" data-copy>Copy</button></div>
+<pre id="prompt">Install Coach Mode in my global Claude Code instructions:
+
+1. Fetch <bdi class="u" dir="ltr">https://www.shiftup.marketing/s/coach/coach-mode-en.md</bdi>
+
+2. Open <bdi class="u" dir="ltr">~/.claude/CLAUDE.md</bdi> (create it if it doesn't exist)
+
+3. If it already has a Coach Mode (between the marker lines <bdi class="u" dir="ltr">coach-mode:start</bdi> and <bdi class="u" dir="ltr">coach-mode:end</bdi>, or an older version starting with "## Coach Mode" and ending with the "Done" section), replace it with the new content. If the old version has rules I added myself, show them to me before replacing and ask whether to keep them. If there's no Coach Mode, append the content to the end of the file unchanged
+
+4. Don't touch anything else in the file. Confirm what you added and tell me in one line what changes from now on</pre>
+    </div>
+    <p class="note">Already using Jay's Coach Mode? The same paste swaps it for this version and asks before touching anything you added yourself. Active from your next chat</p>
+  </section>
+
+  <footer>
+    <span>I built this for myself and I'm sharing because it helped · Shmuel Munitz</span>
+    <a href="https://www.shiftup.marketing"><img src="/s/coach/logo.png" alt="Shift Up"></a>
+  </footer>
+</main>
+
+<script>
+document.querySelector('[data-copy]').addEventListener('click',function(){
+  var b=this,t=document.getElementById('prompt').innerText;
+  function ok(){b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy'},1800)}
+  if(navigator.clipboard){navigator.clipboard.writeText(t).then(ok,fb)}else{fb()}
+  function fb(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(e){}a.remove()}
+});
+</script>
+</body>
+</html>
