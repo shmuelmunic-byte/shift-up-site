@@ -262,8 +262,16 @@ section{padding:104px 0}
 .about .side .cap{color:var(--mute);font-size:15px;margin-top:6px}
 .about p.t{font-size:19px;line-height:1.75;margin-top:20px}
 .about p.t+p.t{color:var(--mute);font-size:17.5px}
-.quote{margin-top:44px;padding:30px 32px}
-.quote p{font-size:17px}
+.quote{margin:52px 0 0;padding:34px 40px 30px;background:#FBF7F0;border:1px solid var(--line);border-right:3px solid var(--gold);position:relative}
+.quote .qm{position:absolute;top:-34px;right:28px;font-size:110px;line-height:1;color:var(--gold);font-family:Georgia,serif}
+.quote blockquote p{font-size:19px;line-height:1.75;color:var(--ink)}
+.quote blockquote p.q2{font-size:17px;color:var(--mute);margin-top:12px}
+.quote em{font-style:normal;color:var(--gold-d);font-weight:500}
+.quote figcaption{display:flex;align-items:center;gap:18px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.quote figcaption img{height:34px;width:auto;filter:brightness(0);opacity:.72}
+.quote figcaption span{font-size:15px;color:var(--mute);line-height:1.4}
+.quote figcaption b{display:block;color:var(--ink);font-weight:600;font-size:16px}
+@media(max-width:760px){.quote{padding:30px 22px 24px}.quote blockquote p{font-size:17px}.quote figcaption img{height:28px}}
 
 /* צור קשר */
 .contact{background:var(--night);color:var(--onnight);position:relative;overflow:hidden}
@@ -558,7 +566,12 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
       <h2 class="h2 rv">אריאל דמתי, <em>מייסד מאיצים</em></h2>
       <p class="t rv d1">יזמים ומנכ"לים של חברות יזמיות מגיעים אלינו כשהחברה רוצה לצמוח, הזדמנויות חדשות נפתחות, ומבנה האשראי הקיים לא מאפשר לגייס את מה שצריך לשלב הבא</p>
       <p class="t rv d2">ההתמחות שלנו היא לחבר בין הצורך העסקי לפתרון הפיננסי הנכון, מתוך היכרות אישית עם בכירי עולם המימון בישראל ועם יותר מ-120 גופי מימון</p>
-      <div class="quote ph rv"><p>כאן ייכנסו ההמלצות מהשותפים (שם, תפקיד וחברה)</p></div>
+      <figure class="quote rv d2">
+        <span class="qm" aria-hidden="true">&rdquo;</span>
+        <blockquote><p>אריאל ליווה את חברתנו בגיוס המימון לפרויקט התחדשות עירונית בתל אביב, ובזכות קשריו המוכחים בשוק הצליח לייצר עבורנו פתרונות פיננסיים יצירתיים ומורכבים, <em>והשיג עבור הפרויקט תנאים אטרקטיביים במיוחד</em> שתאמו במדויק את צרכי החברה ויעדיה</p>
+        <p class="q2">לאורך כל הדרך הוא הפגין זמינות מלאה, נגישות יוצאת דופן וליווי צמוד בכל שלב ושלב</p></blockquote>
+        <figcaption><img src="img/logo_levsorek.png" alt="לב שורק"><span><b>לב לוזינסקי</b>שותף, קבוצת לב-שורק</span></figcaption>
+      </figure>
     </div>
   </div>
 </section>
