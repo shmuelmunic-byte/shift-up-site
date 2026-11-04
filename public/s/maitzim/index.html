@@ -34,10 +34,13 @@ a{color:inherit;text-decoration:none}
 
 /* הירו */
 .hero{position:relative;min-height:100svh;color:var(--onnight);overflow:hidden;display:flex;flex-direction:column;background:var(--night)}
-.hero .bg{position:absolute;inset:0;background:url(img/r_threetowers.jpg) 20% 55%/cover}
+.hero .bg{position:absolute;inset:0;background:url(img/r_threetowers.jpg) 20% 55%/cover;filter:brightness(1.12) saturate(1.05)}
 .hero .bg:after{content:"";position:absolute;inset:0;background:
- linear-gradient(270deg,rgba(20,17,14,.93) 0%,rgba(20,17,14,.78) 38%,rgba(20,17,14,.22) 72%,rgba(20,17,14,0) 100%),
- linear-gradient(0deg,rgba(20,17,14,.9) 0%,rgba(20,17,14,0) 30%)}
+ linear-gradient(270deg,rgba(20,17,14,.72) 0%,rgba(20,17,14,.5) 34%,rgba(20,17,14,.08) 62%,rgba(20,17,14,0) 100%),
+ linear-gradient(0deg,rgba(20,17,14,.55) 0%,rgba(20,17,14,0) 22%),
+ linear-gradient(180deg,rgba(20,17,14,.45) 0%,rgba(20,17,14,0) 18%)}
+.hero main:before{content:"";position:absolute;inset:-40px -80px -40px -120px;background:radial-gradient(ellipse at 60% 50%,rgba(20,17,14,.55) 0%,rgba(20,17,14,.3) 45%,rgba(20,17,14,0) 72%);z-index:-1;pointer-events:none}
+.hero h1,.hero .lead,.hero .slogan,.hero .eyebrow,.hero .facts{text-shadow:0 1px 18px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.4)}
 .hero .frame{position:absolute;inset:24px;border:1px solid rgba(198,161,91,.3);pointer-events:none}
 .hero nav,.hero main{position:relative}
 .hero nav{display:flex;justify-content:space-between;align-items:center;padding:52px 0 0}
@@ -45,14 +48,14 @@ a{color:inherit;text-decoration:none}
 .brand img{height:38px;width:auto}
 .brand span{font-size:24px;font-weight:600;letter-spacing:.01em}
 .navcta{font-size:15px;color:var(--gold);border-bottom:1px solid var(--gold);padding-bottom:2px}
-.hero main{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:720px;padding:56px 0 48px}
+.hero main{z-index:0;flex:1;display:flex;flex-direction:column;justify-content:center;max-width:720px;padding:56px 0 48px}
 .eyebrow{display:flex;align-items:center;gap:14px;color:var(--gold);font-size:14px;letter-spacing:.12em;font-weight:500}
 .eyebrow:before{content:"";width:48px;height:1px;background:var(--gold)}
 h1{font-weight:300;font-size:64px;line-height:1.12;letter-spacing:-.01em;margin:26px 0 18px}
 h1 em{font-style:normal;color:var(--gold);font-weight:400}
 .slogan{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--onnight-m);margin-bottom:26px}
 .slogan img{height:22px;width:auto;opacity:.9}
-.lead{font-size:20px;line-height:1.65;color:#DCD3C6;max-width:600px}
+.lead{font-size:20px;line-height:1.65;color:#EAE2D6;max-width:600px}
 .ctas{display:flex;align-items:center;gap:26px;margin-top:38px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--gold);color:var(--night);font-weight:600;font-size:17px;padding:17px 30px;border:0;cursor:pointer;font-family:inherit;transition:background .2s}
 .btn:hover{background:#D6B575}
@@ -66,13 +69,17 @@ h1 em{font-style:normal;color:var(--gold);font-weight:400}
 .partners{background:var(--night2);padding:52px 0 60px;--line:rgba(198,161,91,.22)}
 .partners .lbl{color:var(--gold)}
 .lbl{font-size:13px;letter-spacing:.14em;color:var(--gold-d);font-weight:500;margin-bottom:24px}
-.grid9{display:grid;grid-template-columns:repeat(9,1fr);gap:0;border-top:1px solid var(--line);border-right:1px solid var(--line)}
-.grid9>div{aspect-ratio:1.35/1;border-left:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:18px}
-.grid9 img{max-height:42px;max-width:100%;object-fit:contain;filter:brightness(0) invert(.93);opacity:.8;transition:.25s}
-.grid9 img.tall{max-height:56px}
-.grid9>div:hover img{opacity:1}
-.grid9 .nm{font-size:15px;line-height:1.35;text-align:center;color:var(--onnight);font-weight:500}
-.grid9 .nm small{display:block;font-weight:400;color:var(--onnight-m);font-size:13px}
+.marquee{overflow:hidden;direction:ltr;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%)}
+.track{display:flex;width:max-content;animation:roll 38s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.set{display:flex;align-items:center;flex:none}
+.it{flex:none;height:86px;display:flex;align-items:center;justify-content:center;padding:0 42px;position:relative}
+.it+.it:before,.set .it:first-child:before{content:"";position:absolute;left:0;top:50%;width:4px;height:4px;background:var(--gold);transform:translate(-50%,-50%) rotate(45deg);opacity:.7}
+.it img{max-height:44px;max-width:150px;object-fit:contain;filter:brightness(0) invert(.93);opacity:.85}
+.it img.tall{max-height:58px}
+.it.nm{flex-direction:column;direction:rtl;font-size:17px;line-height:1.3;color:var(--onnight);font-weight:500;white-space:nowrap;text-align:center}
+.it.nm small{display:block;font-weight:400;color:var(--onnight-m);font-size:13px}
+@keyframes roll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* סקשנים */
 section{padding:104px 0}
@@ -197,7 +204,8 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
   .brand img{height:32px}.brand span{font-size:21px}
   .navcta{font-size:13px}
   .hero .bg{background-position:28% center}
-  .hero .bg:after{background:linear-gradient(0deg,rgba(20,17,14,.98) 42%,rgba(20,17,14,.6) 72%,rgba(20,17,14,.35) 100%)}
+  .hero .bg:after{background:linear-gradient(0deg,rgba(20,17,14,.92) 0%,rgba(20,17,14,.8) 45%,rgba(20,17,14,.35) 68%,rgba(20,17,14,.1) 80%,rgba(20,17,14,.4) 100%)}
+  .hero main:before{display:none}
   .hero main{justify-content:flex-end;padding:120px 0 40px}
   h1{font-size:38px;margin:18px 0 14px}
   .eyebrow{font-size:12px}.eyebrow:before{width:28px}
@@ -208,9 +216,8 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
   .facts{gap:10px 20px;margin-top:28px;font-size:13px}
   .hero .loc{display:none}
   .partners{padding:40px 0}
-  .grid9{grid-template-columns:repeat(3,1fr)}
-  .grid9 img{max-height:30px}.grid9 img.tall{max-height:40px}
-  .grid9 .nm{font-size:13px}
+  .it{height:70px;padding:0 28px}.it img{max-height:32px;max-width:110px}.it img.tall{max-height:44px}.it.nm{font-size:15px}
+  .track{animation-duration:28s}
   section{padding:72px 0}
   .h2{font-size:31px}
   .intro{font-size:16.5px}
@@ -270,17 +277,30 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
 <div class="partners">
   <div class="wrap">
     <div class="lbl">שותפים לדרך</div>
-    <div class="grid9">
-      <div><img src="img/logo_bendavid.png" class="tall" alt="קבוצת בן-דוד"></div>
-      <div><img src="img/logo_levsorek.png" alt=""></div>
-      <div class="nm">אבן העזר<small>יזמות נדל"ן</small></div>
-      <div><img src="img/logo_talis.png" class="tall" alt="TALIS"></div>
-      <div><img src="img/logo_alma.png" alt=""></div>
-      <div class="nm">קבוצת רכישה<small>רבבה</small></div>
-      <div><img src="img/logo_arrows.png" class="tall" alt="ARROWS"></div>
-      <div><img src="img/logo_citytower.png" class="tall" alt="City Tower"></div>
-      <div class="nm">קבוצת רכישה<small>אריאל</small></div>
-    </div>
+    <div class="marquee"><div class="track">
+      <div class="set">
+        <div class="it"><img src="img/logo_bendavid.png" class="tall" alt="קבוצת בן-דוד"></div>
+        <div class="it"><img src="img/logo_levsorek.png" alt=""></div>
+        <div class="it nm">אבן העזר<small>יזמות נדל"ן</small></div>
+        <div class="it"><img src="img/logo_talis.png" class="tall" alt="TALIS"></div>
+        <div class="it"><img src="img/logo_alma.png" alt=""></div>
+        <div class="it nm">קבוצת רכישה רבבה</div>
+        <div class="it"><img src="img/logo_arrows.png" class="tall" alt="ARROWS"></div>
+        <div class="it"><img src="img/logo_citytower.png" class="tall" alt="City Tower"></div>
+        <div class="it nm">קבוצת רכישה אריאל</div>
+      </div>
+      <div class="set" aria-hidden="true">
+        <div class="it"><img src="img/logo_bendavid.png" class="tall" alt="קבוצת בן-דוד"></div>
+        <div class="it"><img src="img/logo_levsorek.png" alt=""></div>
+        <div class="it nm">אבן העזר<small>יזמות נדל"ן</small></div>
+        <div class="it"><img src="img/logo_talis.png" class="tall" alt="TALIS"></div>
+        <div class="it"><img src="img/logo_alma.png" alt=""></div>
+        <div class="it nm">קבוצת רכישה רבבה</div>
+        <div class="it"><img src="img/logo_arrows.png" class="tall" alt="ARROWS"></div>
+        <div class="it"><img src="img/logo_citytower.png" class="tall" alt="City Tower"></div>
+        <div class="it nm">קבוצת רכישה אריאל</div>
+      </div>
+    </div></div>
   </div>
 </div>
 
