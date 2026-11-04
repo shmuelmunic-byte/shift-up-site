@@ -5,6 +5,10 @@
       "destination": "https://fsqstwlapiiqbnyjjzqx.supabase.co/:path*"
     },
     {
+      "source": "/s/maitzim",
+      "destination": "/s/maitzim/index.html"
+    },
+    {
       "source": "/((?!assets|.*\\..*).*)",
       "destination": "/index.html"
     }
