@@ -258,6 +258,7 @@ section{padding:104px 0}
 /* אודות */
 .about .inner{display:grid;grid-template-columns:.8fr 1.2fr;gap:72px;align-items:start}
 .about .side{border-top:1px solid var(--ink);padding-top:22px}
+.about .side .lg{display:block;width:max-content}
 .about .side .big{font-size:64px;font-weight:300;color:var(--gold-d);line-height:1}
 .about .side .cap{color:var(--mute);font-size:15px;margin-top:6px}
 .about p.t{font-size:19px;line-height:1.75;margin-top:20px}
@@ -275,7 +276,7 @@ section{padding:104px 0}
 
 /* צור קשר */
 .contact{background:var(--night);color:var(--onnight);position:relative;overflow:hidden}
-.contact .bg{position:absolute;inset:-10% 0;background:url(img/r_night10.jpg) center/cover;opacity:.2;will-change:transform}
+.contact .bg{position:absolute;inset:-10% 0;background:url(img/r_night10.webp) center/cover;opacity:.2;will-change:transform}
 .contact .inner{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
 .contact .lbl{color:var(--gold)}
 .contact .h2 em{color:var(--gold)}
@@ -382,11 +383,11 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
 
 <header class="hero" id="hero">
   <div class="par" id="par">
-    <div class="bg on" data-loc="הדמיה" style="background-image:url(img/r_threetowers.jpg);background-position:20% 55%"></div>
-    <div class="bg" data-loc="הדמיה · ירושלים" style="background-image:url(img/r_tower.jpg);background-position:center 35%"></div>
-    <div class="bg" data-loc="הדמיה · מעלה אדומים" style="background-image:url(img/r_hills.jpg)"></div>
-    <div class="bg" data-loc="הדמיה · תל אביב" style="background-image:url(img/r_night10.jpg)"></div>
-    <div class="bg" data-loc="הדמיה · ירושלים" style="background-image:url(img/r_stone.jpg)"></div>
+    <div class="bg on" data-loc="הדמיה" style="background-image:url(img/r_threetowers.webp);background-position:20% 55%"></div>
+    <div class="bg" data-loc="הדמיה · ירושלים" style="background-image:url(img/r_tower.webp);background-position:center 35%"></div>
+    <div class="bg" data-loc="הדמיה · מעלה אדומים" style="background-image:url(img/r_hills.webp)"></div>
+    <div class="bg" data-loc="הדמיה · תל אביב" style="background-image:url(img/r_night10.webp)"></div>
+    <div class="bg" data-loc="הדמיה · ירושלים" style="background-image:url(img/r_stone.webp)"></div>
   </div>
   <div class="shade"></div>
   <div class="glint"></div>
@@ -529,10 +530,10 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
       <div class="arrows"><button aria-label="הקודם" data-d="1">→</button><button aria-label="הבא" data-d="-1">←</button></div>
     </div>
     <div class="gal" id="gal">
-      <figure><div class="pi"><img src="img/r_tower.jpg" alt="הדמיה, ירושלים" loading="lazy"></div><figcaption>ירושלים<span>מגורים</span></figcaption></figure>
-      <figure><div class="pi"><img src="img/r_hills.jpg" alt="הדמיה, מעלה אדומים" loading="lazy"></div><figcaption>מעלה אדומים<span>שכונת מגורים</span></figcaption></figure>
-      <figure><div class="pi"><img src="img/r_night10.jpg" alt="הדמיה, תל אביב" loading="lazy"></div><figcaption>תל אביב<span>מגורים</span></figcaption></figure>
-      <figure><div class="pi"><img src="img/r_stone.jpg" alt="הדמיה, ירושלים" loading="lazy"></div><figcaption>ירושלים<span>מגורים</span></figcaption></figure>
+      <figure><div class="pi"><img src="img/r_tower.webp" alt="הדמיה, ירושלים" loading="lazy"></div><figcaption>ירושלים<span>מגורים</span></figcaption></figure>
+      <figure><div class="pi"><img src="img/r_hills.webp" alt="הדמיה, מעלה אדומים" loading="lazy"></div><figcaption>מעלה אדומים<span>שכונת מגורים</span></figcaption></figure>
+      <figure><div class="pi"><img src="img/r_night10.webp" alt="הדמיה, תל אביב" loading="lazy"></div><figcaption>תל אביב<span>מגורים</span></figcaption></figure>
+      <figure><div class="pi"><img src="img/r_stone.webp" alt="הדמיה, ירושלים" loading="lazy"></div><figcaption>ירושלים<span>מגורים</span></figcaption></figure>
     </div>
   </div>
 </section>
@@ -676,9 +677,13 @@ NAMES.forEach(function(n){
 function load(){
   var k=mob()?'m':'d'; if(k===key) return; key=k; imgs=[]; cur=-1;
   var w=k==='m'?800:1980, h=k==='m'?1250:900; cv.width=w; cv.height=h; tf.dataset.ar=w/h;
-  for(var i=0;i<TN;i++){var im=new Image();im.src='img/tender/'+k+'/f'+(i<10?'0':'')+i+'.webp';im.onload=function(){cur=-1};imgs.push(im)}
+  for(var i=0;i<TN;i++){var im=new Image();im.onload=function(){cur=-1};im.dataset.src='img/tender/'+k+'/f'+(i<10?'0':'')+i+'.webp';imgs.push(im)}
+  imgs[0].src=imgs[0].dataset.src; if(rest) loadRest();
   fit();
 }
+var rest=false;
+function loadRest(){rest=true;imgs.forEach(function(im){if(!im.src) im.src=im.dataset.src})}
+if('IntersectionObserver' in window){var tio=new IntersectionObserver(function(e){if(e[0].isIntersecting){loadRest();tio.disconnect()}},{rootMargin:'200px 0px'});tio.observe(document.getElementById('tender'))}addEventListener('load',function(){setTimeout(loadRest,300)})
 function fit(){var ar=+tf.dataset.ar, W=stage.clientWidth, H=stage.clientHeight; var w=Math.min(W,H*ar), h=w/ar; tf.style.width=w+'px'; tf.style.height=h+'px';}
 addEventListener('resize',function(){load();fit()});
 if('ResizeObserver' in window) new ResizeObserver(fit).observe(stage);
