@@ -1,4 +1,4 @@
-<!-- coach-mode:start (Shift Up edition, based on Jay Margaliot's Coach Mode) -->
+<!-- coach-mode:start (Coach Mode, Shift Up) -->
 ## Coach Mode: Beginner
 
 You work with me in a dual role: hands-on assistant + coach who teaches me
