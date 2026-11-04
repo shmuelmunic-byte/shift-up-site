@@ -120,13 +120,13 @@ h1 em{font-style:normal;color:var(--gold-l);font-weight:500}
 .tframe line.win{stroke:var(--gold-l);stroke-width:2.4;stroke-dasharray:none;filter:drop-shadow(0 0 6px rgba(217,181,108,.9));animation:none}
 @keyframes flow{to{stroke-dashoffset:-18}}
 /* כרטיס שם */
-.nc{position:absolute;transform:translate(-50%,-50%) rotateX(calc(var(--in,0) * 75deg)) scale(calc(1 - var(--in,0) * .2));opacity:calc(1 - var(--in,1));min-width:138px;padding:9px 16px 9px;text-align:center;
+.nc{position:absolute;transform:translate(-50%,-50%) rotateX(calc(var(--in,0) * 75deg)) scale(calc(1 - var(--in,0) * .2));opacity:calc(1 - var(--in,1));min-width:124px;padding:7px 14px 8px;text-align:center;
   background:linear-gradient(160deg,#2A241C 0%,#15110D 60%,#0F0C09 100%);border:1px solid rgba(198,161,91,.55);
   box-shadow:0 14px 28px rgba(0,0,0,.65),inset 0 0 0 3px rgba(20,17,14,.9),inset 0 0 0 4px rgba(198,161,91,.22);
   transition:background .5s,border-color .5s,box-shadow .5s,filter .5s,color .5s;pointer-events:none}
 .nc:before{content:"";position:absolute;top:-4px;left:50%;width:7px;height:7px;background:var(--gold);transform:translateX(-50%) rotate(45deg)}
 .nc .k{display:block;font-size:9.5px;letter-spacing:.22em;color:var(--gold-d);font-weight:500}
-.nc b{display:block;font-size:17px;font-weight:500;color:var(--onnight);margin:2px 0 3px;white-space:nowrap}
+.nc b{display:block;font-size:15.5px;font-weight:500;color:var(--onnight);margin:2px 0 3px;white-space:nowrap}
 .nc .st{display:block;font-size:11px;color:var(--onnight-m);white-space:nowrap}
 .nc .st i{display:inline-block;width:3px;height:3px;border-radius:50%;background:currentColor;margin:0 1px;animation:dot 1.2s infinite}
 .nc .st i:nth-child(2){animation-delay:.2s}.nc .st i:nth-child(3){animation-delay:.4s}
@@ -672,10 +672,12 @@ load();
 var started=false, last=-1, T=[];
 function draw(p){
   var i=Math.round(p*(TN-1));
-  if(i!==cur && imgs[i] && imgs[i].complete && imgs[i].naturalWidth){cx.clearRect(0,0,cv.width,cv.height);cx.drawImage(imgs[i],0,0,cv.width,cv.height);cur=i}
+  var ok=function(k){return imgs[k]&&imgs[k].complete&&imgs[k].naturalWidth};
+  if(!ok(i)){for(var dd=1;dd<TN;dd++){if(ok(i-dd)){i=i-dd;break}if(ok(i+dd)){i=i+dd;break}}}
+  if(i!==cur && ok(i)){cx.clearRect(0,0,cv.width,cv.height);cx.drawImage(imgs[i],0,0,cv.width,cv.height);cur=i}
   var F=TP[key][Math.max(0,cur)]; if(!F) return;
   cards.forEach(function(d,j){
-    var q=F.l[j], a=Math.min(1,Math.max(0,(p-.62-j*.035)/.16));
+    var q0=F.l[j], q=[q0[0]+(q0[0]-F.c[0])*.12, q0[1]+(q0[1]-F.c[1])*.42], a=Math.min(1,Math.max(0,(p-.62-j*.035)/.16));
     d.style.left=(q[0]*100)+'%';d.style.top=(q[1]*100)+'%';d.style.setProperty('--in',(1-a).toFixed(3));
     lns[j].setAttribute('x1',q[0]*100);lns[j].setAttribute('y1',q[1]*100);lns[j].setAttribute('x2',F.c[0]*100);lns[j].setAttribute('y2',F.c[1]*100);
   });
