@@ -677,7 +677,7 @@ function draw(p){
   if(i!==cur && ok(i)){cx.clearRect(0,0,cv.width,cv.height);cx.drawImage(imgs[i],0,0,cv.width,cv.height);cur=i}
   var F=TP[key][Math.max(0,cur)]; if(!F) return;
   cards.forEach(function(d,j){
-    var q0=F.l[j], q=[q0[0]+(q0[0]-F.c[0])*.12, q0[1]+(q0[1]-F.c[1])*.42], a=Math.min(1,Math.max(0,(p-.62-j*.035)/.16));
+    var q0=F.l[j], fx=key==='m'?1.0:.12, fy=key==='m'?.1:.42, q=[q0[0]+(q0[0]-F.c[0])*fx, q0[1]+(q0[1]-F.c[1])*fy], a=Math.min(1,Math.max(0,(p-.62-j*.035)/.16));
     d.style.left=(q[0]*100)+'%';d.style.top=(q[1]*100)+'%';d.style.setProperty('--in',(1-a).toFixed(3));
     lns[j].setAttribute('x1',q[0]*100);lns[j].setAttribute('y1',q[1]*100);lns[j].setAttribute('x2',F.c[0]*100);lns[j].setAttribute('y2',F.c[1]*100);
   });
