@@ -70,8 +70,8 @@ h1 em{font-style:normal;color:#D9B56C;font-weight:500}
 .partners .lbl{color:var(--gold)}
 .lbl{font-size:13px;letter-spacing:.14em;color:var(--gold-d);font-weight:500;margin-bottom:24px}
 .marquee{overflow:hidden;direction:ltr;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%)}
-.track{display:flex;width:max-content;animation:roll 38s linear infinite}
-.marquee:hover .track{animation-play-state:paused}
+.mtrack{display:flex;width:max-content;animation:roll 38s linear infinite}
+.marquee:hover .mtrack{animation-play-state:paused}
 .set{display:flex;align-items:center;flex:none}
 .it{flex:none;height:86px;display:flex;align-items:center;justify-content:center;padding:0 42px;position:relative}
 .it+.it:before,.set .it:first-child:before{content:"";position:absolute;left:0;top:50%;width:4px;height:4px;background:var(--gold);transform:translate(-50%,-50%) rotate(45deg);opacity:.7}
@@ -180,8 +180,10 @@ form{background:rgba(29,25,21,.92);border:1px solid rgba(198,161,91,.35);padding
 form h3{font-weight:400;font-size:20px;margin-bottom:6px}
 form .s{font-size:14px;color:var(--onnight-m);margin-bottom:22px}
 form label{display:block;font-size:13px;color:var(--onnight-m);margin:14px 0 6px}
-form input{width:100%;background:transparent;border:0;border-bottom:1px solid rgba(241,234,223,.35);color:var(--onnight);font:inherit;font-size:17px;padding:8px 0;outline:none}
-form input:focus{border-color:var(--gold)}
+form input,form textarea{width:100%;background:transparent;border:0;border-bottom:1px solid rgba(241,234,223,.35);color:var(--onnight);font:inherit;font-size:17px;padding:8px 0;outline:none}
+form input:focus,form textarea:focus{border-color:var(--gold)}
+form textarea{resize:vertical;min-height:76px;line-height:1.5}
+form label small{color:rgba(181,170,154,.7)}
 form .btn{width:100%;margin-top:28px}
 form .note{font-size:12px;color:var(--onnight-m);margin-top:12px;text-align:center}
 #formmsg{display:none;margin-top:14px;font-size:14px;color:var(--gold);text-align:center}
@@ -217,7 +219,7 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
   .hero .loc{display:none}
   .partners{padding:40px 0}
   .it{height:70px;padding:0 28px}.it img{max-height:32px;max-width:110px}.it img.tall{max-height:44px}.it.nm{font-size:15px}
-  .track{animation-duration:28s}
+  .mtrack{animation-duration:28s}
   section{padding:72px 0}
   .h2{font-size:31px}
   .intro{font-size:16.5px}
@@ -277,7 +279,7 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
 <div class="partners">
   <div class="wrap">
     <div class="lbl">שותפים לדרך</div>
-    <div class="marquee"><div class="track">
+    <div class="marquee"><div class="mtrack">
       <div class="set">
         <div class="it"><img src="img/logo_bendavid.png" class="tall" alt="קבוצת בן-דוד"></div>
         <div class="it"><img src="img/logo_levsorek.png" alt=""></div>
@@ -419,9 +421,10 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
     </div>
     <form id="form" onsubmit="return sent(event)">
       <h3>מעדיף במייל?</h3>
-      <div class="s">השאר שם ומייל, ואריאל דמתי יחזור אליך</div>
+      <div class="s">השאר פרטים וכמה מילים על הפרויקט, ואריאל דמתי יחזור אליך</div>
       <label for="n">שם</label><input id="n" autocomplete="name" required>
       <label for="e">מייל</label><input id="e" type="email" autocomplete="email" dir="ltr" required>
+      <label for="d">בקצרה על הפרויקט <small>(לא חובה)</small></label><textarea id="d" rows="3" placeholder="סוג הפרויקט, מיקום, ואיזה מימון חסר לך"></textarea>
       <button class="btn" type="submit">שליחה</button>
       <div class="note">הפרטים נשארים אצלנו בלבד</div>
       <div id="formmsg">בסקיצה הטופס עוד לא מחובר, בדף האמיתי הפרטים יגיעו ישר אליך</div>
