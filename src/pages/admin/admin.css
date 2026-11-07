@@ -302,7 +302,7 @@ button.hub-row-btn:focus-visible { outline: 2px solid var(--brand-prime); outlin
 .hub-drawer-head h2 { margin: 0; font-size: 1.3rem; }
 .hub-close { margin-inline-start: auto; width: 40px; height: 40px; border: none; background: none; color: var(--text-secondary); font-size: 1.1rem; border-radius: 6px; }
 .hub-close:hover { background: var(--ad-surface-2); color: var(--text-primary); }
-.hub-drawer-body { padding: 16px 16px 40px; display: grid; gap: 14px; }
+.hub-drawer-body { padding: 16px 16px 40px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
 .hub-drawer-links { display: flex; gap: 8px; }
 .hub-drawer-block h3 { font-size: 0.95rem; margin: 6px 0 4px; display: flex; gap: 8px; align-items: baseline; }
 .hub-drawer-block h3 .n { color: var(--text-muted); font-weight: 400; font-size: 0.85rem; }
@@ -333,3 +333,79 @@ body:has(.adm-app) .grid-bg-fixed,
 body:has(.adm-app) .noise-overlay { display: none !important; }
 body:has(.admin-scope) { background: oklch(0.968 0.011 85); }
 @media (prefers-color-scheme: dark) { body:has(.admin-scope) { background: oklch(0.185 0.01 70); } }
+
+/* ─── stage 4: light actions ─── */
+.hub-row[data-kb]:focus { outline: none; }
+.hub-row[data-kb]:focus-visible, .hub-row[data-kb]:focus { box-shadow: inset 3px 0 0 var(--brand-prime); background: var(--ad-brand-soft); }
+.hub-row[data-pending] .main { color: var(--text-muted); }
+.hub-row[data-pending="done"] .main { text-decoration: line-through; text-decoration-color: var(--ad-line-strong); }
+.hub-pending { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; }
+
+/* the done circle: 22px visible, 40px to tap */
+.hub-check {
+  flex-shrink: 0; position: relative; width: 22px; height: 22px; margin: 0 2px; padding: 0;
+  border-radius: 50%; border: 1.5px solid var(--ad-line-strong); background: none;
+}
+button.hub-check { cursor: pointer; }
+button.hub-check::before { content: ''; position: absolute; inset: -9px; }
+button.hub-check:hover, button.hub-check:focus-visible { border-color: var(--brand-prime); outline: none; }
+button.hub-check:hover::after, .hub-check[data-on]::after {
+  content: ''; position: absolute; inset: 4px 6.5px 6px; border: solid var(--brand-prime); border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+button.hub-check:hover::after { opacity: 0.5; }
+.hub-check[data-on] { border-color: var(--brand-prime); background: var(--ad-brand-soft); }
+
+.hub-act { background: none; cursor: pointer; font-family: inherit; }
+.hub-act:disabled { opacity: 0.45; cursor: default; }
+.hub-act:disabled:hover { border-color: var(--ad-line-strong); color: var(--text-primary); }
+.hub-act-main { background: var(--brand-prime); color: var(--ad-on-brand); border-color: var(--brand-prime); }
+.hub-act-main:hover { color: var(--ad-on-brand); opacity: 0.9; }
+
+.hub-postpone { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 0 12px; padding-inline-start: 34px; }
+.hub-postpone-date { display: flex; gap: 6px; }
+.admin-scope input[type="date"] {
+  min-height: 32px; padding: 0 8px; border-radius: 6px; border: 1px solid var(--ad-line-strong);
+  background: var(--ad-input); color: var(--text-primary); font: inherit; font-size: 0.85rem;
+}
+
+/* phones: the row keeps one line, meta drops under the text */
+@media (max-width: 899px) {
+  .hub-row[data-kb] .hub-row-line { flex-wrap: wrap; row-gap: 0; }
+  .hub-row[data-kb] .hub-row-btn { flex: 1 1 0; }
+  .hub-row[data-kb] .hub-row-line > .meta { order: 5; flex-basis: 100%; padding: 0 0 8px; margin-top: -8px; }
+  .hub-row[data-kb] .hub-row-line:has(.hub-check) > .meta { padding-inline-start: 34px; }
+}
+
+.hub-add { display: grid; gap: 8px; padding-top: 6px; }
+.hub-add h3 { font-size: 0.95rem; margin: 0; }
+.hub-add input[type="text"] {
+  width: 100%; min-height: 40px; padding: 0 12px; border-radius: 6px; border: 1px solid var(--ad-line-strong);
+  background: var(--ad-input); color: var(--text-primary); font: inherit; font-size: 0.95rem;
+}
+.hub-add input[type="text"]:focus, .admin-scope input[type="date"]:focus { outline: 2px solid var(--brand-prime); outline-offset: -1px; }
+.hub-add-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.hub-add-row .hub-act-main { margin-inline-start: auto; min-height: 36px; padding: 0 16px; }
+.hub-seg { display: inline-flex; border: 1px solid var(--ad-line-strong); border-radius: 6px; overflow: hidden; }
+.hub-seg button { min-height: 32px; padding: 0 12px; border: none; background: none; color: var(--text-secondary); font: inherit; font-size: 0.85rem; cursor: pointer; }
+.hub-seg button[aria-checked="true"] { background: var(--ad-surface-2); color: var(--text-primary); font-weight: 600; }
+
+.hub-failed { margin: 12px 0 4px; padding: 12px 14px; border-radius: 6px; background: var(--ad-danger-soft); border: 1px solid var(--ad-danger-line); font-size: 0.9rem; }
+.hub-failed p { margin: 0 0 4px; color: var(--ad-danger); }
+.hub-failed ul { margin: 0 0 8px; padding-inline-start: 18px; color: var(--text-secondary); }
+
+.hub-toast-wrap { position: fixed; inset: auto 0 0 0; z-index: 200; height: 0; background: none !important; }
+.hub-toast {
+  position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(84px + env(safe-area-inset-bottom));
+  display: flex; align-items: center; gap: 14px; max-width: calc(100vw - 32px);
+  padding: 10px 12px 10px 16px; border-radius: 8px; background: var(--text-primary); color: var(--ad-bg);
+  font-size: 0.92rem; box-shadow: 0 6px 24px var(--ad-shadow); animation: hub-toast 0.16s ease-out;
+}
+.hub-toast[data-bad] { background: var(--ad-danger); color: #fff; }
+.hub-toast button { border: none; background: none; color: inherit; font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 6px 4px; }
+@keyframes hub-toast { from { opacity: 0; transform: translate(-50%, 8px); } }
+@media (prefers-reduced-motion: reduce) { .hub-toast { animation: none; } }
+@media (min-width: 900px) { .hub-toast { bottom: 28px; } }
+
+.hub-keys { display: none; color: var(--text-muted); font-size: 0.8rem; margin: 18px 0 0; }
+.hub-keys kbd { font-family: inherit; font-size: 0.75rem; padding: 1px 6px; border-radius: 4px; border: 1px solid var(--ad-line-strong); background: var(--ad-surface); }
+@media (min-width: 900px) and (hover: hover) { .hub-keys { display: block; } }

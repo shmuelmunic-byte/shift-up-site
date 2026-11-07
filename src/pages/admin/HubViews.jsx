@@ -2,16 +2,21 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { createClient } from '@supabase/supabase-js';
 import { supabase } from '../../lib/supabase';
 
-/* Stage 3: "Today" + active client files, read only.
+/* Stage 3: "Today" + active client files. Stage 4: light actions.
    All hub_* tables are small (tens of rows), so they load once into one shared
    store and every section is computed from it. Fresh data arrives by Realtime
    when the browser can reach supabase.co directly, and by a 2-minute refresh
-   plus a refresh on returning to the tab when it can't (kosher filters). */
+   plus a refresh on returning to the tab when it can't (kosher filters).
+   Actions (done / postpone / add / paid) are saved to hub_actions on the tap
+   itself. The local sync agent writes them to the center files; until then the
+   row shows a small clock. "Undo" marks the queued action cancelled. */
 
 const STALE_MIN = 15;
 const TZ = 'Asia/Jerusalem';
 const REFRESH_MS = 120000;
-const HUB_TABLES = ['hub_clients', 'hub_tasks', 'hub_events', 'hub_inbox', 'hub_collect', 'hub_goals', 'hub_sync_status'];
+const UNDO_MS = 6000;
+const HUB_TABLES = ['hub_clients', 'hub_tasks', 'hub_events', 'hub_inbox', 'hub_collect', 'hub_goals', 'hub_sync_status', 'hub_actions'];
+const DISMISSED_KEY = 'hub-dismissed-failed';
 
 /* ─── dates (always Jerusalem time) ─── */
 const isoDay = (d = new Date()) => new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(d);
@@ -22,6 +27,13 @@ const fmtTime = (iso) => new Intl.DateTimeFormat('he-IL', { timeZone: TZ, hour: 
 const fmtDay = (iso) => new Intl.DateTimeFormat('he-IL', { timeZone: TZ, weekday: 'short', day: 'numeric', month: 'numeric' }).format(new Date(iso));
 const fmtShortDate = (iso) => (iso ? `${+iso.slice(8, 10)}.${+iso.slice(5, 7)}` : '');
 const daysWord = (n) => (n === 1 ? 'יום' : `${n} ימים`);
+const weekday = (iso) => new Date(`${iso}T12:00:00Z`).getUTCDay(); // 0 = Sunday
+/* next working day: Shmuel doesn't work Friday or Shabbat */
+function nextWorkday(today) {
+  let d = addDays(today, 1);
+  while (weekday(d) === 5 || weekday(d) === 6) d = addDays(d, 1);
+  return d;
+}
 const money = (n) => `${Number(n).toLocaleString('he-IL')} ₪`;
 const waLink = (phone) => (phone ? `https://wa.me/${String(phone).replace(/\D/g, '')}` : null);
 
@@ -57,7 +69,10 @@ export function HubProvider({ children }) {
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 30000); return () => clearInterval(t); }, []);
 
   const load = useCallback(async () => {
-    const res = await Promise.all(HUB_TABLES.map((t) => supabase.from(t).select('*')));
+    const since = new Date(Date.now() - 3 * 86400000).toISOString(); // actions: only the last 3 days
+    const res = await Promise.all(HUB_TABLES.map((t) => (t === 'hub_actions'
+      ? supabase.from(t).select('*').gte('created_at', since).order('created_at')
+      : supabase.from(t).select('*'))));
     const error = res.find((r) => r.error)?.error || null;
     setState((s) => ({
       ...s,
@@ -105,7 +120,49 @@ export function HubProvider({ children }) {
     };
   }, [load, soon]);
 
-  return <HubCtx.Provider value={{ ...state, now, reload: load }}>{children}</HubCtx.Provider>;
+  /* ─── actions ─── */
+  const [toast, setToast] = useState(null);
+  const toastTimer = useRef(null);
+  const say = useCallback((t) => {
+    clearTimeout(toastTimer.current);
+    setToast({ ...t, key: Date.now() });
+    toastTimer.current = setTimeout(() => setToast(null), t.undo ? UNDO_MS : 4000);
+  }, []);
+  useEffect(() => () => clearTimeout(toastTimer.current), []);
+
+  const putAction = useCallback((row) => setState((s) => (s.data ? {
+    ...s, data: { ...s.data, hub_actions: [...s.data.hub_actions.filter((a) => a.id !== row.id), row] },
+  } : s)), []);
+
+  const cancel = useCallback(async (id) => {
+    const { data, error } = await supabase.from('hub_actions').update({ status: 'cancelled' }).eq('id', id).eq('status', 'pending').select().maybeSingle();
+    if (error) say({ msg: 'לא הצלחתי לבטל. נסה שוב', bad: true });
+    else if (!data) say({ msg: 'כבר נכתב לקובץ, אי אפשר לבטל מכאן', bad: true });
+    else { putAction(data); say({ msg: 'בוטל' }); }
+  }, [putAction, say]);
+
+  /* saved on the tap itself, never delayed (a closed tab must not lose it) */
+  const act = useCallback(async (kind, targetId, payload, msg) => {
+    const { data, error } = await supabase.from('hub_actions').insert({ kind, target_id: targetId, payload }).select().single();
+    if (error) { say({ msg: 'לא נשמר. בדוק חיבור ונסה שוב', bad: true }); return false; }
+    putAction(data);
+    say({ msg, undo: () => cancel(data.id) });
+    return true;
+  }, [putAction, say, cancel]);
+
+  return (
+    <HubCtx.Provider value={{ ...state, now, reload: load, act }}>
+      {children}
+      {toast && (
+        <div className="admin-scope hub-toast-wrap" dir="rtl">
+          <div className="hub-toast" role="status" data-bad={toast.bad || undefined} key={toast.key}>
+            <span>{toast.msg}</span>
+            {toast.undo && <button type="button" onClick={() => { const u = toast.undo; setToast(null); u(); }}>בטל</button>}
+          </div>
+        </div>
+      )}
+    </HubCtx.Provider>
+  );
 }
 
 const useHub = () => useContext(HubCtx);
@@ -156,13 +213,14 @@ function Section({ title, count, extra, empty, loading, error, children, id }) {
   );
 }
 
-/* one line closed, details on tap */
-function Row({ main, sub, meta, metaTone, action, details }) {
+/* one line closed, details on tap. kb = reachable with J/K, lead = control before the text */
+function Row({ main, sub, meta, metaTone, action, details, kb, lead, pending, below }) {
   const [open, setOpen] = useState(false);
   const canOpen = details && details.some(([, v]) => v);
   return (
-    <li className="hub-row" data-open={open || undefined}>
+    <li className="hub-row" data-open={open || undefined} data-kb={kb || undefined} data-pending={pending || undefined} tabIndex={kb ? -1 : undefined}>
       <div className="hub-row-line">
+        {lead}
         {canOpen ? (
           <button type="button" className="hub-row-btn" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
             <span className="main">{main}{sub && <span className="sub"> · {sub}</span>}</span>
@@ -173,6 +231,7 @@ function Row({ main, sub, meta, metaTone, action, details }) {
         {meta && <span className={`meta${metaTone ? ` ${metaTone}` : ''}`}>{meta}</span>}
         {action}
       </div>
+      {below}
       {open && canOpen && (
         <dl className="hub-details">
           {details.filter(([, v]) => v).map(([k, v]) => (<div key={k}><dt>{k}</dt><dd>{v}</dd></div>))}
@@ -180,6 +239,87 @@ function Row({ main, sub, meta, metaTone, action, details }) {
       )}
     </li>
   );
+}
+
+const Clock = ({ text = 'ממתין לסנכרון' }) => <span className="hub-pending" title="נשמר. ייכתב לקבצים במרכז כשהמחשב יסנכרן">⏳ {text}</span>;
+
+/* a task line with "done" (circle before the text) and "postpone" */
+function TaskRow({ t, c, meta, metaTone, details, extra, noClient }) {
+  const hub = useHub();
+  const [panel, setPanel] = useState(false);
+  const [date, setDate] = useState('');
+  const p = c.pending.get(t.id);
+  const short = cut(t.title);
+
+  const postpone = async (iso) => {
+    setPanel(false);
+    await hub.act('task_postpone', t.id, { client_id: t.client_id, due: iso, label: short }, `נדחה ל-${fmtShortDate(iso)}`);
+  };
+
+  if (p) {
+    const isDone = p.kind === 'task_done';
+    return (
+      <Row kb main={t.title} sub={noClient ? null : c.clientName(t.client_id)} pending={isDone ? 'done' : 'moved'}
+        lead={<span className="hub-check" data-on={isDone || undefined} aria-hidden="true" />}
+        meta={<Clock text={isDone ? 'בוצע, ממתין לסנכרון' : `נדחה ל-${fmtShortDate(p.payload?.due)}`} />}
+        details={details} />
+    );
+  }
+
+  const next = nextWorkday(c.today);
+  const week = addDays(c.today, 7);
+  return (
+    <Row kb main={t.title} sub={noClient ? null : c.clientName(t.client_id)} meta={meta} metaTone={metaTone} details={details}
+      lead={<button type="button" className="hub-check" data-k="x" aria-label={`סמן בוצע: ${short}`} title="בוצע (X)"
+        onClick={() => hub.act('task_done', t.id, { client_id: t.client_id, label: short }, 'סומן בוצע')} />}
+      action={<>
+        {extra}
+        <button type="button" className="hub-act" data-k="d" aria-expanded={panel} onClick={() => setPanel((o) => !o)} title="דחה (D)">דחה</button>
+      </>}
+      below={panel && (
+        <div className="hub-postpone" role="group" aria-label="לדחות ל"
+          onKeyDown={(e) => { if (e.key === 'Escape') { e.stopPropagation(); e.currentTarget.closest('.hub-row')?.focus(); setPanel(false); } }}>
+          <button type="button" className="hub-act" autoFocus onClick={() => postpone(next)}>{next === addDays(c.today, 1) ? 'מחר' : 'ראשון'} · {fmtShortDate(next)}</button>
+          <button type="button" className="hub-act" onClick={() => postpone(week)}>עוד שבוע · {fmtShortDate(week)}</button>
+          <form className="hub-postpone-date" onSubmit={(e) => { e.preventDefault(); if (date) postpone(date); }}>
+            <input type="date" value={date} min={addDays(c.today, 1)} onChange={(e) => setDate(e.target.value)} aria-label="תאריך אחר" />
+            <button type="submit" className="hub-act" disabled={!date}>דחה</button>
+          </form>
+        </div>
+      )} />
+  );
+}
+
+const cut = (s, n = 60) => (s && s.length > n ? `${s.slice(0, n - 1)}…` : s);
+
+/* J/K move between rows, X done, D postpone, Enter opens details.
+   Inside an open drawer only the drawer's rows count. Physical keys (e.code),
+   so it works with the Hebrew keyboard layout too. */
+function useRowKeys() {
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const tag = e.target?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target?.isContentEditable) return;
+      const scope = document.querySelector('.hub-drawer') || document.querySelector('.adm-content');
+      if (!scope) return;
+      const rows = [...scope.querySelectorAll('.hub-row[data-kb]')];
+      if (!rows.length) return;
+      const cur = document.activeElement?.closest?.('.hub-row[data-kb]');
+      const i = rows.indexOf(cur);
+      const go = (n) => { const r = rows[Math.max(0, Math.min(rows.length - 1, n))]; r.focus(); r.scrollIntoView({ block: 'nearest' }); };
+      if (e.code === 'KeyJ') { e.preventDefault(); go(i < 0 ? 0 : i + 1); }
+      else if (e.code === 'KeyK') { e.preventDefault(); go(i < 0 ? 0 : i - 1); }
+      else if ((e.code === 'KeyX' || e.code === 'KeyD') && cur) {
+        const b = cur.querySelector(`[data-k="${e.code === 'KeyX' ? 'x' : 'd'}"]`);
+        if (b && !b.disabled) { e.preventDefault(); b.click(); if (e.code === 'KeyX') requestAnimationFrame(() => cur.focus()); }
+      } else if (e.key === 'Enter' && e.target === cur) {
+        const b = cur.querySelector('button.hub-row-btn'); if (b) { e.preventDefault(); b.click(); }
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
 }
 
 function WaButton({ phone, label = 'וואטסאפ' }) {
@@ -224,12 +364,18 @@ function useComputed() {
     if (soonCall) one = { text: soonCall.title, why: `ביומן ב-${fmtTime(soonCall.starts_at)}`, phone: clients.get(soonCall.client_id)?.phone };
     else if (due[0]) {
       const late = daysBetween(due[0].due, today);
-      one = { text: due[0].title, why: [clientName(due[0].client_id), late > 0 ? `באיחור ${daysWord(late)}` : 'להיום'].filter(Boolean).join(' · '), late: late > 0 };
+      one = { text: due[0].title, why: [clientName(due[0].client_id), late > 0 ? `באיחור ${daysWord(late)}` : 'להיום'].filter(Boolean).join(' · '), late: late > 0, task: due[0] };
     } else if (hotReply) one = { text: `לענות ל${clientName(hotReply.client_id) || hotReply.contact_name}`, why: hotReply.preview, phone: hotReply.phone };
     else if (nextCall) one = { text: nextCall.title, why: `ביומן ב-${fmtTime(nextCall.starts_at)}`, phone: clients.get(nextCall.client_id)?.phone };
     else if (replies[0]) one = { text: `לענות ל${replies[0].contact_name}`, why: replies[0].preview, phone: replies[0].phone };
 
-    return { now, today, clients, clientName, calls, replies, reach, due, waiting, collect, stuck, goal, one, tasks: d.hub_tasks, events: d.hub_events };
+    /* queued actions: pending ones overlay their row, failed ones are listed on top */
+    const acts = d.hub_actions || [];
+    const pending = new Map(acts.filter((a) => a.status === 'pending' && a.target_id).map((a) => [a.target_id, a]));
+    const added = acts.filter((a) => a.status === 'pending' && a.kind === 'task_add');
+    const failed = acts.filter((a) => a.status === 'failed' && now - new Date(a.created_at).getTime() < 2 * 86400000);
+
+    return { now, today, clients, clientName, calls, replies, reach, due, waiting, collect, stuck, goal, one, tasks: d.hub_tasks, events: d.hub_events, pending, added, failed };
   }, [hub?.data, today, now]);
 }
 
@@ -240,6 +386,7 @@ export function TodayView() {
   const loading = hub.loading;
   const error = hub.error;
   const L = { loading, error };
+  useRowKeys();
 
   if (!loading && !error && c && !hub.data.hub_clients.length) {
     return <p className="hub-empty" style={{ paddingTop: 18 }}>אין עדיין נתונים במסך. ברגע שסוכן הסנכרון יעלה מהמחשב, כאן יופיע הדבר הכי דחוף להיום.</p>;
@@ -256,11 +403,16 @@ export function TodayView() {
               <p className="hub-one-text">{c.one.text}</p>
               <div className="hub-one-why">
                 <span className={c.one.late ? 'late' : undefined}>{c.one.why}</span>
+                {c.one.task && (c.pending.get(c.one.task.id)
+                  ? <Clock />
+                  : <button type="button" className="hub-act hub-act-main" onClick={() => hub.act('task_done', c.one.task.id, { client_id: c.one.task.client_id, label: cut(c.one.task.title) }, 'סומן בוצע')}>בוצע</button>)}
                 <WaButton phone={c.one.phone} label="פתח בוואטסאפ" />
               </div>
             </>
           ) : <p className="hub-one-text" data-empty="true">אין שום דבר דחוף. זמן טוב לקדם לקוח רביעי.</p>}
       </div>
+
+      {c?.failed.length ? <FailedNotice failed={c.failed} /> : null}
 
       {c?.goal?.target ? <GoalStrip goal={c.goal} /> : null}
 
@@ -296,9 +448,7 @@ export function TodayView() {
         {c?.due.map((t) => {
           const late = daysBetween(t.due, c.today);
           return (
-            <Row key={t.id}
-              main={t.title}
-              sub={c.clientName(t.client_id)}
+            <TaskRow key={t.id} t={t} c={c}
               meta={late > 0 ? `באיחור ${daysWord(late)}` : 'להיום'}
               metaTone={late > 0 ? 'late' : undefined}
               details={[['יעד', t.due_text], ['אחראי', t.owner], ['ממתין ל', t.waiting_on], ['סטטוס', t.status_note], ['פתוחה מאז', fmtShortDate(t.since)]]} />
@@ -308,11 +458,9 @@ export function TodayView() {
 
       <Section id="s-wait" title="מחכה ללקוח" count={c?.waiting.length} empty="אף לקוח לא תקוע יותר מ-3 ימים" {...L}>
         {c?.waiting.map((t) => (
-          <Row key={t.id}
-            main={t.title}
-            sub={c.clientName(t.client_id)}
+          <TaskRow key={t.id} t={t} c={c}
             meta={`ממתינה ${daysWord(daysBetween(t.since, c.today))}`}
-            action={<WaButton phone={c.clients.get(t.client_id)?.phone} label="תזכורת" />}
+            extra={<WaButton phone={c.clients.get(t.client_id)?.phone} label="תזכורת" />}
             details={[['ממתין ל', t.waiting_on || t.owner], ['יעד', t.due_text], ['סטטוס', t.status_note]]} />
         ))}
       </Section>
@@ -331,12 +479,18 @@ export function TodayView() {
         empty="אין תשלומים פתוחים" {...L}>
         {c?.collect.map((x) => {
           const n = daysBetween(x.since, c.today);
+          const amount = x.amount ? money(x.amount) : x.amount_text;
+          const p = c.pending.get(x.id);
           return (
-            <Row key={x.id}
+            <Row key={x.id} kb pending={p ? 'done' : undefined}
               main={x.who}
-              meta={[x.amount ? money(x.amount) : x.amount_text, n != null ? `${daysWord(n)}` : null].filter(Boolean).join(' · ')}
-              metaTone={n > 14 ? 'late' : undefined}
-              action={<WaButton phone={c.clients.get(x.client_id)?.phone} />}
+              meta={p ? <Clock text="נכנס, ממתין לסנכרון" /> : [amount, n != null ? `${daysWord(n)}` : null].filter(Boolean).join(' · ')}
+              metaTone={!p && n > 14 ? 'late' : undefined}
+              action={!p && <>
+                <WaButton phone={c.clients.get(x.client_id)?.phone} />
+                <button type="button" className="hub-act" data-k="x" title="נכנס (X)"
+                  onClick={() => hub.act('payment_received', x.id, { client_id: x.client_id, label: cut(x.who), amount_text: amount }, 'סומן שנכנס')}>נכנס ✓</button>
+              </>}
               details={[['מאז', fmtShortDate(x.since)], ['הערה', x.note]]} />
           );
         })}
@@ -344,15 +498,37 @@ export function TodayView() {
 
       {c?.stuck && (
         <Section id="s-five" title="5 דקות" {...L}>
-          <Row
-            main={c.stuck.title}
-            sub={c.clientName(c.stuck.client_id)}
+          <TaskRow t={c.stuck} c={c}
             meta={`פתוחה ${daysWord(daysBetween(c.stuck.since, c.today))}`}
             details={[['יעד', c.stuck.due_text], ['ממתין ל', c.stuck.waiting_on], ['סטטוס', c.stuck.status_note]]} />
           <li className="hub-five-hint">המשימה שתקועה הכי הרבה זמן. מה הצעד הכי קטן שאפשר לעשות בה עכשיו?</li>
         </Section>
       )}
+
+      <p className="hub-keys">מקשים: <kbd>J</kbd> <kbd>K</kbd> לזוז · <kbd>X</kbd> בוצע · <kbd>D</kbd> דחה · <kbd>Enter</kbd> פרטים</p>
     </>
+  );
+}
+
+/* an action the agent couldn't write to the files (row changed meanwhile, etc.) */
+function FailedNotice({ failed }) {
+  const [gone, setGone] = useState(() => {
+    try { return new Set(JSON.parse(localStorage.getItem(DISMISSED_KEY) || '[]')); } catch { return new Set(); }
+  });
+  const list = failed.filter((a) => !gone.has(a.id));
+  if (!list.length) return null;
+  const dismiss = () => {
+    const next = new Set([...gone, ...list.map((a) => a.id)]);
+    setGone(next);
+    try { localStorage.setItem(DISMISSED_KEY, JSON.stringify([...next].slice(-50))); } catch { /* private mode */ }
+  };
+  const what = { task_done: 'בוצע', task_postpone: 'דחייה', task_add: 'משימה חדשה', payment_received: 'תשלום שנכנס' };
+  return (
+    <div className="hub-failed" role="alert">
+      <p><b>{list.length === 1 ? 'פעולה אחת לא נכתבה לקבצים' : `${list.length} פעולות לא נכתבו לקבצים`}</b></p>
+      <ul>{list.map((a) => <li key={a.id}>{what[a.kind] || a.kind}: {a.payload?.label || a.payload?.title || ''}{a.error ? ` · ${a.error}` : ''}</li>)}</ul>
+      <button type="button" className="hub-act" onClick={dismiss}>הבנתי</button>
+    </div>
   );
 }
 
@@ -374,6 +550,7 @@ export function ClientsView() {
   const hub = useHub();
   const c = useComputed();
   const [openId, setOpenId] = useState(null);
+  useRowKeys();
   const active = useMemo(() => (hub.data?.hub_clients || []).filter((x) => x.stage === 'שוטף').sort((a, b) => a.name.localeCompare(b.name, 'he')), [hub.data]);
   const current = active.find((x) => x.id === openId) || null;
 
@@ -436,12 +613,18 @@ function ClientDrawer({ cl, c, onClose }) {
   const taskRow = (t) => {
     const late = t.due ? daysBetween(t.due, c.today) : null;
     return (
-      <Row key={t.id} main={t.title}
+      <TaskRow key={t.id} t={t} c={c} noClient
         meta={t.due_text ? (late > 0 ? `באיחור ${daysWord(late)}` : t.due_text) : null}
         metaTone={late > 0 ? 'late' : undefined}
         details={[['אחראי', t.owner], ['ממתין ל', t.waiting_on], ['פתוחה מאז', fmtShortDate(t.since)], ['סטטוס', t.status_note]]} />
     );
   };
+  /* tasks added here that the agent hasn't written yet */
+  const newRows = (side) => c.added
+    .filter((a) => a.payload?.client_id === cl.id && (a.payload?.owner === 'לקוח') === (side === 'theirs'))
+    .map((a) => <Row key={a.id} main={a.payload.title} pending="new" meta={<Clock />} />);
+  const mineNew = newRows('mine');
+  const theirsNew = newRows('theirs');
 
   return (
     <div className="hub-drawer-wrap" onClick={onClose}>
@@ -471,16 +654,18 @@ function ClientDrawer({ cl, c, onClose }) {
           )}
 
           <div className="hub-drawer-block">
-            <h3>עליי <span className="n">{mine.length}</span></h3>
-            {mine.length ? <ul className="hub-rows">{mine.map(taskRow)}</ul> : <p className="hub-empty">אין משימות פתוחות עליי</p>}
+            <h3>עליי <span className="n">{mine.length + mineNew.length}</span></h3>
+            {mine.length + mineNew.length ? <ul className="hub-rows">{mine.map(taskRow)}{mineNew}</ul> : <p className="hub-empty">אין משימות פתוחות עליי</p>}
           </div>
 
-          {theirs.length > 0 && (
+          {theirs.length + theirsNew.length > 0 && (
             <div className="hub-drawer-block">
-              <h3>מחכה להם <span className="n">{theirs.length}</span></h3>
-              <ul className="hub-rows">{theirs.map(taskRow)}</ul>
+              <h3>מחכה להם <span className="n">{theirs.length + theirsNew.length}</span></h3>
+              <ul className="hub-rows">{theirs.map(taskRow)}{theirsNew}</ul>
             </div>
           )}
+
+          <AddTask clientId={cl.id} today={c.today} />
 
           {done.length > 0 && (
             <div className="hub-drawer-block">
@@ -491,9 +676,41 @@ function ClientDrawer({ cl, c, onClose }) {
 
           {cl.payment_status && <p className="hub-drawer-status"><span>תשלום</span>{cl.payment_status}</p>}
           {cl.folder_path && <p className="hub-folder" title="התיקייה במרכז">📁 {cl.folder_path}</p>}
-          <p className="hub-readonly">סימון בוצע, הוספה ודחייה יגיעו בשלב הבא. בינתיים העדכונים נעשים בקבצים, דרך Claude.</p>
+          <p className="hub-readonly">מה שמסומן כאן נכתב ל-משימות_תיק.md של הלקוח כשהמחשב מסנכרן (תוך פחות מדקה כשהוא דולק). שינוי שלב ועריכת זיכרון הלקוח נשארים אצל Claude.</p>
         </div>
       </aside>
     </div>
+  );
+}
+
+function AddTask({ clientId, today }) {
+  const hub = useHub();
+  const [title, setTitle] = useState('');
+  const [owner, setOwner] = useState('אני');
+  const [due, setDue] = useState('');
+  const [busy, setBusy] = useState(false);
+  const submit = async (e) => {
+    e.preventDefault();
+    const t = title.replace(/\s+/g, ' ').trim();
+    if (!t || busy) return;
+    setBusy(true);
+    const ok = await hub.act('task_add', null, { client_id: clientId, title: t.slice(0, 300), owner, due: due || null, label: cut(t) }, 'המשימה נוספה');
+    setBusy(false);
+    if (ok) { setTitle(''); setDue(''); }
+  };
+  return (
+    <form className="hub-add" onSubmit={submit}>
+      <h3>משימה חדשה</h3>
+      <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="מה צריך לעשות" aria-label="משימה חדשה" maxLength={300} />
+      <div className="hub-add-row">
+        <div className="hub-seg" role="radiogroup" aria-label="על מי">
+          {[['אני', 'עליי'], ['לקוח', 'עליהם']].map(([v, l]) => (
+            <button key={v} type="button" role="radio" aria-checked={owner === v} onClick={() => setOwner(v)}>{l}</button>
+          ))}
+        </div>
+        <input type="date" value={due} min={today} onChange={(e) => setDue(e.target.value)} aria-label="יעד (לא חובה)" />
+        <button type="submit" className="hub-act hub-act-main" disabled={!title.trim() || busy}>הוסף</button>
+      </div>
+    </form>
   );
 }
