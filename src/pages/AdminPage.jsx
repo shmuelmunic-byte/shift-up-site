@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import Cursor from '../components/Cursor';
+import { TodayView, ClientsView, SyncBar, HebrewDates } from './admin/HubViews';
+import './admin/admin.css';
 import { CATS, SEG_LABEL, Q } from '../lib/auditQuestions';
 
 // ─── ICONS ──────────────────────────────────────────────────────────────────
@@ -47,10 +48,10 @@ function Toast({ msg, type, onClose }) {
       position: 'fixed', bottom: 28, left: '50%', transform: 'translateX(-50%)',
       zIndex: 9999, display: 'flex', alignItems: 'center', gap: 10,
       padding: '12px 20px', borderRadius: 3,
-      background: isErr ? 'oklch(0.15 0.02 25)' : 'oklch(0.13 0.02 145)',
-      border: `1.5px solid ${isErr ? 'oklch(0.65 0.22 25 / 0.5)' : 'oklch(0.785 0.173 156.6 / 0.4)'}`,
-      boxShadow: '0 8px 40px oklch(0 0 0 / 0.5)',
-      color: isErr ? 'oklch(0.80 0.18 25)' : 'var(--brand-prime)',
+      background: isErr ? 'var(--ad-danger-bg)' : 'var(--ad-ok-bg)',
+      border: `1.5px solid ${isErr ? 'var(--ad-danger-line)' : 'var(--ad-brand-line)'}`,
+      boxShadow: '0 8px 40px var(--ad-shadow)',
+      color: isErr ? 'var(--ad-danger)' : 'var(--brand-prime)',
       fontWeight: 700, fontSize: '0.9rem', whiteSpace: 'nowrap',
       animation: 'ig-fade-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) both',
     }}>
@@ -65,10 +66,10 @@ function Toast({ msg, type, onClose }) {
 const S = {
   input: {
     width: '100%', minHeight: 44, borderRadius: 3,
-    border: '1.5px solid oklch(0.97 0.005 240 / 0.12)',
-    background: 'oklch(0.08 0.01 240 / 0.8)',
+    border: '1.5px solid var(--ad-line-strong)',
+    background: 'var(--ad-input)',
     color: 'var(--text-primary)', padding: '0 14px',
-    fontFamily: "'Space Grotesk', 'Secular One', sans-serif", fontSize: '0.9rem',
+    fontFamily: 'var(--font)', fontSize: '0.9rem',
     outline: 'none', boxSizing: 'border-box',
     transition: 'border-color 0.2s',
   },
@@ -80,24 +81,24 @@ const S = {
   btn: (variant = 'ghost') => ({
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
     gap: 7, padding: '8px 16px', borderRadius: 3, border: 'none',
-    fontFamily: "'Space Grotesk', 'Secular One', sans-serif", fontWeight: 700, fontSize: '0.85rem',
+    fontFamily: 'var(--font)', fontWeight: 700, fontSize: '0.85rem',
     cursor: 'pointer', transition: 'all 0.18s ease',
     ...(variant === 'primary' ? {
-      background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)',
-      boxShadow: '0 0 24px oklch(0.785 0.173 156.6 / 0.3)',
+      background: 'var(--brand-prime)', color: 'var(--ad-on-brand)',
+      
     } : variant === 'danger' ? {
-      background: 'oklch(0.65 0.22 25 / 0.12)',
-      color: 'oklch(0.75 0.18 25)',
-      border: '1px solid oklch(0.65 0.22 25 / 0.25)',
+      background: 'var(--ad-danger-soft)',
+      color: 'var(--ad-danger)',
+      border: '1px solid var(--ad-danger-line)',
     } : {
-      background: 'oklch(0.14 0.02 240)',
+      background: 'var(--ad-surface-2)',
       color: 'var(--text-secondary)',
-      border: '1px solid oklch(0.97 0.005 240 / 0.1)',
+      border: '1px solid var(--ad-line-strong)',
     }),
   }),
   card: {
-    background: 'oklch(0.11 0.015 240)',
-    border: '1.5px solid oklch(0.97 0.005 240 / 0.08)',
+    background: 'var(--ad-surface)',
+    border: '1.5px solid var(--ad-line)',
     borderRadius: 4, overflow: 'hidden',
   },
 };
@@ -116,7 +117,7 @@ function PromptForm({ initial = EMPTY_PROMPT, onSave, onCancel, saving }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 16, padding: '24px', background: 'oklch(0.09 0.012 240)', borderTop: '1px solid oklch(0.97 0.005 240 / 0.08)' }}>
+    <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 16, padding: '24px', background: 'var(--ad-sunken)', borderTop: '1px solid var(--ad-line)' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <div>
           <label style={S.label}>Slug (ייחודי, ללא רווחים)</label>
@@ -149,7 +150,7 @@ function PromptForm({ initial = EMPTY_PROMPT, onSave, onCancel, saving }) {
         />
       </div>
 
-      <div style={{ borderTop: '1px solid oklch(0.97 0.005 240 / 0.08)', paddingTop: 16 }}>
+      <div style={{ borderTop: '1px solid var(--ad-line)', paddingTop: 16 }}>
         <p style={{ ...S.label, marginBottom: 12 }}>משאב נוסף (אופציונלי — קובץ / סרטון / לינק)</p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
           <div>
@@ -263,7 +264,7 @@ function PromptsTab({ toast }) {
 
       {addingNew && (
         <div style={{ ...S.card, marginBottom: 14 }}>
-          <div style={{ padding: '14px 20px', borderBottom: '1px solid oklch(0.97 0.005 240 / 0.08)', fontWeight: 800, color: 'var(--brand-prime)', fontSize: '0.9rem' }}>
+          <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--ad-line)', fontWeight: 800, color: 'var(--brand-prime)', fontSize: '0.9rem' }}>
             + פרומפט חדש
           </div>
           <PromptForm onSave={handleSaveNew} onCancel={() => setAddingNew(false)} saving={saving} />
@@ -291,7 +292,7 @@ function PromptsTab({ toast }) {
                   {p.title}
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.73rem', color: 'var(--brand-prime)', fontWeight: 700, background: 'oklch(0.785 0.173 156.6 / 0.1)', padding: '2px 8px', borderRadius: 100 }}>
+                  <span style={{ fontSize: '0.73rem', color: 'var(--brand-prime)', fontWeight: 700, background: 'var(--ad-brand-soft)', padding: '2px 8px', borderRadius: 100 }}>
                     {p.tag}
                   </span>
                   {p.resource_type && (
@@ -315,8 +316,8 @@ function PromptsTab({ toast }) {
 
             {/* Confirm delete */}
             {confirmDelete === p.id && (
-              <div style={{ padding: '12px 16px', borderTop: '1px solid oklch(0.65 0.22 25 / 0.2)', background: 'oklch(0.65 0.22 25 / 0.06)', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span style={{ flex: 1, fontSize: '0.85rem', color: 'oklch(0.75 0.18 25)', fontWeight: 600 }}>
+              <div style={{ padding: '12px 16px', borderTop: '1px solid var(--ad-danger-line)', background: 'var(--ad-danger-soft)', display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ flex: 1, fontSize: '0.85rem', color: 'var(--ad-danger)', fontWeight: 600 }}>
                   למחוק את "{p.title}"? לא ניתן לשחזר.
                 </span>
                 <button style={S.btn('ghost')} onClick={() => setConfirmDelete(null)}>ביטול</button>
@@ -413,7 +414,7 @@ function IgLinksTab({ toast }) {
   };
 
   const LinkInlineForm = ({ form, setForm, onSubmit, onCancel }) => (
-    <form onSubmit={onSubmit} style={{ padding: '14px 16px', borderTop: '1px solid oklch(0.97 0.005 240 / 0.08)', background: 'oklch(0.09 0.012 240)', display: 'grid', gap: 10 }}>
+    <form onSubmit={onSubmit} style={{ padding: '14px 16px', borderTop: '1px solid var(--ad-line)', background: 'var(--ad-sunken)', display: 'grid', gap: 10 }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 1fr', gap: 10 }}>
         <div>
           <label style={S.label}>טקסט כפתור</label>
@@ -461,7 +462,7 @@ function IgLinksTab({ toast }) {
 
       {addingNew && (
         <div style={{ ...S.card, marginBottom: 12 }}>
-          <div style={{ padding: '12px 16px', fontWeight: 800, color: 'var(--brand-prime)', fontSize: '0.88rem', borderBottom: '1px solid oklch(0.97 0.005 240 / 0.08)' }}>
+          <div style={{ padding: '12px 16px', fontWeight: 800, color: 'var(--brand-prime)', fontSize: '0.88rem', borderBottom: '1px solid var(--ad-line)' }}>
             + כפתור חדש
           </div>
           <LinkInlineForm form={newForm} setForm={setNewForm} onSubmit={handleSaveNew} onCancel={() => { setAddingNew(false); setNewForm(EMPTY_LINK); }} />
@@ -480,7 +481,7 @@ function IgLinksTab({ toast }) {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 800, fontSize: '0.92rem', color: 'var(--text-primary)', marginBottom: 2 }}>{l.label}</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{ padding: '1px 7px', borderRadius: 100, background: l.style === 'primary' ? 'oklch(0.785 0.173 156.6 / 0.1)' : 'oklch(0.97 0.005 240 / 0.08)', color: l.style === 'primary' ? 'var(--brand-prime)' : 'var(--text-muted)', fontSize: '0.68rem', fontWeight: 700 }}>
+                  <span style={{ padding: '1px 7px', borderRadius: 100, background: l.style === 'primary' ? 'var(--ad-brand-soft)' : 'var(--ad-line)', color: l.style === 'primary' ? 'var(--brand-prime)' : 'var(--text-muted)', fontSize: '0.68rem', fontWeight: 700 }}>
                     {l.style === 'primary' ? 'ירוק' : 'לבן'}
                   </span>
                   <IconLink size={11} />
@@ -499,8 +500,8 @@ function IgLinksTab({ toast }) {
             </div>
 
             {confirmDelete === l.id && (
-              <div style={{ padding: '10px 14px', borderTop: '1px solid oklch(0.65 0.22 25 / 0.2)', background: 'oklch(0.65 0.22 25 / 0.06)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ flex: 1, fontSize: '0.83rem', color: 'oklch(0.75 0.18 25)', fontWeight: 600 }}>למחוק "{l.label}"?</span>
+              <div style={{ padding: '10px 14px', borderTop: '1px solid var(--ad-danger-line)', background: 'var(--ad-danger-soft)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ flex: 1, fontSize: '0.83rem', color: 'var(--ad-danger)', fontWeight: 600 }}>למחוק "{l.label}"?</span>
                 <button style={S.btn('ghost')} onClick={() => setConfirmDelete(null)}>ביטול</button>
                 <button style={S.btn('danger')} onClick={() => handleDelete(l.id)}><IconTrash size={13} /> מחק</button>
               </div>
@@ -558,7 +559,7 @@ function ContactTab({ toast }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       {sections.map(sec => (
         <div key={sec} style={S.card}>
-          <div style={{ padding: '14px 20px', borderBottom: '1px solid oklch(0.97 0.005 240 / 0.08)', fontWeight: 800, fontSize: '0.88rem', color: 'var(--brand-prime)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--ad-line)', fontWeight: 800, fontSize: '0.88rem', color: 'var(--brand-prime)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
             {sec}
           </div>
           <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -661,7 +662,7 @@ function GenericCrudTab({ toast, table, emptyForm, fields, itemTitle }) {
   };
 
   const InlineForm = ({ form, setForm, onSubmit, onCancel }) => (
-    <form onSubmit={onSubmit} style={{ padding: '14px 16px', borderTop: '1px solid oklch(0.97 0.005 240 / 0.08)', background: 'oklch(0.09 0.012 240)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <form onSubmit={onSubmit} style={{ padding: '14px 16px', borderTop: '1px solid var(--ad-line)', background: 'var(--ad-sunken)', display: 'flex', flexDirection: 'column', gap: 10 }}>
       {fields.map(f => (
         <div key={f.key}>
           <label style={S.label}>{f.label}</label>
@@ -723,7 +724,7 @@ function GenericCrudTab({ toast, table, emptyForm, fields, itemTitle }) {
 
       {addingNew && (
         <div style={{ ...S.card, marginBottom: 12 }}>
-          <div style={{ padding: '12px 16px', fontWeight: 800, color: 'var(--brand-prime)', fontSize: '0.88rem', borderBottom: '1px solid oklch(0.97 0.005 240 / 0.08)' }}>+ חדש</div>
+          <div style={{ padding: '12px 16px', fontWeight: 800, color: 'var(--brand-prime)', fontSize: '0.88rem', borderBottom: '1px solid var(--ad-line)' }}>+ חדש</div>
           <InlineForm form={newForm} setForm={setNewForm} onSubmit={handleSaveNew} onCancel={() => { setAddingNew(false); setNewForm(emptyForm); }} />
         </div>
       )}
@@ -741,12 +742,12 @@ function GenericCrudTab({ toast, table, emptyForm, fields, itemTitle }) {
                   {itemTitle(item)}
                 </div>
                 {item.featured !== undefined && (
-                  <span style={{ fontSize: '0.7rem', padding: '1px 7px', borderRadius: 100, background: item.featured ? 'oklch(0.785 0.173 156.6 / 0.12)' : 'oklch(0.14 0.02 240)', color: item.featured ? 'var(--brand-prime)' : 'var(--text-muted)', fontWeight: 700 }}>
+                  <span style={{ fontSize: '0.7rem', padding: '1px 7px', borderRadius: 100, background: item.featured ? 'var(--ad-brand-soft)' : 'var(--ad-surface-2)', color: item.featured ? 'var(--brand-prime)' : 'var(--text-muted)', fontWeight: 700 }}>
                     {item.featured ? '⭐ featured' : 'לא מוצג בדף הבית'}
                   </span>
                 )}
                 {item.is_live !== undefined && (
-                  <span style={{ fontSize: '0.7rem', padding: '1px 7px', borderRadius: 100, background: item.is_live ? 'oklch(0.785 0.173 156.6 / 0.12)' : 'oklch(0.14 0.02 240)', color: item.is_live ? 'var(--brand-prime)' : 'var(--text-muted)', fontWeight: 700 }}>
+                  <span style={{ fontSize: '0.7rem', padding: '1px 7px', borderRadius: 100, background: item.is_live ? 'var(--ad-brand-soft)' : 'var(--ad-surface-2)', color: item.is_live ? 'var(--brand-prime)' : 'var(--text-muted)', fontWeight: 700 }}>
                     {item.is_live ? '🟢 live badge' : ''}
                   </span>
                 )}
@@ -767,8 +768,8 @@ function GenericCrudTab({ toast, table, emptyForm, fields, itemTitle }) {
             </div>
 
             {confirmDelete === item.id && (
-              <div style={{ padding: '10px 14px', borderTop: '1px solid oklch(0.65 0.22 25 / 0.2)', background: 'oklch(0.65 0.22 25 / 0.06)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ flex: 1, fontSize: '0.83rem', color: 'oklch(0.75 0.18 25)', fontWeight: 600 }}>למחוק "{itemTitle(item)}"?</span>
+              <div style={{ padding: '10px 14px', borderTop: '1px solid var(--ad-danger-line)', background: 'var(--ad-danger-soft)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ flex: 1, fontSize: '0.83rem', color: 'var(--ad-danger)', fontWeight: 600 }}>למחוק "{itemTitle(item)}"?</span>
                 <button style={S.btn('ghost')} onClick={() => setConfirmDelete(null)}>ביטול</button>
                 <button style={S.btn('danger')} onClick={() => handleDelete(item.id)}><IconTrash size={13} /> מחק</button>
               </div>
@@ -1022,7 +1023,7 @@ function LeadsTab({ toast }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
         <span style={{ fontWeight: 800, fontSize: '1.05rem' }}>{leads.length} לידים</span>
         {unhandled > 0 && (
-          <span style={{ background: 'oklch(0.785 0.173 156.6 / 0.15)', color: 'var(--brand-prime)', border: '1px solid oklch(0.785 0.173 156.6 / 0.3)', borderRadius: 3, padding: '3px 12px', fontSize: '0.78rem', fontWeight: 700 }}>
+          <span style={{ background: 'var(--ad-brand-soft)', color: 'var(--brand-prime)', border: '1px solid var(--ad-brand-line)', borderRadius: 3, padding: '3px 12px', fontSize: '0.78rem', fontWeight: 700 }}>
             {unhandled} חדשים
           </span>
         )}
@@ -1037,12 +1038,12 @@ function LeadsTab({ toast }) {
       ) : (
         <div style={{ display: 'grid', gap: 12 }}>
           {leads.map(l => (
-            <div key={l.id} className="admin-card" style={{ ...S.card, padding: 18, opacity: l.handled ? 0.6 : 1, borderColor: l.handled ? undefined : 'oklch(0.785 0.173 156.6 / 0.25)' }}>
+            <div key={l.id} className="admin-card" style={{ ...S.card, padding: 18, opacity: l.handled ? 0.6 : 1, borderColor: l.handled ? undefined : 'var(--ad-brand-line)' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
                 <div style={{ flex: 1, minWidth: 200 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
                     <span style={{ fontWeight: 800, fontSize: '1.02rem' }}>{l.name}</span>
-                    {l.business && <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', background: 'oklch(0.16 0.02 240)', borderRadius: 3, padding: '2px 10px' }}>{l.business}</span>}
+                    {l.business && <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', background: 'var(--ad-surface-2)', borderRadius: 3, padding: '2px 10px' }}>{l.business}</span>}
                   </div>
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{fmtDate(l.created_at)} · {l.source || 'form'}</div>
                   {l.message && <p style={{ marginTop: 10, fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{l.message}</p>}
@@ -1091,7 +1092,7 @@ function Bar({ label, pct, count, color }) {
           {pct}%{count != null ? ` · ${count}` : ''}
         </span>
       </div>
-      <div style={{ height: 8, background: 'oklch(0.08 0.01 240)', borderRadius: 100, overflow: 'hidden' }}>
+      <div style={{ height: 8, background: 'var(--ad-on-brand)', borderRadius: 100, overflow: 'hidden' }}>
         <div style={{ height: '100%', width: `${pct}%`, background: color || 'var(--brand-prime)', borderRadius: 100, transition: 'width 0.5s ease' }} />
       </div>
     </div>
@@ -1166,7 +1167,7 @@ function AuditStatsTab({ toast }) {
     return { q, i, counts, answered };
   });
 
-  const colorFor = (p) => (p >= 67 ? 'var(--brand-prime)' : p >= 34 ? 'oklch(0.78 0.16 80)' : 'oklch(0.70 0.20 25)');
+  const colorFor = (p) => (p >= 67 ? 'var(--brand-prime)' : p >= 34 ? 'var(--ad-warn)' : 'var(--ad-danger)');
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
@@ -1179,15 +1180,15 @@ function AuditStatsTab({ toast }) {
         <StatBox value={n} label="אבחונים שהושלמו" />
         <StatBox value={avg} label="ציון ממוצע" color={colorFor(avg)} />
         <StatBox value={median} label="ציון חציוני" color={colorFor(median)} />
-        <StatBox value={`${Math.round((buckets.low / n) * 100)}%`} label="מתחת ל-45 (דולפים חזק)" color="oklch(0.70 0.20 25)" />
+        <StatBox value={`${Math.round((buckets.low / n) * 100)}%`} label="מתחת ל-45 (דולפים חזק)" color="var(--ad-danger)" />
       </div>
 
       {/* התפלגות ציונים */}
       <div style={{ ...S.card, padding: 20 }}>
         <div style={{ fontWeight: 800, marginBottom: 14 }}>התפלגות ציונים</div>
         <Bar label="70-100 · בסיס בריא" pct={Math.round((buckets.high / n) * 100)} count={buckets.high} color="var(--brand-prime)" />
-        <Bar label="45-69 · דולף בנקודות" pct={Math.round((buckets.mid / n) * 100)} count={buckets.mid} color="oklch(0.78 0.16 80)" />
-        <Bar label="0-44 · דולף חזק" pct={Math.round((buckets.low / n) * 100)} count={buckets.low} color="oklch(0.70 0.20 25)" />
+        <Bar label="45-69 · דולף בנקודות" pct={Math.round((buckets.mid / n) * 100)} count={buckets.mid} color="var(--ad-warn)" />
+        <Bar label="0-44 · דולף חזק" pct={Math.round((buckets.low / n) * 100)} count={buckets.low} color="var(--ad-danger)" />
       </div>
 
       {/* איפה רוב האנשים חלשים */}
@@ -1203,7 +1204,7 @@ function AuditStatsTab({ toast }) {
         {topLeaks.length === 0 ? (
           <div style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>אין דליפות שנרשמו עדיין.</div>
         ) : topLeaks.map(([title, count]) => (
-          <Bar key={title} label={title} pct={Math.round((count / n) * 100)} count={count} color="oklch(0.70 0.20 25)" />
+          <Bar key={title} label={title} pct={Math.round((count / n) * 100)} count={count} color="var(--ad-danger)" />
         ))}
       </div>
 
@@ -1211,7 +1212,7 @@ function AuditStatsTab({ toast }) {
       <div style={{ ...S.card, padding: 20 }}>
         <div style={{ fontWeight: 800, marginBottom: 14 }}>מה הם משקיעים היום</div>
         {Object.entries(segCount).sort((a, b) => b[1] - a[1]).map(([seg, count]) => (
-          <Bar key={seg} label={SEG_LABEL[seg] || seg} pct={Math.round((count / n) * 100)} count={count} color="oklch(0.65 0.18 285)" />
+          <Bar key={seg} label={SEG_LABEL[seg] || seg} pct={Math.round((count / n) * 100)} count={count} color="var(--ad-accent)" />
         ))}
       </div>
 
@@ -1220,12 +1221,12 @@ function AuditStatsTab({ toast }) {
         <div style={{ fontWeight: 800, marginBottom: 4 }}>מה אנשים עונים — לפי שאלה</div>
         <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 18 }}>ירוק = תשובה חזקה · אדום = תשובה חלשה</div>
         {answerDist.map(({ q, i, counts, answered }) => (
-          <div key={i} style={{ marginBottom: 22, paddingBottom: 18, borderBottom: '1px solid oklch(0.97 0.005 240 / 0.06)' }}>
+          <div key={i} style={{ marginBottom: 22, paddingBottom: 18, borderBottom: '1px solid var(--ad-line)' }}>
             <div style={{ fontSize: '0.72rem', color: 'var(--brand-prime)', fontWeight: 700, marginBottom: 4 }}>{CATS[q.cat]}</div>
             <div style={{ fontSize: '0.92rem', fontWeight: 700, marginBottom: 12, lineHeight: 1.4 }}>{q.t}</div>
             {q.o.map((opt, oi) => {
               const pct = Math.round((counts[oi] / answered) * 100);
-              const col = opt[1] === 3 ? 'var(--brand-prime)' : opt[1] === 1 ? 'oklch(0.78 0.16 80)' : 'oklch(0.70 0.20 25)';
+              const col = opt[1] === 3 ? 'var(--brand-prime)' : opt[1] === 1 ? 'var(--ad-warn)' : 'var(--ad-danger)';
               return <Bar key={oi} label={opt[0]} pct={pct} count={counts[oi]} color={col} />;
             })}
           </div>
@@ -1235,118 +1236,174 @@ function AuditStatsTab({ toast }) {
   );
 }
 
-const TABS = [
-  { id: 'leads',        label: '📥 לידים',        desc: 'טופס' },
-  { id: 'auditstats',   label: '🎯 אבחון',        desc: '/audit · אנונימי' },
-  { id: 'contact',      label: '📝 תוכן + קשר',   desc: 'כותרות · קישורים' },
-  { id: 'trust',        label: '🤝 רצועת אמון',   desc: 'סקשן 2' },
-  { id: 'pain',         label: '😣 כאב',          desc: 'סקשן 3' },
-  { id: 'process',      label: '🔄 תהליך',        desc: 'סקשן 5' },
-  { id: 'outcomes',     label: '🎁 מה תקבל',      desc: 'סקשן 6' },
-  { id: 'whyme',        label: '💡 למה אני',      desc: 'סקשן 7' },
-  { id: 'proofcases',   label: '🏆 קייסים',       desc: 'סקשן 8' },
-  { id: 'proofgrid',    label: '🖼️ גריד מודעות', desc: 'סקשן 8' },
-  { id: 'faqs',         label: '❓ שאלות',        desc: 'סקשן 10' },
-  { id: 'testimonials', label: '⭐ עדויות',        desc: '/testimonials' },
-  { id: 'stats',        label: '📊 סטטיסטיקות',  desc: 'מנותק' },
-  { id: 'prompts',      label: '📚 פרומפטים',    desc: '/freebies' },
-  { id: 'ig',           label: '🔗 כפתורי /ig',  desc: 'Link in Bio' },
+// ─── SHELL: one work area (היום · לקוחות · לידים מהאתר · האתר) ──────────────
+
+const SECTIONS = [
+  { id: 'today',   label: 'היום' },
+  { id: 'clients', label: 'לקוחות' },
+  { id: 'leads',   label: 'לידים מהאתר' },
+  { id: 'site',    label: 'האתר' },
 ];
 
+const LEADS_TABS = [
+  { id: 'leads',      label: 'לידים' },
+  { id: 'auditstats', label: 'שאלון אבחון' },
+];
+
+// existing content tabs, grouped under "האתר"
+const SITE_GROUPS = [
+  { id: 'home', label: 'דף הבית', tabs: [
+    { id: 'contact',  label: 'תוכן וקשר' },
+    { id: 'trust',    label: 'רצועת אמון' },
+    { id: 'pain',     label: 'כאב' },
+    { id: 'process',  label: 'תהליך' },
+    { id: 'outcomes', label: 'מה תקבל' },
+    { id: 'whyme',    label: 'למה אני' },
+    { id: 'faqs',     label: 'שאלות' },
+    { id: 'stats',    label: 'סטטיסטיקות' },
+  ] },
+  { id: 'proof', label: 'עדויות וקייסים', tabs: [
+    { id: 'testimonials', label: 'עדויות' },
+    { id: 'proofcases',   label: 'קייסים' },
+    { id: 'proofgrid',    label: 'גריד מודעות' },
+  ] },
+  { id: 'ig',      label: 'אינסטגרם', tabs: [{ id: 'ig', label: 'כפתורי /ig' }] },
+  { id: 'prompts', label: 'פרומפטים', tabs: [{ id: 'prompts', label: 'פרומפטים' }] },
+];
+
+const TAB_COMPONENTS = {
+  leads: LeadsTab, auditstats: AuditStatsTab, contact: ContactTab, trust: TrustTab, pain: PainTab,
+  process: ProcessTab, outcomes: OutcomesTab, whyme: WhyMeTab, proofcases: ProofCasesTab,
+  proofgrid: ProofGridTab, faqs: FaqsTab, testimonials: TestimonialsTab, stats: StatsTab,
+  prompts: PromptsTab, ig: IgLinksTab,
+};
+
+function SubTabs({ items, active, onPick, className = '', badge }) {
+  return (
+    <div className={`admin-tabs ${className}`} role="tablist" style={{ marginBottom: 22 }}>
+      {items.map(t => (
+        <button key={t.id} role="tab" aria-selected={active === t.id} className="admin-tab" data-active={active === t.id} onClick={() => onPick(t.id)}>
+          {t.label}
+          {badge?.[t.id] > 0 && <span className="tab-count">{badge[t.id]}</span>}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState('leads');
+  const [params, setParams] = useSearchParams();
   const [toast, setToast] = useState(null);
   const [newLeads, setNewLeads] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(null);
   const navigate = useNavigate();
+
+  const section = SECTIONS.some(s => s.id === params.get('s')) ? params.get('s') : 'today';
+  const tab = params.get('t');
+  const go = (s, t) => setParams(t ? { s, t } : { s }, { replace: true });
 
   const showToast = useCallback((msg, type = 'success') => {
     setToast({ msg, type, key: Date.now() });
   }, []);
 
-  // ספירת לידים שלא טופלו — ל-badge על הטאב
+  useEffect(() => {
+    supabase.rpc('is_hub_admin').then(({ data, error }) => setIsAdmin(!error && data === true));
+  }, []);
+
+  // ספירת לידים שלא טופלו, ל-badge בתפריט
   useEffect(() => {
     let alive = true;
     supabase.from('leads').select('id', { count: 'exact', head: true }).eq('handled', false)
       .then(({ count, error }) => { if (alive && !error) setNewLeads(count || 0); });
     return () => { alive = false; };
-  }, [activeTab]);
+  }, [section, tab]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate('/login', { replace: true });
   };
 
-  return (
-    <div className="admin-scope" dir="rtl" style={{ minHeight: '100dvh', background: 'var(--bedrock)', fontFamily: 'var(--font)', color: 'var(--text-primary)', position: 'relative', overflowX: 'hidden' }}>
-      <div className="noise-overlay" aria-hidden="true" />
-      {/* ambient aurora */}
-      <div className="aurora-orb" style={{ width: 480, height: 480, top: '-12%', right: '-6%', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.10), transparent 70%)', '--dur': '24s' }} />
-      <div className="aurora-orb" style={{ width: 420, height: 420, top: '34%', left: '-12%', background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.08), transparent 72%)', '--dur': '28s', '--delay': '-9s' }} />
-      <Cursor />
-
-      {/* ── Header ── */}
-      <header style={{
-        position: 'sticky', top: 0, zIndex: 100,
-        background: 'oklch(0.09 0.012 240 / 0.82)',
-        backdropFilter: 'blur(20px) saturate(1.3)',
-        WebkitBackdropFilter: 'blur(20px) saturate(1.3)',
-        borderBottom: '1px solid oklch(0.97 0.005 240 / 0.08)',
-        padding: '0 clamp(16px, 4vw, 28px)',
-        display: 'flex', alignItems: 'center', gap: 14, height: 62,
-      }}>
-        <img src="/logo.png" alt="Shift Up" style={{ height: 36, animation: 'hue-drift 8s ease-in-out infinite' }} />
-        <div style={{ width: 1, height: 24, background: 'oklch(0.97 0.005 240 / 0.1)' }} />
-        <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
-          <span style={{ fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-primary)' }}>ממשק ניהול</span>
-          <span style={{ fontSize: '0.62rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Shift Up CMS</span>
+  if (isAdmin === false) {
+    return (
+      <div className="admin-scope" dir="rtl" style={{ minHeight: '100dvh' }}>
+        <div className="adm-denied">
+          <h1>אין גישה</h1>
+          <p>המשתמש הזה לא מורשה לאזור העבודה.</p>
+          <button style={S.btn('ghost')} onClick={handleSignOut}>יציאה</button>
         </div>
-        <div style={{ flex: 1 }} />
-        <a href="/" target="_blank" rel="noopener noreferrer" style={{ ...S.btn('ghost'), textDecoration: 'none', fontSize: '0.78rem' }}>
-          צפה באתר ↗
-        </a>
-        <button style={S.btn('ghost')} onClick={handleSignOut}>
-          <IconLogout size={14} /> יציאה
-        </button>
-      </header>
+      </div>
+    );
+  }
 
-      {/* ── Layout ── */}
-      <div style={{ maxWidth: 920, margin: '0 auto', padding: 'clamp(20px, 4vw, 32px) clamp(16px, 4vw, 24px)', position: 'relative', zIndex: 1 }}>
+  let body = null;
+  if (section === 'today') body = <TodayView />;
+  if (section === 'clients') body = <ClientsView />;
+  if (section === 'leads') {
+    const t = LEADS_TABS.some(x => x.id === tab) ? tab : 'leads';
+    const C = TAB_COMPONENTS[t];
+    body = <>
+      <SubTabs items={LEADS_TABS} active={t} onPick={(id) => go('leads', id)} badge={{ leads: newLeads }} />
+      <C toast={showToast} />
+    </>;
+  }
+  if (section === 'site') {
+    const group = SITE_GROUPS.find(g => g.tabs.some(x => x.id === tab)) || SITE_GROUPS[0];
+    const t = group.tabs.some(x => x.id === tab) ? tab : group.tabs[0].id;
+    const C = TAB_COMPONENTS[t];
+    body = <>
+      <SubTabs items={SITE_GROUPS} active={group.id} onPick={(gid) => go('site', SITE_GROUPS.find(g => g.id === gid).tabs[0].id)} />
+      {group.tabs.length > 1 && <SubTabs className="adm-subtabs-2" items={group.tabs} active={t} onPick={(id) => go('site', id)} />}
+      <C toast={showToast} />
+    </>;
+  }
 
-        {/* Tab nav */}
-        <div className="admin-tabs" style={{ marginBottom: 26, background: 'oklch(0.11 0.015 240)', borderRadius: 3, padding: 6, border: '1px solid oklch(0.97 0.005 240 / 0.06)' }}>
-          {TABS.map(t => (
-            <button
-              key={t.id}
-              className="admin-tab"
-              data-active={activeTab === t.id}
-              onClick={() => setActiveTab(t.id)}
-              title={t.desc}
-            >
-              {t.label}
-              {t.id === 'leads' && newLeads > 0 && <span className="tab-count">{newLeads}</span>}
+  const title = SECTIONS.find(s => s.id === section).label;
+
+  return (
+    <div className="admin-scope adm-app" dir="rtl">
+      <aside className="adm-side" aria-label="תפריט">
+        <div className="adm-brand"><picture><source srcSet="/logo.png" media="(prefers-color-scheme: dark)" /><img src="/logo-onlight.png" alt="Shift Up" /></picture><span>המרכז</span></div>
+        <nav style={{ display: 'grid', gap: 2 }}>
+          {SECTIONS.map(s => (
+            <button key={s.id} className="adm-nav-item" aria-current={section === s.id ? 'page' : undefined} onClick={() => go(s.id)}>
+              {s.label}
+              {s.id === 'leads' && newLeads > 0 && <span className="adm-count">{newLeads}</span>}
             </button>
           ))}
+        </nav>
+        <div className="adm-side-foot">
+          <a className="adm-link-quiet" href="/" target="_blank" rel="noopener noreferrer">צפה באתר ↗</a>
+          <button className="adm-link-quiet" onClick={handleSignOut}>יציאה</button>
         </div>
+      </aside>
 
-        {/* Tab content */}
-        {activeTab === 'leads'        && <LeadsTab        toast={showToast} />}
-        {activeTab === 'auditstats'   && <AuditStatsTab   toast={showToast} />}
-        {activeTab === 'contact'      && <ContactTab      toast={showToast} />}
-        {activeTab === 'trust'        && <TrustTab        toast={showToast} />}
-        {activeTab === 'pain'         && <PainTab         toast={showToast} />}
-        {activeTab === 'process'      && <ProcessTab      toast={showToast} />}
-        {activeTab === 'outcomes'     && <OutcomesTab     toast={showToast} />}
-        {activeTab === 'whyme'        && <WhyMeTab        toast={showToast} />}
-        {activeTab === 'proofcases'   && <ProofCasesTab   toast={showToast} />}
-        {activeTab === 'proofgrid'    && <ProofGridTab    toast={showToast} />}
-        {activeTab === 'faqs'         && <FaqsTab         toast={showToast} />}
-        {activeTab === 'testimonials' && <TestimonialsTab toast={showToast} />}
-        {activeTab === 'stats'        && <StatsTab        toast={showToast} />}
-        {activeTab === 'prompts'      && <PromptsTab      toast={showToast} />}
-        {activeTab === 'ig'           && <IgLinksTab      toast={showToast} />}
+      <div className="adm-main">
+        <header className="adm-top">
+          <div className="adm-top-row">
+            <picture><source srcSet="/logo.png" media="(prefers-color-scheme: dark)" /><img className="adm-top-mobile-logo" src="/logo-onlight.png" alt="Shift Up" /></picture>
+            <h1>{title}</h1>
+            <div className="adm-top-actions adm-top-mobile-only">
+              <button className="adm-link-quiet" onClick={handleSignOut}>יציאה</button>
+            </div>
+          </div>
+          <div className="adm-top-row" style={{ flexWrap: 'wrap', gap: '6px 16px' }}>
+            <HebrewDates />
+            <SyncBar />
+          </div>
+        </header>
+
+        <main className="adm-content">{isAdmin === null ? <div className="hub-skel" /> : body}</main>
       </div>
 
-      {/* Toast */}
+      <nav className="adm-bottom" aria-label="תפריט">
+        {SECTIONS.map(s => (
+          <button key={s.id} aria-current={section === s.id ? 'page' : undefined} onClick={() => go(s.id)}>
+            {s.label}
+            {s.id === 'leads' && newLeads > 0 && <span className="adm-count">{newLeads}</span>}
+          </button>
+        ))}
+      </nav>
+
       {toast && <Toast key={toast.key} msg={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   );

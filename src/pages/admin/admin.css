@@ -1,0 +1,255 @@
+/* ─── /admin: unified work area (light + automatic dark) ───────────────────
+   Every color in AdminPage.jsx reads these tokens, so the existing content
+   tabs follow the theme without changing their behavior. */
+
+.admin-scope {
+  --ad-bg:          oklch(0.968 0.011 85);
+  --ad-surface:     oklch(0.992 0.005 85);
+  --ad-surface-2:   oklch(0.945 0.012 85);
+  --ad-sunken:      oklch(0.955 0.011 85);
+  --ad-input:       oklch(0.997 0.003 85);
+  --ad-line:        oklch(0.28 0.02 60 / 0.11);
+  --ad-line-strong: oklch(0.28 0.02 60 / 0.2);
+  --ad-on-brand:    oklch(0.99 0.005 156);
+  --ad-brand-soft:  oklch(0.5 0.12 156 / 0.1);
+  --ad-brand-line:  oklch(0.5 0.12 156 / 0.35);
+  --ad-danger:      oklch(0.52 0.19 27);
+  --ad-danger-soft: oklch(0.52 0.19 27 / 0.08);
+  --ad-danger-line: oklch(0.52 0.19 27 / 0.3);
+  --ad-danger-bg:   oklch(0.97 0.02 27);
+  --ad-ok-bg:       oklch(0.96 0.03 156);
+  --ad-warn:        oklch(0.54 0.12 70);
+  --ad-accent:      oklch(0.48 0.15 285);
+  --ad-shadow:      oklch(0.3 0.03 60 / 0.12);
+
+  /* site tokens re-pointed inside the admin only */
+  --bedrock:        var(--ad-bg);
+  --surface-0:      var(--ad-surface);
+  --surface-1:      var(--ad-surface-2);
+  --surface-2:      var(--ad-line-strong);
+  --brand-prime:    oklch(0.5 0.12 156);
+  --text-primary:   oklch(0.22 0.02 60);
+  --text-secondary: oklch(0.4 0.02 60);
+  --text-muted:     oklch(0.5 0.015 60);
+  --font:           'Rubik', sans-serif;
+
+  color-scheme: light;
+  background: var(--ad-bg);
+  color: var(--text-primary);
+  font-family: var(--font);
+}
+
+@media (prefers-color-scheme: dark) {
+  .admin-scope {
+    --ad-bg:          oklch(0.185 0.01 70);
+    --ad-surface:     oklch(0.215 0.01 70);
+    --ad-surface-2:   oklch(0.25 0.012 70);
+    --ad-sunken:      oklch(0.17 0.01 70);
+    --ad-input:       oklch(0.165 0.01 70);
+    --ad-line:        oklch(0.95 0.01 85 / 0.09);
+    --ad-line-strong: oklch(0.95 0.01 85 / 0.17);
+    --ad-on-brand:    oklch(0.17 0.02 156);
+    --ad-brand-soft:  oklch(0.76 0.14 156 / 0.13);
+    --ad-brand-line:  oklch(0.76 0.14 156 / 0.4);
+    --ad-danger:      oklch(0.72 0.16 27);
+    --ad-danger-soft: oklch(0.72 0.16 27 / 0.1);
+    --ad-danger-line: oklch(0.72 0.16 27 / 0.35);
+    --ad-danger-bg:   oklch(0.25 0.04 27);
+    --ad-ok-bg:       oklch(0.26 0.04 156);
+    --ad-warn:        oklch(0.8 0.12 80);
+    --ad-accent:      oklch(0.75 0.12 285);
+    --ad-shadow:      oklch(0 0 0 / 0.45);
+    --brand-prime:    oklch(0.76 0.14 156);
+    --text-primary:   oklch(0.94 0.01 85);
+    --text-secondary: oklch(0.79 0.01 85);
+    --text-muted:     oklch(0.66 0.01 85);
+    color-scheme: dark;
+  }
+}
+
+/* the marketing site hides the native cursor; the work area needs it back */
+.admin-scope *, .admin-scope *::before, .admin-scope *::after { cursor: auto !important; }
+.admin-scope :is(a, button, select, summary, label[for], [role="button"]),
+.admin-scope :is(a, button, select, summary) * { cursor: pointer !important; }
+.admin-scope :is(input:not([type="checkbox"]):not([type="radio"]), textarea) { cursor: text !important; }
+.admin-scope button:disabled { cursor: not-allowed !important; }
+
+.admin-scope input::placeholder,
+.admin-scope textarea::placeholder { color: var(--text-muted); opacity: 0.8; }
+.admin-scope input:focus,
+.admin-scope textarea:focus,
+.admin-scope select:focus {
+  border-color: var(--brand-prime) !important;
+  box-shadow: 0 0 0 3px var(--ad-brand-soft) !important;
+}
+.admin-scope .admin-card:hover {
+  border-color: var(--ad-brand-line) !important;
+  box-shadow: 0 6px 22px var(--ad-shadow);
+}
+
+/* sub-navigation (existing tab rows) */
+.admin-scope .admin-tabs {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  border-bottom: 1px solid var(--ad-line) !important;
+  border-radius: 0 !important;
+  gap: 4px;
+  scrollbar-color: var(--ad-line-strong) transparent;
+  overflow-y: hidden;
+}
+.admin-scope .admin-tabs::-webkit-scrollbar-thumb { background: var(--ad-line-strong); }
+.admin-scope .admin-tab {
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: 0.92rem;
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 10px 12px;
+  margin-bottom: -1px;
+  color: var(--text-secondary);
+}
+.admin-scope .admin-tab:hover { background: transparent; color: var(--text-primary); }
+.admin-scope .admin-tab[data-active="true"] {
+  background: transparent;
+  color: var(--text-primary);
+  font-weight: 700;
+  border-bottom-color: var(--brand-prime);
+}
+.admin-scope .admin-tab .tab-count,
+.adm-count {
+  background: var(--brand-prime);
+  color: var(--ad-on-brand);
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 99px;
+  padding: 0 7px;
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+}
+.adm-subtabs-2 { margin-top: 2px; }
+.adm-subtabs-2 .admin-tab { font-size: 0.85rem; padding: 8px 10px; }
+
+/* ─── shell ─── */
+.adm-app { min-height: 100dvh; display: flex; }
+.adm-side {
+  display: none;
+  width: 232px;
+  flex-shrink: 0;
+  border-inline-end: 1px solid var(--ad-line);
+  padding: 22px 14px;
+  position: sticky; top: 0; height: 100dvh;
+  flex-direction: column; gap: 4px;
+}
+.adm-brand { display: flex; align-items: center; gap: 10px; padding: 0 10px 22px; }
+.adm-brand img { height: 44px; width: auto; display: block; margin-inline-start: -6px; }
+.adm-brand { flex-direction: column; align-items: flex-start; gap: 2px; }
+.adm-brand span { padding-inline-start: 4px; color: var(--text-muted); font-size: 0.82rem; font-weight: 500; }
+.adm-nav-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  width: 100%; text-align: start;
+  padding: 10px 12px; border: none; border-radius: 6px;
+  background: transparent; color: var(--text-secondary);
+  font: inherit; font-size: 0.98rem; font-weight: 500;
+}
+.adm-nav-item:hover { color: var(--text-primary); background: var(--ad-surface-2); }
+.adm-nav-item[aria-current="page"] { color: var(--text-primary); font-weight: 700; background: var(--ad-surface-2); box-shadow: inset -3px 0 0 var(--brand-prime); }
+.adm-side-foot { margin-top: auto; display: grid; gap: 2px; }
+.adm-link-quiet {
+  display: block; padding: 8px 12px; border: none; background: none; text-align: start;
+  color: var(--text-muted); font: inherit; font-size: 0.88rem; text-decoration: none; border-radius: 6px;
+}
+.adm-link-quiet:hover { color: var(--text-primary); }
+
+.adm-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.adm-top {
+  padding: 18px 16px 14px;
+  display: grid; gap: 10px;
+  border-bottom: 1px solid var(--ad-line);
+}
+.adm-top-row { display: flex; align-items: center; gap: 12px; }
+.adm-top h1 { font-size: 1.45rem; font-weight: 700; line-height: 1.2; margin: 0; }
+.adm-dates { color: var(--text-muted); font-size: 0.88rem; }
+.adm-top-mobile-logo { height: 32px; width: auto; display: block; margin-inline-start: -4px; }
+.adm-top-actions { margin-inline-start: auto; display: flex; gap: 4px; }
+.adm-content { padding: 20px 16px 110px; width: 100%; max-width: 980px; margin: 0 auto; box-sizing: border-box; }
+
+.adm-sync { display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-secondary); }
+.adm-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); flex-shrink: 0; }
+.adm-dot[data-state="ok"] { background: var(--brand-prime); }
+.adm-dot[data-state="stale"] { background: var(--ad-danger); }
+.adm-sync[data-state="stale"] { color: var(--ad-danger); }
+
+.adm-bottom {
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 50;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  background: var(--ad-surface);
+  border-top: 1px solid var(--ad-line);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.adm-bottom button {
+  position: relative;
+  min-height: 58px; border: none; background: none;
+  font: inherit; font-size: 0.82rem; font-weight: 500; color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center; gap: 5px; padding: 0 4px;
+}
+.adm-bottom button[aria-current="page"] { color: var(--text-primary); font-weight: 700; }
+.adm-bottom button[aria-current="page"]::before {
+  content: ''; position: absolute; top: 0; inset-inline: 22%; height: 3px; background: var(--brand-prime); border-radius: 0 0 3px 3px;
+}
+
+@media (min-width: 900px) {
+  .adm-side { display: flex; }
+  .adm-bottom, .adm-top-mobile-logo, .adm-top-mobile-only { display: none !important; }
+  .adm-top { padding: 26px 36px 18px; }
+  .adm-top h1 { font-size: 1.75rem; }
+  .adm-content { padding: 28px 36px 60px; margin: 0; }
+}
+
+/* ─── today / clients ─── */
+.hub-one {
+  padding: 18px 0 22px;
+  border-bottom: 1px solid var(--ad-line);
+  margin-bottom: 8px;
+}
+.hub-one-label { font-size: 0.8rem; font-weight: 700; color: var(--brand-prime); margin-bottom: 6px; }
+.hub-one-text { font-size: 1.25rem; font-weight: 600; line-height: 1.45; margin: 0; }
+.hub-one-text[data-empty="true"] { color: var(--text-muted); font-weight: 400; font-size: 1.05rem; }
+
+.hub-sec { padding: 18px 0; border-bottom: 1px solid var(--ad-line); }
+.hub-sec:last-child { border-bottom: none; }
+.hub-sec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.hub-sec-head h2 { font-size: 1.02rem; font-weight: 700; margin: 0; }
+.hub-sec-head .n { color: var(--text-muted); font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+.hub-empty { color: var(--text-muted); font-size: 0.93rem; margin: 0; }
+.hub-err { color: var(--ad-danger); font-size: 0.9rem; margin: 0; }
+.hub-rows { list-style: none; margin: 0; padding: 0; }
+.hub-row {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 9px 0; border-top: 1px solid var(--ad-line); font-size: 0.96rem;
+}
+.hub-row:first-child { border-top: none; }
+.hub-row .main { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hub-row .meta { color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.hub-row .late { color: var(--ad-danger); }
+.hub-skel { height: 14px; width: 55%; border-radius: 4px; background: var(--ad-surface-2); animation: hub-pulse 1.2s ease-in-out infinite; }
+@keyframes hub-pulse { 50% { opacity: 0.45; } }
+@media (prefers-reduced-motion: reduce) { .hub-skel { animation: none; } }
+
+.adm-denied { max-width: 420px; margin: 18vh auto 0; padding: 0 16px; text-align: center; }
+.adm-denied h1 { font-size: 1.4rem; margin-bottom: 10px; }
+.adm-denied p { color: var(--text-secondary); margin-bottom: 18px; }
+
+/* site-wide accessibility button: keep it above the bottom menu on phones */
+@media (max-width: 899px) {
+  body:has(.adm-app) .a11y-trigger { bottom: calc(70px + env(safe-area-inset-bottom)) !important; }
+  .admin-scope .admin-tabs { scrollbar-width: none; }
+  .admin-scope .admin-tabs::-webkit-scrollbar { display: none; }
+}
+
+/* the marketing site's background grid and noise don't belong in the work area */
+body:has(.adm-app) .grid-bg-fixed,
+body:has(.adm-app) .noise-overlay { display: none !important; }
+body:has(.admin-scope) { background: oklch(0.968 0.011 85); }
+@media (prefers-color-scheme: dark) { body:has(.admin-scope) { background: oklch(0.185 0.01 70); } }
