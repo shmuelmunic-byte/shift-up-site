@@ -241,6 +241,23 @@ function Row({ main, sub, meta, metaTone, action, details, kb, lead, pending, be
   );
 }
 
+const hasTime = (e) => /\d{1,2}:\d{2}/.test(e.when_text || '');
+
+/* call-prep PDF: private storage, opened through a 5-minute signed link.
+   The tab opens on the tap itself (popup blockers), then gets the link. */
+function PrepButton({ path }) {
+  const [busy, setBusy] = useState(false);
+  const open = async () => {
+    const w = window.open('', '_blank');
+    setBusy(true);
+    const { data, error } = await supabase.storage.from('hub-prep').createSignedUrl(path, 300);
+    setBusy(false);
+    if (error || !data?.signedUrl) { w?.close(); alert('לא הצלחתי לפתוח את ההכנה. נסה שוב בעוד רגע'); return; }
+    if (w) w.location.href = data.signedUrl; else window.location.href = data.signedUrl;
+  };
+  return <button type="button" className="hub-act" onClick={open} disabled={busy}>{busy ? 'פותח…' : 'הכנה'}</button>;
+}
+
 const Clock = ({ text = 'ממתין לסנכרון' }) => <span className="hub-pending" title="נשמר. ייכתב לקבצים במרכז כשהמחשב יסנכרן">⏳ {text}</span>;
 
 /* a task line with "done" (circle before the text) and "postpone" */
@@ -346,7 +363,8 @@ function useComputed() {
     const open = d.hub_tasks.filter((t) => isOpen(t) && !quiet(t));
     const mine = open.filter((t) => !isClientSide(t));
 
-    const calls = d.hub_events.filter((e) => isoDay(new Date(e.starts_at)) === today).sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+    const calls = d.hub_events.filter((e) => e.starts_at && isoDay(new Date(e.starts_at)) === today).sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+    const timed = calls.filter(hasTime); // "about to start" only for an item with a real hour, not the 09:00 placeholder
     const replies = d.hub_inbox.filter((x) => x.kind === 'reply').sort((a, b) => b.priority - a.priority || String(a.last_message_at).localeCompare(String(b.last_message_at)));
     const reach = d.hub_inbox.filter((x) => x.kind === 'reach_out').sort((a, b) => b.priority - a.priority).slice(0, 5);
     const due = mine.filter((t) => t.due && t.due <= today).sort((a, b) => a.due.localeCompare(b.due));
@@ -357,8 +375,8 @@ function useComputed() {
 
     /* "the one thing": a call about to start beats everything, then the oldest
        overdue task, then a client/lead waiting for an answer, then today's calls */
-    const soonCall = calls.find((e) => { const t = new Date(e.starts_at).getTime(); return t > now - 30 * 60000 && t < now + 90 * 60000; });
-    const nextCall = calls.find((e) => new Date(e.starts_at).getTime() > now);
+    const soonCall = timed.find((e) => { const t = new Date(e.starts_at).getTime(); return t > now - 30 * 60000 && t < now + 90 * 60000; });
+    const nextCall = timed.find((e) => new Date(e.starts_at).getTime() > now);
     const hotReply = replies.find((r) => r.priority >= 3);
     let one = null;
     if (soonCall) one = { text: soonCall.title, why: `ביומן ב-${fmtTime(soonCall.starts_at)}`, phone: clients.get(soonCall.client_id)?.phone };
@@ -419,13 +437,13 @@ export function TodayView() {
       <Section id="s-calls" title="ביומן היום" count={c?.calls.length} empty="אין שיחות ביומן היום" {...L}>
         {c?.calls.map((e) => {
           const approx = /~/.test(e.when_text || '');
-          const hasTime = /\d{1,2}:\d{2}/.test(e.when_text || '');
-          const past = new Date(e.starts_at).getTime() < c.now - 45 * 60000;
+          const withTime = hasTime(e);
+          const past = withTime && new Date(e.starts_at).getTime() < c.now - 45 * 60000;
           return (
             <Row key={e.id}
-              main={<><span className="hub-time" data-past={past || undefined}>{hasTime ? `${approx ? '~' : ''}${fmtTime(e.starts_at)}` : 'היום'}</span>{e.title}</>}
+              main={<><span className="hub-time" data-past={past || undefined}>{withTime ? `${approx ? '~' : ''}${fmtTime(e.starts_at)}` : 'היום'}</span>{e.title}</>}
               action={<>
-                {e.prep_pdf && <a className="hub-act" href={e.prep_pdf} target="_blank" rel="noopener noreferrer">הכנה</a>}
+                {e.prep_pdf && <PrepButton path={e.prep_pdf} />}
                 <WaButton phone={c.clients.get(e.client_id)?.phone} />
               </>}
               details={[['מתי', e.when_text], ['לקוח', c.clientName(e.client_id)]]} />
@@ -608,7 +626,10 @@ function ClientDrawer({ cl, c, onClose }) {
   const mine = open.filter((t) => !isClientSide(t));
   const theirs = open.filter(isClientSide);
   const done = all.filter((t) => t.status === 'done').sort((a, b) => String(b.done_at).localeCompare(String(a.done_at))).slice(0, 6);
-  const meetings = c.events.filter((e) => e.client_id === cl.id && new Date(e.starts_at).getTime() >= c.now).sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+  const meetings = c.events.filter((e) => e.client_id === cl.id && e.starts_at
+    && (hasTime(e) ? new Date(e.starts_at).getTime() >= c.now - 60 * 60000 : isoDay(new Date(e.starts_at)) >= c.today))
+    .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+  const undated = c.events.filter((e) => e.client_id === cl.id && !e.starts_at);
 
   const taskRow = (t) => {
     const late = t.due ? daysBetween(t.due, c.today) : null;
@@ -649,7 +670,15 @@ function ClientDrawer({ cl, c, onClose }) {
           {meetings.length > 0 && (
             <div className="hub-drawer-block">
               <h3>מועדים</h3>
-              <ul className="hub-rows">{meetings.map((e) => <Row key={e.id} main={e.title} meta={`${fmtDay(e.starts_at)} ${/\d:\d\d/.test(e.when_text || '') ? fmtTime(e.starts_at) : ''}`.trim()} />)}</ul>
+              <ul className="hub-rows">{meetings.map((e) => <Row key={e.id} main={e.title} meta={`${fmtDay(e.starts_at)} ${hasTime(e) ? fmtTime(e.starts_at) : ''}`.trim()}
+                action={e.prep_pdf && <PrepButton path={e.prep_pdf} />} details={[['מתי', e.when_text]]} />)}</ul>
+            </div>
+          )}
+
+          {undated.length > 0 && (
+            <div className="hub-drawer-block">
+              <h3>מועדים בלי תאריך <span className="n">{undated.length}</span></h3>
+              <ul className="hub-rows">{undated.map((e) => <Row key={e.id} main={e.title} sub={e.when_text} details={[['מתי', e.when_text]]} />)}</ul>
             </div>
           )}
 
