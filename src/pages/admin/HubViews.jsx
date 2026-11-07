@@ -372,6 +372,11 @@ function useComputed() {
     const collect = d.hub_collect.filter((x) => x.status === 'open').sort((a, b) => String(a.since).localeCompare(String(b.since)));
     const stuck = mine.filter((t) => t.since && !due.includes(t)).sort((a, b) => a.since.localeCompare(b.since))[0] || null;
     const goal = d.hub_goals.find((g) => g.key === 'active_clients') || null;
+    const week = ['week_calls', 'week_proposals', 'week_closes'].map((k) => d.hub_goals.find((g) => g.key === k)).filter(Boolean);
+    const replyMin = d.hub_goals.find((g) => g.key === 'week_reply_min') || null;
+    /* the next 7 days after today, the old dashboard's "upcoming meetings" */
+    const upcoming = d.hub_events.filter((e) => { if (!e.starts_at) return false; const day = isoDay(new Date(e.starts_at)); return day > today && day <= addDays(today, 7); })
+      .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
 
     /* "the one thing": a call about to start beats everything, then the oldest
        overdue task, then a client/lead waiting for an answer, then today's calls */
@@ -393,7 +398,7 @@ function useComputed() {
     const added = acts.filter((a) => a.status === 'pending' && a.kind === 'task_add');
     const failed = acts.filter((a) => a.status === 'failed' && now - new Date(a.created_at).getTime() < 2 * 86400000);
 
-    return { now, today, clients, clientName, calls, replies, reach, due, waiting, collect, stuck, goal, one, tasks: d.hub_tasks, events: d.hub_events, pending, added, failed };
+    return { now, today, clients, clientName, calls, replies, reach, due, waiting, collect, stuck, goal, week, replyMin, upcoming, one, tasks: d.hub_tasks, events: d.hub_events, pending, added, failed };
   }, [hub?.data, today, now]);
 }
 
@@ -433,6 +438,7 @@ export function TodayView() {
       {c?.failed.length ? <FailedNotice failed={c.failed} /> : null}
 
       {c?.goal?.target ? <GoalStrip goal={c.goal} /> : null}
+      {c?.week.length ? <WeekNumbers week={c.week} replyMin={c.replyMin} /> : null}
 
       <Section id="s-calls" title="ביומן היום" count={c?.calls.length} empty="אין שיחות ביומן היום" {...L}>
         {c?.calls.map((e) => {
@@ -514,6 +520,18 @@ export function TodayView() {
         })}
       </Section>
 
+      <Section id="s-week" title="השבוע ביומן" count={c?.upcoming.length} empty="אין מועדים בשבוע הקרוב" {...L}>
+        {c?.upcoming.map((e) => (
+          <Row key={e.id}
+            main={<><span className="hub-time hub-time-day">{fmtDay(e.starts_at)}{hasTime(e) ? ` ${fmtTime(e.starts_at)}` : ''}</span>{e.title}</>}
+            action={<>
+              {e.prep_pdf && <PrepButton path={e.prep_pdf} />}
+              <WaButton phone={c.clients.get(e.client_id)?.phone} />
+            </>}
+            details={[['מתי', e.when_text], ['לקוח', c.clientName(e.client_id)]]} />
+        ))}
+      </Section>
+
       {c?.stuck && (
         <Section id="s-five" title="5 דקות" {...L}>
           <TaskRow t={c.stuck} c={c}
@@ -563,6 +581,31 @@ function GoalStrip({ goal }) {
   );
 }
 
+/* the numbers of the week, moved over from WhatsApp live (stage 5).
+   This week runs Sunday to today, so last week is shown as a plain number, not an arrow */
+function WeekNumbers({ week, replyMin }) {
+  return (
+    <section className="hub-week" aria-labelledby="s-weeknum">
+      <h2 id="s-weeknum" className="hub-week-title">המספרים של השבוע</h2>
+      <dl className="hub-week-grid">
+        {week.map((g) => (
+          <div key={g.key} title={g.detail || undefined}>
+            <dt>{g.label}</dt>
+            <dd><b>{Number(g.current) || 0}</b>{g.previous != null && <span>שבוע שעבר {Number(g.previous)}</span>}</dd>
+          </div>
+        ))}
+      </dl>
+      {week.some((g) => g.detail) && (
+        <details className="hub-week-who">
+          <summary>מי בפנים</summary>
+          {week.filter((g) => g.detail).map((g) => <p key={g.key}><b>{g.label}:</b> {g.detail}</p>)}
+        </details>
+      )}
+      {replyMin && <p className="hub-week-note">זמן תגובה חציוני לפניות: {replyMin.current < 60 ? `${replyMin.current} דק'` : `${Math.round(replyMin.current / 6) / 10} שעות`}{replyMin.detail ? ` (${replyMin.detail})` : ''}</p>}
+    </section>
+  );
+}
+
 /* ─── Active client files ─── */
 export function ClientsView() {
   const hub = useHub();
@@ -570,7 +613,17 @@ export function ClientsView() {
   const [openId, setOpenId] = useState(null);
   useRowKeys();
   const active = useMemo(() => (hub.data?.hub_clients || []).filter((x) => x.stage === 'שוטף').sort((a, b) => a.name.localeCompare(b.name, 'he')), [hub.data]);
-  const current = active.find((x) => x.id === openId) || null;
+  /* the lead pipeline: everything that isn't an active client, grouped by stage, closed by default */
+  const pipeline = useMemo(() => {
+    const rest = (hub.data?.hub_clients || []).filter((x) => x.stage !== 'שוטף' && !/נסגר|סגור/.test(x.stage || ''));
+    const order = ['חי', 'כדור אצלם', 'מוקפא'];
+    const groups = order.map((st) => ({ stage: st, list: rest.filter((x) => (x.stage || '').trim() === st) }));
+    const other = rest.filter((x) => !order.includes((x.stage || '').trim()));
+    if (other.length) groups.push({ stage: 'בלי שלב', list: other });
+    for (const g of groups) g.list.sort((a, b) => String(b.file_updated).localeCompare(String(a.file_updated)));
+    return groups.filter((g) => g.list.length);
+  }, [hub.data]);
+  const current = (hub.data?.hub_clients || []).find((x) => x.id === openId) || null;
 
   return (
     <>
@@ -578,6 +631,35 @@ export function ClientsView() {
         empty="עוד אין לקוחות במסך. הם יגיעו מהתיקים במרכז ברגע שסוכן הסנכרון יעלה.">
         {active.map((cl) => <ClientCard key={cl.id} cl={cl} c={c} onOpen={() => setOpenId(cl.id)} />)}
       </Section>
+      {!hub.loading && !hub.error && pipeline.length > 0 && (
+        <section className="hub-sec" aria-labelledby="s-pipe">
+          <div className="hub-sec-head">
+            <h2 id="s-pipe">צנרת לידים</h2>
+            <span className="n">{pipeline.reduce((s, g) => s + g.list.length, 0)}</span>
+          </div>
+          {pipeline.map((g) => (
+            <details key={g.stage} className="hub-pipe">
+              <summary><span>{g.stage}</span><span className="n">{g.list.length}</span></summary>
+              <ul className="hub-rows">
+                {g.list.map((cl) => {
+                  const age = daysBetween(cl.file_updated, c.today);
+                  return (
+                    <li key={cl.id} className="hub-row">
+                      <div className="hub-row-line">
+                        <button type="button" className="hub-row-btn" onClick={() => setOpenId(cl.id)} aria-haspopup="dialog">
+                          <span className="main"><b>{c.clientName(cl.id)}</b>{cl.next_action && <span className="sub"> · {cl.next_action}</span>}</span>
+                        </button>
+                        {age != null && <span className={`meta${age > 14 ? ' late' : ''}`}>{age === 0 ? 'היום' : `לפני ${daysWord(age)}`}</span>}
+                        <WaButton phone={cl.phone} />
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </details>
+          ))}
+        </section>
+      )}
       {current && <ClientDrawer cl={current} c={c} onClose={() => setOpenId(null)} />}
     </>
   );

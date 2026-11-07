@@ -263,6 +263,30 @@ button.hub-row-btn:focus-visible { outline: 2px solid var(--brand-prime); outlin
 .hub-goal { display: flex; align-items: center; gap: 12px; padding: 14px 0 6px; font-size: 0.88rem; color: var(--text-secondary); }
 .hub-goal-label { white-space: nowrap; }
 .hub-goal-n { white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* stage 5: numbers of the week */
+.hub-week { padding: 12px 0 14px; border-bottom: 1px solid var(--ad-line); }
+.hub-week-title { font-size: 0.86rem; font-weight: 500; color: var(--text-secondary); margin: 0 0 8px; }
+.hub-week-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; }
+.hub-week-grid dt { font-size: 0.82rem; color: var(--text-muted); }
+.hub-week-grid dd { margin: 2px 0 0; display: flex; flex-direction: column; }
+.hub-week-grid b { font-size: 1.6rem; font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.hub-week-grid span { font-size: 0.8rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.hub-week-who { margin-top: 8px; font-size: 0.86rem; color: var(--text-secondary); }
+.hub-week-who summary { cursor: pointer; color: var(--text-muted); }
+.hub-week-who p { margin: 4px 0 0; }
+.hub-week-note { margin: 8px 0 0; font-size: 0.84rem; color: var(--text-muted); }
+.hub-time-day { min-width: 6.5em; }
+
+/* stage 5: lead pipeline, grouped by stage */
+.hub-pipe { border-top: 1px solid var(--ad-line); }
+.hub-pipe:first-of-type { border-top: none; }
+.hub-pipe summary { display: flex; align-items: baseline; gap: 10px; padding: 10px 0; cursor: pointer; font-weight: 500; list-style: none; }
+.hub-pipe summary::-webkit-details-marker { display: none; }
+.hub-pipe summary::before { content: '\2039'; display: inline-block; color: var(--text-muted); transition: transform .15s; }
+.hub-pipe[open] summary::before { transform: rotate(-90deg); }
+.hub-pipe summary .n { color: var(--text-muted); font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+.hub-pipe .hub-rows { padding-bottom: 8px; }
 .hub-bar { flex: 1; max-width: 220px; height: 6px; border-radius: 99px; background: var(--ad-surface-2); overflow: hidden; display: block; }
 .hub-bar > span { display: block; height: 100%; background: var(--brand-prime); border-radius: inherit; }
 
