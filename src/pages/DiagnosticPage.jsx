@@ -688,7 +688,7 @@ export default function DiagnosticPage() {
                         onChange={(e) => setConsent(e.target.checked)}
                         style={{ width: 18, height: 18, marginTop: 2, flexShrink: 0, accentColor: 'var(--dg-green)', cursor: 'pointer' }} />
                       <span style={{ fontSize: '.85rem', lineHeight: 1.5 }}>
-                        קראתי ואני מסכים/ה ל<a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--dg-green-ink)', fontWeight: 600 }}>מדיניות הפרטיות</a> ולכך שתיצרו איתי קשר. *
+                        קראתי ואני מסכים/ה ל<a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--dg-green-ink)', fontWeight: 600 }}>מדיניות הפרטיות</a>, כולל אחסון הפרטים בשרת בחו"ל, ולכך שתיצרו איתי קשר. *
                       </span>
                     </label>
                   </div>

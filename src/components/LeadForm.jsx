@@ -207,7 +207,7 @@ export default function LeadForm() {
                       onChange={(e) => setConsent(e.target.checked)}
                       aria-invalid={consentError} aria-describedby={consentError ? 'lf-consent-error' : undefined}
                       style={{ width: 18, height: 18, marginTop: 2, flexShrink: 0, accentColor: '#1f9d57', cursor: 'pointer' }} />
-                    <span>קראתי ואני מסכים/ה ל<a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#117a41', fontWeight: 700 }}>מדיניות הפרטיות</a> ולכך שתיצרו איתי קשר בעקבות פנייתי. *</span>
+                    <span>קראתי ואני מסכים/ה ל<a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#117a41', fontWeight: 700 }}>מדיניות הפרטיות</a>, כולל אחסון הפרטים בשרת בחו"ל, ולכך שתיצרו איתי קשר בעקבות פנייתי. *</span>
                   </label>
                   {consentError && <p id="lf-consent-error" style={errorTextStyle}>יש לאשר את מדיניות הפרטיות כדי להמשיך.</p>}
                 </div>
