@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { TodayView, ClientsView, SyncBar, HebrewDates } from './admin/HubViews';
+import { TodayView, ClientsView, SyncBar, HebrewDates, HubProvider } from './admin/HubViews';
 import './admin/admin.css';
 import { CATS, SEG_LABEL, Q } from '../lib/auditQuestions';
 
@@ -1360,6 +1360,7 @@ export default function AdminPage() {
   const title = SECTIONS.find(s => s.id === section).label;
 
   return (
+    <HubProvider>
     <div className="admin-scope adm-app" dir="rtl">
       <aside className="adm-side" aria-label="תפריט">
         <div className="adm-brand"><picture><source srcSet="/logo.png" media="(prefers-color-scheme: dark)" /><img src="/logo-onlight.png" alt="Shift Up" /></picture><span>המרכז</span></div>
@@ -1406,5 +1407,6 @@ export default function AdminPage() {
 
       {toast && <Toast key={toast.key} msg={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
     </div>
+    </HubProvider>
   );
 }
