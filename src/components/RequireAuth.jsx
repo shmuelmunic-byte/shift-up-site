@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import MfaGate from '../pages/admin/MfaGate';
 
 export default function RequireAuth({ children }) {
   const [checking, setChecking] = useState(true);
@@ -46,5 +47,5 @@ export default function RequireAuth({ children }) {
     );
   }
 
-  return children;
+  return <MfaGate>{children}</MfaGate>;
 }
