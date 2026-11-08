@@ -28,6 +28,7 @@ export default function LoginPage() {
 
   return (
     <div
+      className="private-page"
       dir="ltr"
       style={{
         minHeight: '100vh',

@@ -1339,3 +1339,9 @@ html.a11y-big-cursor .cursor-ring { display: none !important; }
 /* Section label: keep as a small green tick-label, drop the long rule line */
 .section-label { color: var(--brand-prime); text-transform: none; letter-spacing: 0.06em; }
 .section-label::before { width: 14px !important; }
+
+/* the work area and its login are for the owner only: no accessibility button and no cookie banner
+   (on a phone the floating button also sat on the "done" circles) */
+body:has(.adm-app) :is(.a11y-trigger, .a11y-panel, .a11y-overlay, .cookie-banner),
+body:has(.private-page) :is(.a11y-trigger, .a11y-panel, .a11y-overlay, .cookie-banner) { display: none !important; }
+
