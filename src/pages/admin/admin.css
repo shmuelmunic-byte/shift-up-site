@@ -463,3 +463,15 @@ button.hub-check:hover::after { opacity: 0.5; }
 /* "the one thing": only the first button is the main one */
 .hub-one-why .hub-act ~ .hub-act { background: none; color: var(--text-primary); border-color: var(--ad-line-strong); }
 .hub-one-why .hub-act ~ .hub-act:hover { color: var(--brand-prime); border-color: var(--brand-prime); opacity: 1; }
+
+/* "not relevant" reason + "5 minutes" step → task */
+.hub-five-form, .hub-drop { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.hub-five-form { padding-top: 8px; }
+.hub-five-form input[type="text"], .hub-drop input[type="text"] {
+  flex: 1 1 220px; min-width: 0; min-height: 36px; padding: 0 12px; border-radius: 6px; border: 1px solid var(--ad-line-strong);
+  background: var(--ad-input); color: var(--text-primary); font: inherit; font-size: 0.9rem;
+}
+.hub-five-form input[type="text"]:focus, .hub-drop input[type="text"]:focus { outline: 2px solid var(--brand-prime); outline-offset: -1px; }
+.hub-five-form .hub-act-main, .hub-drop .hub-act-main { min-height: 36px; padding: 0 14px; }
+.hub-five-queued { margin: 8px 0 0; font-size: 0.9rem; color: var(--text-secondary); display: flex; gap: 10px; align-items: center; }
+.hub-act-quiet { color: var(--text-muted); }

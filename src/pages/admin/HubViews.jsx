@@ -267,11 +267,12 @@ function PrepButton({ path }) {
 
 const Clock = ({ text = 'ממתין לסנכרון' }) => <span className="hub-pending" title="נשמר. ייכתב לקבצים במרכז כשהמחשב יסנכרן">⏳ {text}</span>;
 
-/* a task line with "done" (circle before the text) and "postpone" */
+/* a task line with "done" (circle before the text), "postpone" and "not relevant" (with a reason) */
 function TaskRow({ t, c, meta, metaTone, details, extra, noClient, main }) {
   const hub = useHub();
-  const [panel, setPanel] = useState(false);
+  const [panel, setPanel] = useState(null); // null | 'postpone' | 'drop'
   const [date, setDate] = useState('');
+  const [reason, setReason] = useState('');
   const p = c.pending.get(t.id);
   const short = cut(clean(t.title));
   // agency agent in charge ("🤖 קופירייטר" in the owner column) shows as a tag on the line itself
@@ -280,19 +281,32 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient, main }) {
   if (main) noClient = true;
 
   const postpone = async (iso) => {
-    setPanel(false);
+    setPanel(null);
     await hub.act('task_postpone', t.id, { client_id: t.client_id, due: iso, label: short }, `נדחה ל-${fmtShortDate(iso)}`);
   };
 
+  const drop = async (e) => {
+    e.preventDefault();
+    const why = reason.replace(/\s+/g, ' ').trim();
+    if (!why) return;
+    const ok = await hub.act('task_irrelevant', t.id, { client_id: t.client_id, label: short, reason: why.slice(0, 300) }, 'סומן לא רלוונטי');
+    if (ok) { setPanel(null); setReason(''); }
+  };
+
   if (p) {
-    const isDone = p.kind === 'task_done';
+    const isDone = p.kind === 'task_done' || p.kind === 'task_irrelevant';
+    const text = p.kind === 'task_done' ? 'בוצע, ממתין לסנכרון'
+      : p.kind === 'task_irrelevant' ? 'לא רלוונטי, ממתין לסנכרון'
+      : `נדחה ל-${fmtShortDate(p.payload?.due)}`;
     return (
       <Row kb main={title} sub={noClient ? null : c.clientName(t.client_id)} pending={isDone ? 'done' : 'moved'}
         lead={<span className="hub-check" data-on={isDone || undefined} aria-hidden="true" />}
-        meta={<Clock text={isDone ? 'בוצע, ממתין לסנכרון' : `נדחה ל-${fmtShortDate(p.payload?.due)}`} />}
-        details={details} />
+        meta={<Clock text={text} />}
+        details={p.kind === 'task_irrelevant' ? [...(details || []), ['למה לא רלוונטי', p.payload?.reason]] : details} />
     );
   }
+
+  const escClose = (e) => { if (e.key === 'Escape') { e.stopPropagation(); e.currentTarget.closest('.hub-row')?.focus(); setPanel(null); } };
 
   const next = nextWorkday(c.today);
   const week = addDays(c.today, 7);
@@ -302,11 +316,17 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient, main }) {
         onClick={() => hub.act('task_done', t.id, { client_id: t.client_id, label: short }, 'סומן בוצע')} />}
       action={<>
         {extra}
-        <button type="button" className="hub-act" data-k="d" aria-expanded={panel} onClick={() => setPanel((o) => !o)} title="דחה (D)">דחה</button>
+        <button type="button" className="hub-act" data-k="d" aria-expanded={panel === 'postpone'} onClick={() => setPanel((o) => (o === 'postpone' ? null : 'postpone'))} title="דחה (D)">דחה</button>
+        <button type="button" className="hub-act hub-act-quiet" data-k="n" aria-expanded={panel === 'drop'} onClick={() => setPanel((o) => (o === 'drop' ? null : 'drop'))} title="לא רלוונטי (N)">לא רלוונטי</button>
       </>}
-      below={panel && (
-        <div className="hub-postpone" role="group" aria-label="לדחות ל"
-          onKeyDown={(e) => { if (e.key === 'Escape') { e.stopPropagation(); e.currentTarget.closest('.hub-row')?.focus(); setPanel(false); } }}>
+      below={panel === 'drop' ? (
+        <form className="hub-postpone hub-drop" onSubmit={drop} onKeyDown={escClose} aria-label="למה המשימה לא רלוונטית">
+          <input type="text" value={reason} onChange={(e) => setReason(e.target.value)} autoFocus maxLength={300}
+            placeholder="למה זה כבר לא רלוונטי?" aria-label="סיבה" />
+          <button type="submit" className="hub-act hub-act-main" disabled={!reason.trim()}>סמן לא רלוונטי</button>
+        </form>
+      ) : panel === 'postpone' && (
+        <div className="hub-postpone" role="group" aria-label="לדחות ל" onKeyDown={escClose}>
           <button type="button" className="hub-act" autoFocus onClick={() => postpone(next)}>{next === addDays(c.today, 1) ? 'מחר' : 'ראשון'} · {fmtShortDate(next)}</button>
           <button type="button" className="hub-act" onClick={() => postpone(week)}>עוד שבוע · {fmtShortDate(week)}</button>
           <form className="hub-postpone-date" onSubmit={(e) => { e.preventDefault(); if (date) postpone(date); }}>
@@ -338,8 +358,8 @@ function useRowKeys() {
       const go = (n) => { const r = rows[Math.max(0, Math.min(rows.length - 1, n))]; r.focus(); r.scrollIntoView({ block: 'nearest' }); };
       if (e.code === 'KeyJ') { e.preventDefault(); go(i < 0 ? 0 : i + 1); }
       else if (e.code === 'KeyK') { e.preventDefault(); go(i < 0 ? 0 : i - 1); }
-      else if ((e.code === 'KeyX' || e.code === 'KeyD') && cur) {
-        const b = cur.querySelector(`[data-k="${e.code === 'KeyX' ? 'x' : 'd'}"]`);
+      else if ((e.code === 'KeyX' || e.code === 'KeyD' || e.code === 'KeyN') && cur) {
+        const b = cur.querySelector(`[data-k="${e.code.slice(3).toLowerCase()}"]`);
         if (b && !b.disabled) { e.preventDefault(); b.click(); if (e.code === 'KeyX') requestAnimationFrame(() => cur.focus()); }
       } else if (e.key === 'Enter' && e.target === cur) {
         const b = cur.querySelector('button.hub-row-btn'); if (b) { e.preventDefault(); b.click(); }
@@ -588,10 +608,39 @@ export function TodayView() {
             meta={`פתוחה ${daysWord(daysBetween(c.stuck.since, c.today))}`}
             details={[['יעד', c.stuck.due_text], ['ממתין ל', c.stuck.waiting_on], ['סטטוס', c.stuck.status_note]]} />
           <li className="hub-five-hint">המשימה שתקועה הכי הרבה זמן. מה הצעד הכי קטן שאפשר לעשות בה עכשיו?</li>
+          <li><FiveMinTask t={c.stuck} c={c} /></li>
         </Section>
       )}
 
-      <p className="hub-keys">מקשים: <kbd>J</kbd> <kbd>K</kbd> לזוז · <kbd>X</kbd> בוצע · <kbd>D</kbd> דחה · <kbd>Enter</kbd> פרטים</p>
+      <p className="hub-keys">מקשים: <kbd>J</kbd> <kbd>K</kbd> לזוז · <kbd>X</kbd> בוצע · <kbd>D</kbd> דחה · <kbd>N</kbd> לא רלוונטי · <kbd>Enter</kbd> פרטים</p>
+    </>
+  );
+}
+
+/* "5 minutes": the smallest step on the stuck task becomes a task of its own, for today,
+   in the same client's file. Until the agent writes it, the step shows here with a clock. */
+function FiveMinTask({ t, c }) {
+  const hub = useHub();
+  const [step, setStep] = useState('');
+  const [busy, setBusy] = useState(false);
+  const queued = c.added.filter((a) => a.payload?.client_id === t.client_id && a.payload?.from_task === t.id);
+  const submit = async (e) => {
+    e.preventDefault();
+    const s = step.replace(/\s+/g, ' ').trim();
+    if (!s || busy) return;
+    setBusy(true);
+    const ok = await hub.act('task_add', null, { client_id: t.client_id, title: s.slice(0, 300), owner: 'אני', due: c.today, label: cut(s), from_task: t.id }, 'נוספה משימה להיום');
+    setBusy(false);
+    if (ok) setStep('');
+  };
+  return (
+    <>
+      {queued.map((a) => <p key={a.id} className="hub-five-queued">{a.payload.title} <Clock /></p>)}
+      <form className="hub-five-form" onSubmit={submit}>
+        <input type="text" value={step} onChange={(e) => setStep(e.target.value)} maxLength={300}
+          placeholder="הצעד הקטן, למשל: לשלוח לו הודעה קצרה" aria-label="הצעד הקטן" />
+        <button type="submit" className="hub-act hub-act-main" disabled={!step.trim() || busy}>הפוך למשימה להיום</button>
+      </form>
     </>
   );
 }
@@ -608,7 +657,7 @@ function FailedNotice({ failed }) {
     setGone(next);
     try { localStorage.setItem(DISMISSED_KEY, JSON.stringify([...next].slice(-50))); } catch { /* private mode */ }
   };
-  const what = { task_done: 'בוצע', task_postpone: 'דחייה', task_add: 'משימה חדשה', payment_received: 'תשלום שנכנס' };
+  const what = { task_done: 'בוצע', task_postpone: 'דחייה', task_add: 'משימה חדשה', task_irrelevant: 'לא רלוונטי', payment_received: 'תשלום שנכנס' };
   return (
     <div className="hub-failed" role="status">
       <details>
