@@ -490,6 +490,7 @@ export function TodayView() {
           }
           return (
             <Row key={e.id} main={main} action={acts}
+              lead={c.linked.size ? <span className="hub-check-gap" aria-hidden="true" /> : null}
               details={[['מתי', e.when_text], ['לקוח', c.clientName(e.client_id)]]} />
           );
         })}
