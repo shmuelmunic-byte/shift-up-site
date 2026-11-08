@@ -267,6 +267,9 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient }) {
   const [date, setDate] = useState('');
   const p = c.pending.get(t.id);
   const short = cut(t.title);
+  // agency agent in charge ("🤖 קופירייטר" in the owner column) shows as a tag on the line itself
+  const agent = /^🤖/.test(t.owner || '') ? t.owner.replace(/^🤖\s*/, '') : null;
+  const title = agent ? <><span className="hub-agent" title="הסוכן שאחראי על המשימה">🤖 {agent}</span>{t.title}</> : t.title;
 
   const postpone = async (iso) => {
     setPanel(false);
@@ -276,7 +279,7 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient }) {
   if (p) {
     const isDone = p.kind === 'task_done';
     return (
-      <Row kb main={t.title} sub={noClient ? null : c.clientName(t.client_id)} pending={isDone ? 'done' : 'moved'}
+      <Row kb main={title} sub={noClient ? null : c.clientName(t.client_id)} pending={isDone ? 'done' : 'moved'}
         lead={<span className="hub-check" data-on={isDone || undefined} aria-hidden="true" />}
         meta={<Clock text={isDone ? 'בוצע, ממתין לסנכרון' : `נדחה ל-${fmtShortDate(p.payload?.due)}`} />}
         details={details} />
@@ -286,7 +289,7 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient }) {
   const next = nextWorkday(c.today);
   const week = addDays(c.today, 7);
   return (
-    <Row kb main={t.title} sub={noClient ? null : c.clientName(t.client_id)} meta={meta} metaTone={metaTone} details={details}
+    <Row kb main={title} sub={noClient ? null : c.clientName(t.client_id)} meta={meta} metaTone={metaTone} details={details}
       lead={<button type="button" className="hub-check" data-k="x" aria-label={`סמן בוצע: ${short}`} title="בוצע (X)"
         onClick={() => hub.act('task_done', t.id, { client_id: t.client_id, label: short }, 'סומן בוצע')} />}
       action={<>
