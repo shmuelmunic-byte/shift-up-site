@@ -602,3 +602,8 @@ button.hub-check:hover::after { opacity: 0.5; }
   .hub-drawer-next { padding: 14px 28px; }
   .hub-drawer-tabs { padding: 0 28px; }
 }
+/* long business names stay inside the card */
+.hub-cards > li { min-width: 0; }
+.hub-card { min-width: 0; overflow: hidden; }
+.hub-card-head { display: grid; gap: 2px; min-width: 0; }
+.hub-card-biz { display: block; min-width: 0; }
