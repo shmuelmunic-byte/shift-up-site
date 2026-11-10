@@ -36,6 +36,24 @@ function nextWorkday(today) {
   while (weekday(d) === 5 || weekday(d) === 6) d = addDays(d, 1);
   return d;
 }
+/* internal target (10.11, Shmuel): finish 2 working days before the deadline. Fri/Sat don't count */
+const GOAL_DAYS = 2;
+function workdaysBefore(iso, n) {
+  let d = iso;
+  for (let k = 0; k < n;) { d = addDays(d, -1); if (weekday(d) !== 5 && weekday(d) !== 6) k += 1; }
+  return d;
+}
+const goalOf = (t) => (t.due ? workdaysBefore(t.due, GOAL_DAYS) : null);
+/* one meta line: past the deadline (red), past the target (amber), target today, or "finish by" */
+function deadlineMeta(t, today) {
+  if (!t.due) return { meta: null };
+  const g = goalOf(t);
+  const over = daysBetween(t.due, today);
+  if (over > 0) return { meta: `באיחור ${daysWord(over)}`, metaTone: 'late' };
+  if (g < today) return { meta: `עבר היעד · דדליין ${fmtShortDate(t.due)}`, metaTone: 'warn' };
+  if (g === today) return { meta: `לסיים היום · דדליין ${fmtShortDate(t.due)}`, metaTone: 'now' };
+  return { meta: `לסיים עד ${fmtShortDate(g)}` };
+}
 const money = (n) => `${Number(n).toLocaleString('he-IL')} ₪`;
 /* phone numbers stay out of titles on screen (the WhatsApp button already has them) */
 const PHONE_RE = /(\s*ל-)?\s*\(?\b0\d{1,2}-?\d{3}-?\d{4}\b\)?/g;
@@ -88,6 +106,9 @@ function whoseTurn(t) {
   }
   return { who: 'client', name: cur.replace(/\s*\(.*$/, '') }; // a client's own name (שירה, ...)
 }
+/* 10.11: a step the agency proposed for a big task waits for Shmuel's OK (🟦), an agent task he started shows ▶️ */
+const isProposed = (t) => /^🟦/.test(t.status_note || '');
+const isStarted = (t) => /^▶️/.test(t.status_note || '');
 const isClientSide = (t) => whoseTurn(t).who === 'client';
 const isMine = (t) => whoseTurn(t).who === 'me';
 const isAgents = (t) => whoseTurn(t).who === 'agent';
@@ -331,7 +352,7 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient, main }) {
   /* whose turn: a verb when it's on Shmuel ("לאשר", "להעביר לשירה"), the agent when it's on the agency */
   const turn = whoseTurn(t);
   const chip = turn.who === 'agent'
-    ? <span className="hub-agent" title={turn.then ? 'אחר כך מגיע אליך' : 'הסוכן שעובד על זה'}>🤖 {turn.agent}{turn.then ? ' ← אתה' : ''}</span>
+    ? <span className="hub-agent" title={turn.then ? 'אחר כך מגיע אליך' : 'הסוכן שעובד על זה'}>{isStarted(t) ? '▶️' : '🤖'} {turn.agent}{turn.then ? ' ← אתה' : ''}</span>
     : turn.who === 'me' && turn.verb ? <span className="hub-verb">{turn.verb}</span>
     : turn.who === 'client' && t.waiting_on ? <span className="hub-wait">מחכה ל{cut(String(t.waiting_on).replace(/^ל/, ''), 22)}</span> : null;
   const title = main || <>{chip}{shortTitle(t.title)}</>;
@@ -353,7 +374,9 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient, main }) {
 
   if (p) {
     const isDone = p.kind === 'task_done' || p.kind === 'task_irrelevant';
-    const text = p.kind === 'task_done' ? 'בוצע, ממתין לסנכרון'
+    const text = p.kind === 'agent_start' ? "נשלח לסוכן, יתחיל תוך ~15 דק'"
+      : p.kind === 'step_approve' ? 'אושר, ממתין לסנכרון'
+      : p.kind === 'task_done' ? 'בוצע, ממתין לסנכרון'
       : p.kind === 'task_irrelevant' ? 'לא רלוונטי, ממתין לסנכרון'
       : `נדחה ל-${fmtShortDate(p.payload?.due)}`;
     return (
@@ -374,6 +397,14 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient, main }) {
         onClick={() => hub.act('task_done', t.id, { client_id: t.client_id, label: short }, 'סומן בוצע')} />}
       action={<>
         {extra}
+        {isProposed(t) && (
+          <button type="button" className="hub-act hub-act-main" title="לאשר את השלב והתאריך"
+            onClick={() => hub.act('step_approve', t.id, { client_id: t.client_id, label: short }, 'השלב אושר')}>✓ אשר</button>
+        )}
+        {!isProposed(t) && turn.who === 'agent' && turn.agent !== 'אוטומטי' && !isStarted(t) && (
+          <button type="button" className="hub-act hub-act-main" title="לשלוח לסוכן להתחיל לעבוד"
+            onClick={() => hub.act('agent_start', t.id, { client_id: t.client_id, label: short, agent: turn.agent }, "נשלח לסוכן, יתחיל תוך ~15 דק'")}>▶ תתחיל</button>
+        )}
         <span className="hub-more-acts">
         <button type="button" className="hub-act" data-k="d" aria-expanded={panel === 'postpone'} onClick={() => setPanel((o) => (o === 'postpone' ? null : 'postpone'))} title="דחה (D)">דחה</button>
         <button type="button" className="hub-act hub-act-quiet" data-k="n" aria-expanded={panel === 'drop'} onClick={() => setPanel((o) => (o === 'drop' ? null : 'drop'))} title="לא רלוונטי (N)">לא רלוונטי</button>
@@ -451,17 +482,19 @@ function useComputed() {
       return (c?.name || id.split(' - ')[0]).replace(/\s*\(.*\)\s*$/, '');
     };
     const quiet = (t) => QUIET_STAGES.test(clients.get(t.client_id)?.stage || '');
-    const open = d.hub_tasks.filter((t) => isOpen(t) && !quiet(t));
+    const openAll = d.hub_tasks.filter((t) => isOpen(t) && !quiet(t));
+    const proposed = openAll.filter(isProposed).sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999'));
+    const open = openAll.filter((t) => !isProposed(t));
     const mine = open.filter(isMine);
     const agents = open.filter(isAgents).sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999'));
-    const soonMine = mine.filter((t) => t.due && t.due > today && t.due <= addDays(today, 7)).sort((a, b) => a.due.localeCompare(b.due));
+    const soonMine = mine.filter((t) => t.due && goalOf(t) > today && goalOf(t) <= addDays(today, 7)).sort((a, b) => a.due.localeCompare(b.due));
     const noDateMine = mine.filter((t) => !t.due);
 
     const calls = d.hub_events.filter((e) => e.starts_at && isoDay(new Date(e.starts_at)) === today).sort((a, b) => a.starts_at.localeCompare(b.starts_at));
     const timed = calls.filter(hasTime); // "about to start" only for an item with a real hour, not the 09:00 placeholder
     const replies = d.hub_inbox.filter((x) => x.kind === 'reply').sort((a, b) => b.priority - a.priority || String(a.last_message_at).localeCompare(String(b.last_message_at)));
     const reach = d.hub_inbox.filter((x) => x.kind === 'reach_out').sort((a, b) => b.priority - a.priority).slice(0, 5);
-    const dueAll = mine.filter((t) => t.due && t.due <= today).sort((a, b) => a.due.localeCompare(b.due));
+    const dueAll = mine.filter((t) => t.due && goalOf(t) <= today).sort((a, b) => a.due.localeCompare(b.due)); // by the internal target
     /* a task due today for a client who is on today's calendar belongs to that calendar row,
        so it shows once (with the time) and can still be marked done or postponed there */
     const linked = new Map();
@@ -495,8 +528,8 @@ function useComputed() {
     const callOne = (e) => ({ text: clean(e.title), why: `ביומן ב-${fmtTime(e.starts_at)}`, phone: clients.get(e.client_id)?.phone, prep: e.prep_pdf });
     if (soonCall) one = callOne(soonCall);
     else if (due[0]) {
-      const late = daysBetween(due[0].due, today);
-      one = { text: clean(due[0].title), why: [clientName(due[0].client_id), late > 0 ? `באיחור ${daysWord(late)}` : 'להיום'].filter(Boolean).join(' · '), late: late > 0, task: due[0] };
+      const dm = deadlineMeta(due[0], today);
+      one = { text: clean(due[0].title), why: [clientName(due[0].client_id), dm.meta].filter(Boolean).join(' · '), late: dm.metaTone === 'late', task: due[0] };
     } else if (hotReply) one = { text: `לענות ל${clientName(hotReply.client_id) || fmtPhone(hotReply.contact_name)}`, why: hotReply.preview, phone: hotReply.phone };
     else if (nextCall) one = callOne(nextCall);
     else if (replies[0]) one = { text: `לענות ל${fmtPhone(replies[0].contact_name)}`, why: replies[0].preview, phone: replies[0].phone };
@@ -512,7 +545,7 @@ function useComputed() {
     const added = acts.filter((a) => a.status === 'pending' && a.kind === 'task_add');
     const failed = acts.filter((a) => a.status === 'failed' && now - new Date(a.created_at).getTime() < 2 * 86400000);
 
-    return { now, today, clients, clientName, calls, linked, replies, reach, due, dueAll, waiting, collect, stuck, goal, week, replyMin, upcoming, one, agents, soonMine, noDateMine, tasks: d.hub_tasks, events: d.hub_events, pending, added, failed };
+    return { now, today, clients, clientName, calls, linked, replies, reach, due, dueAll, proposed, waiting, collect, stuck, goal, week, replyMin, upcoming, one, agents, soonMine, noDateMine, tasks: d.hub_tasks, events: d.hub_events, pending, added, failed };
   }, [hub?.data, today, now]);
 }
 
@@ -520,11 +553,12 @@ function useComputed() {
    Shmuel: "תור רק אחרי לחיצה אבל קודם כרטיסים". The home screen fits one screen:
    the one thing, then a card per kind of work with its number. A card opens its queue
    (?q=key, so Back returns to the cards). Keys: 1-9 open a card, Esc goes back. */
-const TILE_KEYS = ['late', 'today', 'mine', 'reply', 'calls', 'money', 'waiting', 'reach', 'agents', 'leads', 'clients'];
+const TILE_KEYS = ['late', 'today', 'steps', 'mine', 'reply', 'calls', 'money', 'waiting', 'reach', 'agents', 'leads', 'clients'];
 
 function buildTiles(c, newLeads, activeCount, pipeCount) {
   if (!c) return [];
-  const lateMine = c.dueAll.filter((t) => t.due < c.today).length;
+  const lateMine = c.dueAll.filter((t) => goalOf(t) < c.today).length;
+  const reallyLate = c.dueAll.filter((t) => t.due < c.today).length;
   const todayMine = c.dueAll.length - lateMine;
   const nextCall = c.calls.find((e) => hasTime(e) && new Date(e.starts_at).getTime() > c.now);
   const oldReply = c.replies.some((r) => (c.now - new Date(r.last_message_at).getTime()) > 86400000);
@@ -534,9 +568,9 @@ function buildTiles(c, newLeads, activeCount, pipeCount) {
   const agentsForMe = c.agents.filter((t) => whoseTurn(t).then).length;
   return [
     /* 10.11 (Pally, P6): four big cards on top, the rest small */
-    { key: 'late', size: 'big', label: 'באיחור', n: lateMine, tone: lateMine ? 'late' : null,
-      sub: lateMine ? `הכי ותיקה ${daysWord(daysBetween(c.dueAll[0].due, c.today))}` : 'שום דבר לא באיחור' },
-    { key: 'today', size: 'big', label: 'להיום', n: todayMine, tone: todayMine ? 'now' : null,
+    { key: 'late', size: 'big', label: 'עבר היעד', n: lateMine, tone: lateMine ? 'late' : null,
+      sub: !lateMine ? 'הכל בזמן' : reallyLate ? `${reallyLate} עברו את הדדליין` : 'עברו את היעד, הדדליין עוד לא' },
+    { key: 'today', size: 'big', label: 'לסיים היום', n: todayMine, tone: todayMine ? 'now' : null,
       sub: c.calls.length ? `ועוד ${c.calls.length === 1 ? 'שיחה אחת' : `${c.calls.length} שיחות`} ביומן` : c.soonMine.length ? `עוד ${c.soonMine.length} השבוע` : 'יום פנוי' },
     { key: 'reply', size: 'big', label: 'לענות', n: c.replies.length, tone: oldReply ? 'late' : c.replies.length ? 'now' : null,
       sub: oldest ? `הכי ותיקה ${ago(oldest, c.now)}` : 'אף אחד לא מחכה' },
@@ -544,6 +578,8 @@ function buildTiles(c, newLeads, activeCount, pipeCount) {
       sub: c.collect.length ? `${c.collect.length} פתוחים` : 'הכל נכנס' },
     { key: 'calls', label: 'שיחות היום', n: c.calls.length, tone: c.calls.length ? 'now' : null,
       sub: nextCall ? `הבאה ב-${fmtTime(nextCall.starts_at)}` : c.upcoming.length ? `עוד ${c.upcoming.length} השבוע` : 'יומן פנוי' },
+    { key: 'steps', label: 'לאשר שלבים', n: c.proposed.length, tone: c.proposed.length ? 'now' : null,
+      sub: c.proposed.length ? 'פירוק של משימה גדולה' : 'אין מה לאשר' },
     { key: 'waiting', label: 'מחכה ללקוח', n: c.waiting.length, tone: c.waiting.length ? 'quiet' : null,
       sub: c.waiting.length ? `הכי ותיקה ${daysWord(daysBetween(c.waiting[0].since, c.today))}` : 'אף אחד לא תקוע' },
     { key: 'reach', label: 'לפנות', n: c.reach.length, tone: c.reach.length ? 'quiet' : null, sub: c.reach.length ? 'שתקו אחרי ההודעה שלך' : 'אין למי' },
@@ -671,8 +707,8 @@ function OneThing({ c }) {
 
 /* up to 5 next steps right under the big cards (3 on a phone): late first, then who waits for an answer, then today */
 function NextActions({ c }) {
-  const late = c.dueAll.filter((t) => t.due < c.today);
-  const today = c.dueAll.filter((t) => t.due === c.today);
+  const late = c.dueAll.filter((t) => goalOf(t) < c.today);
+  const today = c.dueAll.filter((t) => goalOf(t) === c.today);
   const oneId = c.one?.task?.id;
   const items = [
     ...late.filter((t) => t.id !== oneId).map((t) => ({ k: t.id, t })),
@@ -693,9 +729,8 @@ function NextActions({ c }) {
                 details={[['הודעה אחרונה', preview]]} />
             );
           }
-          const late = daysBetween(t.due, c.today);
           return (
-            <TaskRow key={k} t={t} c={c} meta={late > 0 ? `באיחור ${daysWord(late)}` : 'היום'} metaTone={late > 0 ? 'late' : undefined}
+            <TaskRow key={k} t={t} c={c} {...deadlineMeta(t, c.today)}
               details={[['אחראי', t.owner], ['ממתין ל', t.waiting_on], ['סטטוס', t.status_note]]} />
           );
         })}
@@ -717,22 +752,16 @@ function Group({ title, tone, children, empty }) {
 
 function Queue({ q, c }) {
   const hub = useHub();
-  const taskMeta = (t) => {
-    const late = t.due ? daysBetween(t.due, c.today) : null;
-    return {
-      meta: late > 0 ? `באיחור ${daysWord(late)}` : late === 0 ? 'היום' : t.due ? fmtDay(`${t.due}T12:00:00Z`) : null,
-      metaTone: late > 0 ? 'late' : undefined,
-    };
-  };
+  const taskMeta = (t) => deadlineMeta(t, c.today);
   const tDetails = (t) => [['אחראי', t.owner], ['ממתין ל', t.waiting_on], ['סטטוס', t.status_note], ['פתוחה מאז', fmtShortDate(t.since)]];
   const task = (t, extra) => <TaskRow key={t.id} t={t} c={c} {...taskMeta(t)} details={tDetails(t)} extra={extra} />;
 
   if (q === 'late') {
-    const late = c.dueAll.filter((t) => t.due < c.today);
+    const late = c.dueAll.filter((t) => goalOf(t) < c.today);
     return <Group empty="שום דבר לא באיחור, יפה">{late.map((t) => task(t))}</Group>;
   }
   if (q === 'today' || q === 'mine') {
-    const today = c.dueAll.filter((t) => t.due === c.today);
+    const today = c.dueAll.filter((t) => goalOf(t) === c.today);
     return (
       <>
         <Group title="משימות להיום" empty="אין משימות להיום">{today.map((t) => task(t))}</Group>
@@ -755,6 +784,14 @@ function Queue({ q, c }) {
             <li><FiveMinTask t={c.stuck} c={c} /></li>
           </Group>
         )}
+      </>
+    );
+  }
+  if (q === 'steps') {
+    return (
+      <>
+        <p className="hub-q-note">שלבים שהסוכנות הציעה למשימה גדולה, כל אחד עם תאריך לסיום (2 ימי עבודה לפני הדדליין). "אשר" = השלב נכנס לעבודה. לא מתאים? "דחה" לתאריך אחר או "לא רלוונטי".</p>
+        <Group empty="אין שלבים שמחכים לאישור">{c.proposed.map((t) => task(t))}</Group>
       </>
     );
   }
@@ -1027,7 +1064,7 @@ function ClientCard({ cl, c, onOpen }) {
   const pct = cl.tasks_total ? Math.round((cl.tasks_done / cl.tasks_total) * 100) : 0;
   const open = c.tasks.filter((t) => t.client_id === cl.id && isOpen(t));
   const late = open.filter((t) => isMine(t) && t.due && t.due < c.today).length;
-  const mineNow = open.filter((t) => isMine(t) && t.due && t.due <= addDays(c.today, 2)).length;
+  const mineNow = open.filter((t) => isMine(t) && t.due && goalOf(t) <= c.today).length;
   const waitDays = daysBetween(cl.waiting_since, c.today);
   const owed = c.collect.find((x) => x.client_id === cl.id);
   const moneyDays = owed ? daysBetween(owed.since, c.today) : null;
@@ -1042,7 +1079,7 @@ function ClientCard({ cl, c, onOpen }) {
         {cl.next_action && <span className="hub-card-next"><span>הצעד הבא</span>{shortTitle(cl.next_action)}</span>}
         <span className="hub-card-chips">
           {late > 0 && <span className="hub-chip late">{late} באיחור</span>}
-          {mineNow > 0 && !late && <span className="hub-chip now">{mineNow} עליך עד מחרתיים</span>}
+          {mineNow > 0 && !late && <span className="hub-chip now">{mineNow} לסיים היום</span>}
           {cl.next_meeting_at && <span className="hub-chip">📅 {fmtDay(cl.next_meeting_at)} {fmtTime(cl.next_meeting_at)}</span>}
           {cl.waiting_on && <span className="hub-chip">⏳ {cut(cl.waiting_on.replace(/^ל/, ''), 24)}{waitDays != null ? ` · ${daysWord(waitDays)}` : ''}</span>}
           {owed && <span className={`hub-chip${moneyDays > 14 ? ' late' : ''}`}>💰 {owed.amount ? `${Number(owed.amount).toLocaleString('he-IL')} ₪` : 'לגבות'}</span>}
@@ -1121,11 +1158,8 @@ function ClientDrawer({ cl, c, onClose }) {
   const files = cl.files || [];
 
   const taskRow = (t) => {
-    const late = t.due ? daysBetween(t.due, c.today) : null;
     return (
-      <TaskRow key={t.id} t={t} c={c} noClient
-        meta={t.due ? (late > 0 ? `באיחור ${daysWord(late)}` : late === 0 ? 'היום' : fmtShortDate(t.due)) : null}
-        metaTone={late > 0 ? 'late' : undefined}
+      <TaskRow key={t.id} t={t} c={c} noClient {...deadlineMeta(t, c.today)}
         details={[['אחראי', t.owner], ['ממתין ל', t.waiting_on], ['פתוחה מאז', fmtShortDate(t.since)], ['סטטוס', t.status_note]]} />
     );
   };
