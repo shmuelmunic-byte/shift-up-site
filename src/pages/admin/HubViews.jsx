@@ -407,11 +407,12 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient, main }) {
         onClick={() => hub.act('task_done', t.id, { client_id: t.client_id, label: short }, 'סומן בוצע')} />}
       action={<>
         {extra}
+        {t.file?.k && <OpenFileBtn f={t.file} clientId={t.client_id} main />}
         {isProposed(t) && (
           <button type="button" className="hub-act hub-act-main" title="לאשר את השלב והתאריך"
             onClick={() => hub.act('step_approve', t.id, { client_id: t.client_id, label: short }, 'השלב אושר')}>✓ אשר</button>
         )}
-        {!isProposed(t) && turn.who === 'agent' && turn.agent !== 'אוטומטי' && !isStarted(t) && (
+        {!isProposed(t) && turn.who === 'agent' && turn.agent !== 'אוטומטי' && !isStarted(t) && !t.file?.k && (
           <button type="button" className="hub-act hub-act-main" title="לשלוח לסוכן להתחיל לעבוד"
             onClick={() => hub.act('agent_start', t.id, { client_id: t.client_id, label: short, agent: turn.agent }, "נשלח לסוכן, יתחיל תוך ~15 דק'")}>▶ תתחיל</button>
         )}
@@ -495,6 +496,8 @@ function useComputed() {
     const openAll = d.hub_tasks.filter((t) => isOpen(t) && !quiet(t));
     const proposed = openAll.filter(isProposed).sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999'));
     const open = openAll.filter((t) => !isProposed(t));
+    /* 10.11: a file an agent prepared that waits for Shmuel's OK (📄 in the status cell) */
+    const approvals = open.filter((t) => t.file?.k).sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999'));
     const mine = open.filter(isMine);
     const agents = open.filter(isAgents).sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999'));
     const soonMine = mine.filter((t) => t.due && goalOf(t) > today && goalOf(t) <= addDays(today, 7)).sort((a, b) => a.due.localeCompare(b.due));
@@ -555,7 +558,7 @@ function useComputed() {
     const added = acts.filter((a) => a.status === 'pending' && a.kind === 'task_add');
     const failed = acts.filter((a) => a.status === 'failed' && now - new Date(a.created_at).getTime() < 2 * 86400000);
 
-    return { now, today, clients, clientName, calls, linked, replies, reach, due, dueAll, proposed, waiting, collect, stuck, goal, week, replyMin, upcoming, one, agents, soonMine, noDateMine, tasks: d.hub_tasks, events: d.hub_events, pending, added, failed };
+    return { now, today, clients, clientName, calls, linked, replies, reach, due, dueAll, proposed, approvals, waiting, collect, stuck, goal, week, replyMin, upcoming, one, agents, soonMine, noDateMine, tasks: d.hub_tasks, events: d.hub_events, pending, added, failed };
   }, [hub?.data, today, now]);
 }
 
@@ -588,8 +591,8 @@ function buildTiles(c, newLeads, activeCount, pipeCount) {
       sub: c.collect.length ? `${c.collect.length} פתוחים` : 'הכל נכנס' },
     { key: 'calls', label: 'שיחות היום', n: c.calls.length, tone: c.calls.length ? 'now' : null,
       sub: nextCall ? `הבאה ב-${fmtTime(nextCall.starts_at)}` : c.upcoming.length ? `עוד ${c.upcoming.length} השבוע` : 'יומן פנוי' },
-    { key: 'steps', label: 'לאשר שלבים', n: c.proposed.length, tone: c.proposed.length ? 'now' : null,
-      sub: c.proposed.length ? 'פירוק של משימה גדולה' : 'אין מה לאשר' },
+    { key: 'steps', label: 'לאשר', n: c.approvals.length + c.proposed.length, tone: c.approvals.length + c.proposed.length ? 'now' : null,
+      sub: c.approvals.length ? `${c.approvals.length} קבצים מהסוכנים` : c.proposed.length ? 'שלבים של משימה גדולה' : 'אין מה לאשר' },
     { key: 'waiting', label: 'מחכה ללקוח', n: c.waiting.length, tone: c.waiting.length ? 'quiet' : null,
       sub: c.waiting.length ? `הכי ותיקה ${daysWord(daysBetween(c.waiting[0].since, c.today))}` : 'אף אחד לא תקוע' },
     { key: 'reach', label: 'לפנות', n: c.reach.length, tone: c.reach.length ? 'quiet' : null, sub: c.reach.length ? 'שתקו אחרי ההודעה שלך' : 'אין למי' },
@@ -800,8 +803,9 @@ function Queue({ q, c }) {
   if (q === 'steps') {
     return (
       <>
-        <p className="hub-q-note">שלבים שהסוכנות הציעה למשימה גדולה, כל אחד עם תאריך לסיום (2 ימי עבודה לפני הדדליין). "אשר" = השלב נכנס לעבודה. לא מתאים? "דחה" לתאריך אחר או "לא רלוונטי".</p>
-        <Group empty="אין שלבים שמחכים לאישור">{c.proposed.map((t) => task(t))}</Group>
+        <p className="hub-q-note">קבצים שסוכן הכין ומחכים לעין שלך: "פתח", ואם מאושר מסמנים בוצע. ושלבים שהסוכנות הציעה למשימה גדולה: "אשר" = השלב נכנס לעבודה.</p>
+        <Group title="📄 קבצים לאישור">{c.approvals.map((t) => task(t))}</Group>
+        <Group title="שלבים של משימה גדולה" empty={c.approvals.length ? null : 'אין מה לאשר'}>{c.proposed.map((t) => task(t))}</Group>
       </>
     );
   }
@@ -1106,7 +1110,7 @@ function ClientCard({ cl, c, onOpen }) {
 
 /* a client file: uploaded only when tapped. The tab opens on the tap (popup blockers),
    the agent uploads within seconds, then the tab gets a 10-minute signed link */
-function FileRow({ f, clientId }) {
+function useOpenFile(f, clientId) {
   const [state, setState] = useState(null); // null | 'wait' | 'err'
   const ext = (f.n.match(/\.[a-z0-9]+$/i) || [''])[0].toLowerCase();
   const obj = `${f.k}${ext}`;
@@ -1131,6 +1135,22 @@ function FileRow({ f, clientId }) {
     setState(null);
     if (w) w.location.href = data.signedUrl; else window.location.href = data.signedUrl;
   };
+  return { state, open, ext };
+}
+
+/* "📄 פתח" on a task whose agent output waits for approval */
+function OpenFileBtn({ f, clientId, main }) {
+  const { state, open } = useOpenFile(f, clientId);
+  return (
+    <button type="button" className={`hub-act${main ? ' hub-act-main' : ''}`} onClick={open} disabled={state === 'wait'} title={f.n}>
+      {state === 'wait' ? 'פותח…' : state === 'err' ? 'שוב' : '📄 פתח'}
+    </button>
+  );
+}
+
+function FileRow({ f, clientId }) {
+  const { state, open, ext } = useOpenFile(f, clientId);
+  const name = f.n.replace(/\.[a-z0-9]+$/i, '').replace(/_/g, ' ');
   return (
     <li className="hub-row">
       <div className="hub-row-line">
