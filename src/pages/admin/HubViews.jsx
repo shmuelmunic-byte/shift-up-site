@@ -38,7 +38,9 @@ function nextWorkday(today) {
 const money = (n) => `${Number(n).toLocaleString('he-IL')} ₪`;
 /* phone numbers stay out of titles on screen (the WhatsApp button already has them) */
 const PHONE_RE = /(\s*ל-)?\s*\(?\b0\d{1,2}-?\d{3}-?\d{4}\b\)?/g;
-const clean = (s) => (s ? String(s).replace(PHONE_RE, '').replace(/\s+,/g, ',').replace(/\(\s*\)/g, '').replace(/\s{2,}/g, ' ').trim() : s);
+/* agency task ids ("S-261109-10 · ", "(S-261108-08)") are for the files, not for the screen */
+const TASK_ID_RE = /\s*\(?\bS-\d{6}-\d{2}\b\)?\s*·?\s*/g;
+const clean = (s) => (s ? String(s).replace(TASK_ID_RE, ' ').replace(PHONE_RE, '').replace(/\s+,/g, ',').replace(/\(\s*\)/g, '').replace(/\s{2,}/g, ' ').trim() : s);
 const fmtPhone = (s) => { const d = String(s || '').replace(/\D/g, '').replace(/^972/, '0'); return d.length === 10 ? `${d.slice(0, 3)}-${d.slice(3, 6)}-${d.slice(6)}` : s; };
 /* WhatsApp makes sense next to a call or meeting, not next to an open day or a reminder */
 const isCall = (e) => /📞|שיחה|שיחת|זום|פגישה|פגישת/.test(e.title || '');
@@ -194,6 +196,16 @@ export function SyncBar() {
   if (!row?.last_seen_at) return <span className="adm-sync" data-state="stale"><span className="adm-dot" data-state="stale" />סוכן הסנכרון עוד לא רץ</span>;
   const min = Math.round((hub.now - new Date(row.last_seen_at).getTime()) / 60000);
   const stale = min > STALE_MIN;
+  /* 10.11: the agent can be alive but failing every round. Green = the last round that succeeded, not "alive" */
+  const okMin = row.last_ok_at ? Math.round((hub.now - new Date(row.last_ok_at).getTime()) / 60000) : Infinity;
+  if (!stale && okMin > 5) {
+    return (
+      <span className="adm-sync" data-state="stale" title={row.note || ''}>
+        <span className="adm-dot" data-state="stale" />
+        {`הסנכרון נכשל, הנתונים ${row.last_ok_at ? ago(row.last_ok_at, hub.now) : 'ישנים'}`}
+      </span>
+    );
+  }
   return (
     <span className="adm-sync" data-state={stale ? 'stale' : 'ok'} title={hub.live ? 'מתעדכן חי' : 'מתעדכן כל 2 דקות'}>
       <span className="adm-dot" data-state={stale ? 'stale' : 'ok'} />
@@ -440,7 +452,12 @@ function useComputed() {
 
     /* queued actions: pending ones overlay their row, failed ones are listed on top */
     const acts = d.hub_actions || [];
-    const pending = new Map(acts.filter((a) => a.status === 'pending' && a.target_id).map((a) => [a.target_id, a]));
+    /* 10.11: a "done" that was already written to the file keeps hiding its row until the
+       mirror catches up, so a slow sync never brings a finished task back (it was clicked 4 times) */
+    const closedTaskIds = new Set(d.hub_tasks.filter((t) => !isOpen(t)).map((t) => t.id));
+    const pending = new Map(acts.filter((a) => a.target_id && (a.status === 'pending'
+      || (a.status === 'applied' && (a.kind === 'task_done' || a.kind === 'task_irrelevant') && !closedTaskIds.has(a.target_id)
+        && now - new Date(a.created_at).getTime() < 86400000))).map((a) => [a.target_id, a]));
     const added = acts.filter((a) => a.status === 'pending' && a.kind === 'task_add');
     const failed = acts.filter((a) => a.status === 'failed' && now - new Date(a.created_at).getTime() < 2 * 86400000);
 
