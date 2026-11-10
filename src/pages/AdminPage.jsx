@@ -1336,7 +1336,7 @@ export default function AdminPage() {
   }
 
   let body = null;
-  if (section === 'today') body = <TodayView />;
+  if (section === 'today') body = <TodayView newLeads={newLeads} onGo={(s) => go(s)} />;
   if (section === 'clients') body = <ClientsView />;
   if (section === 'leads') {
     const t = LEADS_TABS.some(x => x.id === tab) ? tab : 'leads';

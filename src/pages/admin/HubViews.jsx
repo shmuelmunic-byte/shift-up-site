@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 
 /* Stage 3: "Today" + active client files. Stage 4: light actions.
@@ -55,8 +56,47 @@ function ago(iso, now) {
   return `לפני ${daysWord(Math.round(min / 1440))}`;
 }
 
-/* ─── who owns a task ─── */
-const isClientSide = (t) => /^(לקוח|ליד)/.test(t.owner || '') || t.status === 'waiting';
+/* ─── whose turn is it now ───
+   The owner column is a chain ("🤖 קופירייטר ✅ → 🤖 עורך וידאו ✅ → שמואל → שירה").
+   Steps marked ✅ are behind us; the first open step owns the task now.
+   10.11: agents' tasks were showing as Shmuel's, and he couldn't tell what to actually do. */
+const SELF_RE = /^(אני|שמואל)(?![\p{L}])/u;
+function whoseTurn(t) {
+  const owner = String(t.owner || '').trim();
+  const wait = String(t.waiting_on || '').trim();
+  const live = owner.split('→').map((s) => s.trim()).filter((s) => s && !/✅/.test(s));
+  const cur = live[0] || '';
+  const nxt = (live[1] || '').replace(/\s*\(.*$/, '').trim();
+  if (/^שמואל/.test(wait)) {
+    const inner = (wait.match(/\(([^)]+)\)/) || [])[1] || '';
+    const pass = inner.match(/העברה ל(\S+)/);
+    return { who: 'me', verb: pass ? `להעביר ל${pass[1]}` : /אישור/.test(inner + wait) ? 'לאשר' : null };
+  }
+  if (/^(אוטומטי|⏰)/.test(cur)) return { who: 'agent', agent: 'אוטומטי', then: live.some((s) => SELF_RE.test(s)) };
+  if (/^(🤖|המנהל)/.test(cur)) {
+    const agent = /^המנהל/.test(cur) ? 'Claude' : cur.replace(/^🤖\s*/, '').replace(/\s*[(+/].*$/, '').trim();
+    return { who: 'agent', agent, then: live.slice(1).some((s) => SELF_RE.test(s)) };
+  }
+  if (t.status === 'waiting' || /^(לקוח|ליד)/.test(cur)) return { who: 'client' };
+  if (!cur || SELF_RE.test(cur)) {
+    let verb = null;
+    if (/מאשר|אישור/.test(cur) || /אישור/.test(live[1] || '')) verb = 'לאשר';
+    else if (/בשיחה|בהצגת|בפגישה/.test(cur)) verb = 'בשיחה';
+    else if (/עונה/.test(cur)) verb = 'לענות';
+    else if (nxt && !/🤖/.test(nxt)) verb = `להעביר ל${nxt}`;
+    return { who: 'me', verb };
+  }
+  return { who: 'client', name: cur.replace(/\s*\(.*$/, '') }; // a client's own name (שירה, ...)
+}
+const isClientSide = (t) => whoseTurn(t).who === 'client';
+const isMine = (t) => whoseTurn(t).who === 'me';
+const isAgents = (t) => whoseTurn(t).who === 'agent';
+/* one short line: no enumeration ("ד. "), no leading status emoji, details after the first bracket go to the details */
+function shortTitle(s) {
+  let x = String(clean(s) || '').replace(/\*\*/g, '').replace(/^[^\p{L}\p{N}"']+/u, '').replace(/^[א-ת]\.\s+/, '').trim();
+  if (x.length > 64) { const at = x.search(/\s\(|:\s|\s→|\s·\s/); if (at > 18) x = x.slice(0, at); }
+  return x;
+}
 const isOpen = (t) => t.section === 'פתוח' && (t.status === 'open' || t.status === 'waiting');
 const QUIET_STAGES = /מוקפא|נסגר|סגור/;
 
@@ -287,9 +327,14 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient, main }) {
   const [reason, setReason] = useState('');
   const p = c.pending.get(t.id);
   const short = cut(clean(t.title));
-  // agency agent in charge ("🤖 קופירייטר" in the owner column) shows as a tag on the line itself
-  const agent = /^🤖/.test(t.owner || '') ? t.owner.replace(/^🤖\s*/, '') : null;
-  const title = main || (agent ? <><span className="hub-agent" title="הסוכן שאחראי על המשימה">🤖 {agent}</span>{clean(t.title)}</> : clean(t.title));
+  /* whose turn: a verb when it's on Shmuel ("לאשר", "להעביר לשירה"), the agent when it's on the agency */
+  const turn = whoseTurn(t);
+  const chip = turn.who === 'agent'
+    ? <span className="hub-agent" title={turn.then ? 'אחר כך מגיע אליך' : 'הסוכן שעובד על זה'}>🤖 {turn.agent}{turn.then ? ' ← אתה' : ''}</span>
+    : turn.who === 'me' && turn.verb ? <span className="hub-verb">{turn.verb}</span>
+    : turn.who === 'client' && t.waiting_on ? <span className="hub-wait">מחכה ל{cut(String(t.waiting_on).replace(/^ל/, ''), 22)}</span> : null;
+  const title = main || <>{chip}{shortTitle(t.title)}</>;
+  details = [['המשימה המלאה', clean(t.title)], ...(details || [])];
   if (main) noClient = true;
 
   const postpone = async (iso) => {
@@ -328,8 +373,10 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient, main }) {
         onClick={() => hub.act('task_done', t.id, { client_id: t.client_id, label: short }, 'סומן בוצע')} />}
       action={<>
         {extra}
+        <span className="hub-more-acts">
         <button type="button" className="hub-act" data-k="d" aria-expanded={panel === 'postpone'} onClick={() => setPanel((o) => (o === 'postpone' ? null : 'postpone'))} title="דחה (D)">דחה</button>
         <button type="button" className="hub-act hub-act-quiet" data-k="n" aria-expanded={panel === 'drop'} onClick={() => setPanel((o) => (o === 'drop' ? null : 'drop'))} title="לא רלוונטי (N)">לא רלוונטי</button>
+        </span>
       </>}
       below={panel === 'drop' ? (
         <form className="hub-postpone hub-drop" onSubmit={drop} onKeyDown={escClose} aria-label="למה המשימה לא רלוונטית">
@@ -404,7 +451,10 @@ function useComputed() {
     };
     const quiet = (t) => QUIET_STAGES.test(clients.get(t.client_id)?.stage || '');
     const open = d.hub_tasks.filter((t) => isOpen(t) && !quiet(t));
-    const mine = open.filter((t) => !isClientSide(t));
+    const mine = open.filter(isMine);
+    const agents = open.filter(isAgents).sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999'));
+    const soonMine = mine.filter((t) => t.due && t.due > today && t.due <= addDays(today, 7)).sort((a, b) => a.due.localeCompare(b.due));
+    const noDateMine = mine.filter((t) => !t.due);
 
     const calls = d.hub_events.filter((e) => e.starts_at && isoDay(new Date(e.starts_at)) === today).sort((a, b) => a.starts_at.localeCompare(b.starts_at));
     const timed = calls.filter(hasTime); // "about to start" only for an item with a real hour, not the 09:00 placeholder
@@ -461,177 +511,292 @@ function useComputed() {
     const added = acts.filter((a) => a.status === 'pending' && a.kind === 'task_add');
     const failed = acts.filter((a) => a.status === 'failed' && now - new Date(a.created_at).getTime() < 2 * 86400000);
 
-    return { now, today, clients, clientName, calls, linked, replies, reach, due, waiting, collect, stuck, goal, week, replyMin, upcoming, one, tasks: d.hub_tasks, events: d.hub_events, pending, added, failed };
+    return { now, today, clients, clientName, calls, linked, replies, reach, due, dueAll, waiting, collect, stuck, goal, week, replyMin, upcoming, one, agents, soonMine, noDateMine, tasks: d.hub_tasks, events: d.hub_events, pending, added, failed };
   }, [hub?.data, today, now]);
 }
 
-/* ─── Today ─── */
-export function TodayView() {
+/* ─── Today: tiles first, a queue only after a tap (10.11) ───
+   Shmuel: "תור רק אחרי לחיצה אבל קודם כרטיסים". The home screen fits one screen:
+   the one thing, then a card per kind of work with its number. A card opens its queue
+   (?q=key, so Back returns to the cards). Keys: 1-9 open a card, Esc goes back. */
+const TILE_KEYS = ['mine', 'reply', 'calls', 'money', 'waiting', 'reach', 'agents', 'leads', 'clients'];
+
+function buildTiles(c, newLeads, activeCount, pipeCount) {
+  if (!c) return [];
+  const lateMine = c.dueAll.filter((t) => t.due < c.today).length;
+  const nextCall = c.calls.find((e) => hasTime(e) && new Date(e.starts_at).getTime() > c.now);
+  const oldReply = c.replies.some((r) => (c.now - new Date(r.last_message_at).getTime()) > 86400000);
+  const oldest = c.replies.reduce((a, r) => (!a || String(r.last_message_at) < String(a) ? r.last_message_at : a), null);
+  const moneySum = c.collect.reduce((s, x) => s + (Number(x.amount) || 0), 0);
+  const oldMoney = c.collect.some((x) => daysBetween(x.since, c.today) > 14);
+  const agentsForMe = c.agents.filter((t) => whoseTurn(t).then).length;
+  return [
+    { key: 'mine', label: 'עליך היום', n: c.dueAll.length, tone: lateMine ? 'late' : c.dueAll.length ? 'now' : null,
+      sub: lateMine ? `${lateMine} באיחור` : c.soonMine.length ? `עוד ${c.soonMine.length} השבוע` : 'אין משימות להיום' },
+    { key: 'reply', label: 'לענות', n: c.replies.length, tone: oldReply ? 'late' : c.replies.length ? 'now' : null,
+      sub: oldest ? `הכי ותיקה ${ago(oldest, c.now)}` : 'אף אחד לא מחכה' },
+    { key: 'calls', label: 'שיחות היום', n: c.calls.length, tone: c.calls.length ? 'now' : null,
+      sub: nextCall ? `הבאה ב-${fmtTime(nextCall.starts_at)}` : c.upcoming.length ? `עוד ${c.upcoming.length} השבוע` : 'יומן פנוי' },
+    { key: 'money', label: 'כסף לגבות', n: c.collect.length, big: c.collect.length ? money(moneySum) : '0', tone: oldMoney ? 'late' : c.collect.length ? 'now' : null,
+      sub: c.collect.length ? `${c.collect.length} פתוחים` : 'הכל נכנס' },
+    { key: 'waiting', label: 'מחכה ללקוח', n: c.waiting.length, tone: c.waiting.length ? 'quiet' : null,
+      sub: c.waiting.length ? `הכי ותיקה ${daysWord(daysBetween(c.waiting[0].since, c.today))}` : 'אף אחד לא תקוע' },
+    { key: 'reach', label: 'לפנות', n: c.reach.length, tone: c.reach.length ? 'quiet' : null, sub: c.reach.length ? 'שתקו אחרי ההודעה שלך' : 'אין למי' },
+    { key: 'agents', label: 'אצל הסוכנים', n: c.agents.length, tone: c.agents.length ? 'quiet' : null,
+      sub: agentsForMe ? `${agentsForMe} יחזרו אליך לאישור` : 'לא עליך' },
+    { key: 'leads', label: 'לידים מהאתר', n: newLeads, tone: newLeads ? 'now' : null, sub: newLeads ? 'חדשים, לא טופלו' : 'אין חדשים' },
+    { key: 'clients', label: 'לקוחות', n: activeCount, tone: 'quiet', sub: `פעילים · ${pipeCount} בצנרת` },
+  ];
+}
+
+function Tile({ t, i, onOpen }) {
+  return (
+    <li>
+      <button type="button" className="hub-tile" data-tone={t.n ? t.tone || undefined : 'zero'} onClick={() => onOpen(t.key)}
+        aria-label={`${t.label}: ${t.big || t.n}. ${t.sub}`} title={`${t.label} (מקש ${i + 1})`}>
+        <span className="hub-tile-label">{t.label}</span>
+        <span className="hub-tile-n">{t.big || t.n}</span>
+        <span className="hub-tile-sub">{t.sub}</span>
+      </button>
+    </li>
+  );
+}
+
+export function TodayView({ newLeads = 0, onGo }) {
   const hub = useHub();
   const c = useComputed();
-  const loading = hub.loading;
-  const error = hub.error;
-  const L = { loading, error };
-  const [showAllWait, setShowAllWait] = useState(false);
+  const [params, setParams] = useSearchParams();
+  const q = TILE_KEYS.includes(params.get('q')) ? params.get('q') : null;
   useRowKeys();
 
-  if (!loading && !error && c && !hub.data.hub_clients.length) {
+  const clientsAll = hub.data?.hub_clients || [];
+  const activeCount = clientsAll.filter((x) => x.stage === 'שוטף').length;
+  const pipeCount = clientsAll.filter((x) => x.stage !== 'שוטף' && !QUIET_STAGES.test(x.stage || '')).length;
+  const tiles = buildTiles(c, newLeads, activeCount, pipeCount);
+
+  const openQ = useCallback((key) => {
+    if (key === 'leads' || key === 'clients') { onGo?.(key); return; }
+    const p = new URLSearchParams(params); p.set('q', key);
+    setParams(p); // a real history step, so the phone's Back returns to the cards
+    window.scrollTo(0, 0);
+  }, [params, setParams, onGo]);
+  const home = useCallback(() => { const p = new URLSearchParams(params); p.delete('q'); setParams(p); }, [params, setParams]);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const tag = e.target?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || document.querySelector('.hub-drawer')) return;
+      if (e.key === 'Escape' && q) { e.preventDefault(); home(); return; }
+      const d = /^Digit([1-9])$/.exec(e.code);
+      if (d && tiles[+d[1] - 1]) { e.preventDefault(); openQ(tiles[+d[1] - 1].key); }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [q, tiles, openQ, home]);
+
+  if (hub.loading) return <div className="hub-skel" style={{ height: 22, width: '70%', marginTop: 18 }} aria-label="טוען" />;
+  if (hub.error || !c) return <p className="hub-err">לא הצלחתי לטעון את הנתונים. בדוק חיבור ונסה לרענן.</p>;
+  if (!clientsAll.length) {
     return <p className="hub-empty" style={{ paddingTop: 18 }}>אין עדיין נתונים במסך. ברגע שסוכן הסנכרון יעלה מהמחשב, כאן יופיע הדבר הכי דחוף להיום.</p>;
   }
 
-  const waitShown = showAllWait ? c?.waiting : c?.waiting.slice(0, WAIT_LIMIT);
-  const waitMore = (c?.waiting.length || 0) - WAIT_LIMIT;
+  if (q) {
+    const t = tiles.find((x) => x.key === q);
+    return (
+      <>
+        <div className="hub-q-head">
+          <button type="button" className="hub-back" onClick={home}>→ כל הכרטיסים</button>
+          <h2>{t.label} <span className="n">{t.big || t.n}</span></h2>
+        </div>
+        <nav className="hub-q-chips" aria-label="מעבר בין התורים">
+          {tiles.filter((x) => x.key !== 'leads' && x.key !== 'clients').map((x) => (
+            <button key={x.key} type="button" aria-current={x.key === q ? 'page' : undefined} data-tone={x.n ? x.tone || undefined : 'zero'}
+              onClick={() => { if (x.key !== q) openQ(x.key); }}>{x.label} <b>{x.n}</b></button>
+          ))}
+        </nav>
+        <Queue q={q} c={c} />
+        <p className="hub-keys">מקשים: <kbd>Esc</kbd> חזרה לכרטיסים · <kbd>J</kbd> <kbd>K</kbd> לזוז · <kbd>X</kbd> בוצע · <kbd>D</kbd> דחה · <kbd>N</kbd> לא רלוונטי · <kbd>Enter</kbd> פרטים</p>
+      </>
+    );
+  }
 
   return (
     <>
-      <div className="hub-one">
-        <div className="hub-one-label">הדבר האחד</div>
-        {loading ? <div className="hub-skel" style={{ height: 22, width: '70%' }} />
-          : error ? <p className="hub-err">לא הצלחתי לטעון את הנתונים. בדוק חיבור ונסה לרענן.</p>
-          : c.one ? (
-            <>
-              <p className="hub-one-text">{c.one.text}</p>
-              <div className="hub-one-why">
-                <span className={c.one.late ? 'late' : undefined}>{c.one.why}</span>
-                {c.one.task && (c.pending.get(c.one.task.id)
-                  ? <Clock />
-                  : <button type="button" className="hub-act hub-act-main" onClick={() => hub.act('task_done', c.one.task.id, { client_id: c.one.task.client_id, label: cut(clean(c.one.task.title)) }, 'סומן בוצע')}>בוצע</button>)}
-                <WaButton phone={c.one.phone} label="פתח בוואטסאפ" />
-                {c.one.prep && <PrepButton path={c.one.prep} />}
-              </div>
-            </>
-          ) : <p className="hub-one-text" data-empty="true">אין שום דבר דחוף. זמן טוב לקדם לקוח רביעי.</p>}
+      <OneThing c={c} />
+      {c.failed.length ? <FailedNotice failed={c.failed} /> : null}
+      <ul className="hub-tiles" aria-label="מה מחכה">
+        {tiles.map((t, i) => <Tile key={t.key} t={t} i={i} onOpen={openQ} />)}
+      </ul>
+      <div className="hub-stats">
+        {c.goal?.target ? <GoalStrip goal={c.goal} /> : null}
+        {c.week.length ? <WeekNumbers week={c.week} replyMin={c.replyMin} /> : null}
       </div>
+      <p className="hub-keys">מקשים: <kbd>1</kbd>-<kbd>9</kbd> פותחים כרטיס</p>
+    </>
+  );
+}
 
-      {c?.failed.length ? <FailedNotice failed={c.failed} /> : null}
+function OneThing({ c }) {
+  const hub = useHub();
+  const turn = c.one?.task ? whoseTurn(c.one.task) : null;
+  return (
+    <div className="hub-one">
+      <div className="hub-one-label">הדבר האחד עכשיו</div>
+      {c.one ? (
+        <>
+          <p className="hub-one-text">{c.one.task ? <>{turn?.verb && <span className="hub-verb">{turn.verb}</span>}{shortTitle(c.one.task.title)}</> : c.one.text}</p>
+          <div className="hub-one-why">
+            <span className={c.one.late ? 'late' : undefined}>{c.one.why}</span>
+            {c.one.task && (c.pending.get(c.one.task.id)
+              ? <Clock />
+              : <button type="button" className="hub-act hub-act-main" onClick={() => hub.act('task_done', c.one.task.id, { client_id: c.one.task.client_id, label: cut(clean(c.one.task.title)) }, 'סומן בוצע')}>בוצע</button>)}
+            <WaButton phone={c.one.phone} label="פתח בוואטסאפ" />
+            {c.one.prep && <PrepButton path={c.one.prep} />}
+          </div>
+        </>
+      ) : <p className="hub-one-text" data-empty="true">אין שום דבר דחוף. זמן טוב לקדם לקוח רביעי.</p>}
+    </div>
+  );
+}
 
-      {c?.goal?.target ? <GoalStrip goal={c.goal} /> : null}
-      {c?.week.length ? <WeekNumbers week={c.week} replyMin={c.replyMin} /> : null}
+function Group({ title, tone, children, empty }) {
+  const has = [children].flat(Infinity).some(Boolean);
+  if (!has && !empty) return null;
+  return (
+    <section className="hub-group">
+      {title && <h3 className={tone === 'late' ? 'late' : undefined}>{title}</h3>}
+      {has ? <ul className="hub-rows">{children}</ul> : <p className="hub-empty">{empty}</p>}
+    </section>
+  );
+}
 
-      <Section id="s-calls" title="ביומן היום" count={c?.calls.length} empty="אין שיחות ביומן היום" {...L}>
-        {c?.calls.map((e) => {
-          const approx = /~/.test(e.when_text || '');
-          const withTime = hasTime(e);
-          const past = withTime && new Date(e.starts_at).getTime() < c.now - 45 * 60000;
-          const main = <><span className="hub-time" data-past={past || undefined}>{withTime ? `${approx ? '~' : ''}${fmtTime(e.starts_at)}` : 'היום'}</span>{clean(e.title)}</>;
-          const acts = <>
-            {e.prep_pdf && <PrepButton path={e.prep_pdf} />}
-            {isCall(e) && <WaButton phone={c.clients.get(e.client_id)?.phone} />}
-          </>;
-          const t = c.linked.get(e.id);
-          if (t) {
-            return (
-              <TaskRow key={e.id} t={t} c={c} main={main} extra={acts}
-                details={[['מתי', e.when_text], ['לקוח', c.clientName(e.client_id)], ['משימה', clean(t.title)], ['סטטוס', t.status_note]]} />
-            );
-          }
-          return (
-            <Row key={e.id} main={main} action={acts}
-              lead={c.linked.size ? <span className="hub-check-gap" aria-hidden="true" /> : null}
-              details={[['מתי', e.when_text], ['לקוח', c.clientName(e.client_id)]]} />
-          );
-        })}
-      </Section>
+function Queue({ q, c }) {
+  const hub = useHub();
+  const taskMeta = (t) => {
+    const late = t.due ? daysBetween(t.due, c.today) : null;
+    return {
+      meta: late > 0 ? `באיחור ${daysWord(late)}` : late === 0 ? 'היום' : t.due ? fmtDay(`${t.due}T12:00:00Z`) : null,
+      metaTone: late > 0 ? 'late' : undefined,
+    };
+  };
+  const tDetails = (t) => [['אחראי', t.owner], ['ממתין ל', t.waiting_on], ['סטטוס', t.status_note], ['פתוחה מאז', fmtShortDate(t.since)]];
+  const task = (t, extra) => <TaskRow key={t.id} t={t} c={c} {...taskMeta(t)} details={tDetails(t)} extra={extra} />;
 
-      <Section id="s-reply" title="לענות" count={c?.replies.length} empty="אין מה לענות, יפה" {...L}>
-        {c?.replies.map((r) => {
-          const old = (c.now - new Date(r.last_message_at).getTime()) > 2 * 86400000;
+  if (q === 'mine') {
+    const late = c.dueAll.filter((t) => t.due < c.today);
+    const today = c.dueAll.filter((t) => t.due === c.today);
+    return (
+      <>
+        <Group title="באיחור" tone="late">{late.map((t) => task(t))}</Group>
+        <Group title="היום" empty={late.length ? null : 'אין משימות להיום'}>{today.map((t) => task(t))}</Group>
+        <Group title="בהמשך השבוע">{c.soonMine.map((t) => task(t))}</Group>
+        {c.noDateMine.length > 0 && (
+          <details className="hub-pipe">
+            <summary><span>בלי תאריך</span><span className="n">{c.noDateMine.length}</span></summary>
+            <ul className="hub-rows">{c.noDateMine.map((t) => task(t))}</ul>
+          </details>
+        )}
+        {c.stuck && (
+          <Group title="5 דקות: התקועה הכי הרבה זמן">
+            {task(c.stuck)}
+            <li className="hub-five-hint">מה הצעד הכי קטן שאפשר לעשות בה עכשיו?</li>
+            <li><FiveMinTask t={c.stuck} c={c} /></li>
+          </Group>
+        )}
+      </>
+    );
+  }
+  if (q === 'reply') {
+    return (
+      <Group empty="אין מה לענות, יפה">
+        {c.replies.map((r) => {
+          const old = (c.now - new Date(r.last_message_at).getTime()) > 86400000;
           const preview = String(r.preview || '').replace(/^\[איש קשר\]\s*/, 'שלח איש קשר: ');
           return (
-            <Row key={r.id}
-              main={<b>{c.clientName(r.client_id) || fmtPhone(r.contact_name)}</b>}
-              sub={clean(preview)}
+            <Row key={r.id} main={<b>{c.clientName(r.client_id) || fmtPhone(r.contact_name)}</b>} sub={cut(clean(preview), 70)}
               meta={ago(r.last_message_at, c.now)} metaTone={old ? 'late' : undefined}
-              action={<WaButton phone={r.phone} />}
-              details={[['הודעה אחרונה', preview], ['טלפון', fmtPhone(r.phone || r.contact_name)], ['לקוח', r.client_id]]} />
+              action={<WaButton phone={r.phone} label="לענות" />}
+              details={[['הודעה אחרונה', preview], ['טלפון', fmtPhone(r.phone || r.contact_name)]]} />
           );
         })}
-      </Section>
-
-      <Section id="s-money" title="כסף לגבות" count={c?.collect.length}
-        extra={c?.collect.length > 1 ? `סה"כ ${money(c.collect.reduce((s, x) => s + (Number(x.amount) || 0), 0))}` : null}
-        empty="אין תשלומים פתוחים" {...L}>
-        {c?.collect.map((x) => {
+      </Group>
+    );
+  }
+  if (q === 'calls') {
+    const ev = (e, withDay) => {
+      const past = hasTime(e) && new Date(e.starts_at).getTime() < c.now - 45 * 60000;
+      const when = withDay ? `${fmtDay(e.starts_at)} ${hasTime(e) ? fmtTime(e.starts_at) : ''}`.trim() : (hasTime(e) ? fmtTime(e.starts_at) : 'היום');
+      return (
+        <Row key={e.id} main={<><span className="hub-time" data-past={past || undefined}>{when}</span>{clean(e.title)}</>}
+          action={<>{e.prep_pdf && <PrepButton path={e.prep_pdf} />}{isCall(e) && <WaButton phone={c.clients.get(e.client_id)?.phone} />}</>}
+          details={[['מתי', e.when_text], ['לקוח', c.clientName(e.client_id)]]} />
+      );
+    };
+    return (
+      <>
+        <Group title="היום" empty="אין שיחות היום">{c.calls.map((e) => ev(e, false))}</Group>
+        <Group title="השבוע">{c.upcoming.map((e) => ev(e, true))}</Group>
+      </>
+    );
+  }
+  if (q === 'money') {
+    return (
+      <Group empty="אין תשלומים פתוחים">
+        {c.collect.map((x) => {
           const n = daysBetween(x.since, c.today);
           const amount = x.amount ? money(x.amount) : x.amount_text;
           const p = c.pending.get(x.id);
           return (
-            <Row key={x.id} kb pending={p ? 'done' : undefined}
-              main={x.who}
-              meta={p ? <Clock text="נכנס, ממתין לסנכרון" /> : [amount, n != null ? `${daysWord(n)}` : null].filter(Boolean).join(' · ')}
+            <Row key={x.id} kb pending={p ? 'done' : undefined} main={x.who}
+              meta={p ? <Clock text="נכנס, ממתין לסנכרון" /> : [amount, n != null ? daysWord(n) : null].filter(Boolean).join(' · ')}
               metaTone={!p && n > 14 ? 'late' : undefined}
               action={!p && <>
-                <WaButton phone={c.clients.get(x.client_id)?.phone} />
-                <button type="button" className="hub-act" data-k="x" title="נכנס (X)"
+                <WaButton phone={c.clients.get(x.client_id)?.phone} label="תזכורת" />
+                <button type="button" className="hub-act hub-act-main" data-k="x" title="נכנס (X)"
                   onClick={() => hub.act('payment_received', x.id, { client_id: x.client_id, label: cut(x.who), amount_text: amount }, 'סומן שנכנס')}>נכנס ✓</button>
               </>}
               details={[['מאז', fmtShortDate(x.since)], ['הערה', x.note]]} />
           );
         })}
-      </Section>
-
-      <Section id="s-due" title="באיחור ולהיום" count={c?.due.length} empty="אין משימות באיחור" {...L}>
-        {c?.due.map((t) => {
-          const late = daysBetween(t.due, c.today);
+      </Group>
+    );
+  }
+  if (q === 'waiting') {
+    return (
+      <Group empty="אף לקוח לא תקוע יותר מ-3 ימים">
+        {c.waiting.map((t) => {
+          const n = daysBetween(t.since, c.today);
           return (
-            <TaskRow key={t.id} t={t} c={c}
-              meta={late > 0 ? `באיחור ${daysWord(late)}` : 'להיום'}
-              metaTone={late > 0 ? 'late' : undefined}
-              details={[['יעד', t.due_text], ['אחראי', t.owner], ['ממתין ל', t.waiting_on], ['סטטוס', t.status_note], ['פתוחה מאז', fmtShortDate(t.since)]]} />
+            <TaskRow key={t.id} t={t} c={c} meta={daysWord(n)} metaTone={n > 10 ? 'late' : undefined}
+              extra={<WaButton phone={c.clients.get(t.client_id)?.phone} label="תזכורת" />} details={tDetails(t)} />
           );
         })}
-      </Section>
-
-      <Section id="s-wait" title="מחכה ללקוח" count={c?.waiting.length} empty="אף לקוח לא תקוע יותר מ-3 ימים" {...L}>
-        {waitShown?.map((t) => (
-          <TaskRow key={t.id} t={t} c={c}
-            meta={`ממתינה ${daysWord(daysBetween(t.since, c.today))}`}
-            extra={<WaButton phone={c.clients.get(t.client_id)?.phone} label="תזכורת" />}
-            details={[['ממתין ל', t.waiting_on || t.owner], ['יעד', t.due_text], ['סטטוס', t.status_note]]} />
+      </Group>
+    );
+  }
+  if (q === 'reach') {
+    return (
+      <Group empty="אין פניות מומלצות להיום">
+        {c.reach.map((r) => (
+          <Row key={r.id} main={<b>{c.clientName(r.client_id) || fmtPhone(r.contact_name)}</b>} sub={clean(r.preview)}
+            action={<WaButton phone={r.phone} label="לפנות" />} />
         ))}
-        {waitMore > 0 && (
-          <li className="hub-more">
-            <button type="button" className="hub-more-btn" aria-expanded={showAllWait} onClick={() => setShowAllWait((v) => !v)}>
-              {showAllWait ? 'להציג פחות' : `עוד ${waitMore} שמחכים`}
-            </button>
-          </li>
-        )}
-      </Section>
-
-      <Section id="s-reach" title="לפנות היום" count={c?.reach.length} empty="אין פניות מומלצות להיום" {...L}>
-        {c?.reach.map((r) => (
-          <Row key={r.id}
-            main={<b>{c.clientName(r.client_id) || fmtPhone(r.contact_name)}</b>}
-            sub={clean(r.preview)}
-            action={<WaButton phone={r.phone} />} />
-        ))}
-      </Section>
-
-      <Section id="s-week" title="השבוע ביומן" count={c?.upcoming.length} empty="אין מועדים בשבוע הקרוב" {...L}>
-        {c?.upcoming.map((e) => (
-          <Row key={e.id}
-            main={<><span className="hub-time hub-time-day"><span>{fmtDay(e.starts_at)}</span><span className="hub-time-h">{hasTime(e) ? fmtTime(e.starts_at) : ''}</span></span>{clean(e.title)}</>}
-            action={<>
-              {e.prep_pdf && <PrepButton path={e.prep_pdf} />}
-              {isCall(e) && <WaButton phone={c.clients.get(e.client_id)?.phone} />}
-            </>}
-            details={[['מתי', e.when_text], ['לקוח', c.clientName(e.client_id)]]} />
-        ))}
-      </Section>
-
-      {c?.stuck && (
-        <Section id="s-five" title="5 דקות" {...L}>
-          <TaskRow t={c.stuck} c={c}
-            meta={`פתוחה ${daysWord(daysBetween(c.stuck.since, c.today))}`}
-            details={[['יעד', c.stuck.due_text], ['ממתין ל', c.stuck.waiting_on], ['סטטוס', c.stuck.status_note]]} />
-          <li className="hub-five-hint">המשימה שתקועה הכי הרבה זמן. מה הצעד הכי קטן שאפשר לעשות בה עכשיו?</li>
-          <li><FiveMinTask t={c.stuck} c={c} /></li>
-        </Section>
-      )}
-
-      <p className="hub-keys">מקשים: <kbd>J</kbd> <kbd>K</kbd> לזוז · <kbd>X</kbd> בוצע · <kbd>D</kbd> דחה · <kbd>N</kbd> לא רלוונטי · <kbd>Enter</kbd> פרטים</p>
-    </>
-  );
+      </Group>
+    );
+  }
+  if (q === 'agents') {
+    const forMe = c.agents.filter((t) => whoseTurn(t).then);
+    const rest = c.agents.filter((t) => !whoseTurn(t).then);
+    return (
+      <>
+        <p className="hub-q-note">מה שהסוכנים עובדים עליו. זה לא עליך, חוץ ממה שמסומן "← אתה" (יחזור אליך לאישור או לשליחה).</p>
+        <Group title="יחזרו אליך">{forMe.map((t) => task(t))}</Group>
+        <Group title="בעבודה" empty={forMe.length ? null : 'אין משימות פתוחות לסוכנים'}>{rest.map((t) => task(t))}</Group>
+      </>
+    );
+  }
+  return null;
 }
 
 /* "5 minutes": the smallest step on the stuck task becomes a task of its own, for today,
@@ -797,7 +962,7 @@ export function ClientsView() {
 function ClientCard({ cl, c, onOpen }) {
   const pct = cl.tasks_total ? Math.round((cl.tasks_done / cl.tasks_total) * 100) : 0;
   const waitDays = daysBetween(cl.waiting_since, c.today);
-  const late = c.tasks.filter((t) => t.client_id === cl.id && isOpen(t) && !isClientSide(t) && t.due && t.due < c.today).length;
+  const late = c.tasks.filter((t) => t.client_id === cl.id && isOpen(t) && isMine(t) && t.due && t.due < c.today).length;
   return (
     <li className="hub-client">
       <button type="button" className="hub-client-btn" onClick={onOpen} aria-haspopup="dialog">
@@ -834,8 +999,9 @@ function ClientDrawer({ cl, c, onClose }) {
 
   const all = c.tasks.filter((t) => t.client_id === cl.id);
   const open = all.filter(isOpen).sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999'));
-  const mine = open.filter((t) => !isClientSide(t));
+  const mine = open.filter(isMine);
   const theirs = open.filter(isClientSide);
+  const agentTasks = open.filter(isAgents);
   const done = all.filter((t) => t.status === 'done').sort((a, b) => String(b.done_at).localeCompare(String(a.done_at))).slice(0, 6);
   const meetings = c.events.filter((e) => e.client_id === cl.id && e.starts_at
     && (hasTime(e) ? new Date(e.starts_at).getTime() >= c.now - 60 * 60000 : isoDay(new Date(e.starts_at)) >= c.today))
@@ -902,6 +1068,13 @@ function ClientDrawer({ cl, c, onClose }) {
             <div className="hub-drawer-block">
               <h3>מחכה להם <span className="n">{theirs.length + theirsNew.length}</span></h3>
               <ul className="hub-rows">{theirs.map(taskRow)}{theirsNew}</ul>
+            </div>
+          )}
+
+          {agentTasks.length > 0 && (
+            <div className="hub-drawer-block">
+              <h3>אצל הסוכנים <span className="n">{agentTasks.length}</span></h3>
+              <ul className="hub-rows">{agentTasks.map(taskRow)}</ul>
             </div>
           )}
 

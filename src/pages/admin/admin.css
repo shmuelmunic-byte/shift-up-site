@@ -475,3 +475,76 @@ button.hub-check:hover::after { opacity: 0.5; }
 .hub-five-form .hub-act-main, .hub-drop .hub-act-main { min-height: 36px; padding: 0 14px; }
 .hub-five-queued { margin: 8px 0 0; font-size: 0.9rem; color: var(--text-secondary); display: flex; gap: 10px; align-items: center; }
 .hub-act-quiet { color: var(--text-muted); }
+
+/* ─── 10.11: home = tiles, queue only after a tap ─── */
+.hub-one { padding: 6px 0 18px; }
+.hub-tiles { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (min-width: 640px) { .hub-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; } }
+.hub-tile {
+  width: 100%; height: 100%; min-height: 104px; display: grid; align-content: start; gap: 2px;
+  text-align: start; padding: 14px 16px 13px; border-radius: 10px;
+  border: 1px solid var(--ad-line-strong); background: var(--ad-surface); color: inherit; font: inherit;
+  border-inline-start: 4px solid var(--ad-line-strong);
+  transition: border-color .12s, box-shadow .12s, transform .12s;
+}
+.hub-tile:hover { box-shadow: 0 6px 20px var(--ad-shadow); transform: translateY(-1px); }
+.hub-tile:focus-visible { outline: 2px solid var(--brand-prime); outline-offset: 2px; }
+.hub-tile-label { font-size: 0.92rem; font-weight: 600; color: var(--text-secondary); }
+.hub-tile-n { font-size: 2.1rem; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.hub-tile-sub { font-size: 0.82rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hub-tile[data-tone="now"] { border-inline-start-color: var(--brand-prime); }
+.hub-tile[data-tone="now"] .hub-tile-n { color: var(--brand-prime); }
+.hub-tile[data-tone="late"] { border-inline-start-color: var(--ad-danger); background: var(--ad-danger-soft); }
+.hub-tile[data-tone="late"] .hub-tile-n, .hub-tile[data-tone="late"] .hub-tile-sub { color: var(--ad-danger); }
+.hub-tile[data-tone="zero"] { background: transparent; border-style: dashed; border-inline-start-style: solid; }
+.hub-tile[data-tone="zero"] .hub-tile-n { color: var(--text-muted); font-weight: 500; }
+@media (prefers-reduced-motion: reduce) { .hub-tile { transition: none; } .hub-tile:hover { transform: none; } }
+@media (max-width: 639px) {
+  .hub-tile { min-height: 92px; padding: 12px 12px 11px; }
+  .hub-tile-n { font-size: 1.75rem; }
+  .hub-one-text { font-size: 1.1rem; }
+}
+
+/* goal + numbers of the week: one quiet block under the cards */
+.hub-stats { margin-top: 22px; padding-top: 6px; border-top: 1px solid var(--ad-line); }
+.hub-stats .hub-week { border-bottom: none; }
+.hub-stats .hub-week-grid b { font-size: 1.3rem; }
+
+/* queue screen */
+.hub-q-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 2px 0 10px; }
+.hub-q-head h2 { margin: 0; font-size: 1.3rem; font-weight: 700; display: flex; gap: 10px; align-items: baseline; }
+.hub-q-head h2 .n { color: var(--text-muted); font-size: 1rem; font-weight: 500; font-variant-numeric: tabular-nums; }
+.hub-back { border: 1px solid var(--ad-line-strong); background: var(--ad-surface); color: var(--text-primary); font: inherit; font-size: 0.88rem; font-weight: 600; padding: 6px 12px; border-radius: 6px; }
+.hub-back:hover { border-color: var(--brand-prime); color: var(--brand-prime); }
+.hub-q-chips { display: flex; gap: 6px; overflow-x: auto; padding: 2px 0 12px; border-bottom: 1px solid var(--ad-line); margin-bottom: 4px; scrollbar-width: none; }
+.hub-q-chips::-webkit-scrollbar { display: none; }
+.hub-q-chips button { flex-shrink: 0; border: 1px solid var(--ad-line); background: none; color: var(--text-secondary); font: inherit; font-size: 0.84rem; padding: 5px 10px; border-radius: 99px; white-space: nowrap; }
+.hub-q-chips button b { font-variant-numeric: tabular-nums; margin-inline-start: 2px; }
+.hub-q-chips button[data-tone="late"] b { color: var(--ad-danger); }
+.hub-q-chips button[data-tone="zero"] { opacity: 0.6; }
+.hub-q-chips button[aria-current="page"] { background: var(--text-primary); color: var(--ad-bg); border-color: var(--text-primary); }
+.hub-q-chips button[aria-current="page"] b { color: inherit; }
+.hub-q-note { color: var(--text-muted); font-size: 0.88rem; margin: 10px 0 0; }
+.hub-group { padding: 12px 0 6px; }
+.hub-group h3 { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin: 0 0 2px; }
+.hub-group h3.late { color: var(--ad-danger); }
+
+/* what to do, in one word, before the task */
+.hub-verb, .hub-wait {
+  display: inline-block; margin-inline-end: 8px; padding: 0 7px; border-radius: 4px;
+  font-size: 0.78rem; font-weight: 700; line-height: 1.6; vertical-align: 1px; white-space: nowrap;
+}
+.hub-verb { background: var(--text-primary); color: var(--ad-bg); }
+.hub-wait { background: var(--ad-surface-2); color: var(--text-secondary); font-weight: 600; }
+.hub-one-text .hub-verb { font-size: 0.85rem; vertical-align: 3px; }
+
+/* rows stay one line: "postpone" and "not relevant" only on hover/focus (desktop) or when the row is open (phone) */
+.hub-more-acts { display: none; gap: 6px; }
+@media (hover: hover) {
+  .hub-row:hover .hub-more-acts, .hub-row:focus-within .hub-more-acts, .hub-row:focus .hub-more-acts { display: inline-flex; }
+}
+.hub-row[data-open] .hub-more-acts, .hub-row:has(.hub-postpone) .hub-more-acts { display: inline-flex; }
+@media (max-width: 899px) {
+  .hub-row[data-open] .hub-row-line { flex-wrap: wrap; }
+  .hub-row[data-open] .hub-more-acts { flex-basis: 100%; padding: 0 0 8px; padding-inline-start: 34px; }
+}
