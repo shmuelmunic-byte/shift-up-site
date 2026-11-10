@@ -901,58 +901,71 @@ function WeekNumbers({ week, replyMin }) {
   );
 }
 
-/* ─── Active client files ─── */
+/* ─── Clients (10.11 redesign) ───
+   Active clients as cards you can scan in one look: what's next, what's late, who we wait for,
+   the next meeting. The pipeline is one tabbed list (חי / כדור אצלם / מוקפא), not folded groups.
+   The drawer has two tabs: tasks and the client's files (opened on demand). */
+const PIPE_ORDER = ['חי', 'כדור אצלם', 'מוקפא'];
+
 export function ClientsView() {
   const hub = useHub();
   const c = useComputed();
   const [openId, setOpenId] = useState(null);
+  const [pipeTab, setPipeTab] = useState('חי');
   useRowKeys();
-  const active = useMemo(() => (hub.data?.hub_clients || []).filter((x) => x.stage === 'שוטף').sort((a, b) => a.name.localeCompare(b.name, 'he')), [hub.data]);
-  /* the lead pipeline: everything that isn't an active client, grouped by stage, closed by default */
+  const all = useMemo(() => hub.data?.hub_clients || [], [hub.data]);
+  const active = useMemo(() => all.filter((x) => x.stage === 'שוטף').sort((a, b) => a.name.localeCompare(b.name, 'he')), [all]);
   const pipeline = useMemo(() => {
-    const rest = (hub.data?.hub_clients || []).filter((x) => x.stage !== 'שוטף' && !/נסגר|סגור/.test(x.stage || ''));
-    const order = ['חי', 'כדור אצלם', 'מוקפא'];
-    const groups = order.map((st) => ({ stage: st, list: rest.filter((x) => (x.stage || '').trim() === st) }));
-    const other = rest.filter((x) => !order.includes((x.stage || '').trim()));
+    const rest = all.filter((x) => x.stage !== 'שוטף' && !/נסגר|סגור/.test(x.stage || ''));
+    const groups = PIPE_ORDER.map((st) => ({ stage: st, list: rest.filter((x) => (x.stage || '').trim() === st) }));
+    const other = rest.filter((x) => !PIPE_ORDER.includes((x.stage || '').trim()));
     if (other.length) groups.push({ stage: 'בלי שלב', list: other });
     for (const g of groups) g.list.sort((a, b) => String(b.file_updated).localeCompare(String(a.file_updated)));
-    return groups.filter((g) => g.list.length);
-  }, [hub.data]);
-  const current = (hub.data?.hub_clients || []).find((x) => x.id === openId) || null;
+    return groups;
+  }, [all]);
+  const current = all.find((x) => x.id === openId) || null;
 
+  if (hub.loading) return <div className="hub-skel" style={{ marginTop: 18 }} aria-label="טוען" />;
+  if (hub.error || !c) return <p className="hub-err">לא הצלחתי לטעון את הלקוחות. בדוק חיבור ונסה לרענן.</p>;
+
+  const pipeGroup = pipeline.find((g) => g.stage === pipeTab) || pipeline[0];
   return (
     <>
-      <Section id="s-clients" title="לקוחות פעילים" count={active.length} loading={hub.loading} error={hub.error}
-        empty="עוד אין לקוחות במסך. הם יגיעו מהתיקים במרכז ברגע שסוכן הסנכרון יעלה.">
-        {active.map((cl) => <ClientCard key={cl.id} cl={cl} c={c} onOpen={() => setOpenId(cl.id)} />)}
-      </Section>
-      {!hub.loading && !hub.error && pipeline.length > 0 && (
-        <section className="hub-sec" aria-labelledby="s-pipe">
-          <div className="hub-sec-head">
-            <h2 id="s-pipe">צנרת לידים</h2>
-            <span className="n">{pipeline.reduce((s, g) => s + g.list.length, 0)}</span>
+      <div className="hub-block-head"><h2>לקוחות פעילים</h2><span className="n">{active.length}</span></div>
+      {active.length ? (
+        <ul className="hub-cards">{active.map((cl) => <ClientCard key={cl.id} cl={cl} c={c} onOpen={() => setOpenId(cl.id)} />)}</ul>
+      ) : <p className="hub-empty">עוד אין לקוחות פעילים במסך.</p>}
+
+      {pipeline.some((g) => g.list.length) && (
+        <section className="hub-pipe-box" aria-labelledby="s-pipe">
+          <div className="hub-block-head"><h2 id="s-pipe">צנרת לידים</h2><span className="n">{pipeline.reduce((s, g) => s + g.list.length, 0)}</span></div>
+          <div className="hub-seg hub-seg-wide" role="tablist" aria-label="שלב">
+            {pipeline.map((g) => (
+              <button key={g.stage} type="button" role="tab" aria-selected={pipeGroup.stage === g.stage} onClick={() => setPipeTab(g.stage)}>
+                {g.stage} <b>{g.list.length}</b>
+              </button>
+            ))}
           </div>
-          {pipeline.map((g) => (
-            <details key={g.stage} className="hub-pipe">
-              <summary><span>{g.stage}</span><span className="n">{g.list.length}</span></summary>
-              <ul className="hub-rows">
-                {g.list.map((cl) => {
-                  const age = daysBetween(cl.file_updated, c.today);
-                  return (
-                    <li key={cl.id} className="hub-row">
-                      <div className="hub-row-line">
-                        <button type="button" className="hub-row-btn" onClick={() => setOpenId(cl.id)} aria-haspopup="dialog">
-                          <span className="main"><b>{c.clientName(cl.id)}</b>{cl.next_action && <span className="sub"> · {cl.next_action}</span>}</span>
-                        </button>
-                        {age != null && <span className={`meta${age > 14 ? ' late' : ''}`}>{age === 0 ? 'היום' : `לפני ${daysWord(age)}`}</span>}
-                        <WaButton phone={cl.phone} />
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </details>
-          ))}
+          {pipeGroup.list.length ? (
+            <ul className="hub-rows">
+              {pipeGroup.list.map((cl) => {
+                const age = daysBetween(cl.file_updated, c.today);
+                const late = c.tasks.filter((t) => t.client_id === cl.id && isOpen(t) && isMine(t) && t.due && t.due < c.today).length;
+                return (
+                  <li key={cl.id} className="hub-row">
+                    <div className="hub-row-line">
+                      <button type="button" className="hub-row-btn" onClick={() => setOpenId(cl.id)} aria-haspopup="dialog">
+                        <span className="main"><b>{c.clientName(cl.id)}</b>{cl.next_action && <span className="sub"> · {shortTitle(cl.next_action)}</span>}</span>
+                      </button>
+                      {late > 0 && <span className="meta late">{late} באיחור</span>}
+                      {age != null && <span className={`meta${age > 14 ? ' late' : ''}`} title="עדכון אחרון בתיק">{age === 0 ? 'היום' : `לפני ${daysWord(age)}`}</span>}
+                      <WaButton phone={cl.phone} />
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : <p className="hub-empty">אין לידים בשלב הזה</p>}
         </section>
       )}
       {current && <ClientDrawer cl={current} c={c} onClose={() => setOpenId(null)} />}
@@ -962,33 +975,80 @@ export function ClientsView() {
 
 function ClientCard({ cl, c, onOpen }) {
   const pct = cl.tasks_total ? Math.round((cl.tasks_done / cl.tasks_total) * 100) : 0;
+  const open = c.tasks.filter((t) => t.client_id === cl.id && isOpen(t));
+  const late = open.filter((t) => isMine(t) && t.due && t.due < c.today).length;
+  const mineNow = open.filter((t) => isMine(t) && t.due && t.due <= addDays(c.today, 2)).length;
   const waitDays = daysBetween(cl.waiting_since, c.today);
-  const late = c.tasks.filter((t) => t.client_id === cl.id && isOpen(t) && isMine(t) && t.due && t.due < c.today).length;
+  const owed = c.collect.find((x) => x.client_id === cl.id);
+  const moneyDays = owed ? daysBetween(owed.since, c.today) : null;
+  const tone = late || (moneyDays != null && moneyDays > 14) ? 'late' : mineNow ? 'now' : null;
   return (
-    <li className="hub-client">
-      <button type="button" className="hub-client-btn" onClick={onOpen} aria-haspopup="dialog">
-        <div className="hub-client-head">
-          <span className="hub-client-name">{c.clientName(cl.id)}</span>
-          {cl.business && <span className="hub-client-biz">{cl.business}</span>}
-        </div>
-        <div className="hub-client-progress">
+    <li>
+      <button type="button" className="hub-card" data-tone={tone || undefined} onClick={onOpen} aria-haspopup="dialog">
+        <span className="hub-card-head">
+          <span className="hub-card-name">{c.clientName(cl.id)}</span>
+          {cl.business && <span className="hub-card-biz">{cl.business}</span>}
+        </span>
+        {cl.next_action && <span className="hub-card-next"><span>הצעד הבא</span>{shortTitle(cl.next_action)}</span>}
+        <span className="hub-card-chips">
+          {late > 0 && <span className="hub-chip late">{late} באיחור</span>}
+          {mineNow > 0 && !late && <span className="hub-chip now">{mineNow} עליך עד מחרתיים</span>}
+          {cl.next_meeting_at && <span className="hub-chip">📅 {fmtDay(cl.next_meeting_at)} {fmtTime(cl.next_meeting_at)}</span>}
+          {cl.waiting_on && <span className="hub-chip">⏳ {cut(cl.waiting_on.replace(/^ל/, ''), 24)}{waitDays != null ? ` · ${daysWord(waitDays)}` : ''}</span>}
+          {owed && <span className={`hub-chip${moneyDays > 14 ? ' late' : ''}`}>💰 {owed.amount ? `${Number(owed.amount).toLocaleString('he-IL')} ₪` : 'לגבות'}</span>}
+        </span>
+        <span className="hub-card-progress">
           <span className="hub-bar" aria-hidden="true"><span style={{ width: `${pct}%` }} /></span>
-          <span className="hub-client-n">{cl.tasks_done}/{cl.tasks_total} משימות</span>
-          {late > 0 && <span className="late">{late} באיחור</span>}
-        </div>
-        {cl.next_action && <p className="hub-client-next"><span>הצעד הבא</span>{cl.next_action}</p>}
-        <div className="hub-client-facts">
-          {cl.waiting_on && <span>ממתין ל{cl.waiting_on.replace(/^ל/, '')}{waitDays != null ? ` · ${daysWord(waitDays)}` : ''}</span>}
-          {cl.next_meeting_at && <span>פגישה {fmtDay(cl.next_meeting_at)} {fmtTime(cl.next_meeting_at)}</span>}
-          {cl.payment_status && <span className="late">💰 {cl.payment_status}</span>}
-        </div>
+          <span>{cl.tasks_done}/{cl.tasks_total}</span>
+          {cl.files?.length ? <span>📎 {cl.files.length}</span> : null}
+        </span>
       </button>
+    </li>
+  );
+}
+
+/* a client file: uploaded only when tapped. The tab opens on the tap (popup blockers),
+   the agent uploads within seconds, then the tab gets a 10-minute signed link */
+function FileRow({ f, clientId }) {
+  const [state, setState] = useState(null); // null | 'wait' | 'err'
+  const ext = (f.n.match(/\.[a-z0-9]+$/i) || [''])[0].toLowerCase();
+  const obj = `${f.k}${ext}`;
+  const name = f.n.replace(/\.[a-z0-9]+$/i, '').replace(/_/g, ' ');
+  const open = async () => {
+    const w = window.open('', '_blank');
+    if (w) w.document.write('<p dir="rtl" style="font-family:sans-serif;padding:24px">פותח את הקובץ מהמחשב, עוד כמה שניות…</p>');
+    setState('wait');
+    const sign = () => supabase.storage.from('hub-files').createSignedUrl(obj, 600);
+    let { data } = await sign();
+    if (!data?.signedUrl) {
+      const ins = await supabase.from('hub_actions').insert({ kind: 'file_open', target_id: f.k, payload: { client_id: clientId, label: cut(f.n, 80) } }).select('id').single();
+      if (ins.error) { w?.close(); setState('err'); return; }
+      for (let i = 0; i < 40 && !data?.signedUrl; i++) {
+        await new Promise((r) => setTimeout(r, 1500));
+        const a = await supabase.from('hub_actions').select('status,error').eq('id', ins.data.id).single();
+        if (a.data?.status === 'failed') { w?.close(); setState('err'); alert(a.data.error || 'הקובץ לא נפתח'); return; }
+        if (a.data?.status === 'applied') ({ data } = await sign());
+      }
+    }
+    if (!data?.signedUrl) { w?.close(); setState('err'); alert('המחשב לא ענה. בדוק שסוכן הסנכרון דולק ונסה שוב'); return; }
+    setState(null);
+    if (w) w.location.href = data.signedUrl; else window.location.href = data.signedUrl;
+  };
+  return (
+    <li className="hub-row">
+      <div className="hub-row-line">
+        <span className="hub-file-ico" aria-hidden="true">{ext === '.mp4' ? '🎬' : '📄'}</span>
+        <span className="hub-row-btn"><span className="main">{name}</span></span>
+        <span className="meta">{[f.f, fmtShortDate(f.t), f.s >= 1 ? `${f.s}MB` : null].filter(Boolean).join(' · ')}</span>
+        <button type="button" className="hub-act" onClick={open} disabled={state === 'wait'}>{state === 'wait' ? 'פותח…' : state === 'err' ? 'שוב' : 'פתח'}</button>
+      </div>
     </li>
   );
 }
 
 function ClientDrawer({ cl, c, onClose }) {
   const ref = useRef(null);
+  const [tab, setTab] = useState('tasks');
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', onKey);
@@ -1008,17 +1068,17 @@ function ClientDrawer({ cl, c, onClose }) {
     && (hasTime(e) ? new Date(e.starts_at).getTime() >= c.now - 60 * 60000 : isoDay(new Date(e.starts_at)) >= c.today))
     .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
   const undated = c.events.filter((e) => e.client_id === cl.id && !e.starts_at);
+  const files = cl.files || [];
 
   const taskRow = (t) => {
     const late = t.due ? daysBetween(t.due, c.today) : null;
     return (
       <TaskRow key={t.id} t={t} c={c} noClient
-        meta={t.due_text ? (late > 0 ? `באיחור ${daysWord(late)}` : t.due_text) : null}
+        meta={t.due ? (late > 0 ? `באיחור ${daysWord(late)}` : late === 0 ? 'היום' : fmtShortDate(t.due)) : null}
         metaTone={late > 0 ? 'late' : undefined}
         details={[['אחראי', t.owner], ['ממתין ל', t.waiting_on], ['פתוחה מאז', fmtShortDate(t.since)], ['סטטוס', t.status_note]]} />
     );
   };
-  /* tasks added here that the agent hasn't written yet */
   const newRows = (side) => c.added
     .filter((a) => a.payload?.client_id === cl.id && (a.payload?.owner === 'לקוח') === (side === 'theirs'))
     .map((a) => <Row key={a.id} main={a.payload.title} pending="new" meta={<Clock />} />);
@@ -1029,68 +1089,82 @@ function ClientDrawer({ cl, c, onClose }) {
     <div className="hub-drawer-wrap" onClick={onClose}>
       <aside className="hub-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" tabIndex={-1} ref={ref} onClick={(e) => e.stopPropagation()}>
         <div className="hub-drawer-head">
-          <div>
+          <div style={{ minWidth: 0 }}>
             <h2 id="drawer-title">{c.clientName(cl.id)}</h2>
             {cl.business && <p className="hub-client-biz">{cl.business}</p>}
           </div>
+          <div className="hub-drawer-links">
+            <WaButton phone={cl.phone} label="וואטסאפ" />
+            {cl.phone && <a className="hub-act" href={`tel:+${cl.phone}`}>חייג</a>}
+          </div>
           <button type="button" className="hub-close" onClick={onClose} aria-label="סגור">✕</button>
+        </div>
+        {cl.next_action && <p className="hub-drawer-next"><span>הצעד הבא</span>{cl.next_action}</p>}
+        <div className="hub-drawer-tabs" role="tablist">
+          <button type="button" role="tab" aria-selected={tab === 'tasks'} onClick={() => setTab('tasks')}>משימות <b>{mine.length + theirs.length + agentTasks.length}</b></button>
+          <button type="button" role="tab" aria-selected={tab === 'files'} onClick={() => setTab('files')}>קבצים <b>{files.length}</b></button>
+          <button type="button" role="tab" aria-selected={tab === 'info'} onClick={() => setTab('info')}>סיכום</button>
         </div>
 
         <div className="hub-drawer-body">
-          {cl.next_action && <p className="hub-client-next"><span>הצעד הבא</span>{cl.next_action}</p>}
-          {cl.status && <p className="hub-drawer-status"><span>סוכם</span>{cl.status}</p>}
-
-          <div className="hub-drawer-links">
-            <WaButton phone={cl.phone} label="פתח בוואטסאפ" />
-            {cl.phone && <a className="hub-act" href={`tel:+${cl.phone}`}>חייג</a>}
-          </div>
-
-          {meetings.length > 0 && (
+          {tab === 'tasks' && <>
+            {meetings.length > 0 && (
+              <div className="hub-drawer-block">
+                <h3>מועדים</h3>
+                <ul className="hub-rows">{meetings.map((e) => <Row key={e.id} main={clean(e.title)} meta={`${fmtDay(e.starts_at)} ${hasTime(e) ? fmtTime(e.starts_at) : ''}`.trim()}
+                  action={e.prep_pdf && <PrepButton path={e.prep_pdf} />} details={[['מתי', e.when_text]]} />)}</ul>
+              </div>
+            )}
             <div className="hub-drawer-block">
-              <h3>מועדים</h3>
-              <ul className="hub-rows">{meetings.map((e) => <Row key={e.id} main={e.title} meta={`${fmtDay(e.starts_at)} ${hasTime(e) ? fmtTime(e.starts_at) : ''}`.trim()}
-                action={e.prep_pdf && <PrepButton path={e.prep_pdf} />} details={[['מתי', e.when_text]]} />)}</ul>
+              <h3>עליך <span className="n">{mine.length + mineNew.length}</span></h3>
+              {mine.length + mineNew.length ? <ul className="hub-rows">{mine.map(taskRow)}{mineNew}</ul> : <p className="hub-empty">אין משימות פתוחות עליך</p>}
+            </div>
+            {theirs.length + theirsNew.length > 0 && (
+              <div className="hub-drawer-block">
+                <h3>מחכה להם <span className="n">{theirs.length + theirsNew.length}</span></h3>
+                <ul className="hub-rows">{theirs.map(taskRow)}{theirsNew}</ul>
+              </div>
+            )}
+            {agentTasks.length > 0 && (
+              <div className="hub-drawer-block">
+                <h3>אצל הסוכנים <span className="n">{agentTasks.length}</span></h3>
+                <ul className="hub-rows">{agentTasks.map(taskRow)}</ul>
+              </div>
+            )}
+            <AddTask clientId={cl.id} today={c.today} />
+          </>}
+
+          {tab === 'files' && (
+            <div className="hub-drawer-block">
+              {files.length ? <>
+                <ul className="hub-rows">{files.map((f) => <FileRow key={f.k} f={f} clientId={cl.id} />)}</ul>
+                <p className="hub-readonly">הגרסה האחרונה של כל מסמך מהתיקייה (PDF וסרטונים). קובץ עולה לענן רק כשלוחצים "פתח", ונמחק משם אחרי יום.</p>
+              </> : <p className="hub-empty">אין עדיין קבצי PDF או סרטונים בתיקייה של הלקוח</p>}
             </div>
           )}
 
-          {undated.length > 0 && (
-            <div className="hub-drawer-block">
-              <h3>מועדים בלי תאריך <span className="n">{undated.length}</span></h3>
-              <ul className="hub-rows">{undated.map((e) => <Row key={e.id} main={e.title} sub={e.when_text} details={[['מתי', e.when_text]]} />)}</ul>
+          {tab === 'info' && <>
+            {cl.status && <p className="hub-drawer-status"><span>סוכם</span>{cl.status}</p>}
+            {cl.payment_status && <p className="hub-drawer-status"><span>תשלום</span>{cl.payment_status}</p>}
+            {undated.length > 0 && (
+              <div className="hub-drawer-block">
+                <h3>מועדים בלי תאריך <span className="n">{undated.length}</span></h3>
+                <ul className="hub-rows">{undated.map((e) => <Row key={e.id} main={clean(e.title)} sub={e.when_text} details={[['מתי', e.when_text]]} />)}</ul>
+              </div>
+            )}
+            {done.length > 0 && (
+              <div className="hub-drawer-block">
+                <h3>בוצע לאחרונה</h3>
+                <ul className="hub-rows hub-done">{done.map((t) => <Row key={t.id} main={shortTitle(t.title)} meta={fmtShortDate(t.done_at)} details={[['המשימה המלאה', clean(t.title)]]} />)}</ul>
+              </div>
+            )}
+            <div className="hub-client-progress">
+              <span className="hub-bar" aria-hidden="true"><span style={{ width: `${cl.tasks_total ? Math.round((cl.tasks_done / cl.tasks_total) * 100) : 0}%` }} /></span>
+              <span>{cl.tasks_done}/{cl.tasks_total} משימות נסגרו</span>
             </div>
-          )}
-
-          <div className="hub-drawer-block">
-            <h3>עליי <span className="n">{mine.length + mineNew.length}</span></h3>
-            {mine.length + mineNew.length ? <ul className="hub-rows">{mine.map(taskRow)}{mineNew}</ul> : <p className="hub-empty">אין משימות פתוחות עליי</p>}
-          </div>
-
-          {theirs.length + theirsNew.length > 0 && (
-            <div className="hub-drawer-block">
-              <h3>מחכה להם <span className="n">{theirs.length + theirsNew.length}</span></h3>
-              <ul className="hub-rows">{theirs.map(taskRow)}{theirsNew}</ul>
-            </div>
-          )}
-
-          {agentTasks.length > 0 && (
-            <div className="hub-drawer-block">
-              <h3>אצל הסוכנים <span className="n">{agentTasks.length}</span></h3>
-              <ul className="hub-rows">{agentTasks.map(taskRow)}</ul>
-            </div>
-          )}
-
-          <AddTask clientId={cl.id} today={c.today} />
-
-          {done.length > 0 && (
-            <div className="hub-drawer-block">
-              <h3>בוצע לאחרונה</h3>
-              <ul className="hub-rows hub-done">{done.map((t) => <Row key={t.id} main={t.title} meta={fmtShortDate(t.done_at)} />)}</ul>
-            </div>
-          )}
-
-          {cl.payment_status && <p className="hub-drawer-status"><span>תשלום</span>{cl.payment_status}</p>}
-          {cl.folder_path && <p className="hub-folder" title="התיקייה במרכז">📁 {cl.folder_path}</p>}
-          <p className="hub-readonly">מה שמסומן כאן נכתב ל-משימות_תיק.md של הלקוח כשהמחשב מסנכרן (תוך פחות מדקה כשהוא דולק). שינוי שלב ועריכת זיכרון הלקוח נשארים אצל Claude.</p>
+            {cl.folder_path && <p className="hub-folder" title="התיקייה במרכז">📁 {cl.folder_path}</p>}
+            <p className="hub-readonly">מה שמסומן כאן נכתב ל-משימות_תיק.md של הלקוח כשהמחשב מסנכרן. שינוי שלב ועריכת זיכרון הלקוח נשארים אצל Claude.</p>
+          </>}
         </div>
       </aside>
     </div>
