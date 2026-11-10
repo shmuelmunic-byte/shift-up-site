@@ -94,7 +94,8 @@ const isAgents = (t) => whoseTurn(t).who === 'agent';
 /* one short line: no enumeration ("ד. "), no leading status emoji, details after the first bracket go to the details */
 function shortTitle(s) {
   let x = String(clean(s) || '').replace(/\*\*/g, '').replace(/^[^\p{L}\p{N}"']+/u, '').replace(/^[א-ת]\.\s+/, '').trim();
-  if (x.length > 64) { const at = x.search(/\s\(|:\s|\s→|\s·\s/); if (at > 18) x = x.slice(0, at); }
+  if (x.length > 56) x = x.replace(/\s*\([^)]*\)/g, '').replace(/\s{2,}/g, ' ').trim(); // brackets go to the details
+  if (x.length > 56) { const at = x.search(/:\s|\s→|\s·\s|\s\+\s/); if (at > 8) x = x.slice(0, at); }
   return x;
 }
 const isOpen = (t) => t.section === 'פתוח' && (t.status === 'open' || t.status === 'waiting');
