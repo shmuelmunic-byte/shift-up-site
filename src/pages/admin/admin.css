@@ -607,3 +607,19 @@ button.hub-check:hover::after { opacity: 0.5; }
 .hub-card { min-width: 0; overflow: hidden; }
 .hub-card-head { display: grid; gap: 2px; min-width: 0; }
 .hub-card-biz { display: block; min-width: 0; }
+
+/* 10.11 (Pally P6): 4 big cards, next steps, then small cards */
+@media (min-width: 640px) { .hub-tiles:not(.hub-tiles-small) { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.hub-tiles:not(.hub-tiles-small) .hub-tile { min-height: 118px; }
+.hub-next { margin-top: 20px; }
+.hub-next h2 { font-size: 0.9rem; font-weight: 700; color: var(--text-secondary); margin: 0 0 2px; }
+.hub-tiles-small { margin-top: 20px; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+@media (min-width: 900px) { .hub-tiles-small { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+.hub-tiles-small .hub-tile { min-height: 0; padding: 10px 12px; gap: 0; border-inline-start-width: 3px; }
+.hub-tiles-small .hub-tile-label { font-size: 0.8rem; }
+.hub-tiles-small .hub-tile-n { font-size: 1.35rem; }
+.hub-tiles-small .hub-tile-sub { font-size: 0.74rem; }
+@media (max-width: 639px) {
+  .hub-next .hub-rows > li:nth-child(n+4) { display: none; } /* phone: 3 steps */
+  .hub-tiles-small .hub-tile-sub { display: none; }
+}

@@ -520,11 +520,12 @@ function useComputed() {
    Shmuel: "תור רק אחרי לחיצה אבל קודם כרטיסים". The home screen fits one screen:
    the one thing, then a card per kind of work with its number. A card opens its queue
    (?q=key, so Back returns to the cards). Keys: 1-9 open a card, Esc goes back. */
-const TILE_KEYS = ['mine', 'reply', 'calls', 'money', 'waiting', 'reach', 'agents', 'leads', 'clients'];
+const TILE_KEYS = ['late', 'today', 'mine', 'reply', 'calls', 'money', 'waiting', 'reach', 'agents', 'leads', 'clients'];
 
 function buildTiles(c, newLeads, activeCount, pipeCount) {
   if (!c) return [];
   const lateMine = c.dueAll.filter((t) => t.due < c.today).length;
+  const todayMine = c.dueAll.length - lateMine;
   const nextCall = c.calls.find((e) => hasTime(e) && new Date(e.starts_at).getTime() > c.now);
   const oldReply = c.replies.some((r) => (c.now - new Date(r.last_message_at).getTime()) > 86400000);
   const oldest = c.replies.reduce((a, r) => (!a || String(r.last_message_at) < String(a) ? r.last_message_at : a), null);
@@ -532,14 +533,17 @@ function buildTiles(c, newLeads, activeCount, pipeCount) {
   const oldMoney = c.collect.some((x) => daysBetween(x.since, c.today) > 14);
   const agentsForMe = c.agents.filter((t) => whoseTurn(t).then).length;
   return [
-    { key: 'mine', label: 'עליך היום', n: c.dueAll.length, tone: lateMine ? 'late' : c.dueAll.length ? 'now' : null,
-      sub: lateMine ? `${lateMine} באיחור` : c.soonMine.length ? `עוד ${c.soonMine.length} השבוע` : 'אין משימות להיום' },
-    { key: 'reply', label: 'לענות', n: c.replies.length, tone: oldReply ? 'late' : c.replies.length ? 'now' : null,
+    /* 10.11 (Pally, P6): four big cards on top, the rest small */
+    { key: 'late', size: 'big', label: 'באיחור', n: lateMine, tone: lateMine ? 'late' : null,
+      sub: lateMine ? `הכי ותיקה ${daysWord(daysBetween(c.dueAll[0].due, c.today))}` : 'שום דבר לא באיחור' },
+    { key: 'today', size: 'big', label: 'להיום', n: todayMine, tone: todayMine ? 'now' : null,
+      sub: c.calls.length ? `ועוד ${c.calls.length === 1 ? 'שיחה אחת' : `${c.calls.length} שיחות`} ביומן` : c.soonMine.length ? `עוד ${c.soonMine.length} השבוע` : 'יום פנוי' },
+    { key: 'reply', size: 'big', label: 'לענות', n: c.replies.length, tone: oldReply ? 'late' : c.replies.length ? 'now' : null,
       sub: oldest ? `הכי ותיקה ${ago(oldest, c.now)}` : 'אף אחד לא מחכה' },
+    { key: 'money', size: 'big', label: 'כסף לגבות', n: c.collect.length, big: c.collect.length ? money(moneySum) : '0', tone: oldMoney ? 'late' : c.collect.length ? 'now' : null,
+      sub: c.collect.length ? `${c.collect.length} פתוחים` : 'הכל נכנס' },
     { key: 'calls', label: 'שיחות היום', n: c.calls.length, tone: c.calls.length ? 'now' : null,
       sub: nextCall ? `הבאה ב-${fmtTime(nextCall.starts_at)}` : c.upcoming.length ? `עוד ${c.upcoming.length} השבוע` : 'יומן פנוי' },
-    { key: 'money', label: 'כסף לגבות', n: c.collect.length, big: c.collect.length ? money(moneySum) : '0', tone: oldMoney ? 'late' : c.collect.length ? 'now' : null,
-      sub: c.collect.length ? `${c.collect.length} פתוחים` : 'הכל נכנס' },
     { key: 'waiting', label: 'מחכה ללקוח', n: c.waiting.length, tone: c.waiting.length ? 'quiet' : null,
       sub: c.waiting.length ? `הכי ותיקה ${daysWord(daysBetween(c.waiting[0].since, c.today))}` : 'אף אחד לא תקוע' },
     { key: 'reach', label: 'לפנות', n: c.reach.length, tone: c.reach.length ? 'quiet' : null, sub: c.reach.length ? 'שתקו אחרי ההודעה שלך' : 'אין למי' },
@@ -626,8 +630,12 @@ export function TodayView({ newLeads = 0, onGo }) {
     <>
       <OneThing c={c} />
       {c.failed.length ? <FailedNotice failed={c.failed} /> : null}
-      <ul className="hub-tiles" aria-label="מה מחכה">
-        {tiles.map((t, i) => <Tile key={t.key} t={t} i={i} onOpen={openQ} />)}
+      <ul className="hub-tiles" aria-label="הכי דחוף">
+        {tiles.filter((t) => t.size === 'big').map((t) => <Tile key={t.key} t={t} i={tiles.indexOf(t)} onOpen={openQ} />)}
+      </ul>
+      <NextActions c={c} />
+      <ul className="hub-tiles hub-tiles-small" aria-label="עוד">
+        {tiles.filter((t) => t.size !== 'big').map((t) => <Tile key={t.key} t={t} i={tiles.indexOf(t)} onOpen={openQ} />)}
       </ul>
       <div className="hub-stats">
         {c.goal?.target ? <GoalStrip goal={c.goal} /> : null}
@@ -661,6 +669,41 @@ function OneThing({ c }) {
   );
 }
 
+/* up to 5 next steps right under the big cards (3 on a phone): late first, then who waits for an answer, then today */
+function NextActions({ c }) {
+  const late = c.dueAll.filter((t) => t.due < c.today);
+  const today = c.dueAll.filter((t) => t.due === c.today);
+  const oneId = c.one?.task?.id;
+  const items = [
+    ...late.filter((t) => t.id !== oneId).map((t) => ({ k: t.id, t })),
+    ...c.replies.slice(0, 3).map((r) => ({ k: r.id, r })),
+    ...today.filter((t) => t.id !== oneId).map((t) => ({ k: t.id, t })),
+  ].slice(0, 5);
+  if (!items.length) return null;
+  return (
+    <section className="hub-next" aria-labelledby="s-next">
+      <h2 id="s-next">הצעדים הבאים</h2>
+      <ul className="hub-rows">
+        {items.map(({ k, t, r }) => {
+          if (r) {
+            const preview = String(r.preview || '').replace(/^\[איש קשר\]\s*/, 'שלח איש קשר: ');
+            return (
+              <Row key={k} main={<><span className="hub-verb">לענות</span><b>{c.clientName(r.client_id) || fmtPhone(r.contact_name)}</b></>} sub={cut(clean(preview), 60)}
+                meta={ago(r.last_message_at, c.now)} action={<WaButton phone={r.phone} label="לענות" />}
+                details={[['הודעה אחרונה', preview]]} />
+            );
+          }
+          const late = daysBetween(t.due, c.today);
+          return (
+            <TaskRow key={k} t={t} c={c} meta={late > 0 ? `באיחור ${daysWord(late)}` : 'היום'} metaTone={late > 0 ? 'late' : undefined}
+              details={[['אחראי', t.owner], ['ממתין ל', t.waiting_on], ['סטטוס', t.status_note]]} />
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
 function Group({ title, tone, children, empty }) {
   const has = [children].flat(Infinity).some(Boolean);
   if (!has && !empty) return null;
@@ -684,13 +727,20 @@ function Queue({ q, c }) {
   const tDetails = (t) => [['אחראי', t.owner], ['ממתין ל', t.waiting_on], ['סטטוס', t.status_note], ['פתוחה מאז', fmtShortDate(t.since)]];
   const task = (t, extra) => <TaskRow key={t.id} t={t} c={c} {...taskMeta(t)} details={tDetails(t)} extra={extra} />;
 
-  if (q === 'mine') {
+  if (q === 'late') {
     const late = c.dueAll.filter((t) => t.due < c.today);
+    return <Group empty="שום דבר לא באיחור, יפה">{late.map((t) => task(t))}</Group>;
+  }
+  if (q === 'today' || q === 'mine') {
     const today = c.dueAll.filter((t) => t.due === c.today);
     return (
       <>
-        <Group title="באיחור" tone="late">{late.map((t) => task(t))}</Group>
-        <Group title="היום" empty={late.length ? null : 'אין משימות להיום'}>{today.map((t) => task(t))}</Group>
+        <Group title="משימות להיום" empty="אין משימות להיום">{today.map((t) => task(t))}</Group>
+        <Group title="ביומן היום">{c.calls.map((e) => (
+          <Row key={e.id} main={<><span className="hub-time">{hasTime(e) ? fmtTime(e.starts_at) : 'היום'}</span>{clean(e.title)}</>}
+            action={<>{e.prep_pdf && <PrepButton path={e.prep_pdf} />}{isCall(e) && <WaButton phone={c.clients.get(e.client_id)?.phone} />}</>}
+            details={[['מתי', e.when_text], ['לקוח', c.clientName(e.client_id)]]} />
+        ))}</Group>
         <Group title="בהמשך השבוע">{c.soonMine.map((t) => task(t))}</Group>
         {c.noDateMine.length > 0 && (
           <details className="hub-pipe">
