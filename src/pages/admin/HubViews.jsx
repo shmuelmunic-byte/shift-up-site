@@ -43,12 +43,22 @@ function workdaysBefore(iso, n) {
   for (let k = 0; k < n;) { d = addDays(d, -1); if (weekday(d) !== 5 && weekday(d) !== 6) k += 1; }
   return d;
 }
-const goalOf = (t) => (t.due ? workdaysBefore(t.due, GOAL_DAYS) : null);
+/* a task tied to a fixed moment (a call, a meeting, an open day, a Shabbat pause, questions asked in a call)
+   happens ON its date: no buffer. Preparing for it still gets the buffer. 📌 marks it explicitly (10.11) */
+const FIXED_RE = /📌|📞|🕯️|🎯|שיחת|שיחה(?!\s*הבאה)|פגישה|פגישת|זום|יום פתוח|הצגת|בשיחה|בפגישה|בהצגת|השהיה|להשהות|הפעלה במוצ|עלייה|לחייג|להתקשר/;
+const PREP_RE = /הכנה|להכין|הכנת|לפני השיחה|לפני הפגישה|PDF/;
+const isFixed = (t) => { const s = `${t.title || ''} ${t.owner || ''}`; return FIXED_RE.test(s) && !PREP_RE.test(t.title || ''); };
+const goalOf = (t) => (t.due ? (isFixed(t) ? t.due : workdaysBefore(t.due, GOAL_DAYS)) : null);
 /* one meta line: past the deadline (red), past the target (amber), target today, or "finish by" */
 function deadlineMeta(t, today) {
   if (!t.due) return { meta: null };
   const g = goalOf(t);
   const over = daysBetween(t.due, today);
+  if (isFixed(t)) {
+    if (over > 0) return { meta: `המועד עבר לפני ${daysWord(over)}`, metaTone: 'late' };
+    if (over === 0) return { meta: '📌 היום', metaTone: 'now' };
+    return { meta: `📌 ${fmtShortDate(t.due)}` };
+  }
   if (over > 0) return { meta: `באיחור ${daysWord(over)}`, metaTone: 'late' };
   if (g < today) return { meta: `עבר היעד · דדליין ${fmtShortDate(t.due)}`, metaTone: 'warn' };
   if (g === today) return { meta: `לסיים היום · דדליין ${fmtShortDate(t.due)}`, metaTone: 'now' };
