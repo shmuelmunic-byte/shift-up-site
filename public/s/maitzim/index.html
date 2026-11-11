@@ -128,7 +128,7 @@ h1 em{font-style:normal;color:var(--gold-l);font-weight:500}
 .nc{position:absolute;transform:translate(-50%,-50%) rotateX(calc(var(--in,0) * 75deg)) scale(calc(1 - var(--in,0) * .2));opacity:calc(1 - var(--in,1));min-width:124px;padding:7px 14px 8px;text-align:center;
   background:linear-gradient(160deg,#2A241C 0%,#15110D 60%,#0F0C09 100%);border:1px solid rgba(198,161,91,.55);
   box-shadow:0 14px 28px rgba(0,0,0,.65),inset 0 0 0 3px rgba(20,17,14,.9),inset 0 0 0 4px rgba(198,161,91,.22);
-  transition:background .5s,border-color .5s,box-shadow .5s,filter .5s,color .5s;pointer-events:none}
+  transition:background .5s,border-color .5s,box-shadow .5s,filter .5s,color .5s,opacity .6s;pointer-events:none}
 .nc:before{content:"";position:absolute;top:-4px;left:50%;width:7px;height:7px;background:var(--gold);transform:translateX(-50%) rotate(45deg)}
 .nc .k{display:block;font-size:9.5px;letter-spacing:.22em;color:var(--gold-d);font-weight:500}
 .nc b{display:block;font-size:15.5px;font-weight:500;color:var(--onnight);margin:2px 0 3px;white-space:nowrap}
@@ -139,6 +139,17 @@ h1 em{font-style:normal;color:var(--gold-l);font-weight:500}
 .nc.sub{border-color:var(--gold);box-shadow:0 14px 28px rgba(0,0,0,.65),0 0 22px rgba(217,181,108,.28),inset 0 0 0 3px rgba(20,17,14,.9),inset 0 0 0 4px rgba(217,181,108,.45)}
 .nc.sub .st{color:var(--gold-l)}
 .nc.lose{filter:saturate(.4) brightness(.6)}
+.nc{--o:1;opacity:calc((1 - var(--in,1)) * var(--o))}
+.nc .st{min-height:1.45em}
+.nc.out{--o:.32;filter:saturate(.2);border-color:rgba(198,161,91,.25)}
+.nc.out:before{background:rgba(198,161,91,.35)}
+.nc.pick{border-color:var(--gold-l);box-shadow:0 14px 28px rgba(0,0,0,.65),0 0 18px rgba(217,181,108,.22),inset 0 0 0 3px rgba(20,17,14,.9),inset 0 0 0 4px rgba(217,181,108,.4)}
+.nc.pick .st{color:var(--gold-l)}
+.tframe line.pick{stroke:rgba(217,181,108,.3);stroke-dasharray:2 7}
+/* השוק סביב השולחן */
+.mkt{position:absolute;inset:0;pointer-events:none;opacity:var(--a,0)}
+.mkt i{position:absolute;width:15px;height:9px;transform:translate(-50%,-50%);border:1px solid rgba(198,161,91,.7);background:var(--night2);opacity:var(--o);transition:opacity .9s var(--ease)}
+.tframe.sel .mkt i{opacity:calc(var(--o) * .28)}
 .nc.win{background:linear-gradient(160deg,#F0D396 0%,#C9A15A 55%,#9C7634 100%);border-color:#F6DEA6;filter:none;
   box-shadow:0 0 40px rgba(217,181,108,.65),0 16px 30px rgba(0,0,0,.6),inset 0 0 0 3px rgba(255,240,205,.35)}
 .nc.win .k{color:#5A4116}.nc.win b{color:var(--night);font-weight:600}.nc.win .st{color:#3A2A0E;font-weight:600}
@@ -319,11 +330,32 @@ form .note{font-size:12px;color:var(--onnight-m);margin-top:12px;text-align:cent
 /* מימונים שבנינו */
 .mhead{display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:end}
 .mnote{border:1px solid var(--gold);background:rgba(198,161,91,.08);padding:18px 22px;font-size:17px;line-height:1.6;color:var(--gold-l);font-weight:500}
-.exs{margin-top:60px;border-top:1px solid rgba(198,161,91,.4)}
-.ex{display:grid;grid-template-columns:200px minmax(0,1fr) 300px;gap:44px;padding:40px 0;border-bottom:1px solid rgba(198,161,91,.18);align-items:start}
-.ex .tag .num{display:block;font-size:13px;color:var(--gold);letter-spacing:.12em;margin-bottom:10px}
-.ex .tag b{display:block;font-size:21px;font-weight:500;color:var(--onnight)}
-.ex .tag span:not(.num){display:block;font-size:14px;color:var(--onnight-m);margin-top:6px;line-height:1.5}
+/* מימונים שבנינו: כרטיסים לחיצים, פירוט נפתח מתחת */
+.exs{margin-top:56px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:18px;align-items:stretch}
+.ex{display:contents}
+.exh{grid-row:1;position:relative;display:grid;grid-template-columns:1fr auto;grid-template-areas:"n p" "t t" "b b";align-content:start;row-gap:14px;text-align:right;font-family:inherit;color:var(--onnight);cursor:pointer;
+  background:var(--night3);border:1px solid rgba(198,161,91,.3);padding:26px 28px 30px;min-height:252px;transition:border-color .4s,background .4s,transform .4s var(--ease)}
+.exh:before{content:"";position:absolute;top:-1px;right:-1px;height:2px;width:56px;background:var(--gold);transition:width .6s var(--ease)}
+.exh:hover{border-color:rgba(198,161,91,.7)}
+.exh:hover:before,.exh[aria-expanded="true"]:before{width:calc(100% + 2px)}
+.exh:focus-visible{outline:2px solid var(--gold-l);outline-offset:3px}
+.exh .en{grid-area:n;font-size:13px;color:var(--gold);letter-spacing:.14em;font-weight:500}
+.exh .et{grid-area:t}
+.exh .et b{display:block;font-size:23px;font-weight:500;line-height:1.25}
+.exh .et span{display:block;font-size:15px;color:var(--onnight-m);margin-top:6px;line-height:1.5}
+.exh .eb{grid-area:b;align-self:end;font-size:50px;font-weight:300;line-height:1;color:var(--gold-l);margin-top:8px;letter-spacing:-.01em}
+.exh .pl{grid-area:p;width:34px;height:34px;border:1px solid rgba(198,161,91,.55);position:relative;transition:transform .45s var(--ease),background .3s}
+.exh .pl:before,.exh .pl:after{content:"";position:absolute;top:50%;left:50%;background:var(--gold-l);transform:translate(-50%,-50%)}
+.exh .pl:before{width:12px;height:1.5px}.exh .pl:after{width:1.5px;height:12px;transition:transform .45s var(--ease)}
+.exh[aria-expanded="true"]{border-color:var(--gold);background:linear-gradient(rgba(198,161,91,.07),rgba(198,161,91,.07)),var(--night3)}
+.exh[aria-expanded="true"] .pl{background:var(--gold);transform:rotate(180deg)}
+.exh[aria-expanded="true"] .pl:before{background:var(--night)}
+.exh[aria-expanded="true"] .pl:after{transform:translate(-50%,-50%) scaleY(0)}
+.exb{grid-row:2;grid-column:1/-1;display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .6s var(--ease),opacity .45s;visibility:hidden}
+.exb.open{grid-template-rows:1fr;opacity:1;visibility:visible}
+.exc{min-height:0;overflow:hidden}
+.exi{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:48px;align-items:start;margin-top:18px;padding:38px 40px 40px;background:linear-gradient(rgba(198,161,91,.07),rgba(198,161,91,.07)),var(--night3);border:1px solid var(--gold)}
+.exi .txt h3{margin-top:0}
 .ex h3{font-size:27px;font-weight:300;line-height:1.3;color:var(--onnight)}
 .ex h3 em{font-style:normal;color:var(--gold-l);font-weight:400}
 .ex .txt p{font-size:16.5px;color:#D8CFC2;line-height:1.75;margin-top:16px}
@@ -338,7 +370,7 @@ form .note{font-size:12px;color:var(--onnight-m);margin-top:12px;text-align:cent
 .bx .tr{display:block;height:6px;background:rgba(255,255,255,.08);margin-top:4px}
 .bx .fill{display:block;height:100%;width:0;background:#8C8273;transition:width 1.4s var(--ease)}
 .bx.you .fill{background:var(--gold);box-shadow:0 0 14px rgba(198,161,91,.5);transition-delay:.4s}
-.ex.in .fill{width:var(--w)}
+.exb.open .fill{width:var(--w)}
 .cmp small{grid-column:1/-1;font-size:12px;color:var(--onnight-m);margin-top:4px}
 
 /* אודות: תמונה */
@@ -417,6 +449,7 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
   .nc .k{font-size:7.5px;letter-spacing:.16em}
   .nc b{font-size:11.5px}
   .nc .st{font-size:8.5px}
+  .mkt i{width:10px;height:6px}
   .tstat{font-size:11px;padding:6px 12px;top:0}
   .stage .note{left:22px}
   .tent>div{font-size:11px;padding:6px 9px 7px}
@@ -460,8 +493,16 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
   .cr .d{font-size:15.5px}
   .mhead{grid-template-columns:1fr;gap:26px}
   .mnote{font-size:16px}
-  .exs{margin-top:40px}
-  .ex{grid-template-columns:1fr;gap:18px;padding:32px 0}
+  .exs{margin-top:36px;display:block}
+  .ex{display:block;margin-bottom:12px}
+  .exh{width:100%;min-height:0;padding:20px 20px 22px;grid-template-columns:auto 1fr auto;grid-template-areas:"n t p" "n b p";column-gap:16px;row-gap:10px}
+  .exh .en{padding-top:4px}
+  .exh .et b{font-size:20px}
+  .exh .et span{font-size:14px}
+  .exh .eb{font-size:36px;margin-top:2px}
+  .exh .pl{align-self:start;width:30px;height:30px}
+  .exi{grid-template-columns:1fr;gap:22px;margin-top:0;border-top:0;padding:4px 20px 24px}
+  .exh[aria-expanded="true"]{border-bottom-color:transparent}
   .ex h3{font-size:23px}
   .ex .txt p{font-size:15.5px}
   .about .side,.fhead{position:static}
@@ -528,9 +569,9 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
       <div class="wrap head">
         <div class="rv">
           <div class="lbl">ככה זה עובד אצלנו</div>
-          <h2 class="h2">היכרות עם כל שוק המימון, <em>ופנייה רק למי שמתאים לפרויקט שלך</em></h2>
+          <h2 class="h2">מכרז אחד, <em>וכל גופי המימון שמתאימים לפרויקט</em></h2>
         </div>
-        <p class="side rv d1">אנחנו פונים בדיסקרטיות למספר מצומצם של גופים שמתאימים לפרויקט, אוספים הצעות ומנהלים את המשא ומתן, <b>ואתה בוחר את הטובה ביותר</b></p><!-- PENDING-APPROVAL-5 -->
+        <p class="side rv d1">אנחנו פונים בצורה דיסקרטית וממוקדת לגופים שמתאימים לפרויקט, אוספים הצעות ומנהלים את המשא ומתן, <b>ואתה בוחר את הטובה ביותר</b></p>
       </div>
       <div class="wrap stage" id="stage">
         <div class="tframe" id="tframe" role="img" aria-label="המחשה: שולחן ישיבות, הפרויקט שלך במרכז וגופי המימון סביבו">
@@ -631,8 +672,14 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
       <p class="mnote rv d1">אלה לא מוצרים למכירה, כל פרויקט נבחן לגופו, והדוגמאות כאן נועדו להראות איך אנחנו חושבים</p>
     </div>
     <div class="exs" id="bars">
-      <article class="ex rv">
-        <div class="tag"><span class="num">01</span><b>שותף הוני</b><span>לשמור על השליטה עם פחות הון עצמי</span></div>
+      <article class="ex">
+        <button type="button" class="exh rv" id="exh1" aria-expanded="false" aria-controls="exb1">
+          <span class="en num">01</span>
+          <span class="et"><b>שותף הוני</b><span>לשמור על השליטה עם פחות הון עצמי</span></span>
+          <span class="eb num">80%</span>
+          <span class="pl" aria-hidden="true"></span>
+        </button>
+        <div class="exb" id="exb1" role="region" aria-labelledby="exh1"><div class="exc"><div class="exi">
         <div class="txt">
           <h3>שותף הוני מכניס <em>80% מההון העצמי</em>, ואתה נשאר עם ההחלטות</h3>
           <p>במקום להכניס בין 15% ל-20% מהתקציב, או לצרף שותף יזמי שמעורב בכל צעד, שותף הוני נכנס ב-80% מחלק ההון העצמי וגובה אחוז שנתי על הכסף שלו, ואתה מכניס בין 4% ל-5% מסך התקציב, נשאר עם רוב הרווח ועם השליטה בפרויקט</p>
@@ -643,9 +690,16 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
           <div class="bx you"><span>מה שאתה מכניס במבנה הזה</span><b class="num">4%-5%</b><i class="tr"><i class="fill" style="--w:24%"></i></i></div>
           <small>דוגמה למבנה מתוך התקציב הכולל, כל פרויקט נבחן לגופו</small>
         </div>
+        </div></div></div>
       </article>
-      <article class="ex rv">
-        <div class="tag"><span class="num">02</span><b>מימון עודפים</b><span>נזילות כבר בשלב מוקדם</span></div>
+      <article class="ex">
+        <button type="button" class="exh rv d1" id="exh2" aria-expanded="false" aria-controls="exb2">
+          <span class="en num">02</span>
+          <span class="et"><b>מימון עודפים</b><span>נזילות כבר בשלב מוקדם</span></span>
+          <span class="eb num">עד 80%</span>
+          <span class="pl" aria-hidden="true"></span>
+        </button>
+        <div class="exb" id="exb2" role="region" aria-labelledby="exh2"><div class="exc"><div class="exi">
         <div class="txt">
           <h3>עד <em>80% מעודפי הפרויקט</em> אצלך בקופה, כבר בשלב הביצוע</h3>
           <p>במקום לחכות לסיום הבנייה כדי לשחרר כסף, מימון עודפים מאפשר למשוך מראש את ההון העצמי שהשקעת יחד עם הרווחים הצפויים, ולהתקדם במקביל לפרויקט הבא</p>
@@ -656,9 +710,16 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
           <div class="bx you"><span>במבנה הזה</span><b>כבר משלב ההיתר</b></div>
           <small>דוגמה מתוך פרויקטים שליווינו, כל פרויקט נבחן לגופו</small>
         </div>
+        </div></div></div>
       </article>
-      <article class="ex rv">
-        <div class="tag"><span class="num">03</span><b>משקיעים פרטיים</b><span>יציאה לדרך בלי הון עצמי מהבית</span></div>
+      <article class="ex">
+        <button type="button" class="exh rv d2" id="exh3" aria-expanded="false" aria-controls="exb3">
+          <span class="en num">03</span>
+          <span class="et"><b>משקיעים פרטיים</b><span>יציאה לדרך בלי הון עצמי מהבית</span></span>
+          <span class="eb num">עד 100%</span>
+          <span class="pl" aria-hidden="true"></span>
+        </button>
+        <div class="exb" id="exb3" role="region" aria-labelledby="exh3"><div class="exc"><div class="exi">
         <div class="txt">
           <h3>משקיע פרטי מעמיד <em>עד 100% מההון העצמי</em>, ואתה מוציא את העסקה לפועל</h3>
           <p>למשקיעים פרטיים אין ועדות חיתום ואין מדיניות מוסדית נוקשה, ואנחנו מחברים אותך למשקיע שמאמין בך ובפרויקט, הוא מעמיד עד 100% מההון העצמי הנדרש בתמורה ל-50% מרווחי הפרויקט, ואתה יוצא לדרך בלי להביא כסף מהבית</p><!-- PENDING-APPROVAL-2 -->
@@ -669,6 +730,7 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
           <div class="bx"><span>חלק המשקיע ברווחים</span><b class="num">50%</b></div><!-- PENDING-APPROVAL-2 -->
           <small>דוגמה מתוך פרויקטים שליווינו, כל פרויקט נבחן לגופו</small>
         </div>
+        </div></div></div>
       </article>
     </div>
   </div>
@@ -824,7 +886,7 @@ requestAnimationFrame(function(){setTimeout(function(){document.getElementById('
 
 // חשיפה בגלילה
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.18,rootMargin:'0px 0px -40px 0px'});
-document.querySelectorAll('.rv,.gal figure,#bars,.aimg,.ex').forEach(function(el){io.observe(el)});
+document.querySelectorAll('.rv,.gal figure,#bars,.aimg').forEach(function(el){io.observe(el)});
 
 // לוגו גדל כשנכנס למסך
 var lio=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('go');lio.unobserve(e.target)}})},{threshold:.3});
@@ -839,20 +901,26 @@ new IntersectionObserver(function(es,o){if(es[0].isIntersecting){o.disconnect();
 // המכרז: המצלמה מסתובבת ועולה עם הגלילה, ואז מכרז: כולם בודקים, מגישים, אחד נבחר
 var TP={"d":[{"c":[0.4049,0.3001],"l":[[0.5596,0.3534],[0.3539,0.3129],[0.2047,0.2835],[0.6447,0.3199],[0.4502,0.2887],[0.3038,0.2652]]},{"c":[0.4045,0.2997],"l":[[0.5584,0.3532],[0.3533,0.3125],[0.2046,0.283],[0.6443,0.3198],[0.4501,0.2884],[0.304,0.2648]]},{"c":[0.404,0.299],"l":[[0.5556,0.3531],[0.352,0.3117],[0.205,0.2818],[0.6439,0.3198],[0.4503,0.2877],[0.3053,0.2638]]},{"c":[0.4031,0.2967],"l":[[0.5509,0.3517],[0.3498,0.3091],[0.2057,0.2787],[0.6431,0.3185],[0.4506,0.2855],[0.3074,0.261]]},{"c":[0.402,0.2925],"l":[[0.5443,0.3488],[0.347,0.3047],[0.2068,0.2734],[0.642,0.3159],[0.4511,0.2816],[0.3103,0.2562]]},{"c":[0.4007,0.2862],"l":[[0.536,0.3441],[0.3436,0.2981],[0.2084,0.2659],[0.6406,0.3116],[0.4519,0.2755],[0.3142,0.2492]]},{"c":[0.3996,0.2776],"l":[[0.5262,0.3373],[0.34,0.2891],[0.2109,0.2557],[0.6392,0.3053],[0.4533,0.2672],[0.3195,0.2398]]},{"c":[0.3997,0.2672],"l":[[0.5158,0.329],[0.3372,0.2783],[0.2152,0.2436],[0.6385,0.2978],[0.4562,0.2573],[0.327,0.2285]]},{"c":[0.4021,0.2575],"l":[[0.5053,0.3214],[0.3365,0.2679],[0.2229,0.232],[0.639,0.2912],[0.4617,0.248],[0.338,0.2178]]},{"c":[0.4079,0.251],"l":[[0.495,0.3166],[0.3398,0.2607],[0.2367,0.2235],[0.6389,0.288],[0.4702,0.242],[0.3541,0.2104]]},{"c":[0.4181,0.2491],"l":[[0.486,0.3158],[0.3485,0.258],[0.2575,0.2197],[0.6384,0.2894],[0.4825,0.2409],[0.3761,0.2078]]},{"c":[0.4288,0.2527],"l":[[0.4755,0.3197],[0.3587,0.2605],[0.2813,0.2213],[0.6333,0.2961],[0.4943,0.2453],[0.3996,0.2107]]},{"c":[0.439,0.2615],"l":[[0.4638,0.3315],[0.3698,0.2686],[0.3068,0.2265],[0.6231,0.3103],[0.5044,0.2548],[0.4231,0.2167]]},{"c":[0.448,0.2742],"l":[[0.4518,0.3504],[0.3807,0.2808],[0.3323,0.2333],[0.6089,0.3312],[0.5124,0.268],[0.4455,0.2242]]},{"c":[0.4576,0.2887],"l":[[0.4423,0.3731],[0.3929,0.2944],[0.3584,0.2397],[0.5946,0.3563],[0.5203,0.2831],[0.4679,0.2315]]},{"c":[0.4665,0.3037],"l":[[0.4344,0.3971],[0.4048,0.3083],[0.3837,0.2451],[0.5799,0.3838],[0.527,0.2991],[0.489,0.2383]]},{"c":[0.4783,0.3181],"l":[[0.4317,0.4204],[0.4198,0.3212],[0.4111,0.2488],[0.5691,0.4118],[0.5362,0.3151],[0.5121,0.2442]]},{"c":[0.4927,0.3316],"l":[[0.4337,0.4419],[0.4374,0.3326],[0.4402,0.2506],[0.5626,0.4394],[0.5478,0.3307],[0.5368,0.2492]]},{"c":[0.5055,0.344],"l":[[0.4361,0.4611],[0.4535,0.3421],[0.4668,0.2508],[0.5562,0.466],[0.5578,0.3459],[0.5591,0.2538]]},{"c":[0.5138,0.3551],"l":[[0.4352,0.4777],[0.4648,0.3498],[0.488,0.2494],[0.5471,0.4913],[0.5634,0.3604],[0.5762,0.2578]]},{"c":[0.518,0.3648],"l":[[0.4311,0.4917],[0.4716,0.3556],[0.5042,0.2463],[0.5354,0.5152],[0.5651,0.3742],[0.5888,0.2614]]},{"c":[0.5182,0.3738],"l":[[0.4236,0.5037],[0.4743,0.3599],[0.5159,0.2421],[0.5211,0.5384],[0.563,0.388],[0.5973,0.2653]]},{"c":[0.5149,0.3826],"l":[[0.4127,0.5142],[0.4732,0.3633],[0.5237,0.2374],[0.5041,0.5614],[0.5577,0.4024],[0.6023,0.2702]]},{"c":[0.5123,0.3916],"l":[[0.4024,0.5232],[0.4726,0.3662],[0.5321,0.2328],[0.4883,0.5844],[0.5532,0.4177],[0.6082,0.2767]]},{"c":[0.5113,0.4011],"l":[[0.3944,0.5304],[0.4736,0.3691],[0.5421,0.2296],[0.4746,0.6064],[0.5503,0.4342],[0.6154,0.2861]]},{"c":[0.5119,0.4115],"l":[[0.3886,0.5354],[0.4763,0.3723],[0.5534,0.2289],[0.463,0.6266],[0.5487,0.452],[0.6237,0.2991]]},{"c":[0.5134,0.4218],"l":[[0.3847,0.5375],[0.4801,0.3753],[0.5655,0.2302],[0.4531,0.6438],[0.5479,0.4699],[0.6324,0.3149]]},{"c":[0.515,0.4318],"l":[[0.3816,0.5364],[0.4841,0.3778],[0.5773,0.2336],[0.4439,0.6575],[0.5469,0.4875],[0.6403,0.3334]]},{"c":[0.5159,0.4412],"l":[[0.3789,0.5323],[0.4876,0.3801],[0.5881,0.2395],[0.4351,0.6672],[0.5452,0.5044],[0.6466,0.3544]]},{"c":[0.5154,0.45],"l":[[0.3751,0.5257],[0.4896,0.3818],[0.597,0.2469],[0.4254,0.6737],[0.5419,0.5203],[0.6509,0.3768]]},{"c":[0.5134,0.4579],"l":[[0.3702,0.5168],[0.4903,0.3829],[0.6043,0.2557],[0.4148,0.6774],[0.5373,0.5351],[0.6534,0.4003]]},{"c":[0.5106,0.4658],"l":[[0.3649,0.5067],[0.49,0.3844],[0.6102,0.2668],[0.4039,0.6787],[0.5317,0.5494],[0.6543,0.4253]]},{"c":[0.508,0.4735],"l":[[0.3603,0.4958],[0.49,0.3862],[0.6159,0.2799],[0.394,0.6781],[0.5264,0.5629],[0.6548,0.4513]]},{"c":[0.5058,0.4808],"l":[[0.3561,0.4843],[0.4903,0.3881],[0.6215,0.294],[0.3848,0.676],[0.5216,0.5756],[0.6553,0.4774]]},{"c":[0.5039,0.4877],"l":[[0.352,0.4723],[0.4908,0.3898],[0.6274,0.3085],[0.3761,0.6731],[0.5172,0.5874],[0.6562,0.503]]},{"c":[0.5024,0.4935],"l":[[0.3479,0.4597],[0.4916,0.3906],[0.6338,0.3221],[0.3676,0.6694],[0.5134,0.5981],[0.6577,0.5275]]},{"c":[0.5013,0.4978],"l":[[0.3435,0.4458],[0.4926,0.3896],[0.6408,0.3338],[0.3592,0.6649],[0.5102,0.6073],[0.6602,0.5501]]},{"c":[0.5006,0.5005],"l":[[0.3389,0.431],[0.4938,0.3873],[0.6482,0.3436],[0.351,0.6595],[0.5074,0.6149],[0.6633,0.5704]]},{"c":[0.5001,0.5019],"l":[[0.3344,0.4159],[0.4952,0.3837],[0.6557,0.3516],[0.3432,0.6535],[0.5051,0.6208],[0.6667,0.5883]]},{"c":[0.4999,0.502],"l":[[0.3301,0.401],[0.4966,0.3793],[0.6629,0.3576],[0.336,0.6472],[0.5032,0.6252],[0.6704,0.6033]]},{"c":[0.4998,0.5014],"l":[[0.3262,0.3875],[0.4979,0.3746],[0.6695,0.3618],[0.3296,0.6414],[0.5018,0.6284],[0.674,0.6155]]},{"c":[0.4999,0.5008],"l":[[0.3227,0.3767],[0.4989,0.3707],[0.6752,0.3647],[0.3243,0.6371],[0.5008,0.6312],[0.6772,0.6252]]},{"c":[0.4999,0.5006],"l":[[0.321,0.3702],[0.4997,0.3687],[0.6783,0.3672],[0.3214,0.6341],[0.5001,0.6326],[0.6788,0.631]]},{"c":[0.4999,0.5003],"l":[[0.3193,0.3669],[0.4999,0.3669],[0.6806,0.3669],[0.3193,0.6338],[0.4999,0.6338],[0.6806,0.6338]]}],"m":[{"c":[0.5,0.4583],"l":[[0.3092,0.4756],[0.4226,0.4563],[0.5056,0.4421],[0.4919,0.4814],[0.5805,0.4604],[0.6445,0.4452]]},{"c":[0.5,0.4591],"l":[[0.3125,0.476],[0.4242,0.4571],[0.5065,0.4431],[0.4907,0.4818],[0.5788,0.4612],[0.643,0.4462]]},{"c":[0.5,0.4599],"l":[[0.3139,0.4764],[0.426,0.4578],[0.5093,0.444],[0.4869,0.4823],[0.5769,0.462],[0.6431,0.4472]]},{"c":[0.5,0.4606],"l":[[0.3137,0.4766],[0.428,0.4584],[0.5137,0.4448],[0.4809,0.4826],[0.575,0.4629],[0.6447,0.4482]]},{"c":[0.5,0.4619],"l":[[0.3154,0.477],[0.4312,0.4596],[0.5194,0.4464],[0.4733,0.4833],[0.5717,0.4643],[0.6457,0.45]]},{"c":[0.5,0.4632],"l":[[0.3166,0.4773],[0.4348,0.4608],[0.5261,0.448],[0.4645,0.4839],[0.5681,0.4657],[0.6473,0.4519]]},{"c":[0.5,0.4645],"l":[[0.317,0.4776],[0.4384,0.4619],[0.5339,0.4496],[0.4547,0.4844],[0.5644,0.4671],[0.6497,0.4538]]},{"c":[0.5,0.4656],"l":[[0.3164,0.4776],[0.4421,0.4628],[0.5424,0.451],[0.444,0.4847],[0.5607,0.4684],[0.6529,0.4555]]},{"c":[0.5,0.4665],"l":[[0.315,0.4774],[0.4457,0.4635],[0.5517,0.4523],[0.4327,0.4849],[0.5571,0.4696],[0.657,0.4572]]},{"c":[0.5,0.4672],"l":[[0.3128,0.4769],[0.4493,0.464],[0.5618,0.4534],[0.4206,0.4849],[0.5534,0.4705],[0.6618,0.4588]]},{"c":[0.5,0.4677],"l":[[0.31,0.4763],[0.4529,0.4643],[0.5726,0.4543],[0.408,0.4847],[0.5498,0.4713],[0.6674,0.4602]]},{"c":[0.5,0.4681],"l":[[0.3071,0.4755],[0.4566,0.4645],[0.5839,0.4552],[0.3951,0.4843],[0.5459,0.472],[0.6732,0.4615]]},{"c":[0.5,0.4685],"l":[[0.3043,0.4749],[0.4606,0.4645],[0.5958,0.4555],[0.3819,0.4846],[0.5419,0.4728],[0.6791,0.4627]]},{"c":[0.5,0.469],"l":[[0.3018,0.4744],[0.4647,0.4642],[0.6081,0.4553],[0.3686,0.4856],[0.5376,0.474],[0.6851,0.4639]]},{"c":[0.5,0.4695],"l":[[0.3002,0.4739],[0.4692,0.4639],[0.6206,0.4548],[0.3558,0.4872],[0.5329,0.4756],[0.6905,0.4653]]},{"c":[0.5,0.4702],"l":[[0.2995,0.4731],[0.4739,0.4633],[0.6332,0.4543],[0.3435,0.4889],[0.5279,0.4776],[0.6952,0.4674]]},{"c":[0.5,0.471],"l":[[0.3002,0.4718],[0.479,0.4626],[0.6454,0.4541],[0.3323,0.4906],[0.5225,0.4801],[0.6986,0.4703]]},{"c":[0.5,0.472],"l":[[0.3023,0.4698],[0.4844,0.4619],[0.6572,0.4544],[0.3223,0.492],[0.5167,0.4829],[0.7007,0.4743]]},{"c":[0.5,0.4731],"l":[[0.3055,0.4668],[0.49,0.461],[0.6686,0.4554],[0.3134,0.4927],[0.5107,0.486],[0.7014,0.4795]]},{"c":[0.5,0.4743],"l":[[0.31,0.4629],[0.4958,0.4601],[0.6792,0.4574],[0.3057,0.4926],[0.5045,0.4894],[0.7005,0.4862]]},{"c":[0.5,0.4756],"l":[[0.3158,0.4579],[0.5018,0.4593],[0.6888,0.4606],[0.2995,0.4914],[0.4981,0.4929],[0.6978,0.4945]]},{"c":[0.5,0.4769],"l":[[0.3228,0.4519],[0.5079,0.4586],[0.6974,0.4654],[0.2947,0.489],[0.4915,0.4965],[0.6933,0.5042]]},{"c":[0.5,0.4784],"l":[[0.3312,0.4449],[0.5142,0.458],[0.7045,0.4717],[0.2915,0.4853],[0.4849,0.5001],[0.6866,0.5155]]},{"c":[0.5,0.48],"l":[[0.3407,0.437],[0.5205,0.4578],[0.7102,0.4798],[0.2897,0.4803],[0.4783,0.5035],[0.678,0.5282]]},{"c":[0.5,0.4817],"l":[[0.3516,0.4283],[0.5268,0.4579],[0.7139,0.4895],[0.2896,0.474],[0.4718,0.5067],[0.6672,0.5418]]},{"c":[0.5,0.4834],"l":[[0.3638,0.4192],[0.5329,0.4585],[0.7153,0.5009],[0.2913,0.4665],[0.4655,0.5095],[0.6542,0.5561]]},{"c":[0.5,0.4852],"l":[[0.377,0.4099],[0.5389,0.4596],[0.7147,0.5137],[0.2945,0.4579],[0.4595,0.5119],[0.6395,0.5706]]},{"c":[0.5,0.4869],"l":[[0.391,0.4003],[0.5447,0.4611],[0.7124,0.5275],[0.2987,0.4485],[0.4537,0.5137],[0.6235,0.5851]]},{"c":[0.5,0.4886],"l":[[0.4055,0.3904],[0.5504,0.4629],[0.7089,0.5422],[0.3035,0.4381],[0.4481,0.515],[0.6067,0.5994]]},{"c":[0.5,0.4901],"l":[[0.4204,0.3804],[0.556,0.465],[0.7045,0.5577],[0.3085,0.4269],[0.4425,0.5159],[0.5895,0.6135]]},{"c":[0.5,0.4916],"l":[[0.4355,0.3698],[0.5619,0.4674],[0.6998,0.5739],[0.3133,0.4147],[0.4368,0.5163],[0.572,0.6275]]},{"c":[0.5,0.4929],"l":[[0.4513,0.3591],[0.5677,0.4699],[0.6945,0.5905],[0.3184,0.4017],[0.4311,0.5163],[0.554,0.6411]]},{"c":[0.5,0.4941],"l":[[0.4677,0.3488],[0.5735,0.4728],[0.6879,0.6071],[0.3242,0.3885],[0.4256,0.5157],[0.5354,0.6536]]},{"c":[0.5,0.4953],"l":[[0.4848,0.339],[0.579,0.476],[0.6803,0.6233],[0.3307,0.3751],[0.4202,0.5148],[0.5165,0.665]]},{"c":[0.5,0.4963],"l":[[0.5022,0.3298],[0.5843,0.4793],[0.6718,0.6387],[0.3377,0.3618],[0.4151,0.5134],[0.4977,0.6751]]},{"c":[0.5,0.4972],"l":[[0.5197,0.3215],[0.5893,0.4827],[0.6627,0.653],[0.3452,0.349],[0.4103,0.5117],[0.4791,0.6837]]},{"c":[0.5,0.498],"l":[[0.5369,0.3144],[0.5936,0.4861],[0.653,0.6657],[0.3533,0.3371],[0.4061,0.5099],[0.4613,0.6905]]},{"c":[0.5,0.4986],"l":[[0.553,0.3096],[0.5969,0.4895],[0.6424,0.6757],[0.3622,0.3273],[0.4029,0.5078],[0.4451,0.6947]]},{"c":[0.5,0.4991],"l":[[0.5674,0.3065],[0.5993,0.4925],[0.6319,0.6833],[0.3712,0.3195],[0.4007,0.5058],[0.4308,0.6969]]},{"c":[0.5,0.4995],"l":[[0.58,0.3041],[0.6013,0.4951],[0.6228,0.6894],[0.3792,0.3127],[0.3987,0.5039],[0.4186,0.6984]]},{"c":[0.5,0.4998],"l":[[0.5905,0.3023],[0.6028,0.4973],[0.6153,0.6942],[0.3858,0.3073],[0.3971,0.5024],[0.4086,0.6993]]},{"c":[0.5,0.5],"l":[[0.5982,0.3013],[0.6039,0.4988],[0.6095,0.6973],[0.3909,0.3036],[0.3961,0.5012],[0.4013,0.6996]]},{"c":[0.5,0.5001],"l":[[0.603,0.3008],[0.6045,0.4998],[0.6059,0.6991],[0.3942,0.3014],[0.3955,0.5004],[0.3969,0.6997]]},{"c":[0.5,0.5001],"l":[[0.6045,0.3009],[0.6045,0.5001],[0.6045,0.6994],[0.3955,0.3009],[0.3955,0.5001],[0.3955,0.6994]]}]}, TN=44;
 var tf=document.getElementById('tframe'), cv=document.getElementById('tcv'), cx=cv.getContext('2d'), svg=document.getElementById('lines'), ts=document.getElementById('tscroll'), stage=document.getElementById('stage');
-var NAMES=["בנק א'","קרן השקעות","חברת ביטוח","גוף חוץ-בנקאי"], SEAT=[0,2,3,5];
+var NAMES=["בנק א'","קרן השקעות","בנק ב'","חברת ביטוח","בית השקעות","גוף חוץ-בנקאי"], PICK=3, MKT='<b class="num">120+</b> גופי מימון בהיכרות אישית';
 var ns='http://www.w3.org/2000/svg', cards=[], lns=[], key='', imgs=[], cur=-1;
-var stat=document.createElement('div');stat.className='tstat';stat.innerHTML='<span class="pd"></span><span id="stt">המכרז נפתח</span>';tf.appendChild(stat);
+var stat=document.createElement('div');stat.className='tstat';stat.innerHTML='<span class="pd"></span><span id="stt">'+MKT+'</span>';tf.appendChild(stat);
+// השוק: הרבה גופים מסביב לשולחן (מעומעמים), מתוכם נבחרים רק המתאימים
+var MK={"d":[[0.0203,0.0338],[0.0608,0.0338],[0.1014,0.0338],[0.142,0.0338],[0.1825,0.0338],[0.2231,0.0338],[0.7503,0.0338],[0.7909,0.0338],[0.8315,0.0338],[0.872,0.0338],[0.9126,0.0338],[0.9531,0.0338],[0.9937,0.0338],[0.0406,0.1015],[0.0811,0.1015],[0.1217,0.1015],[0.1622,0.1015],[0.2028,0.1015],[0.2434,0.1015],[0.7706,0.1015],[0.8112,0.1015],[0.8517,0.1015],[0.8923,0.1015],[0.9329,0.1015],[0.9734,0.1015],[0.0203,0.1692],[0.0608,0.1692],[0.1014,0.1692],[0.142,0.1692],[0.1825,0.1692],[0.2231,0.1692],[0.7503,0.1692],[0.7909,0.1692],[0.8315,0.1692],[0.872,0.1692],[0.9126,0.1692],[0.9531,0.1692],[0.9937,0.1692],[0.0406,0.2369],[0.0811,0.2369],[0.1217,0.2369],[0.1622,0.2369],[0.2028,0.2369],[0.2434,0.2369],[0.7706,0.2369],[0.8112,0.2369],[0.8517,0.2369],[0.8923,0.2369],[0.9329,0.2369],[0.9734,0.2369],[0.0203,0.3046],[0.0608,0.3046],[0.1014,0.3046],[0.142,0.3046],[0.1825,0.3046],[0.8315,0.3046],[0.872,0.3046],[0.9126,0.3046],[0.9531,0.3046],[0.9937,0.3046],[0.0406,0.3723],[0.0811,0.3723],[0.1217,0.3723],[0.1622,0.3723],[0.8112,0.3723],[0.8517,0.3723],[0.8923,0.3723],[0.9329,0.3723],[0.9734,0.3723],[0.0203,0.44],[0.0608,0.44],[0.9531,0.44],[0.9937,0.44],[0.0406,0.5077],[0.9329,0.5077],[0.9734,0.5077],[0.0203,0.5754],[0.0608,0.5754],[0.9531,0.5754],[0.9937,0.5754],[0.0406,0.6431],[0.0811,0.6431],[0.1217,0.6431],[0.1622,0.6431],[0.8112,0.6431],[0.8517,0.6431],[0.8923,0.6431],[0.9329,0.6431],[0.9734,0.6431],[0.0203,0.7108],[0.0608,0.7108],[0.1014,0.7108],[0.142,0.7108],[0.1825,0.7108],[0.8315,0.7108],[0.872,0.7108],[0.9126,0.7108],[0.9531,0.7108],[0.9937,0.7108],[0.0406,0.7785],[0.0811,0.7785],[0.1217,0.7785],[0.1622,0.7785],[0.2028,0.7785],[0.2434,0.7785],[0.7706,0.7785],[0.8112,0.7785],[0.8517,0.7785],[0.8923,0.7785],[0.9329,0.7785],[0.9734,0.7785],[0.0203,0.8462],[0.0608,0.8462],[0.1014,0.8462],[0.142,0.8462],[0.1825,0.8462],[0.2231,0.8462],[0.7503,0.8462],[0.7909,0.8462],[0.8315,0.8462],[0.872,0.8462],[0.9126,0.8462],[0.9531,0.8462],[0.9937,0.8462],[0.0406,0.9138],[0.0811,0.9138],[0.1217,0.9138],[0.1622,0.9138],[0.2028,0.9138],[0.2434,0.9138],[0.7706,0.9138],[0.8112,0.9138],[0.8517,0.9138],[0.8923,0.9138],[0.9329,0.9138],[0.9734,0.9138],[0.0203,0.9815],[0.0608,0.9815],[0.1014,0.9815],[0.142,0.9815],[0.1825,0.9815],[0.2231,0.9815],[0.7503,0.9815],[0.7909,0.9815],[0.8315,0.9815],[0.872,0.9815],[0.9126,0.9815],[0.9531,0.9815],[0.9937,0.9815]],"m":[[0.0448,0.0249],[0.1343,0.0249],[0.2239,0.0249],[0.7612,0.0249],[0.8507,0.0249],[0.9403,0.0249],[0.0896,0.0746],[0.1791,0.0746],[0.806,0.0746],[0.8955,0.0746],[0.9851,0.0746],[0.0448,0.1243],[0.1343,0.1243],[0.2239,0.1243],[0.3134,0.1243],[0.6716,0.1243],[0.7612,0.1243],[0.8507,0.1243],[0.9403,0.1243],[0.0896,0.174],[0.8955,0.174],[0.9851,0.174],[0.0448,0.2237],[0.9851,0.2734],[0.0448,0.3231],[0.9851,0.3728],[0.0448,0.4226],[0.9851,0.4723],[0.0448,0.522],[0.9851,0.5717],[0.0448,0.6214],[0.9403,0.6214],[0.9851,0.6711],[0.0448,0.7208],[0.9851,0.7706],[0.0448,0.8203],[0.9403,0.8203],[0.0896,0.87],[0.1791,0.87],[0.2687,0.87],[0.7164,0.87],[0.806,0.87],[0.8955,0.87],[0.9851,0.87],[0.0448,0.9197],[0.1343,0.9197],[0.2239,0.9197],[0.3134,0.9197],[0.6716,0.9197],[0.7612,0.9197],[0.8507,0.9197],[0.9403,0.9197],[0.0896,0.9694],[0.1791,0.9694],[0.2687,0.9694],[0.7164,0.9694],[0.806,0.9694],[0.8955,0.9694],[0.9851,0.9694]]};
+var mkt=document.createElement('div');mkt.className='mkt';mkt.setAttribute('aria-hidden','true');tf.insertBefore(mkt,svg.nextSibling);
+// מיקומים מחושבים מראש על הרצפה בלבד (לא על הכיסאות ולא על השולחן), בערך 120 בדסקטופ
+function placeMkt(){mkt.innerHTML='';MK[key].forEach(function(q){if(q[0]<.09&&q[1]>.88) return;var e=document.createElement('i'),dx=(q[0]-.5)*2,dy=(q[1]-.5)*2,d=Math.min(1,Math.sqrt(dx*dx+dy*dy)/1.3);
+  e.style.left=(q[0]*100)+'%';e.style.top=(q[1]*100)+'%';e.style.setProperty('--o',(.95-d*.6).toFixed(2));mkt.appendChild(e)})}
 var stt=stat.querySelector('#stt');
 NAMES.forEach(function(n){
   var l=document.createElementNS(ns,'line');svg.appendChild(l);lns.push(l);
-  var d=document.createElement('div');d.className='nc';d.innerHTML='<span class="k">גוף מימון</span><b>'+n+'</b><span class="st">בודק את התיק <i></i><i></i><i></i></span>';tf.appendChild(d);cards.push(d);
+  var d=document.createElement('div');d.className='nc';d.innerHTML='<span class="k">גוף מימון</span><b>'+n+'</b><span class="st"></span>';tf.appendChild(d);cards.push(d);
 });
 function load(){
   var k=mob()?'m':'d'; if(k===key) return; key=k; imgs=[]; cur=-1;
   var w=k==='m'?800:1980, h=k==='m'?1250:900; cv.width=w; cv.height=h; tf.dataset.ar=w/h;
   for(var i=0;i<TN;i++){var im=new Image();im.onload=function(){cur=-1};im.dataset.src='img/tender/'+k+'/f'+(i<10?'0':'')+i+'.webp';imgs.push(im)}
   imgs[0].src=imgs[0].dataset.src; if(rest) loadRest();
-  fit();
+  placeMkt(); fit();
 }
 var rest=false;
 function loadRest(){rest=true;imgs.forEach(function(im){if(!im.src) im.src=im.dataset.src})}
@@ -869,29 +937,38 @@ function draw(p){
   if(i!==cur && ok(i)){cx.clearRect(0,0,cv.width,cv.height);cx.drawImage(imgs[i],0,0,cv.width,cv.height);cur=i}
   var F=TP[key][Math.max(0,cur)]; if(!F) return;
   cards.forEach(function(d,j){
-    var q0=F.l[SEAT[j]], fx=key==='m'?1.0:.12, fy=key==='m'?.1:.42, q=[q0[0]+(q0[0]-F.c[0])*fx, q0[1]+(q0[1]-F.c[1])*fy], a=Math.min(1,Math.max(0,(p-.62-j*.035)/.16));
+    var q0=F.l[j], fx=key==='m'?1.0:.12, fy=key==='m'?.1:.42, q=[q0[0]+(q0[0]-F.c[0])*fx, q0[1]+(q0[1]-F.c[1])*fy], a=Math.min(1,Math.max(0,(p-.62-j*.035)/.16));
     d.style.left=(q[0]*100)+'%';d.style.top=(q[1]*100)+'%';d.style.setProperty('--in',(1-a).toFixed(3));
     lns[j].style.opacity=a<.98?0:1;
     lns[j].setAttribute('x1',q[0]*100);lns[j].setAttribute('y1',q[1]*100);lns[j].setAttribute('x2',F.c[0]*100);lns[j].setAttribute('y2',F.c[1]*100);
   });
   stat.classList.toggle('on',p>.7);
+  mkt.style.setProperty('--a',Math.min(1,Math.max(0,(p-.86)/.13)).toFixed(3));
   if(p>.9&&!started){started=true;run()}
   if(p<.6&&started){started=false;T.forEach(clearTimeout);T=[];reset()}
 }
 function setSt(d,t){d.querySelector('.st').innerHTML=t}
-function reset(){cards.forEach(function(d){d.className='nc';setSt(d,'בודק את התיק <i></i><i></i><i></i>')});lns.forEach(function(l){l.setAttribute('class','')});stat.classList.remove('done');stt.textContent='המכרז נפתח'}
+var DOTS=' <i></i><i></i><i></i>', lastSet='';
+function reset(){cards.forEach(function(d){d.className='nc';setSt(d,'')});lns.forEach(function(l){l.setAttribute('class','')});tf.classList.remove('sel');stat.classList.remove('done');stt.innerHTML=MKT}
+function pick(){var ids,k;do{ids=cards.map(function(_,i){return i}).sort(function(){return Math.random()-.5}).slice(0,PICK).sort();k=ids.join()}while(k===lastSet);lastSet=k;return ids}
+function choose(ids){
+  tf.classList.add('sel');stt.textContent='המכרז נפתח';
+  cards.forEach(function(d,j){if(ids.indexOf(j)<0){d.classList.add('out')}else{d.classList.add('pick');setSt(d,'בודק את התיק'+DOTS);lns[j].setAttribute('class','pick')}});
+}
 function run(){
   T.forEach(clearTimeout);T=[];reset();
-  var w; do{w=Math.floor(Math.random()*cards.length)}while(w===last); last=w;
-  if(RM){finish(w);return}
-  var order=cards.map(function(_,i){return i}).sort(function(){return Math.random()-.5});
-  T.push(setTimeout(function(){stt.textContent='מתקבלות הצעות'},900));
-  order.forEach(function(j,n){T.push(setTimeout(function(){cards[j].classList.add('sub');setSt(cards[j],'הגיש הצעה');lns[j].setAttribute('class','sub')},1300+n*650))});
-  T.push(setTimeout(function(){finish(w)},1300+order.length*650+900));
-  T.push(setTimeout(run,1300+order.length*650+900+5200));
+  var ids=pick(), w=ids[Math.floor(Math.random()*ids.length)];
+  if(RM){choose(ids);finish(ids,w);return}
+  T.push(setTimeout(function(){choose(ids)},1400));
+  var order=ids.slice().sort(function(){return Math.random()-.5}), t0=1400+1500;
+  T.push(setTimeout(function(){stt.textContent='מתקבלות הצעות'},t0));
+  order.forEach(function(j,n){T.push(setTimeout(function(){cards[j].classList.add('sub');setSt(cards[j],'הגיש הצעה');lns[j].setAttribute('class','sub')},t0+400+n*700))});
+  var tf2=t0+400+order.length*700+900;
+  T.push(setTimeout(function(){finish(ids,w)},tf2));
+  T.push(setTimeout(run,tf2+5200));
 }
-function finish(w){
-  cards.forEach(function(d,j){if(j!==w){d.classList.remove('sub');d.classList.add('lose');lns[j].setAttribute('class','')}});
+function finish(ids,w){
+  ids.forEach(function(j){if(j!==w){cards[j].classList.remove('sub');cards[j].classList.add('lose');lns[j].setAttribute('class','')}});
   cards[w].classList.remove('sub');cards[w].classList.add('win');setSt(cards[w],'ההצעה הנבחרת');lns[w].setAttribute('class','win');
   stat.classList.add('done');stt.textContent='נבחרה ההצעה הטובה ביותר';
 }
@@ -907,6 +984,14 @@ function frame(){
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+
+// מימונים שבנינו: כרטיס לחיץ, אחד פתוח בכל פעם
+var exh=[].slice.call(document.querySelectorAll('.exh'));
+exh.forEach(function(b){b.addEventListener('click',function(){
+  var open=b.getAttribute('aria-expanded')!=='true';
+  exh.forEach(function(x){x.setAttribute('aria-expanded','false');document.getElementById(x.getAttribute('aria-controls')).classList.remove('open')});
+  if(open){b.setAttribute('aria-expanded','true');document.getElementById(b.getAttribute('aria-controls')).classList.add('open')}
+})});
 
 // גלריה
 var g=document.getElementById('gal');
