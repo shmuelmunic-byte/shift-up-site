@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<base href="/s/maitzim/">
+<title>מאיצים | מימון וגיוס הון לחברות ויזמי נדל"ן</title>
+<meta name="description" content="מכרז ממוקד ודיסקרטי מול גופי המימון, משא ומתן על התנאים וליווי עד שהמימון בחשבון">
+<link rel="icon" href="img/icon_gold.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#14110E; --night2:#1D1915; --night3:#26211B; --cream:#F6F1E8; --paper:#FFFDF9;
+  --ink:#1E1A16; --mute:#6E655A; --line:#E3DACB;
+  --gold:#C6A15B; --gold-l:#D9B56C; --gold-d:#8A6A2E; --onnight:#F1EADF; --onnight-m:#B5AA9A;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"IBM Plex Sans Hebrew",system-ui,sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1160px;margin:0 auto;padding:0 40px}
+.num{unicode-bidi:isolate;direction:ltr;display:inline-block;font-variant-numeric:tabular-nums}
+
+/* חשיפה בגלילה */
+.rv{opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.12s}.rv.d2{transition-delay:.24s}.rv.d3{transition-delay:.36s}
+
+/* לוגו מונפש */
+.lg{display:inline-block;position:relative;line-height:0}
+.lg img{display:block;height:100%;width:auto;clip-path:inset(100% 0 0 0);transform:translateY(8px);transition:clip-path 1.3s var(--ease),transform 1.3s var(--ease)}
+.lg.go img{clip-path:inset(-10% -10% -10% -10%);transform:none}
+.brand .lg{height:38px}
+.wm{position:absolute;pointer-events:none;opacity:.07;z-index:0}
+.wm img{height:100%;width:auto}
+.wm.lg img{transition-duration:2.2s}
+
+/* סרגל סקיצה */
+.sketchbar{background:#2A241E;color:#E9DFCF;font-size:14px;padding:10px 16px;display:flex;gap:10px 12px;align-items:center;justify-content:center;flex-wrap:wrap;text-align:center;position:relative;z-index:5}
+.sketchbar b{color:var(--gold);font-weight:500}
+.sketchbar button{font:inherit;font-size:13px;border:1px solid rgba(198,161,91,.5);background:transparent;color:#E9DFCF;padding:4px 12px;cursor:pointer}
+.sketchbar button.on{background:var(--gold);color:var(--night);border-color:var(--gold)}
+
+/* הירו */
+.hero{position:relative;min-height:100svh;color:var(--onnight);overflow:hidden;display:flex;flex-direction:column;background:var(--night)}
+.hero .par{position:absolute;inset:-8% 0 -8% 0;will-change:transform}
+.hero .bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(1.1) saturate(1.05);opacity:0;transform:scale(1.12);transition:opacity 1.8s ease}
+.hero .bg.on{opacity:1;animation:kb 9s linear forwards}
+.hero .bg.out{opacity:0;transform:scale(1)}
+@keyframes kb{from{transform:scale(1.12)}to{transform:scale(1)}}
+.hero .dots{position:absolute;left:44px;bottom:66px;display:flex;gap:8px;z-index:2}
+.hero .dots i{width:22px;height:2px;background:rgba(241,234,223,.3);transition:background .4s,width .4s}
+.hero .dots i.on{background:var(--gold);width:38px}
+.hero .shade{position:absolute;inset:0;background:
+ linear-gradient(270deg,rgba(20,17,14,.92) 0%,rgba(20,17,14,.86) 38%,rgba(20,17,14,.6) 52%,rgba(20,17,14,.12) 68%,rgba(20,17,14,0) 100%),
+ linear-gradient(0deg,rgba(20,17,14,.6) 0%,rgba(20,17,14,0) 22%),
+ linear-gradient(180deg,rgba(20,17,14,.45) 0%,rgba(20,17,14,0) 18%)}
+.hero .glint{position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,rgba(217,181,108,.10) 50%,transparent 60%);background-size:250% 100%;animation:glint 9s 2s ease-in-out infinite;mix-blend-mode:screen;pointer-events:none}
+@keyframes glint{0%{background-position:120% 0}55%,100%{background-position:-60% 0}}
+.hero h1,.hero .lead,.hero .slogan,.hero .eyebrow,.hero .facts{text-shadow:0 1px 18px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.4)}
+.hero .frame{position:absolute;inset:24px;pointer-events:none}
+.hero .frame i{position:absolute;background:rgba(198,161,91,.4);transition:transform 1.4s var(--ease)}
+.hero .frame i:nth-child(1){top:0;right:0;left:0;height:1px;transform:scaleX(0);transform-origin:right}
+.hero .frame i:nth-child(2){bottom:0;right:0;left:0;height:1px;transform:scaleX(0);transform-origin:left}
+.hero .frame i:nth-child(3){top:0;bottom:0;right:0;width:1px;transform:scaleY(0);transform-origin:top}
+.hero .frame i:nth-child(4){top:0;bottom:0;left:0;width:1px;transform:scaleY(0);transform-origin:bottom}
+.hero.on .frame i{transform:none}
+.hero .inner{position:relative;display:flex;flex-direction:column;flex:1;width:100%}
+.hero nav{display:flex;justify-content:space-between;align-items:center;padding:50px 0 0}
+.brand{display:flex;align-items:center;gap:12px}
+.brand span{font-size:24px;font-weight:600;letter-spacing:.01em}
+.navcta{font-size:15px;color:var(--gold);border-bottom:1px solid var(--gold);padding-bottom:2px}
+.hero main{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:720px;padding:56px 0 48px}
+.hero main>*{opacity:0;transform:translateY(26px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.hero.on main>*{opacity:1;transform:none}
+.hero.on main>*:nth-child(2){transition-delay:.12s}.hero.on main>*:nth-child(3){transition-delay:.26s}
+.hero.on main>*:nth-child(4){transition-delay:.38s}.hero.on main>*:nth-child(5){transition-delay:.5s}.hero.on main>*:nth-child(6){transition-delay:.62s}
+.eyebrow{display:flex;align-items:center;gap:14px;color:var(--gold);font-size:14px;letter-spacing:.12em;font-weight:500}
+.eyebrow:before{content:"";width:48px;height:1px;background:var(--gold)}
+h1{font-weight:400;font-size:64px;line-height:1.12;letter-spacing:-.01em;margin:26px 0 18px}
+h1 em{font-style:normal;color:var(--gold-l);font-weight:500}
+.slogan{display:flex;align-items:center;gap:10px;font-size:15px;color:#D6CCBD;margin-bottom:26px}
+.slogan img{height:22px;width:auto;opacity:.9}
+.lead{font-size:20px;line-height:1.65;color:#F5EFE6;max-width:600px}
+.ctas{display:flex;align-items:center;gap:26px;margin-top:38px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--gold);color:var(--night);font-weight:600;font-size:17px;padding:17px 30px;border:0;cursor:pointer;font-family:inherit;position:relative;overflow:hidden;transition:transform .3s var(--ease),box-shadow .3s}
+.btn:before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(120%);transition:transform .8s var(--ease)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(198,161,91,.3)}
+.btn:hover:before{transform:translateX(-120%)}
+.btn svg{width:20px;height:20px;flex:none;position:relative}
+.ghost{font-size:16px;color:var(--onnight);border-bottom:1px solid rgba(241,234,223,.4);padding-bottom:2px}
+.facts{display:flex;gap:28px;margin-top:44px;font-size:14px;color:var(--onnight-m);flex-wrap:wrap}
+.facts b{color:var(--onnight);font-weight:500}
+.hero .loc{position:absolute;left:44px;bottom:40px;font-size:12px;color:rgba(255,255,255,.6);letter-spacing:.08em}
+.scrollcue{position:absolute;left:50%;bottom:34px;width:1px;height:46px;background:rgba(198,161,91,.25);overflow:hidden}
+.scrollcue:after{content:"";position:absolute;top:-50%;left:0;width:1px;height:50%;background:var(--gold);animation:cue 2s ease-in-out infinite}
+@keyframes cue{to{top:100%}}
+
+/* המכרז: המצלמה מסתובבת סביב השולחן ועולה, כרטיסי שמות וסטטוס מכרז */
+.tender{background:var(--night);color:var(--onnight);position:relative}
+.tscroll{height:320vh;position:relative}
+.tsticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;padding:56px 0 28px}
+.tsticky:before{content:"";position:absolute;left:50%;top:-20%;width:1200px;height:1000px;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 40%,rgba(217,181,108,.13),rgba(217,181,108,.03) 45%,transparent 70%);pointer-events:none}
+.tender .head{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:end;flex:none}
+.tender .lbl{color:var(--gold)}
+.tender .h2 em{color:var(--gold-l)}
+.tender .side{color:#D8CFC2;font-size:17.5px;line-height:1.7}
+.tender .side b{color:var(--gold-l);font-weight:500}
+.stage{position:relative;flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;margin-top:10px}
+.tframe{position:relative;perspective:900px}
+.tender .stage{max-width:none;padding:0}
+.tframe canvas{position:absolute;inset:0;width:100%;height:100%}
+.tframe svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.tframe line{stroke:transparent;stroke-width:1.2;vector-effect:non-scaling-stroke}
+.tframe line.sub{stroke:rgba(217,181,108,.35);stroke-dasharray:3 6;animation:flow 1.4s linear infinite}
+.tframe line.win{stroke:var(--gold-l);stroke-width:2.4;stroke-dasharray:none;filter:drop-shadow(0 0 6px rgba(217,181,108,.9));animation:none}
+@keyframes flow{to{stroke-dashoffset:-18}}
+/* כרטיס שם */
+.nc{position:absolute;transform:translate(-50%,-50%) rotateX(calc(var(--in,0) * 75deg)) scale(calc(1 - var(--in,0) * .2));opacity:calc(1 - var(--in,1));min-width:124px;padding:7px 14px 8px;text-align:center;
+  background:linear-gradient(160deg,#2A241C 0%,#15110D 60%,#0F0C09 100%);border:1px solid rgba(198,161,91,.55);
+  box-shadow:0 14px 28px rgba(0,0,0,.65),inset 0 0 0 3px rgba(20,17,14,.9),inset 0 0 0 4px rgba(198,161,91,.22);
+  transition:background .5s,border-color .5s,box-shadow .5s,filter .5s,color .5s;pointer-events:none}
+.nc:before{content:"";position:absolute;top:-4px;left:50%;width:7px;height:7px;background:var(--gold);transform:translateX(-50%) rotate(45deg)}
+.nc .k{display:block;font-size:9.5px;letter-spacing:.22em;color:var(--gold-d);font-weight:500}
+.nc b{display:block;font-size:15.5px;font-weight:500;color:var(--onnight);margin:2px 0 3px;white-space:nowrap}
+.nc .st{display:block;font-size:11px;color:var(--onnight-m);white-space:nowrap}
+.nc .st i{display:inline-block;width:3px;height:3px;border-radius:50%;background:currentColor;margin:0 1px;animation:dot 1.2s infinite}
+.nc .st i:nth-child(2){animation-delay:.2s}.nc .st i:nth-child(3){animation-delay:.4s}
+@keyframes dot{0%,100%{opacity:.2}50%{opacity:1}}
+.nc.sub{border-color:var(--gold);box-shadow:0 14px 28px rgba(0,0,0,.65),0 0 22px rgba(217,181,108,.28),inset 0 0 0 3px rgba(20,17,14,.9),inset 0 0 0 4px rgba(217,181,108,.45)}
+.nc.sub .st{color:var(--gold-l)}
+.nc.lose{filter:saturate(.4) brightness(.6)}
+.nc.win{background:linear-gradient(160deg,#F0D396 0%,#C9A15A 55%,#9C7634 100%);border-color:#F6DEA6;filter:none;
+  box-shadow:0 0 40px rgba(217,181,108,.65),0 16px 30px rgba(0,0,0,.6),inset 0 0 0 3px rgba(255,240,205,.35)}
+.nc.win .k{color:#5A4116}.nc.win b{color:var(--night);font-weight:600}.nc.win .st{color:#3A2A0E;font-weight:600}
+.nc.win:before{background:var(--night)}
+/* סטטוס המכרז */
+.tstat{position:absolute;top:8px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:8px 18px;border:1px solid rgba(198,161,91,.4);background:rgba(20,17,14,.75);backdrop-filter:blur(6px);font-size:13px;letter-spacing:.08em;color:var(--onnight);white-space:nowrap;opacity:0;transition:opacity .6s;z-index:3}
+.tstat.on{opacity:1}
+.tstat .pd{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(217,181,108,.7);animation:pulse 1.6s infinite}
+.tstat.done .pd{animation:none;background:var(--gold-l);box-shadow:0 0 12px rgba(217,181,108,.9)}
+@keyframes pulse{70%{box-shadow:0 0 0 10px rgba(217,181,108,0)}100%{box-shadow:0 0 0 0 rgba(217,181,108,0)}}
+.stage .note{position:absolute;left:0;bottom:0;font-size:12px;color:var(--onnight-m);letter-spacing:.08em}
+
+/* שותפים */
+.partners{background:var(--night2);padding:52px 0 60px;border-top:1px solid rgba(198,161,91,.15)}
+.partners .lbl{color:var(--gold)}
+.lbl{font-size:13px;letter-spacing:.14em;color:var(--gold-d);font-weight:500;margin-bottom:22px}
+.marquee{overflow:hidden;direction:ltr;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%)}
+.mtrack{display:flex;width:max-content;animation:roll 38s linear infinite}
+.marquee:hover .mtrack{animation-play-state:paused}
+.set{display:flex;align-items:center;flex:none}
+.it{flex:none;height:86px;display:flex;align-items:center;justify-content:center;padding:0 42px;position:relative}
+.it:before{content:"";position:absolute;left:0;top:50%;width:4px;height:4px;background:var(--gold);transform:translate(-50%,-50%) rotate(45deg);opacity:.7}
+.it img{max-height:44px;max-width:150px;object-fit:contain;filter:brightness(0) invert(.93);opacity:.85}
+.it img.tall{max-height:58px}
+.it.nm{flex-direction:column;direction:rtl;font-size:17px;line-height:1.3;color:var(--onnight);font-weight:500;white-space:nowrap;text-align:center}
+.it.nm small{display:block;font-weight:400;color:var(--onnight-m);font-size:13px}
+@keyframes roll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* סקשנים */
+section{padding:104px 0}
+.h2{font-weight:300;font-size:44px;line-height:1.2;letter-spacing:-.01em;max-width:760px}
+.h2 em{font-style:normal;color:var(--gold-d);font-weight:400}
+.intro{font-size:18px;color:var(--mute);max-width:640px;margin-top:16px}
+
+/* למה */
+.why{display:grid;grid-template-columns:1fr 1fr 1fr;gap:56px;margin-top:64px}
+.why>div{position:relative}
+.why .n{font-size:13px;color:var(--gold-d);letter-spacing:.1em;border-top:1px solid var(--ink);padding-top:16px;margin-bottom:14px;font-weight:500;position:relative}
+.why .n:after{content:"";position:absolute;top:-1px;right:0;height:2px;width:100%;background:var(--gold);transform:scaleX(0);transform-origin:right;transition:transform .6s var(--ease)}
+.why>div:hover .n:after,.why>div.in .n:after{transform:scaleX(1)}
+.why h3{font-size:22px;font-weight:500;margin-bottom:10px;line-height:1.35}
+.why p{color:var(--mute);font-size:16.5px}
+
+/* שירותים */
+.services{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.svc{margin-top:56px;border-top:1px solid var(--line)}
+.svc details{border-bottom:1px solid var(--line);transition:background .3s}
+.svc details:hover{background:rgba(198,161,91,.05)}
+.svc summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:64px 1fr 32px;align-items:center;padding:28px 0;gap:8px}
+.svc summary::-webkit-details-marker{display:none}
+.svc .i{font-size:14px;color:var(--gold-d);font-weight:500}
+.svc h3{font-size:24px;font-weight:400;transition:transform .35s var(--ease)}
+.svc details:hover h3{transform:translateX(-6px)}
+.svc h3 small{display:block;font-size:14px;color:var(--mute);font-weight:400;margin-top:2px}
+.svc .pl{width:24px;height:24px;position:relative;justify-self:end}
+.svc .pl:before,.svc .pl:after{content:"";position:absolute;background:var(--ink);top:50%;left:50%;transform:translate(-50%,-50%)}
+.svc .pl:before{width:16px;height:1.5px}.svc .pl:after{width:1.5px;height:16px;transition:.25s}
+.svc details[open] .pl:after{transform:translate(-50%,-50%) scaleY(0)}
+.svc .body{padding:0 72px 30px 40px;color:var(--mute);font-size:17px;max-width:820px;animation:op .5s var(--ease)}
+@keyframes op{from{opacity:0;transform:translateY(-8px)}}
+.more{margin-top:28px}
+.more summary{cursor:pointer;color:var(--gold-d);font-weight:500;list-style:none;display:inline-flex;gap:8px;border-bottom:1px solid var(--gold-d);padding-bottom:2px}
+.more summary::-webkit-details-marker{display:none}
+.more .extra{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:24px;animation:op .5s var(--ease)}
+.more .card{background:var(--cream);padding:26px 28px;border:1px solid var(--line)}
+.more .card h4{font-size:18px;font-weight:500;margin-bottom:8px}
+.more .card p{color:var(--mute);font-size:16px}
+.ph{border:1.5px dashed #C9B48A !important;background:repeating-linear-gradient(135deg,rgba(198,161,91,.06) 0 10px,transparent 10px 20px) !important;color:var(--gold-d)}
+.ph p,.ph h4{color:var(--gold-d) !important}
+
+/* מבנה שעבד */
+.model{background:var(--night);color:var(--onnight);position:relative;overflow:hidden}
+.model .inner{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:center;position:relative}
+.model .lbl{color:var(--gold)}
+.model .h2 em{color:var(--gold)}
+.model p.t{font-size:18px;color:#D8CFC2;margin-top:22px;max-width:600px}
+.model .where{margin-top:22px;font-size:15px;color:var(--onnight-m)}
+.bars{display:flex;flex-direction:column;gap:22px;border:1px solid rgba(198,161,91,.3);padding:36px;background:rgba(29,25,21,.6)}
+.bar .k{display:flex;justify-content:space-between;font-size:15px;color:var(--onnight-m);margin-bottom:8px}
+.bar .k b{color:var(--onnight);font-weight:500;font-size:18px}
+.bar .tr{height:12px;background:rgba(255,255,255,.08)}
+.bar .fill{height:100%;background:#8C8273;width:0;transition:width 1.4s var(--ease)}
+.bar.you .fill{background:var(--gold);box-shadow:0 0 18px rgba(198,161,91,.5);transition-delay:.4s}
+.bars.in .fill{width:var(--w)}
+.bars small{font-size:12px;color:var(--onnight-m)}
+
+/* פרויקטים */
+.gal-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
+.arrows{display:flex;gap:8px}
+.arrows button{width:46px;height:46px;border:1px solid var(--ink);background:transparent;cursor:pointer;font-size:20px;color:var(--ink);transition:.25s}
+.arrows button:hover{background:var(--ink);color:var(--cream)}
+.gal{margin-top:44px;display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:6px}
+.gal::-webkit-scrollbar{display:none}
+.gal figure{flex:0 0 calc(40% - 10px);scroll-snap-align:start}
+.gal .pi{aspect-ratio:4/5;overflow:hidden;background:#ddd;clip-path:inset(12% 0 0 0);transition:clip-path 1.2s var(--ease)}
+.gal figure.in .pi{clip-path:inset(0 0 0 0)}
+.gal img{width:100%;height:100%;object-fit:cover;transform:scale(1.15);transition:transform 1.6s var(--ease)}
+.gal figure.in img{transform:scale(1)}
+.gal figure:hover img{transform:scale(1.04)}
+.gal figcaption{display:flex;justify-content:space-between;font-size:15px;padding:12px 0;border-bottom:1px solid var(--line)}
+.gal figcaption span{color:var(--mute);font-size:13px}
+
+/* תהליך */
+.process{background:var(--paper);border-top:1px solid var(--line)}
+.steps{margin-top:56px;display:grid;grid-template-columns:repeat(6,1fr);position:relative;border-top:1px solid var(--line)}
+.steps .prog{position:absolute;top:-1px;right:0;height:2px;background:var(--gold);width:0;transition:width 2.4s var(--ease)}
+.steps.in .prog{width:100%}
+.step{padding:26px 18px 0 0;position:relative}
+.step+.step{border-right:1px solid var(--line)}
+.step:first-child{padding-right:0}
+.step .sn{font-size:13px;color:var(--mute);font-weight:600;letter-spacing:.06em;transition:color .4s}
+.step .mkr{position:absolute;top:-6px;right:-6px;width:11px;height:11px;background:var(--paper);border:1.5px solid var(--line);transform:rotate(45deg);transition:background .4s,border-color .4s}
+.step:first-child .mkr{right:-6px}
+.step h3{font-size:19px;font-weight:500;margin:12px 0 8px;line-height:1.3;padding-left:14px}
+.step p{color:var(--mute);font-size:15px;padding-left:14px}
+.step.lit .mkr{border-color:var(--gold);background:var(--paper)}
+.step.lit .sn{color:var(--gold-d)}
+.step.key.lit .mkr{background:var(--gold)}
+.step.key h3{color:var(--gold-d)}
+
+/* אודות */
+.about .inner{display:grid;grid-template-columns:.8fr 1.2fr;gap:72px;align-items:start}
+.about .side{border-top:1px solid var(--ink);padding-top:22px}
+.about .side .lg{display:block;width:max-content}
+.about .side .big{font-size:64px;font-weight:300;color:var(--gold-d);line-height:1}
+.about .side .cap{color:var(--mute);font-size:15px;margin-top:6px}
+.about p.t{font-size:19px;line-height:1.75;margin-top:20px}
+.about p.t+p.t{color:var(--mute);font-size:17.5px}
+.quote{margin:52px 0 0;padding:34px 40px 30px;background:#FBF7F0;border:1px solid var(--line);border-right:3px solid var(--gold);position:relative}
+.quote .qm{position:absolute;top:-34px;right:28px;font-size:110px;line-height:1;color:var(--gold);font-family:Georgia,serif}
+.quote blockquote p{font-size:19px;line-height:1.75;color:var(--ink)}
+.quote blockquote p.q2{font-size:17px;color:var(--mute);margin-top:12px}
+.quote em{font-style:normal;color:var(--gold-d);font-weight:500}
+.quote figcaption{display:flex;align-items:center;gap:18px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.quote figcaption img{height:34px;width:auto;filter:brightness(0);opacity:.72}
+.quote figcaption span{font-size:15px;color:var(--mute);line-height:1.4}
+.quote figcaption b{display:block;color:var(--ink);font-weight:600;font-size:16px}
+@media(max-width:760px){.quote{padding:30px 22px 24px}.quote blockquote p{font-size:17px}.quote figcaption img{height:28px}}
+
+/* צור קשר */
+.contact{background:var(--night);color:var(--onnight);position:relative;overflow:hidden}
+.contact .bg{position:absolute;inset:-10% 0;background:url(img/r_night10.webp) center/cover;opacity:.2;will-change:transform}
+.contact .inner{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.contact .lbl{color:var(--gold)}
+.contact .h2 em{color:var(--gold)}
+.contact p.t{font-size:18px;color:#D8CFC2;margin-top:18px}
+.contact .btn{margin-top:32px}
+form{background:rgba(29,25,21,.92);border:1px solid rgba(198,161,91,.35);padding:38px;backdrop-filter:blur(4px)}
+form h3{font-weight:400;font-size:20px;margin-bottom:6px}
+form .s{font-size:14px;color:var(--onnight-m);margin-bottom:20px}
+form label{display:block;font-size:13px;color:var(--onnight-m);margin:14px 0 6px}
+form label small{color:rgba(181,170,154,.7)}
+form input,form textarea{width:100%;background:transparent;border:0;border-bottom:1px solid rgba(241,234,223,.35);color:var(--onnight);font:inherit;font-size:17px;padding:8px 0;outline:none;border-radius:0;transition:border-color .3s}
+form input:focus,form textarea:focus{border-color:var(--gold)}
+form textarea{resize:vertical;min-height:76px;line-height:1.5}
+form .btn{width:100%;margin-top:28px}
+form .note{font-size:12px;color:var(--onnight-m);margin-top:12px;text-align:center}
+#formmsg{display:none;margin-top:14px;font-size:14px;color:var(--gold);text-align:center}
+
+footer{background:#0E0C0A;color:var(--onnight-m);padding:44px 0 36px;font-size:13px}
+footer .row{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+footer .brand span{font-size:19px;color:var(--onnight)}
+footer .disc{margin-top:22px;max-width:760px;line-height:1.7}
+footer .credit{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.08)}
+footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.25)}
+
+.mwa{display:none}
+
+@media(max-width:900px){
+  .wrap{padding:0 22px}
+  .hero .frame{inset:12px}
+  .hero nav{padding:32px 0 0}
+  .brand .lg{height:32px}.brand span{font-size:21px}
+  .navcta{font-size:13px}
+  .hero .bg{background-position:center}
+  .hero .dots{left:auto;right:22px;bottom:auto;top:96px}
+  .hero .shade{background:linear-gradient(0deg,rgba(20,17,14,.95) 0%,rgba(20,17,14,.88) 56%,rgba(20,17,14,.5) 70%,rgba(20,17,14,.08) 84%,rgba(20,17,14,.35) 100%)}
+  .hero main{justify-content:flex-end;padding:120px 0 52px}
+  h1{font-size:38px;margin:18px 0 14px}
+  .eyebrow{font-size:12px}.eyebrow:before{width:28px}
+  .slogan{font-size:13px;align-items:flex-start}
+  .lead{font-size:17px}
+  .ctas{flex-direction:column;align-items:stretch;gap:16px;margin-top:28px}
+  .ghost{text-align:center;align-self:center}
+  .facts{gap:10px 20px;margin-top:28px;font-size:13px}
+  .hero .loc,.scrollcue{display:none}
+  .tscroll{height:300vh}
+  .tsticky{padding:40px 0 18px}
+  .tender .head{grid-template-columns:1fr;gap:10px}
+  .tender .h2{font-size:27px}
+  .tender .side{font-size:15px;line-height:1.6}
+  .nc{min-width:86px;padding:6px 8px 6px}
+  .nc .k{font-size:7.5px;letter-spacing:.16em}
+  .nc b{font-size:11.5px}
+  .nc .st{font-size:8.5px}
+  .tstat{font-size:11px;padding:6px 12px;top:0}
+  .stage .note{left:22px}
+  .tent>div{font-size:11px;padding:6px 9px 7px}
+  .tent.back>div{font-size:10px;padding:5px 8px 6px}
+  .tent small{display:none!important}
+  .stage .note{left:22px}
+  .partners{padding:40px 0}
+  .it{height:70px;padding:0 28px}.it img{max-height:32px;max-width:110px}.it img.tall{max-height:44px}.it.nm{font-size:15px}
+  .mtrack{animation-duration:28s}
+  section{padding:72px 0}
+  .h2{font-size:31px}
+  .intro{font-size:16.5px}
+  .why{grid-template-columns:1fr;gap:36px;margin-top:40px}
+  .svc summary{grid-template-columns:40px 1fr 28px;padding:22px 0}
+  .svc h3{font-size:19px}
+  .svc .body{padding:0 40px 24px 0;font-size:16px}
+  .more .extra{grid-template-columns:1fr}
+  .model .inner,.about .inner,.contact .inner{grid-template-columns:1fr;gap:40px}
+  .wm{opacity:.05}
+  .bars{padding:24px}
+  .gal-head{align-items:flex-start;flex-direction:column}
+  .arrows{display:none}
+  .gal figure{flex-basis:80%}
+  .steps{grid-template-columns:1fr;border-top:0;border-right:1px solid var(--line);margin-right:6px}
+  .steps .prog{top:0;right:-1px;width:2px!important;height:0;transition:height 2.4s var(--ease)}
+  .steps.in .prog{height:100%}
+  .step,.step:first-child,.step+.step{padding:0 26px 28px 0;border-right:0}
+  .step .mkr,.step:first-child .mkr{top:3px;right:-6px}
+  .step h3,.step p{padding-left:0}
+  .about .side .big{font-size:52px}
+  form{padding:26px 22px}
+  .mwa{display:flex;position:fixed;bottom:16px;left:16px;right:16px;z-index:20;box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;transform:translateY(20px);transition:.3s;pointer-events:none}
+  .mwa.show{opacity:1;transform:none;pointer-events:auto}
+  footer{padding-bottom:96px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*:before,*:after{animation:none!important;transition:none!important}
+  .rv,.hero main>*{opacity:1!important;transform:none!important}
+  .lg img{clip-path:none!important;transform:none!important}
+  .bars .fill{width:var(--w)}
+}
+</style>
+</head>
+<body>
+
+<div class="sketchbar">
+  <span><b>סקיצה</b> · הכותרת שבחרת בשלושה ליטושים, אפשר להחליף:</span>
+  <button data-h="0" class="on">1</button><button data-h="1">2</button><button data-h="2">3</button>
+</div>
+
+<header class="hero" id="hero">
+  <div class="par" id="par">
+    <div class="bg on" data-loc="הדמיה" style="background-image:url(img/r_threetowers.webp);background-position:20% 55%"></div>
+    <div class="bg" data-loc="הדמיה · ירושלים" style="background-image:url(img/r_tower.webp);background-position:center 35%"></div>
+    <div class="bg" data-loc="הדמיה · מעלה אדומים" style="background-image:url(img/r_hills.webp)"></div>
+    <div class="bg" data-loc="הדמיה · תל אביב" style="background-image:url(img/r_night10.webp)"></div>
+    <div class="bg" data-loc="הדמיה · ירושלים" style="background-image:url(img/r_stone.webp)"></div>
+  </div>
+  <div class="shade"></div>
+  <div class="glint"></div>
+  <div class="frame"><i></i><i></i><i></i><i></i></div>
+  <div class="wrap inner">
+    <nav>
+      <div class="brand"><span class="lg" id="navlg"><img src="img/icon_gold.png" alt=""></span><span>מאיצים</span></div>
+      <a class="navcta" href="#contact">לשיחה עם אריאל</a>
+    </nav>
+    <main>
+      <div class="eyebrow">מימון וגיוס הון לחברות ויזמי נדל"ן</div>
+      <h1 id="h1">גופי המימון מתחרים על הפרויקט שלך, <em>ואתה בוחר</em></h1>
+      <div class="slogan"><img src="img/icon_white.png" alt=""><span>מנועי צמיחה פיננסיים יצירתיים לחברות ומיזמי נדל"ן</span></div>
+      <p class="lead">אנחנו מוציאים את הפרויקט למכרז ממוקד ודיסקרטי מול גופי המימון שמתאימים לו, מנהלים את המשא ומתן על התנאים ומלווים אותך עד שהמימון נמצא בחשבון</p>
+      <div class="ctas">
+        <a class="btn wa" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.6 2.1 1.1 1 2.1 1.3 2.4 1.4.3.2.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg><span style="position:relative">לשיחה עם אריאל בוואטסאפ</span></a>
+        <a class="ghost" href="#contact">או השאר פרטים במייל</a>
+      </div>
+      <div class="facts">
+        <span><b class="num">120+</b> גופי מימון בהיכרות אישית</span>
+        <span>ליווי בנייה · הון עצמי · מזנין · משקיעים</span>
+      </div>
+    </main>
+  </div>
+  <div class="loc" id="loc">הדמיה</div>
+  <div class="dots" id="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+  <div class="scrollcue" aria-hidden="true"></div>
+</header>
+
+<section class="tender" id="tender">
+  <div class="tscroll" id="tscroll">
+    <div class="tsticky">
+      <div class="wrap head">
+        <div class="rv">
+          <div class="lbl">ככה זה עובד אצלנו</div>
+          <h2 class="h2">מכרז אחד, <em>וכל גופי המימון שמתאימים לפרויקט</em></h2>
+        </div>
+        <p class="side rv d1">אנחנו פונים בדיסקרטיות לגופים שמתאימים לפרויקט, אוספים הצעות ומנהלים את המשא ומתן, <b>ואתה בוחר את הטובה ביותר</b></p>
+      </div>
+      <div class="wrap stage" id="stage">
+        <div class="tframe" id="tframe" role="img" aria-label="המחשה: שולחן ישיבות, הפרויקט שלך במרכז וגופי המימון סביבו">
+          <canvas id="tcv"></canvas>
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" id="lines"></svg>
+        </div>
+        <div class="note">המחשה</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="partners">
+  <div class="wrap"><div class="lbl">שותפים לדרך</div></div>
+  <div class="marquee"><div class="mtrack">
+    <div class="set">
+      <div class="it"><img src="img/logo_bendavid.png" class="tall" alt="קבוצת בן-דוד"></div>
+      <div class="it"><img src="img/logo_levsorek.png" alt=""></div>
+      <div class="it nm">אבן העזר<small>יזמות נדל"ן</small></div>
+      <div class="it"><img src="img/logo_talis.png" class="tall" alt="TALIS"></div>
+      <div class="it"><img src="img/logo_alma.png" alt=""></div>
+      <div class="it nm">קבוצת רכישה רבבה</div>
+      <div class="it"><img src="img/logo_arrows.png" class="tall" alt="ARROWS"></div>
+      <div class="it"><img src="img/logo_citytower.png" class="tall" alt="City Tower"></div>
+      <div class="it nm">קבוצת רכישה אריאל</div>
+    </div>
+    <div class="set" aria-hidden="true">
+      <div class="it"><img src="img/logo_bendavid.png" class="tall" alt=""></div>
+      <div class="it"><img src="img/logo_levsorek.png" alt=""></div>
+      <div class="it nm">אבן העזר<small>יזמות נדל"ן</small></div>
+      <div class="it"><img src="img/logo_talis.png" class="tall" alt=""></div>
+      <div class="it"><img src="img/logo_alma.png" alt=""></div>
+      <div class="it nm">קבוצת רכישה רבבה</div>
+      <div class="it"><img src="img/logo_arrows.png" class="tall" alt=""></div>
+      <div class="it"><img src="img/logo_citytower.png" class="tall" alt=""></div>
+      <div class="it nm">קבוצת רכישה אריאל</div>
+    </div>
+  </div></div>
+</div>
+
+<section style="position:relative;overflow:hidden">
+  <div class="wm lg" style="left:-60px;bottom:-30px;height:340px"><img src="img/icon_ink.png" alt=""></div>
+  <div class="wrap" style="position:relative">
+    <div class="lbl rv">למה זה עובד</div>
+    <h2 class="h2 rv">מימון שנבנה <em>סביב הפרויקט שלך</em></h2>
+    <div class="why">
+      <div class="rv"><div class="n">01</div><h3>אנחנו בצד שלך</h3><p>אין לנו כסף משלנו להלוות ואין לנו גוף מימון שאנחנו צריכים לדחוף, אז ההמלצה נבנית רק לפי מה שטוב לפרויקט</p></div>
+      <div class="rv d1"><div class="n">02</div><h3>קשר שוטף עם גופי המימון</h3><p>אנחנו מדברים איתם כל שבוע, וכשאנחנו מביאים פרויקט יש לנו משקל לבקש תנאים טובים יותר</p></div>
+      <div class="rv d2"><div class="n">03</div><h3>חשיבה יצירתית</h3><p>כל חברה בשלב אחר של צמיחה, ועם היכרות עמוקה עם שוק המימון אפשר למצוא פתרון כמעט לכל צורך פיננסי</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <div class="wrap" style="position:relative">
+    <div class="lbl rv">השירותים</div>
+    <h2 class="h2 rv">מה אנחנו בונים <em>בשבילך</em></h2>
+    <div class="svc rv d1">
+      <details open><summary><span class="i">01</span><h3>גיוס מימון לפרויקטים<small>ליווי בנייה · הון עצמי · הלוואות מזנין</small></h3><span class="pl"></span></summary>
+        <div class="body">ליווי בנייה בתנאים שמתאימים לך, השלמת הון עצמי והלוואות מזנין במחיר שפוי<br>אנחנו בוחנים חלופות ומתאימים את מבנה העסקה, כדי שתתקדם עם הון עצמי שמתאים ליכולות ולתוכנית העסקית שלך</div></details>
+      <details><summary><span class="i">02</span><h3>גיוס משקיע לחברה או לפרויקט<small>שותף הוני · משקיע אסטרטגי · היערכות להנפקה</small></h3><span class="pl"></span></summary>
+        <div class="body">ההון העצמי שלך מושקע בפרויקטים קיימים, והזדמנות חדשה כבר מחכה, אז אנחנו מגייסים שותף הוני לפרויקט, או משקיע אסטרטגי לחברה שמתכוננת לשלב הבא, כולל היערכות לקראת הנפקה</div></details>
+      <details><summary><span class="i">03</span><h3>מימון לפיתוח עסקי<small>האתגר שאף אחד לא מדבר עליו</small></h3><span class="pl"></span></summary>
+        <div class="body">לפרויקט יש תקציב ותאריך יציאה, לפיתוח העסקי של החברה אין<br>משכורות, הוצאות מטה, תכנון וקידום פרויקטים חדשים מצטברים הרבה לפני שההכנסות מגיעות, ואנחנו בונים מימון תאגידי שמתאים לתזרים של החברה</div></details>
+      <details><summary><span class="i">04</span><h3>רכישות, מיזוגים וכניסת שותפים<small>שינוי במבנה העסקי</small></h3><span class="pl"></span></summary>
+        <div class="body">לפעמים הצעד הנכון הוא שינוי במבנה: רכישת פרויקט, כניסת שותף, מיזוג או שינוי בהחזקות, מהלכים שיכולים לשחרר הון עצמי, לשפר את התזרים או להוציא משקיעים יקרים</div></details>
+    </div>
+    <details class="more"><summary>לכל השירותים ←</summary>
+      <div class="extra">
+        <div class="card"><h4>מימון משכנתאות לקבוצות רכישה</h4><p>משכנתא לקבוצת רכישה צריכה להתאים גם למשק הבית של כל משתתף וגם למטרות הקבוצה, ואנחנו בונים לכל אחד מהמשתתפים משכנתא שמחברת בין השניים</p></div>
+        <div class="card ph"><h4>שירות נוסף</h4><p>כאן ייכנס השירות השני, כשתחליט עליו</p></div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="model">
+  <div class="wm lg" style="right:-70px;top:12%;height:78%"><img src="img/icon_gold.png" alt=""></div>
+  <div class="wrap inner">
+    <div>
+      <div class="lbl rv">מבנה שעבד לנו</div>
+      <h2 class="h2 rv">שותף הוני מכניס <em>80% מההון העצמי</em>, ואתה נשאר עם ההחלטות</h2>
+      <p class="t rv d1">במקום להכניס בין 15% ל-20% מהתקציב, או לצרף שותף יזמי שמעורב בכל צעד, שותף הוני נכנס ב-80% מחלק ההון העצמי וגובה אחוז שנתי על הכסף שלו, ואתה מכניס בין 4% ל-5% מסך התקציב, נשאר עם רוב הרווח ועם השליטה בפרויקט</p>
+      <p class="where rv d2">עשינו את זה ברכישת פרויקטים, במכרזי רמ"י ובהתחדשות עירונית</p>
+    </div>
+    <div class="bars rv d1" id="bars" aria-hidden="true">
+      <div class="bar"><div class="k"><span>הון עצמי בדרך הרגילה</span><b class="num">15%-20%</b></div><div class="tr"><div class="fill" style="--w:90%"></div></div></div>
+      <div class="bar you"><div class="k"><span>מה שאתה מכניס במבנה הזה</span><b class="num">4%-5%</b></div><div class="tr"><div class="fill" style="--w:24%"></div></div></div>
+      <small>דוגמה למבנה מתוך התקציב הכולל, כל פרויקט נבחן לגופו</small>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="gal-head">
+      <div>
+        <div class="lbl rv">פרויקטים</div>
+        <h2 class="h2 rv">מהפרויקטים <em>שעבדנו עליהם</em></h2>
+        <p class="intro rv d1">הדמיות, בלי שמות היזמים, כי דיסקרטיות היא חלק מהעבודה שלנו</p>
+      </div>
+      <div class="arrows"><button aria-label="הקודם" data-d="1">→</button><button aria-label="הבא" data-d="-1">←</button></div>
+    </div>
+    <div class="gal" id="gal">
+      <figure><div class="pi"><img src="img/r_tower.webp" alt="הדמיה, ירושלים" loading="lazy"></div><figcaption>ירושלים<span>מגורים</span></figcaption></figure>
+      <figure><div class="pi"><img src="img/r_hills.webp" alt="הדמיה, מעלה אדומים" loading="lazy"></div><figcaption>מעלה אדומים<span>שכונת מגורים</span></figcaption></figure>
+      <figure><div class="pi"><img src="img/r_night10.webp" alt="הדמיה, תל אביב" loading="lazy"></div><figcaption>תל אביב<span>מגורים</span></figcaption></figure>
+      <figure><div class="pi"><img src="img/r_stone.webp" alt="הדמיה, ירושלים" loading="lazy"></div><figcaption>ירושלים<span>מגורים</span></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="process" style="position:relative;overflow:hidden">
+  <div class="wm lg" style="left:-50px;top:30px;height:360px"><img src="img/icon_ink.png" alt=""></div>
+  <div class="wrap" style="position:relative">
+    <div class="lbl rv">איך זה עובד</div>
+    <h2 class="h2 rv">מפגישת ההיכרות <em>ועד שהמימון בחשבון</em></h2>
+    <div class="steps" id="steps">
+      <div class="prog"></div>
+      <div class="step"><i class="mkr"></i><div class="sn num">01</div><h3>פגישת היכרות</h3><p>מכירים את החברה, שומעים על החזון שלך וממפים את צורכי האשראי</p></div>
+      <div class="step"><i class="mkr"></i><div class="sn num">02</div><h3>ניתוח צרכים ואסטרטגיה</h3><p>הצרכים המיידיים של הפרויקט, לצד האסטרטגיה הארוכה של החברה</p></div>
+      <div class="step"><i class="mkr"></i><div class="sn num">03</div><h3>בניית תיק מימון</h3><p>הנתונים והמסמכים נארזים לתיק אשראי ברור ומשכנע, כזה שגופי המימון אוהבים לראות</p></div>
+      <div class="step key"><i class="mkr"></i><div class="sn num">04</div><h3>מכרז ממוקד ודיסקרטי</h3><p>פנייה בסודיות מלאה לגופי המימון הרלוונטיים והאטרקטיביים ביותר עבורך</p></div>
+      <div class="step"><i class="mkr"></i><div class="sn num">05</div><h3>משא ומתן על התנאים</h3><p>על הריביות והתנאים, לפי המטרות שהגדרנו מראש</p></div>
+      <div class="step"><i class="mkr"></i><div class="sn num">06</div><h3>ליווי עד החתימה</h3><p>חתימות, בירוקרטיה וסגירה פיננסית, עד שהמימון נמצא בחשבון</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="about">
+  <div class="wrap inner">
+    <div class="side rv">
+      <span class="lg" style="height:110px;margin-bottom:18px"><img src="img/icon_goldd.png" alt=""></span>
+      <div class="big num">120+</div>
+      <div class="cap">גופי מימון בהיכרות אישית</div>
+    </div>
+    <div>
+      <div class="lbl rv">מי אנחנו</div>
+      <h2 class="h2 rv">אריאל דמתי, <em>מייסד מאיצים</em></h2>
+      <p class="t rv d1">יזמים ומנכ"לים של חברות יזמיות מגיעים אלינו כשהחברה רוצה לצמוח, הזדמנויות חדשות נפתחות, ומבנה האשראי הקיים לא מאפשר לגייס את מה שצריך לשלב הבא</p>
+      <p class="t rv d2">ההתמחות שלנו היא לחבר בין הצורך העסקי לפתרון הפיננסי הנכון, מתוך היכרות אישית עם בכירי עולם המימון בישראל ועם יותר מ-120 גופי מימון</p>
+      <figure class="quote rv d2">
+        <span class="qm" aria-hidden="true">&rdquo;</span>
+        <blockquote><p>אריאל ליווה את חברתנו בגיוס המימון לפרויקט התחדשות עירונית בתל אביב, ובזכות קשריו המוכחים בשוק הצליח לייצר עבורנו פתרונות פיננסיים יצירתיים ומורכבים, <em>והשיג עבור הפרויקט תנאים אטרקטיביים במיוחד</em> שתאמו במדויק את צרכי החברה ויעדיה</p>
+        <p class="q2">לאורך כל הדרך הוא הפגין זמינות מלאה, נגישות יוצאת דופן וליווי צמוד בכל שלב ושלב</p></blockquote>
+        <figcaption><img src="img/logo_levsorek.png" alt="לב שורק"><span><b>לב לוזינסקי</b>שותף, קבוצת לב-שורק</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="bg" id="cbg"></div>
+  <div class="wm lg" style="left:-60px;bottom:-40px;height:440px;opacity:.09"><img src="img/icon_gold.png" alt=""></div>
+  <div class="wrap inner">
+    <div>
+      <div class="lbl rv">לשיחה</div>
+      <h2 class="h2 rv">הפרויקט הבא שלך <em>כבר על השולחן?</em></h2>
+      <p class="t rv d1">ספר לנו עליו, ואריאל דמתי יחזור אליך</p>
+      <a class="btn wa rv d2" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.6 2.1 1.1 1 2.1 1.3 2.4 1.4.3.2.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg><span style="position:relative">לשיחה עם אריאל בוואטסאפ</span></a>
+    </div>
+    <form id="form" class="rv d1" onsubmit="return sent(event)">
+      <h3>מעדיף במייל?</h3>
+      <div class="s">השאר פרטים וכמה מילים על הפרויקט, ואריאל דמתי יחזור אליך</div>
+      <label for="n">שם</label><input id="n" autocomplete="name" required>
+      <label for="e">מייל</label><input id="e" type="email" autocomplete="email" dir="ltr" required>
+      <label for="d">בקצרה על הפרויקט <small>(לא חובה)</small></label><textarea id="d" rows="3" placeholder="סוג הפרויקט, מיקום, ואיזה מימון חסר לך"></textarea>
+      <button class="btn" type="submit">שליחה</button>
+      <div class="note">הפרטים נשארים אצלנו בלבד</div>
+      <div id="formmsg">בסקיצה הטופס עוד לא מחובר, בדף האמיתי הפרטים יגיעו ישר אליך</div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <div class="brand"><span class="lg go"><img src="img/icon_gold.png" alt="" style="clip-path:none;transform:none"></span><span>מאיצים</span></div>
+      <div>מנועי צמיחה פיננסיים יצירתיים לחברות ומיזמי נדל"ן</div>
+    </div>
+    <p class="disc">המידע בעמוד כללי ואינו ייעוץ השקעות, ייעוץ משפטי או ייעוץ מס, הדוגמאות משקפות מקרים ספציפיים ואינן התחייבות לתוצאה דומה וההדמיות להמחשה בלבד</p>
+    <div class="credit">נבנה על ידי <a href="https://www.shiftup.marketing/" target="_blank" rel="noopener">Shift Up שיווק דיגיטלי</a></div>
+  </div>
+</footer>
+
+<a class="btn wa mwa" id="mwa" href="#" target="_blank" rel="noopener"><span style="position:relative">לשיחה עם אריאל בוואטסאפ</span></a>
+
+<script>
+(function(){
+var RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var mob=function(){return innerWidth<=900};
+
+
+// וואטסאפ עם הודעה מוכנה
+var wa='https://wa.me/972586631267?text='+encodeURIComponent('היי אריאל, הגעתי מהדף של מאיצים ואשמח לדבר על מימון לפרויקט');
+document.querySelectorAll('a.wa').forEach(function(a){a.href=wa});
+
+// שלושה ליטושים לכותרת
+var H=['גופי המימון מתחרים על הפרויקט שלך, <em>ואתה בוחר</em>',
+       '<em>גופי המימון</em> מתחרים על הפרויקט שלך',
+       'הפרויקט שלך על השולחן, <em>וגופי המימון מתחרים עליו</em>'];
+document.querySelectorAll('.sketchbar button').forEach(function(b){
+  b.onclick=function(){
+    document.getElementById('h1').innerHTML=H[+b.dataset.h];
+    document.querySelectorAll('.sketchbar button').forEach(function(x){x.classList.toggle('on',x===b)});
+  };
+});
+
+// הירו: ההדמיות מתחלפות
+(function(){
+  var bgs=[].slice.call(document.querySelectorAll('.hero .bg')), dots=[].slice.call(document.querySelectorAll('#dots i')), loc=document.getElementById('loc'), k=0;
+  if(RM) return;
+  setInterval(function(){
+    var prev=bgs[k]; k=(k+1)%bgs.length;
+    prev.classList.remove('on'); prev.classList.add('out'); setTimeout(function(){prev.classList.remove('out')},1900);
+    bgs[k].classList.add('on'); loc.textContent=bgs[k].dataset.loc;
+    dots.forEach(function(d,i){d.classList.toggle('on',i===k)});
+  },5500);
+})();
+
+// כניסת ההירו
+requestAnimationFrame(function(){setTimeout(function(){document.getElementById('hero').classList.add('on')},80)});
+
+// חשיפה בגלילה
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.18,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv,.gal figure,#bars').forEach(function(el){io.observe(el)});
+
+// לוגו גדל כשנכנס למסך
+var lio=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('go');lio.unobserve(e.target)}})},{threshold:.3});
+document.querySelectorAll('.lg:not(.go)').forEach(function(el){lio.observe(el)});
+
+// התהליך: הצעדים נדלקים אחד אחרי השני
+var st=document.getElementById('steps');
+new IntersectionObserver(function(es,o){if(es[0].isIntersecting){o.disconnect();st.classList.add('in');
+  [].slice.call(st.querySelectorAll('.step')).forEach(function(s,i){setTimeout(function(){s.classList.add('lit')},RM?0:300+i*380)});
+}},{threshold:.3}).observe(st);
+
+// המכרז: המצלמה מסתובבת ועולה עם הגלילה, ואז מכרז: כולם בודקים, מגישים, אחד נבחר
+var TP={"d":[{"c":[0.4049,0.3001],"l":[[0.5596,0.3534],[0.3539,0.3129],[0.2047,0.2835],[0.6447,0.3199],[0.4502,0.2887],[0.3038,0.2652]]},{"c":[0.4045,0.2997],"l":[[0.5584,0.3532],[0.3533,0.3125],[0.2046,0.283],[0.6443,0.3198],[0.4501,0.2884],[0.304,0.2648]]},{"c":[0.404,0.299],"l":[[0.5556,0.3531],[0.352,0.3117],[0.205,0.2818],[0.6439,0.3198],[0.4503,0.2877],[0.3053,0.2638]]},{"c":[0.4031,0.2967],"l":[[0.5509,0.3517],[0.3498,0.3091],[0.2057,0.2787],[0.6431,0.3185],[0.4506,0.2855],[0.3074,0.261]]},{"c":[0.402,0.2925],"l":[[0.5443,0.3488],[0.347,0.3047],[0.2068,0.2734],[0.642,0.3159],[0.4511,0.2816],[0.3103,0.2562]]},{"c":[0.4007,0.2862],"l":[[0.536,0.3441],[0.3436,0.2981],[0.2084,0.2659],[0.6406,0.3116],[0.4519,0.2755],[0.3142,0.2492]]},{"c":[0.3996,0.2776],"l":[[0.5262,0.3373],[0.34,0.2891],[0.2109,0.2557],[0.6392,0.3053],[0.4533,0.2672],[0.3195,0.2398]]},{"c":[0.3997,0.2672],"l":[[0.5158,0.329],[0.3372,0.2783],[0.2152,0.2436],[0.6385,0.2978],[0.4562,0.2573],[0.327,0.2285]]},{"c":[0.4021,0.2575],"l":[[0.5053,0.3214],[0.3365,0.2679],[0.2229,0.232],[0.639,0.2912],[0.4617,0.248],[0.338,0.2178]]},{"c":[0.4079,0.251],"l":[[0.495,0.3166],[0.3398,0.2607],[0.2367,0.2235],[0.6389,0.288],[0.4702,0.242],[0.3541,0.2104]]},{"c":[0.4181,0.2491],"l":[[0.486,0.3158],[0.3485,0.258],[0.2575,0.2197],[0.6384,0.2894],[0.4825,0.2409],[0.3761,0.2078]]},{"c":[0.4288,0.2527],"l":[[0.4755,0.3197],[0.3587,0.2605],[0.2813,0.2213],[0.6333,0.2961],[0.4943,0.2453],[0.3996,0.2107]]},{"c":[0.439,0.2615],"l":[[0.4638,0.3315],[0.3698,0.2686],[0.3068,0.2265],[0.6231,0.3103],[0.5044,0.2548],[0.4231,0.2167]]},{"c":[0.448,0.2742],"l":[[0.4518,0.3504],[0.3807,0.2808],[0.3323,0.2333],[0.6089,0.3312],[0.5124,0.268],[0.4455,0.2242]]},{"c":[0.4576,0.2887],"l":[[0.4423,0.3731],[0.3929,0.2944],[0.3584,0.2397],[0.5946,0.3563],[0.5203,0.2831],[0.4679,0.2315]]},{"c":[0.4665,0.3037],"l":[[0.4344,0.3971],[0.4048,0.3083],[0.3837,0.2451],[0.5799,0.3838],[0.527,0.2991],[0.489,0.2383]]},{"c":[0.4783,0.3181],"l":[[0.4317,0.4204],[0.4198,0.3212],[0.4111,0.2488],[0.5691,0.4118],[0.5362,0.3151],[0.5121,0.2442]]},{"c":[0.4927,0.3316],"l":[[0.4337,0.4419],[0.4374,0.3326],[0.4402,0.2506],[0.5626,0.4394],[0.5478,0.3307],[0.5368,0.2492]]},{"c":[0.5055,0.344],"l":[[0.4361,0.4611],[0.4535,0.3421],[0.4668,0.2508],[0.5562,0.466],[0.5578,0.3459],[0.5591,0.2538]]},{"c":[0.5138,0.3551],"l":[[0.4352,0.4777],[0.4648,0.3498],[0.488,0.2494],[0.5471,0.4913],[0.5634,0.3604],[0.5762,0.2578]]},{"c":[0.518,0.3648],"l":[[0.4311,0.4917],[0.4716,0.3556],[0.5042,0.2463],[0.5354,0.5152],[0.5651,0.3742],[0.5888,0.2614]]},{"c":[0.5182,0.3738],"l":[[0.4236,0.5037],[0.4743,0.3599],[0.5159,0.2421],[0.5211,0.5384],[0.563,0.388],[0.5973,0.2653]]},{"c":[0.5149,0.3826],"l":[[0.4127,0.5142],[0.4732,0.3633],[0.5237,0.2374],[0.5041,0.5614],[0.5577,0.4024],[0.6023,0.2702]]},{"c":[0.5123,0.3916],"l":[[0.4024,0.5232],[0.4726,0.3662],[0.5321,0.2328],[0.4883,0.5844],[0.5532,0.4177],[0.6082,0.2767]]},{"c":[0.5113,0.4011],"l":[[0.3944,0.5304],[0.4736,0.3691],[0.5421,0.2296],[0.4746,0.6064],[0.5503,0.4342],[0.6154,0.2861]]},{"c":[0.5119,0.4115],"l":[[0.3886,0.5354],[0.4763,0.3723],[0.5534,0.2289],[0.463,0.6266],[0.5487,0.452],[0.6237,0.2991]]},{"c":[0.5134,0.4218],"l":[[0.3847,0.5375],[0.4801,0.3753],[0.5655,0.2302],[0.4531,0.6438],[0.5479,0.4699],[0.6324,0.3149]]},{"c":[0.515,0.4318],"l":[[0.3816,0.5364],[0.4841,0.3778],[0.5773,0.2336],[0.4439,0.6575],[0.5469,0.4875],[0.6403,0.3334]]},{"c":[0.5159,0.4412],"l":[[0.3789,0.5323],[0.4876,0.3801],[0.5881,0.2395],[0.4351,0.6672],[0.5452,0.5044],[0.6466,0.3544]]},{"c":[0.5154,0.45],"l":[[0.3751,0.5257],[0.4896,0.3818],[0.597,0.2469],[0.4254,0.6737],[0.5419,0.5203],[0.6509,0.3768]]},{"c":[0.5134,0.4579],"l":[[0.3702,0.5168],[0.4903,0.3829],[0.6043,0.2557],[0.4148,0.6774],[0.5373,0.5351],[0.6534,0.4003]]},{"c":[0.5106,0.4658],"l":[[0.3649,0.5067],[0.49,0.3844],[0.6102,0.2668],[0.4039,0.6787],[0.5317,0.5494],[0.6543,0.4253]]},{"c":[0.508,0.4735],"l":[[0.3603,0.4958],[0.49,0.3862],[0.6159,0.2799],[0.394,0.6781],[0.5264,0.5629],[0.6548,0.4513]]},{"c":[0.5058,0.4808],"l":[[0.3561,0.4843],[0.4903,0.3881],[0.6215,0.294],[0.3848,0.676],[0.5216,0.5756],[0.6553,0.4774]]},{"c":[0.5039,0.4877],"l":[[0.352,0.4723],[0.4908,0.3898],[0.6274,0.3085],[0.3761,0.6731],[0.5172,0.5874],[0.6562,0.503]]},{"c":[0.5024,0.4935],"l":[[0.3479,0.4597],[0.4916,0.3906],[0.6338,0.3221],[0.3676,0.6694],[0.5134,0.5981],[0.6577,0.5275]]},{"c":[0.5013,0.4978],"l":[[0.3435,0.4458],[0.4926,0.3896],[0.6408,0.3338],[0.3592,0.6649],[0.5102,0.6073],[0.6602,0.5501]]},{"c":[0.5006,0.5005],"l":[[0.3389,0.431],[0.4938,0.3873],[0.6482,0.3436],[0.351,0.6595],[0.5074,0.6149],[0.6633,0.5704]]},{"c":[0.5001,0.5019],"l":[[0.3344,0.4159],[0.4952,0.3837],[0.6557,0.3516],[0.3432,0.6535],[0.5051,0.6208],[0.6667,0.5883]]},{"c":[0.4999,0.502],"l":[[0.3301,0.401],[0.4966,0.3793],[0.6629,0.3576],[0.336,0.6472],[0.5032,0.6252],[0.6704,0.6033]]},{"c":[0.4998,0.5014],"l":[[0.3262,0.3875],[0.4979,0.3746],[0.6695,0.3618],[0.3296,0.6414],[0.5018,0.6284],[0.674,0.6155]]},{"c":[0.4999,0.5008],"l":[[0.3227,0.3767],[0.4989,0.3707],[0.6752,0.3647],[0.3243,0.6371],[0.5008,0.6312],[0.6772,0.6252]]},{"c":[0.4999,0.5006],"l":[[0.321,0.3702],[0.4997,0.3687],[0.6783,0.3672],[0.3214,0.6341],[0.5001,0.6326],[0.6788,0.631]]},{"c":[0.4999,0.5003],"l":[[0.3193,0.3669],[0.4999,0.3669],[0.6806,0.3669],[0.3193,0.6338],[0.4999,0.6338],[0.6806,0.6338]]}],"m":[{"c":[0.5,0.4583],"l":[[0.3092,0.4756],[0.4226,0.4563],[0.5056,0.4421],[0.4919,0.4814],[0.5805,0.4604],[0.6445,0.4452]]},{"c":[0.5,0.4591],"l":[[0.3125,0.476],[0.4242,0.4571],[0.5065,0.4431],[0.4907,0.4818],[0.5788,0.4612],[0.643,0.4462]]},{"c":[0.5,0.4599],"l":[[0.3139,0.4764],[0.426,0.4578],[0.5093,0.444],[0.4869,0.4823],[0.5769,0.462],[0.6431,0.4472]]},{"c":[0.5,0.4606],"l":[[0.3137,0.4766],[0.428,0.4584],[0.5137,0.4448],[0.4809,0.4826],[0.575,0.4629],[0.6447,0.4482]]},{"c":[0.5,0.4619],"l":[[0.3154,0.477],[0.4312,0.4596],[0.5194,0.4464],[0.4733,0.4833],[0.5717,0.4643],[0.6457,0.45]]},{"c":[0.5,0.4632],"l":[[0.3166,0.4773],[0.4348,0.4608],[0.5261,0.448],[0.4645,0.4839],[0.5681,0.4657],[0.6473,0.4519]]},{"c":[0.5,0.4645],"l":[[0.317,0.4776],[0.4384,0.4619],[0.5339,0.4496],[0.4547,0.4844],[0.5644,0.4671],[0.6497,0.4538]]},{"c":[0.5,0.4656],"l":[[0.3164,0.4776],[0.4421,0.4628],[0.5424,0.451],[0.444,0.4847],[0.5607,0.4684],[0.6529,0.4555]]},{"c":[0.5,0.4665],"l":[[0.315,0.4774],[0.4457,0.4635],[0.5517,0.4523],[0.4327,0.4849],[0.5571,0.4696],[0.657,0.4572]]},{"c":[0.5,0.4672],"l":[[0.3128,0.4769],[0.4493,0.464],[0.5618,0.4534],[0.4206,0.4849],[0.5534,0.4705],[0.6618,0.4588]]},{"c":[0.5,0.4677],"l":[[0.31,0.4763],[0.4529,0.4643],[0.5726,0.4543],[0.408,0.4847],[0.5498,0.4713],[0.6674,0.4602]]},{"c":[0.5,0.4681],"l":[[0.3071,0.4755],[0.4566,0.4645],[0.5839,0.4552],[0.3951,0.4843],[0.5459,0.472],[0.6732,0.4615]]},{"c":[0.5,0.4685],"l":[[0.3043,0.4749],[0.4606,0.4645],[0.5958,0.4555],[0.3819,0.4846],[0.5419,0.4728],[0.6791,0.4627]]},{"c":[0.5,0.469],"l":[[0.3018,0.4744],[0.4647,0.4642],[0.6081,0.4553],[0.3686,0.4856],[0.5376,0.474],[0.6851,0.4639]]},{"c":[0.5,0.4695],"l":[[0.3002,0.4739],[0.4692,0.4639],[0.6206,0.4548],[0.3558,0.4872],[0.5329,0.4756],[0.6905,0.4653]]},{"c":[0.5,0.4702],"l":[[0.2995,0.4731],[0.4739,0.4633],[0.6332,0.4543],[0.3435,0.4889],[0.5279,0.4776],[0.6952,0.4674]]},{"c":[0.5,0.471],"l":[[0.3002,0.4718],[0.479,0.4626],[0.6454,0.4541],[0.3323,0.4906],[0.5225,0.4801],[0.6986,0.4703]]},{"c":[0.5,0.472],"l":[[0.3023,0.4698],[0.4844,0.4619],[0.6572,0.4544],[0.3223,0.492],[0.5167,0.4829],[0.7007,0.4743]]},{"c":[0.5,0.4731],"l":[[0.3055,0.4668],[0.49,0.461],[0.6686,0.4554],[0.3134,0.4927],[0.5107,0.486],[0.7014,0.4795]]},{"c":[0.5,0.4743],"l":[[0.31,0.4629],[0.4958,0.4601],[0.6792,0.4574],[0.3057,0.4926],[0.5045,0.4894],[0.7005,0.4862]]},{"c":[0.5,0.4756],"l":[[0.3158,0.4579],[0.5018,0.4593],[0.6888,0.4606],[0.2995,0.4914],[0.4981,0.4929],[0.6978,0.4945]]},{"c":[0.5,0.4769],"l":[[0.3228,0.4519],[0.5079,0.4586],[0.6974,0.4654],[0.2947,0.489],[0.4915,0.4965],[0.6933,0.5042]]},{"c":[0.5,0.4784],"l":[[0.3312,0.4449],[0.5142,0.458],[0.7045,0.4717],[0.2915,0.4853],[0.4849,0.5001],[0.6866,0.5155]]},{"c":[0.5,0.48],"l":[[0.3407,0.437],[0.5205,0.4578],[0.7102,0.4798],[0.2897,0.4803],[0.4783,0.5035],[0.678,0.5282]]},{"c":[0.5,0.4817],"l":[[0.3516,0.4283],[0.5268,0.4579],[0.7139,0.4895],[0.2896,0.474],[0.4718,0.5067],[0.6672,0.5418]]},{"c":[0.5,0.4834],"l":[[0.3638,0.4192],[0.5329,0.4585],[0.7153,0.5009],[0.2913,0.4665],[0.4655,0.5095],[0.6542,0.5561]]},{"c":[0.5,0.4852],"l":[[0.377,0.4099],[0.5389,0.4596],[0.7147,0.5137],[0.2945,0.4579],[0.4595,0.5119],[0.6395,0.5706]]},{"c":[0.5,0.4869],"l":[[0.391,0.4003],[0.5447,0.4611],[0.7124,0.5275],[0.2987,0.4485],[0.4537,0.5137],[0.6235,0.5851]]},{"c":[0.5,0.4886],"l":[[0.4055,0.3904],[0.5504,0.4629],[0.7089,0.5422],[0.3035,0.4381],[0.4481,0.515],[0.6067,0.5994]]},{"c":[0.5,0.4901],"l":[[0.4204,0.3804],[0.556,0.465],[0.7045,0.5577],[0.3085,0.4269],[0.4425,0.5159],[0.5895,0.6135]]},{"c":[0.5,0.4916],"l":[[0.4355,0.3698],[0.5619,0.4674],[0.6998,0.5739],[0.3133,0.4147],[0.4368,0.5163],[0.572,0.6275]]},{"c":[0.5,0.4929],"l":[[0.4513,0.3591],[0.5677,0.4699],[0.6945,0.5905],[0.3184,0.4017],[0.4311,0.5163],[0.554,0.6411]]},{"c":[0.5,0.4941],"l":[[0.4677,0.3488],[0.5735,0.4728],[0.6879,0.6071],[0.3242,0.3885],[0.4256,0.5157],[0.5354,0.6536]]},{"c":[0.5,0.4953],"l":[[0.4848,0.339],[0.579,0.476],[0.6803,0.6233],[0.3307,0.3751],[0.4202,0.5148],[0.5165,0.665]]},{"c":[0.5,0.4963],"l":[[0.5022,0.3298],[0.5843,0.4793],[0.6718,0.6387],[0.3377,0.3618],[0.4151,0.5134],[0.4977,0.6751]]},{"c":[0.5,0.4972],"l":[[0.5197,0.3215],[0.5893,0.4827],[0.6627,0.653],[0.3452,0.349],[0.4103,0.5117],[0.4791,0.6837]]},{"c":[0.5,0.498],"l":[[0.5369,0.3144],[0.5936,0.4861],[0.653,0.6657],[0.3533,0.3371],[0.4061,0.5099],[0.4613,0.6905]]},{"c":[0.5,0.4986],"l":[[0.553,0.3096],[0.5969,0.4895],[0.6424,0.6757],[0.3622,0.3273],[0.4029,0.5078],[0.4451,0.6947]]},{"c":[0.5,0.4991],"l":[[0.5674,0.3065],[0.5993,0.4925],[0.6319,0.6833],[0.3712,0.3195],[0.4007,0.5058],[0.4308,0.6969]]},{"c":[0.5,0.4995],"l":[[0.58,0.3041],[0.6013,0.4951],[0.6228,0.6894],[0.3792,0.3127],[0.3987,0.5039],[0.4186,0.6984]]},{"c":[0.5,0.4998],"l":[[0.5905,0.3023],[0.6028,0.4973],[0.6153,0.6942],[0.3858,0.3073],[0.3971,0.5024],[0.4086,0.6993]]},{"c":[0.5,0.5],"l":[[0.5982,0.3013],[0.6039,0.4988],[0.6095,0.6973],[0.3909,0.3036],[0.3961,0.5012],[0.4013,0.6996]]},{"c":[0.5,0.5001],"l":[[0.603,0.3008],[0.6045,0.4998],[0.6059,0.6991],[0.3942,0.3014],[0.3955,0.5004],[0.3969,0.6997]]},{"c":[0.5,0.5001],"l":[[0.6045,0.3009],[0.6045,0.5001],[0.6045,0.6994],[0.3955,0.3009],[0.3955,0.5001],[0.3955,0.6994]]}]}, TN=44;
+var tf=document.getElementById('tframe'), cv=document.getElementById('tcv'), cx=cv.getContext('2d'), svg=document.getElementById('lines'), ts=document.getElementById('tscroll'), stage=document.getElementById('stage');
+var NAMES=["בנק א'","קרן השקעות","בנק ב'","חברת ביטוח","בית השקעות","גוף חוץ-בנקאי"];
+var ns='http://www.w3.org/2000/svg', cards=[], lns=[], key='', imgs=[], cur=-1;
+var stat=document.createElement('div');stat.className='tstat';stat.innerHTML='<span class="pd"></span><span id="stt">המכרז נפתח</span>';tf.appendChild(stat);
+var stt=stat.querySelector('#stt');
+NAMES.forEach(function(n){
+  var l=document.createElementNS(ns,'line');svg.appendChild(l);lns.push(l);
+  var d=document.createElement('div');d.className='nc';d.innerHTML='<span class="k">גוף מימון</span><b>'+n+'</b><span class="st">בודק את התיק <i></i><i></i><i></i></span>';tf.appendChild(d);cards.push(d);
+});
+function load(){
+  var k=mob()?'m':'d'; if(k===key) return; key=k; imgs=[]; cur=-1;
+  var w=k==='m'?800:1980, h=k==='m'?1250:900; cv.width=w; cv.height=h; tf.dataset.ar=w/h;
+  for(var i=0;i<TN;i++){var im=new Image();im.onload=function(){cur=-1};im.dataset.src='img/tender/'+k+'/f'+(i<10?'0':'')+i+'.webp';imgs.push(im)}
+  imgs[0].src=imgs[0].dataset.src; if(rest) loadRest();
+  fit();
+}
+var rest=false;
+function loadRest(){rest=true;imgs.forEach(function(im){if(!im.src) im.src=im.dataset.src})}
+if('IntersectionObserver' in window){var tio=new IntersectionObserver(function(e){if(e[0].isIntersecting){loadRest();tio.disconnect()}},{rootMargin:'200px 0px'});tio.observe(document.getElementById('tender'))}addEventListener('load',function(){setTimeout(loadRest,300)})
+function fit(){var ar=+tf.dataset.ar, W=stage.clientWidth, H=stage.clientHeight; var w=Math.min(W,H*ar), h=w/ar; tf.style.width=w+'px'; tf.style.height=h+'px';}
+addEventListener('resize',function(){load();fit()});
+if('ResizeObserver' in window) new ResizeObserver(fit).observe(stage);
+load();
+var started=false, last=-1, T=[];
+function draw(p){
+  var i=Math.round(p*(TN-1));
+  var ok=function(k){return imgs[k]&&imgs[k].complete&&imgs[k].naturalWidth};
+  if(!ok(i)){for(var dd=1;dd<TN;dd++){if(ok(i-dd)){i=i-dd;break}if(ok(i+dd)){i=i+dd;break}}}
+  if(i!==cur && ok(i)){cx.clearRect(0,0,cv.width,cv.height);cx.drawImage(imgs[i],0,0,cv.width,cv.height);cur=i}
+  var F=TP[key][Math.max(0,cur)]; if(!F) return;
+  cards.forEach(function(d,j){
+    var q0=F.l[j], fx=key==='m'?1.0:.12, fy=key==='m'?.1:.42, q=[q0[0]+(q0[0]-F.c[0])*fx, q0[1]+(q0[1]-F.c[1])*fy], a=Math.min(1,Math.max(0,(p-.62-j*.035)/.16));
+    d.style.left=(q[0]*100)+'%';d.style.top=(q[1]*100)+'%';d.style.setProperty('--in',(1-a).toFixed(3));
+    lns[j].setAttribute('x1',q[0]*100);lns[j].setAttribute('y1',q[1]*100);lns[j].setAttribute('x2',F.c[0]*100);lns[j].setAttribute('y2',F.c[1]*100);
+  });
+  stat.classList.toggle('on',p>.7);
+  if(p>.9&&!started){started=true;run()}
+}
+function setSt(d,t){d.querySelector('.st').innerHTML=t}
+function reset(){cards.forEach(function(d){d.className='nc';setSt(d,'בודק את התיק <i></i><i></i><i></i>')});lns.forEach(function(l){l.setAttribute('class','')});stat.classList.remove('done');stt.textContent='המכרז נפתח'}
+function run(){
+  T.forEach(clearTimeout);T=[];reset();
+  var w; do{w=Math.floor(Math.random()*cards.length)}while(w===last); last=w;
+  if(RM){finish(w);return}
+  var order=[0,1,2,3,4,5].sort(function(){return Math.random()-.5});
+  T.push(setTimeout(function(){stt.textContent='מתקבלות הצעות'},900));
+  order.forEach(function(j,n){T.push(setTimeout(function(){cards[j].classList.add('sub');setSt(cards[j],'הגיש הצעה');lns[j].setAttribute('class','sub')},1300+n*650))});
+  T.push(setTimeout(function(){finish(w)},1300+order.length*650+900));
+  T.push(setTimeout(run,1300+order.length*650+900+5200));
+}
+function finish(w){
+  cards.forEach(function(d,j){if(j!==w){d.classList.remove('sub');d.classList.add('lose');lns[j].setAttribute('class','')}});
+  cards[w].classList.remove('sub');cards[w].classList.add('win');setSt(cards[w],'ההצעה הנבחרת');lns[w].setAttribute('class','win');
+  stat.classList.add('done');stt.textContent='נבחרה ההצעה הטובה ביותר';
+}
+
+var par=document.getElementById('par'), cbg=document.getElementById('cbg'), hero=document.getElementById('hero');
+function frame(){
+  var vh=innerHeight, r=ts.getBoundingClientRect();
+  var p=Math.min(1,Math.max(0,-r.top/(r.height-vh)));
+  draw(RM?1:p);
+  var y=scrollY;
+  if(!RM&&y<hero.offsetHeight*1.2) par.style.transform='translateY('+(y*.28).toFixed(1)+'px)';
+  var cr=cbg.parentNode.getBoundingClientRect(); if(!RM&&cr.top<vh&&cr.bottom>0) cbg.style.transform='translateY('+((cr.top-vh/2)*-.12).toFixed(1)+'px)';
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+// גלריה
+var g=document.getElementById('gal');
+document.querySelectorAll('.arrows button').forEach(function(b){
+  b.onclick=function(){g.scrollBy({left:(+b.dataset.d)*g.clientWidth*0.42,behavior:'smooth'})};
+});
+
+// וואטסאפ צף במובייל
+var m=document.getElementById('mwa'),ct=document.getElementById('contact');
+var tsc=document.getElementById('tscroll');
+function chk(){var y=scrollY,h=hero.offsetHeight,c=ct.offsetTop-innerHeight*.6,tr=tsc.getBoundingClientRect(),inT=tr.top<innerHeight*.5&&tr.bottom>innerHeight*.5;m.classList.toggle('show',y>h*.8&&y<c&&!inT)}
+addEventListener('scroll',chk,{passive:true});
+
+window.sent=function(e){e.preventDefault();document.getElementById('formmsg').style.display='block';return false};
+})();
+</script>
+</body>
+</html>
