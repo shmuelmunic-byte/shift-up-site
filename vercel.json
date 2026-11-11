@@ -17,6 +17,10 @@
       "destination": "/s/coach/en/index.html"
     },
     {
+      "source": "/s/dd-privacy",
+      "destination": "/s/dd-privacy/index.html"
+    },
+    {
       "source": "/((?!assets|.*\\..*).*)",
       "destination": "/index.html"
     }
