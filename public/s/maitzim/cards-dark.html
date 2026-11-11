@@ -356,6 +356,7 @@ form .note{font-size:12px;color:var(--onnight-m);margin-top:12px;text-align:cent
 .exc{min-height:0;overflow:hidden}
 .exi{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:48px;align-items:start;margin-top:18px;padding:38px 40px 40px;background:linear-gradient(rgba(198,161,91,.07),rgba(198,161,91,.07)),var(--night3);border:1px solid var(--gold)}
 .exi .txt h3{margin-top:0}
+.nb{white-space:nowrap}
 .ex h3{font-size:27px;font-weight:300;line-height:1.3;color:var(--onnight)}
 .ex h3 em{font-style:normal;color:var(--gold-l);font-weight:400}
 .ex .txt p{font-size:16.5px;color:#D8CFC2;line-height:1.75;margin-top:16px}
@@ -682,7 +683,7 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
         <div class="exb" id="exb1" role="region" aria-labelledby="exh1"><div class="exc"><div class="exi">
         <div class="txt">
           <h3>שותף הוני מכניס <em>80% מההון העצמי</em>, ואתה נשאר עם ההחלטות</h3>
-          <p>במקום להכניס בין 15% ל-20% מהתקציב, או לצרף שותף יזמי שמעורב בכל צעד, שותף הוני נכנס ב-80% מחלק ההון העצמי וגובה אחוז שנתי על הכסף שלו, ואתה מכניס בין 4% ל-5% מסך התקציב, נשאר עם רוב הרווח ועם השליטה בפרויקט</p>
+          <p>במקום להכניס <span class="nb">בין 15% ל-20%</span> מהתקציב, או לצרף שותף יזמי שמעורב בכל צעד, שותף הוני נכנס ב-80% מחלק ההון העצמי וגובה אחוז שנתי על הכסף שלו, ואתה מכניס <span class="nb">בין 4% ל-5%</span> מסך התקציב, נשאר עם רוב הרווח ועם השליטה בפרויקט</p>
           <p class="proof">עשינו את זה ברכישת פרויקטים, במכרזי רמ"י ובהתחדשות עירונית</p><!-- PENDING-APPROVAL-7 -->
         </div>
         <div class="cmp">
@@ -779,7 +780,7 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
       <span class="lg" style="height:110px;margin-bottom:18px"><img src="img/icon_goldd.png" alt=""></span>
       <div class="big num">120+</div>
       <div class="cap">גופי מימון בהיכרות אישית</div>
-      <figure class="aimg"><div class="ph2"><img src="img/r_threetowers.webp" alt="הדמיה, ארמון הנציב, ירושלים" loading="lazy"></div><figcaption>הדמיה · ארמון הנציב, ירושלים</figcaption></figure>
+      <figure class="aimg"><div class="ph2"><img src="img/r_threetowers.webp" alt="הדמיה, ארמון הנציב, ירושלים" loading="lazy"></div><figcaption>ארמון הנציב, ירושלים</figcaption></figure>
     </div>
     <div>
       <div class="lbl rv">מי אנחנו</div>
@@ -985,8 +986,9 @@ function frame(){
 }
 requestAnimationFrame(frame);
 
-// מימונים שבנינו: כרטיס לחיץ, אחד פתוח בכל פעם
+// מימונים שבנינו: כרטיס לחיץ, אחד פתוח בכל פעם. בדסקטופ הראשון פתוח בטעינה, במובייל כולם סגורים
 var exh=[].slice.call(document.querySelectorAll('.exh'));
+if(!matchMedia('(max-width:900px)').matches){exh[0].setAttribute('aria-expanded','true');document.getElementById('exb1').classList.add('open')}
 exh.forEach(function(b){b.addEventListener('click',function(){
   var open=b.getAttribute('aria-expanded')!=='true';
   exh.forEach(function(x){x.setAttribute('aria-expanded','false');document.getElementById(x.getAttribute('aria-controls')).classList.remove('open')});
