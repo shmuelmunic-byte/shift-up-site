@@ -988,7 +988,6 @@ requestAnimationFrame(frame);
 
 // מימונים שבנינו: כרטיס לחיץ, אחד פתוח בכל פעם. בדסקטופ הראשון פתוח בטעינה, במובייל כולם סגורים
 var exh=[].slice.call(document.querySelectorAll('.exh'));
-if(!matchMedia('(max-width:900px)').matches){exh[0].setAttribute('aria-expanded','true');document.getElementById('exb1').classList.add('open')}
 exh.forEach(function(b){b.addEventListener('click',function(){
   var open=b.getAttribute('aria-expanded')!=='true';
   exh.forEach(function(x){x.setAttribute('aria-expanded','false');document.getElementById(x.getAttribute('aria-controls')).classList.remove('open')});
