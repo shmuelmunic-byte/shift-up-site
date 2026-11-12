@@ -552,9 +552,15 @@ function useComputed() {
     /* 10.11: a "done" that was already written to the file keeps hiding its row until the
        mirror catches up, so a slow sync never brings a finished task back (it was clicked 4 times) */
     const closedTaskIds = new Set(d.hub_tasks.filter((t) => !isOpen(t)).map((t) => t.id));
+    /* 12.11: a row that came back to "open" in the file after the click (marked by mistake and restored)
+       must show again. The mirror is rewritten on every sync, so an open row synced more than a minute
+       after the action was applied is the file's real state, not a slow sync */
+    const openSyncedAt = new Map(d.hub_tasks.filter(isOpen).map((t) => [t.id, new Date(t.synced_at || 0).getTime()]));
+    const reopened = (a) => openSyncedAt.has(a.target_id) && a.applied_at
+      && openSyncedAt.get(a.target_id) > new Date(a.applied_at).getTime() + 60000;
     const pending = new Map(acts.filter((a) => a.target_id && (a.status === 'pending'
       || (a.status === 'applied' && (a.kind === 'task_done' || a.kind === 'task_irrelevant') && !closedTaskIds.has(a.target_id)
-        && now - new Date(a.created_at).getTime() < 86400000))).map((a) => [a.target_id, a]));
+        && !reopened(a) && now - new Date(a.created_at).getTime() < 86400000))).map((a) => [a.target_id, a]));
     const added = acts.filter((a) => a.status === 'pending' && a.kind === 'task_add');
     const failed = acts.filter((a) => a.status === 'failed' && now - new Date(a.created_at).getTime() < 2 * 86400000);
 
