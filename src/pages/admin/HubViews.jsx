@@ -118,7 +118,8 @@ function whoseTurn(t) {
 }
 /* 10.11: a step the agency proposed for a big task waits for Shmuel's OK (🟦), an agent task he started shows ▶️ */
 const isProposed = (t) => /^🟦/.test(t.status_note || '');
-const isStarted = (t) => /^▶️/.test(t.status_note || '');
+/* 13.11: a rejected output (🔲 ↩️) is already back in the agency queue, so no second "תתחיל" */
+const isStarted = (t) => /^(▶️|🔲\s*↩️)/.test(t.status_note || '');
 const isClientSide = (t) => whoseTurn(t).who === 'client';
 const isMine = (t) => whoseTurn(t).who === 'me';
 const isAgents = (t) => whoseTurn(t).who === 'agent';
@@ -354,7 +355,7 @@ const Clock = ({ text = 'ממתין לסנכרון' }) => <span className="hub-p
 /* a task line with "done" (circle before the text), "postpone" and "not relevant" (with a reason) */
 function TaskRow({ t, c, meta, metaTone, details, extra, noClient, main }) {
   const hub = useHub();
-  const [panel, setPanel] = useState(null); // null | 'postpone' | 'drop'
+  const [panel, setPanel] = useState(null); // null | 'postpone' | 'drop' | 'reject'
   const [date, setDate] = useState('');
   const [reason, setReason] = useState('');
   const p = c.pending.get(t.id);
@@ -382,10 +383,21 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient, main }) {
     if (ok) { setPanel(null); setReason(''); }
   };
 
+  /* 13.11: "לא מאשר" with the reasons, they go into the fix brief of the agent who made it */
+  const reject = async (e) => {
+    e.preventDefault();
+    const why = reason.replace(/\s+/g, ' ').trim();
+    if (!why) return;
+    const ok = await hub.act('output_reject', t.id, { client_id: t.client_id, label: short, title: cut(clean(t.title), 300), reason: why.slice(0, 600) }, 'חזר לתיקון אצל הסוכן');
+    if (ok) { setPanel(null); setReason(''); }
+  };
+
   if (p) {
-    const isDone = p.kind === 'task_done' || p.kind === 'task_irrelevant';
+    const isDone = p.kind === 'task_done' || p.kind === 'task_irrelevant' || p.kind === 'output_approve';
     const text = p.kind === 'agent_start' ? "נשלח לסוכן, יתחיל תוך ~15 דק'"
       : p.kind === 'step_approve' ? 'אושר, ממתין לסנכרון'
+      : p.kind === 'output_approve' ? 'אושר, השלב הבא נכנס לתור'
+      : p.kind === 'output_reject' ? 'לא אושר, חוזר לתיקון'
       : p.kind === 'task_done' ? 'בוצע, ממתין לסנכרון'
       : p.kind === 'task_irrelevant' ? 'לא רלוונטי, ממתין לסנכרון'
       : `נדחה ל-${fmtShortDate(p.payload?.due)}`;
@@ -393,10 +405,12 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient, main }) {
       <Row kb main={title} sub={noClient ? null : c.clientName(t.client_id)} pending={isDone ? 'done' : 'moved'}
         lead={<span className="hub-check" data-on={isDone || undefined} aria-hidden="true" />}
         meta={<Clock text={text} />}
-        details={p.kind === 'task_irrelevant' ? [...(details || []), ['למה לא רלוונטי', p.payload?.reason]] : details} />
+        details={p.kind === 'task_irrelevant' ? [...(details || []), ['למה לא רלוונטי', p.payload?.reason]]
+          : p.kind === 'output_reject' ? [...(details || []), ['למה לא אושר', p.payload?.reason]] : details} />
     );
   }
 
+  const waitsOk = !!t.file?.k && /^🟡/.test(clean(t.status_note || ''));
   const escClose = (e) => { if (e.key === 'Escape') { e.stopPropagation(); e.currentTarget.closest('.hub-row')?.focus(); setPanel(null); } };
 
   const next = nextWorkday(c.today);
@@ -404,10 +418,16 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient, main }) {
   return (
     <Row kb main={title} sub={noClient ? null : c.clientName(t.client_id)} meta={meta} metaTone={metaTone} details={details}
       lead={<button type="button" className="hub-check" data-k="x" aria-label={`סמן בוצע: ${short}`} title="בוצע (X)"
-        onClick={() => hub.act('task_done', t.id, { client_id: t.client_id, label: short }, 'סומן בוצע')} />}
+        onClick={() => hub.act('task_done', t.id, { client_id: t.client_id, label: short, title: cut(clean(t.title), 300) }, 'סומן בוצע')} />}
       action={<>
         {extra}
-        {t.file?.k && <OpenFileBtn f={t.file} clientId={t.client_id} main />}
+        {t.file?.k && <OpenFileBtn f={t.file} clientId={t.client_id} main={!waitsOk} />}
+        {waitsOk && (<>
+          <button type="button" className="hub-act hub-act-main" title="התוצר מאושר כמו שהוא, השלב הבא נכנס לתור"
+            onClick={() => hub.act('output_approve', t.id, { client_id: t.client_id, label: short, title: cut(clean(t.title), 300) }, 'אושר, השלב הבא נכנס לתור')}>✓ מאשר</button>
+          <button type="button" className="hub-act hub-act-no" aria-expanded={panel === 'reject'} title="חוזר לסוכן לתיקון עם הסיבות שלך"
+            onClick={() => setPanel((o) => (o === 'reject' ? null : 'reject'))}>✗ לא מאשר</button>
+        </>)}
         {isProposed(t) && (
           <button type="button" className="hub-act hub-act-main" title="לאשר את השלב והתאריך"
             onClick={() => hub.act('step_approve', t.id, { client_id: t.client_id, label: short }, 'השלב אושר')}>✓ אשר</button>
@@ -421,7 +441,13 @@ function TaskRow({ t, c, meta, metaTone, details, extra, noClient, main }) {
         <button type="button" className="hub-act hub-act-quiet" data-k="n" aria-expanded={panel === 'drop'} onClick={() => setPanel((o) => (o === 'drop' ? null : 'drop'))} title="לא רלוונטי (N)">לא רלוונטי</button>
         </span>
       </>}
-      below={panel === 'drop' ? (
+      below={panel === 'reject' ? (
+        <form className="hub-postpone hub-drop hub-reject" onSubmit={reject} onKeyDown={escClose} aria-label="למה התוצר לא מאושר">
+          <textarea value={reason} onChange={(e) => setReason(e.target.value)} autoFocus maxLength={600} rows={3}
+            placeholder="מה לא טוב ומה לתקן? זה נכנס כמו שהוא לבריף של הסוכן" aria-label="סיבות" />
+          <button type="submit" className="hub-act hub-act-main" disabled={!reason.trim()}>שלח לתיקון</button>
+        </form>
+      ) : panel === 'drop' ? (
         <form className="hub-postpone hub-drop" onSubmit={drop} onKeyDown={escClose} aria-label="למה המשימה לא רלוונטית">
           <input type="text" value={reason} onChange={(e) => setReason(e.target.value)} autoFocus maxLength={300}
             placeholder="למה זה כבר לא רלוונטי?" aria-label="סיבה" />
@@ -558,13 +584,31 @@ function useComputed() {
     const openSyncedAt = new Map(d.hub_tasks.filter(isOpen).map((t) => [t.id, new Date(t.synced_at || 0).getTime()]));
     const reopened = (a) => openSyncedAt.has(a.target_id) && a.applied_at
       && openSyncedAt.get(a.target_id) > new Date(a.applied_at).getTime() + 60000;
-    const pending = new Map(acts.filter((a) => a.target_id && (a.status === 'pending'
+    /* 13.11: "החזר לאישור" clicked after the action = the action no longer hides the row */
+    const reopenAt = new Map(acts.filter((a) => a.kind === 'task_reopen' && a.status !== 'cancelled' && a.status !== 'failed')
+      .map((a) => [a.target_id, new Date(a.created_at).getTime()]));
+    const undone = (a) => (reopenAt.get(a.target_id) || 0) > new Date(a.created_at).getTime();
+    /* approve/reject keep the row's place until the mirror shows the file after the write */
+    const stale = (a) => !a.applied_at || openSyncedAt.get(a.target_id) <= new Date(a.applied_at).getTime();
+    const pending = new Map(acts.filter((a) => a.target_id && a.kind !== 'task_reopen' && (a.status === 'pending'
       || (a.status === 'applied' && (a.kind === 'task_done' || a.kind === 'task_irrelevant') && !closedTaskIds.has(a.target_id)
-        && !reopened(a) && now - new Date(a.created_at).getTime() < 86400000))).map((a) => [a.target_id, a]));
+        && !reopened(a) && !undone(a) && now - new Date(a.created_at).getTime() < 86400000)
+      || (a.status === 'applied' && (a.kind === 'output_approve' || a.kind === 'output_reject') && openSyncedAt.has(a.target_id) && stale(a)
+        && now - new Date(a.created_at).getTime() < 3600000))).map((a) => [a.target_id, a]));
+    /* 13.11 (B1): what Shmuel approved or marked done in the last 24h, with "החזר לאישור" (12.11: "אישרתי בטעות") */
+    const recentOk = [];
+    const seenOk = new Set();
+    [...acts].reverse().forEach((a) => {
+      if (seenOk.has(a.target_id) || a.status !== 'applied' || !(a.kind === 'task_done' || a.kind === 'output_approve')) return;
+      if (now - new Date(a.created_at).getTime() >= 86400000 || undone(a)) return;
+      seenOk.add(a.target_id);
+      recentOk.push(a);
+    });
+    const reopening = new Map(acts.filter((a) => a.kind === 'task_reopen' && a.status === 'pending').map((a) => [a.target_id, a]));
     const added = acts.filter((a) => a.status === 'pending' && a.kind === 'task_add');
     const failed = acts.filter((a) => a.status === 'failed' && now - new Date(a.created_at).getTime() < 2 * 86400000);
 
-    return { now, today, clients, clientName, calls, linked, replies, reach, due, dueAll, proposed, approvals, waiting, collect, stuck, goal, week, replyMin, upcoming, one, agents, soonMine, noDateMine, tasks: d.hub_tasks, events: d.hub_events, pending, added, failed };
+    return { now, today, clients, clientName, calls, linked, replies, reach, due, dueAll, proposed, approvals, waiting, collect, stuck, goal, week, replyMin, upcoming, one, agents, soonMine, noDateMine, tasks: d.hub_tasks, events: d.hub_events, pending, added, failed, recentOk, reopening };
   }, [hub?.data, today, now]);
 }
 
@@ -758,6 +802,23 @@ function NextActions({ c }) {
   );
 }
 
+/* 13.11 (B1): approved or marked done by mistake → back to "waiting for approval" */
+function RecentOkRow({ a, c }) {
+  const hub = useHub();
+  const back = c.reopening.get(a.target_id);
+  const when = fmtTime(a.applied_at || a.created_at);
+  const ok = a.kind === 'output_approve';
+  return (
+    <Row main={<>{ok ? '✓ ' : ''}{a.payload?.label || 'משימה'}</>} sub={c.clientName(a.payload?.client_id)}
+      meta={back ? <Clock text="חוזר לאישור" /> : `${ok ? 'אושר' : 'סומן בוצע'} ב-${when}`}
+      action={!back && (
+        <button type="button" className="hub-act" title="אישרת בטעות? המשימה חוזרת למסך לאשר, והשלב הבא יוצא מהתור אם עוד לא התחיל"
+          onClick={() => hub.act('task_reopen', a.target_id, { client_id: a.payload?.client_id, label: a.payload?.label, title: a.payload?.title || a.payload?.label }, 'חוזר לאישור')}>↩ החזר לאישור</button>
+      )}
+      details={[['המשימה', a.payload?.title || a.payload?.label], ['מתי', `${fmtShortDate(isoDay(new Date(a.created_at)))} ${when}`]]} />
+  );
+}
+
 function Group({ title, tone, children, empty }) {
   const has = [children].flat(Infinity).some(Boolean);
   if (!has && !empty) return null;
@@ -809,9 +870,10 @@ function Queue({ q, c }) {
   if (q === 'steps') {
     return (
       <>
-        <p className="hub-q-note">קבצים שסוכן הכין ומחכים לעין שלך: "פתח", ואם מאושר מסמנים בוצע. ושלבים שהסוכנות הציעה למשימה גדולה: "אשר" = השלב נכנס לעבודה.</p>
+        <p className="hub-q-note">קבצים שסוכן הכין: "פתח", ואז "מאשר" (השלב הבא נכנס לתור לבד) או "לא מאשר" עם הסיבות (חוזר לסוכן לתיקון). שלבים שהסוכנות הציעה למשימה גדולה: "אשר" = השלב נכנס לעבודה.</p>
         <Group title="📄 קבצים לאישור">{c.approvals.map((t) => task(t))}</Group>
-        <Group title="שלבים של משימה גדולה" empty={c.approvals.length ? null : 'אין מה לאשר'}>{c.proposed.map((t) => task(t))}</Group>
+        <Group title="שלבים של משימה גדולה" empty={c.approvals.length || c.recentOk.length ? null : 'אין מה לאשר'}>{c.proposed.map((t) => task(t))}</Group>
+        <Group title="אישרת ב-24 השעות האחרונות">{c.recentOk.map((a) => <RecentOkRow key={a.id} a={a} c={c} />)}</Group>
       </>
     );
   }

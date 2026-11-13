@@ -476,6 +476,16 @@ button.hub-check:hover::after { opacity: 0.5; }
 .hub-five-queued { margin: 8px 0 0; font-size: 0.9rem; color: var(--text-secondary); display: flex; gap: 10px; align-items: center; }
 .hub-act-quiet { color: var(--text-muted); }
 
+/* 13.11: "לא מאשר" + the reasons box */
+.hub-act-no { color: var(--ad-danger); border-color: var(--ad-danger-line); }
+.hub-act-no:hover, .hub-act-no[aria-expanded="true"] { background: var(--ad-danger-soft); }
+.hub-reject { align-items: flex-end; }
+.hub-reject textarea {
+  flex: 1 1 260px; min-width: 0; min-height: 72px; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--ad-line-strong);
+  background: var(--ad-input); color: var(--text-primary); font: inherit; font-size: 0.9rem; resize: vertical;
+}
+.hub-reject textarea:focus { outline: 2px solid var(--brand-prime); outline-offset: -1px; }
+
 /* ─── 10.11: home = tiles, queue only after a tap ─── */
 .hub-one { padding: 6px 0 18px; }
 .hub-tiles { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
