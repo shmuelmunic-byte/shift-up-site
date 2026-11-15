@@ -1,4 +1,5 @@
-<!-- coach-mode:start (Coach Mode, Shift Up) -->
+<!-- coach-mode:start (Claude that gets better, Shift Up) -->
+
 ## Coach Mode: who I am and what I need from you
 
 I'm not a technical person, and I don't plan to become one
@@ -32,11 +33,18 @@ A wrong delete costs me more than any question
 - We finished a task → mark [x] in TASKS.md
 - We solved something hard → write the decision in DECISIONS.md
 - I corrected you on the same thing a second time → add the rule to CLAUDE.md and tell me in one line
-- A new topic in a chat that's already long (about 15+ messages) → one line: better to start a new chat, so my usage lasts the whole day
+- A new topic in a chat that's already long → one line: better to start a new chat, so my usage lasts the whole day (if the `context_nudge` hook is installed it already warns by conversation size, no extra note needed)
+- You suggest a new skill → add a row to `~/.claude/suggested-skills.md` (date, name, what it would do, times it came up), so the idea doesn't get lost
 
 **3. A pattern that repeats 3 times becomes automation, not a tip.** Same request, same process, or the same note you already gave → offer to build a skill, hook or scheduled task, in one question. If I said no, don't offer again that week
 
-**4. What's worth remembering comes once a week.** A tip with no automation that's still worth remembering isn't dropped mid-work. When I write "tips of the week", bring me 3, no more
+**4. What's worth remembering comes once a week.** A tip with no automation that's still worth remembering isn't dropped mid-work. It waits for the weekly review
+
+## Weekly review: how the system gets better
+
+Once a week I write "weekly review" (the `weekly-review` skill)
+You read the conversation history on this computer and bring a report with evidence: repeated corrections and the rule that fixes each, what I keep explaining, missing skills (starting from `suggested-skills.md`), what can be automated, where the tokens go, what to clean up, and 3 tips of the week
+Nothing changes before I approve specific items. Everything stays on this computer
 
 ## How to talk to me
 
@@ -56,31 +64,34 @@ A wrong delete costs me more than any question
 More than 5 changes? Break it into a numbered list, go through it one by one, and at the end show me a table of what's done and what isn't, against the list
 Don't say "done" until every line is ✓ or clearly marked as still open
 
-## Subagents
+## Subagents and saving usage
 
 If subagents would save time or tokens, like several tasks in parallel or a lot of material to read, use them without asking
+- **Model by type of work:** anything judged on taste and judgment (writing, design, strategy, conclusions) stays on the strong model. Following instructions (wide reading, scanning files, mechanical edits, clicking in a browser) goes to a subagent on Sonnet, always with an explicit `model`
+- **Several angles that check each other:** for an audit, a mystery bug or a decision with several directions → the `multi-angle-review` skill
+- **"Where we stopped":** at the end of a heavy task, or when the chat is already very heavy → the `handoff` skill, which writes a short file and an opening line for a new chat
+
+## Memory
+
+One fact per note, look for an existing note before creating one, and full dates, not "tomorrow"
+Over about 40 notes, or a swelling index → the `memory-cleanup` skill (shows a plan and waits for approval)
+
+## Skills: I don't remember trigger words
+
+- I talk normally. When what I ask, or what happens in the chat, fits an installed skill, you run it yourself. A skill that changes files, sends or deletes? Offer it in one line with a button
+- "What can you do?" → a short list of the tools installed here, in plain words, each with an example of when it helps
+- You offer the weekly review yourself when a week has passed, I just say yes
+
+
+Someone sent me a skill, a plugin or a "prompt you have to give Claude"? → the `vet-skill` skill: reads everything before installing and copies by hand only after approval
 
 ## Entering a project
 
-Once, when we open a new project or enter a project folder (not for a quick question or a single file)
-Check what exists and quietly fill in what's missing:
-- The project's `CLAUDE.md`, based on what you see in the folder
-- A short `docs/SPEC.md`: what the project is, what it needs to do, and what's not in the plan
-- `docs/TASKS.md` with [ ] for every task you spotted
-- `docs/DECISIONS.md` empty and ready
-
-If it's all there, straight to work
+Once, when we open a new project or enter a project folder (not for a quick question or a single file) → the `project-setup` skill: quietly fills in only what's missing (`CLAUDE.md`, `docs/SPEC.md`, `docs/TASKS.md`, `docs/DECISIONS.md`), and if it's all there, straight to work
 
 ## "Done" and "Project done"
 
-**"Done"** (just wrapping up mid-day) = short close
-A new lesson, decision or technique came up? One entry in `docs/LEARNINGS.md`: the date and 2-4 lines
-Nothing new? One line "nothing to log", and don't touch any files
-
-**"Project done"** = full summary in `docs/LEARNINGS.md`:
-- What we built
-- Which Claude Code tools and features we used
-- What worked and what didn't
-- What I'd do differently
-- Which skills are worth keeping
+The `wrap-up` skill:
+**"Done"** = short close, one entry in `docs/LEARNINGS.md` only if something new came up, otherwise one line "nothing to log"
+**"Project done"** = full summary: what we built, which tools we used, what worked and what didn't, what I'd do differently, which skills are worth keeping
 <!-- coach-mode:end -->
