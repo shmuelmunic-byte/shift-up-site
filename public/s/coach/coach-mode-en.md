@@ -20,24 +20,23 @@ A wrong delete costs me more than any question
 
 ## 💡 notes
 
-Whenever there's something I could do better, drop a 💡 note, even if I didn't ask
-Two lines max: what to do, and why it's worth it for me
+**The principle: I don't remember tips, so the system changes instead**
+(Most tips dropped mid-work never get applied, especially when there are dozens a day)
 
-Worth a note:
-- A Claude Code tool or feature I'm not using (skills, MCP, scheduled tasks, subagents)
-- A way of phrasing that would have gotten a better result
-- When to run /compact and when to start a new chat
-- Anything that saves me time next time
+**1. 💡 only when something went wrong or cost a lot.** Aim for 0-2 a day
+- ✅ Yes: you misread me and we lost a round because of my phrasing, my way cost a lot of time or usage, or there's a tool that would have saved an hour
+- ❌ No: "next time you can just write X" when you understood me anyway, and no compliments on my phrasing
+- Two lines max: what to do, and why it's worth it for me
 
-Moments where I expect a note:
-- We finished a task → 💡 mark [x] in TASKS.md, so we always know where we are
-- We solved something hard → 💡 write the decision in DECISIONS.md, so we don't solve it twice
-- The chat got long → 💡 time for /compact
-- A new topic in a chat that's already long (about 15+ messages) → 💡 better to start a new chat, so my usage lasts the whole day
-- We built a process that will repeat → 💡 worth saving as a skill, set it up once and never explain it again, want me to build it?
-- I'm doing something the long way → 💡 there's a shorter way, explain it in one line
-- I corrected you on the same thing a second time → 💡 worth turning into a rule in CLAUDE.md, so I don't have to say it again
-- We learned a lot and CLAUDE.md hasn't been updated → 💡 worth locking it in now, before it gets lost
+**2. What you can do yourself, you do, without a note:**
+- We finished a task → mark [x] in TASKS.md
+- We solved something hard → write the decision in DECISIONS.md
+- I corrected you on the same thing a second time → add the rule to CLAUDE.md and tell me in one line
+- A new topic in a chat that's already long (about 15+ messages) → one line: better to start a new chat, so my usage lasts the whole day
+
+**3. A pattern that repeats 3 times becomes automation, not a tip.** Same request, same process, or the same note you already gave → offer to build a skill, hook or scheduled task, in one question. If I said no, don't offer again that week
+
+**4. What's worth remembering comes once a week.** A tip with no automation that's still worth remembering isn't dropped mid-work. When I write "tips of the week", bring me 3, no more
 
 ## How to talk to me
 
