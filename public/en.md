@@ -5,7 +5,7 @@ Strategy First. Budget Second.
 
 Research-based campaigns for businesses that already get marketing, with a performance guarantee on the first month of management.
 
-> Performance guarantee: if the first month of management brings no inquiries, I keep managing for free until it does · 1 founding case-study spot · free intro call.
+> Performance guarantee: if the first month of management brings no inquiries, I manage the next month for free · 1 founding case-study spot · free intro call.
 
 [Get a tailored proposal](https://www.shiftup.marketing/en#en-contact) · [Got a question? Message me](https://wa.me/972534673151)
 
@@ -14,7 +14,7 @@ Research-based campaigns for businesses that already get marketing, with a perfo
 ## Why trust me? Because the risk is on me.
 
 - **Research-based**: not a single shekel goes into a campaign before research: audience, competitors, message. Decisions on data, not gut feeling.
-- **Performance guarantee**: this isn't a "free first month". If the first month of management brings no inquiries, I keep managing for free until it does.
+- **Performance guarantee**: this isn't a "free first month". If the first month of management brings no inquiries, I manage the next month for free.
 - **Eye-level partner**: an execution partner, not a salesman. Free intro call, we check the fit with no pressure and no buzzwords.
 
 ---
@@ -42,7 +42,7 @@ Before a single shekel goes into ads, we build the playing field: which funnel b
 - The right channels
 
 ### 03 · The Action
-A ready-to-run campaign goes live: I set up and manage your paid campaigns on Meta and Google and produce creative that sells. And if the first month brings no inquiries, I keep managing for free until it does.
+A ready-to-run campaign goes live: I set up and manage your paid campaigns on Meta and Google and produce creative that sells. And if the first month brings no inquiries, I manage the next month for free.
 - Meta + Google campaigns
 - Creative that sells
 - First-month performance guarantee
@@ -66,7 +66,7 @@ There are plenty of digital marketers. Here are 4 real reasons I'd be your smart
 
 1. **Research-Based**: I don't run campaigns on gut feeling. Audience, competitors, message, everything is researched before a single shekel goes into paid.
 2. **AI-First**: what takes others a week, I do in hours, at higher quality.
-3. **Performance Guarantee**: if the first month of management brings no inquiries, I keep managing for free until it does. The risk is on me.
+3. **Performance Guarantee**: if the first month of management brings no inquiries, I manage the next month for free. The risk is on me.
 4. **Eye-Level Partner**: an execution partner, not a salesman. No buzzwords, no inflated decks. Straight talk: what we do, why, and what it costs.
 
 ---
@@ -80,7 +80,7 @@ I'm Shmuel Munitz. I don't come from a 20-year-old ad agency, and that's exactly
 ## Pricing & availability
 - Structure: a one-time setup (research, strategy, creative and a ready-to-run campaign) + monthly management (media budget separate)
 - A fixed, clear price is set in the intro call based on scope, no vague packages and no surprises
-- Performance guarantee (not a "free first month"): if the first month of management brings no inquiries, management continues for free until it does
+- Performance guarantee (not a "free first month"): if the first month of management brings no inquiries, the next month of management is free
 - 1 founding case-study spot on special terms, in exchange for publishing the results
 - Free intro call, no commitment
 
