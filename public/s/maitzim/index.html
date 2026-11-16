@@ -942,7 +942,7 @@ function ok(k){return imgs[k]&&imgs[k]._ok}
 var lastF=-1, lastMa=null;
 function lp(a,b,t){return a+(b-a)*t}
 function draw(p){
-  var f=p*(TN-1), i=Math.min(TN-1,Math.floor(f)), a=f-i;
+  var f=p*(TN-1), i=Math.min(TN-1,Math.round(f)), a=0;
   if(!ok(i)){a=0;for(var dd=1;dd<TN;dd++){if(ok(i-dd)){i=i-dd;break}if(ok(i+dd)){i=i+dd;break}}}
   if(!ok(i)) return;
   var blend=a>.01&&i<TN-1&&ok(i+1), fk=i+(blend?a:0);
@@ -996,7 +996,6 @@ addEventListener('scroll',function(){lastSc=performance.now()},{passive:true});
 function frame(now){
   var vh=innerHeight, r=ts.getBoundingClientRect();
   var tp=Math.min(1,Math.max(0,-r.top/(r.height-vh))), dt=lt?Math.min(64,now-lt):16.7; lt=now;
-  if(now-lastSc>140) tp=Math.round(tp*(TN-1))/(TN-1);
   if(RM) sp=1; else if(sp<0||r.bottom<0||r.top>vh) sp=tp; else {sp+=(tp-sp)*(1-Math.pow(.78,dt/16.7)); if(Math.abs(tp-sp)<.0004) sp=tp}
   if(dirty||Math.abs(sp-lastDrawn)>.0002){draw(sp);lastDrawn=sp;dirty=false}
   var y=scrollY;
