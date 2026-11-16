@@ -8,6 +8,8 @@
 <title>מאיצים | מימון וגיוס הון לחברות ויזמי נדל"ן</title>
 <meta name="description" content="מכרז ממוקד ודיסקרטי מול גופי המימון, משא ומתן על התנאים וליווי עד שהמימון בחשבון">
 <link rel="icon" href="img/icon_gold.png">
+<meta name="theme-color" content="#14110E">
+<link rel="preload" as="image" href="img/r_threetowers.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -19,6 +21,10 @@
   --ease:cubic-bezier(.2,.7,.2,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
+@media (pointer:fine){html{overscroll-behavior:none}}
+section[id],header[id]{scroll-margin-top:16px}
+a,button,label,.exh{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+h1,.h2{text-wrap:balance}
 html{scroll-behavior:smooth}
 body{font-family:"IBM Plex Sans Hebrew",system-ui,sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden}
 img{display:block;max-width:100%}
@@ -118,14 +124,14 @@ h1 em{font-style:normal;color:var(--gold-l);font-weight:500}
 .stage{position:relative;flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;margin-top:10px}
 .tframe{position:relative;perspective:900px}
 .tender .stage{max-width:none;padding:0}
-.tframe canvas{position:absolute;inset:0;width:100%;height:100%}
+.tframe canvas{position:absolute;inset:0;width:100%;height:100%;transform:translateZ(0)}
 .tframe svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .tframe line{stroke:transparent;stroke-width:1.2;vector-effect:non-scaling-stroke;transition:opacity .35s}
 .tframe line.sub{stroke:rgba(217,181,108,.35);stroke-dasharray:3 6;animation:flow 1.4s linear infinite}
 .tframe line.win{stroke:var(--gold-l);stroke-width:2.4;stroke-dasharray:none;filter:drop-shadow(0 0 6px rgba(217,181,108,.9));animation:none}
 @keyframes flow{to{stroke-dashoffset:-18}}
 /* כרטיס שם */
-.nc{position:absolute;transform:translate(-50%,-50%) rotateX(calc(var(--in,0) * 75deg)) scale(calc(1 - var(--in,0) * .2));opacity:calc(1 - var(--in,1));min-width:124px;padding:7px 14px 8px;text-align:center;
+.nc{position:absolute;left:0;top:0;transform:translate3d(calc(var(--x,0px) - 50%),calc(var(--y,0px) - 50%),0) rotateX(calc(var(--in,0) * 75deg)) scale(calc(1 - var(--in,0) * .2));will-change:transform,opacity;opacity:calc(1 - var(--in,1));min-width:124px;padding:7px 14px 8px;text-align:center;
   background:linear-gradient(160deg,#2A241C 0%,#15110D 60%,#0F0C09 100%);border:1px solid rgba(198,161,91,.55);
   box-shadow:0 14px 28px rgba(0,0,0,.65),inset 0 0 0 3px rgba(20,17,14,.9),inset 0 0 0 4px rgba(198,161,91,.22);
   transition:background .5s,border-color .5s,box-shadow .5s,filter .5s,color .5s,opacity .6s;pointer-events:none}
@@ -147,7 +153,7 @@ h1 em{font-style:normal;color:var(--gold-l);font-weight:500}
 .nc.pick .st{color:var(--gold-l)}
 .tframe line.pick{stroke:rgba(217,181,108,.3);stroke-dasharray:2 7}
 /* השוק סביב השולחן */
-.mkt{position:absolute;inset:0;pointer-events:none;opacity:var(--a,0)}
+.mkt{position:absolute;inset:0;pointer-events:none;opacity:var(--a,0);will-change:opacity;contain:strict;transform:translateZ(0)}
 .mkt i{position:absolute;width:15px;height:9px;transform:translate(-50%,-50%);border:1px solid rgba(198,161,91,.7);background:var(--night2);opacity:var(--o);transition:opacity .9s var(--ease)}
 .tframe.sel .mkt i{opacity:calc(var(--o) * .28)}
 .nc.win{background:linear-gradient(160deg,#F0D396 0%,#C9A15A 55%,#9C7634 100%);border-color:#F6DEA6;filter:none;
@@ -837,9 +843,9 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
     <form id="form" class="rv d1" onsubmit="return sent(event)">
       <h3>מעדיף במייל?</h3>
       <div class="s">השאר פרטים וכמה מילים על הפרויקט, ואנחנו נחזור אליך תוך <span class="num">24</span> שעות בימי עבודה</div>
-      <label for="n">שם</label><input id="n" autocomplete="name" required>
-      <label for="e">מייל</label><input id="e" type="email" autocomplete="email" dir="ltr" required>
-      <label for="d">בקצרה על הפרויקט <small>(לא חובה)</small></label><textarea id="d" rows="3" placeholder="סוג הפרויקט, מיקום, ואיזה מימון חסר לך"></textarea>
+      <label for="n">שם</label><input id="n" name="name" autocomplete="name" required>
+      <label for="e">מייל</label><input id="e" name="email" type="email" autocomplete="email" spellcheck="false" dir="ltr" required>
+      <label for="d">בקצרה על הפרויקט <small>(לא חובה)</small></label><textarea id="d" name="project" rows="3" placeholder="סוג הפרויקט, מיקום, ואיזה מימון חסר לך…"></textarea>
       <button class="btn" type="submit">שליחה</button>
       <div class="note">הפרטים נשארים אצלנו בלבד</div>
       <div class="thanks" id="thanks" role="status" aria-live="polite"><span class="lg"><img src="img/icon_gold.png" alt=""></span><h3>תודה, הפרטים אצלנו</h3><p>נחזור אליך תוך <span class="num">24</span> שעות בימי עבודה לתיאום פגישת היכרות</p><div class="tw">רוצה לקצר את הדרך? אפשר לכתוב לאריאל ישירות</div><a class="btn wa" href="#" target="_blank" rel="noopener"><span style="position:relative">לשיחה עם אריאל בוואטסאפ</span></a></div>
@@ -917,34 +923,44 @@ NAMES.forEach(function(n){
   var d=document.createElement('div');d.className='nc';d.innerHTML='<span class="k">גוף מימון</span><b>'+n+'</b><span class="st"></span>';tf.appendChild(d);cards.push(d);
 });
 function load(){
-  var k=mob()?'m':'d'; if(k===key) return; key=k; imgs=[]; cur=-1;
-  var w=k==='m'?800:1980, h=k==='m'?1250:900; cv.width=w; cv.height=h; tf.dataset.ar=w/h;
-  for(var i=0;i<TN;i++){var im=new Image();im.onload=function(){cur=-1};im.dataset.src='img/tender/'+k+'/f'+(i<10?'0':'')+i+'.webp';imgs.push(im)}
+  var k=mob()?'m':'d'; if(k===key) return; key=k; imgs=[]; cur=-1; dirty=true;
+  var w=k==='m'?800:1980, h=k==='m'?1250:900; tf.dataset.ar=w/h; var dpr=Math.min(2,window.devicePixelRatio||1), sw=Math.min(w,Math.round(Math.min(stage.clientWidth,stage.clientHeight*w/h)*dpr))||w; cv.width=sw; cv.height=Math.round(sw*h/w);
+  for(var i=0;i<TN;i++){var im=new Image();im.onload=function(){var t=this,kk=key;if(window.createImageBitmap){createImageBitmap(t,{resizeWidth:cv.width,resizeHeight:cv.height,resizeQuality:'high'}).then(function(b){if(kk!==key) return;t._bm=b;t._ok=1;dirty=true},function(){t._ok=1;dirty=true})}else{t._ok=1;dirty=true}};im.dataset.src='img/tender/'+k+'/f'+(i<10?'0':'')+i+'.webp';imgs.push(im)}
   imgs[0].src=imgs[0].dataset.src; if(rest) loadRest();
   placeMkt(); fit();
 }
 var rest=false;
 function loadRest(){rest=true;imgs.forEach(function(im){if(!im.src) im.src=im.dataset.src})}
 if('IntersectionObserver' in window){var tio=new IntersectionObserver(function(e){if(e[0].isIntersecting){loadRest();tio.disconnect()}},{rootMargin:'200px 0px'});tio.observe(document.getElementById('tender'))}addEventListener('load',function(){setTimeout(loadRest,300)})
-function fit(){var ar=+tf.dataset.ar, W=stage.clientWidth, H=stage.clientHeight; var w=Math.min(W,H*ar), h=w/ar; tf.style.width=w+'px'; tf.style.height=h+'px';}
+var TW=0,TH=0,dirty=true;
+function fit(){var ar=+tf.dataset.ar, W=stage.clientWidth, H=stage.clientHeight; var w=Math.min(W,H*ar), h=w/ar; if(w===TW&&h===TH) return; TW=w;TH=h; tf.style.width=w+'px'; tf.style.height=h+'px'; dirty=true;}
 addEventListener('resize',function(){load();fit()});
 if('ResizeObserver' in window) new ResizeObserver(fit).observe(stage);
 load();
 var started=false, last=-1, T=[];
+function ok(k){return imgs[k]&&imgs[k]._ok}
+var lastF=-1, lastMa=null;
+function lp(a,b,t){return a+(b-a)*t}
 function draw(p){
-  var i=Math.round(p*(TN-1));
-  var ok=function(k){return imgs[k]&&imgs[k].complete&&imgs[k].naturalWidth};
-  if(!ok(i)){for(var dd=1;dd<TN;dd++){if(ok(i-dd)){i=i-dd;break}if(ok(i+dd)){i=i+dd;break}}}
-  if(i!==cur && ok(i)){cx.clearRect(0,0,cv.width,cv.height);cx.drawImage(imgs[i],0,0,cv.width,cv.height);cur=i}
-  var F=TP[key][Math.max(0,cur)]; if(!F) return;
+  var f=p*(TN-1), i=Math.min(TN-1,Math.floor(f)), a=f-i;
+  if(!ok(i)){a=0;for(var dd=1;dd<TN;dd++){if(ok(i-dd)){i=i-dd;break}if(ok(i+dd)){i=i+dd;break}}}
+  if(!ok(i)) return;
+  var blend=a>.01&&i<TN-1&&ok(i+1), fk=i+(blend?a:0);
+  if(Math.abs(fk-lastF)>.002||dirty){
+    cx.clearRect(0,0,cv.width,cv.height);cx.globalAlpha=1;cx.drawImage(imgs[i]._bm||imgs[i],0,0,cv.width,cv.height);
+    if(blend){cx.globalAlpha=a;cx.drawImage(imgs[i+1]._bm||imgs[i+1],0,0,cv.width,cv.height);cx.globalAlpha=1}
+    lastF=fk;cur=i;
+  }
+  var A=TP[key][i], B=TP[key][Math.min(TN-1,i+1)], t=blend?a:0; if(!A) return;
+  var c0=lp(A.c[0],B.c[0],t), c1=lp(A.c[1],B.c[1],t);
   cards.forEach(function(d,j){
-    var q0=F.l[j], fx=key==='m'?1.0:.12, fy=key==='m'?.1:.42, q=[q0[0]+(q0[0]-F.c[0])*fx, q0[1]+(q0[1]-F.c[1])*fy], a=Math.min(1,Math.max(0,(p-.62-j*.035)/.16));
-    d.style.left=(q[0]*100)+'%';d.style.top=(q[1]*100)+'%';d.style.setProperty('--in',(1-a).toFixed(3));
-    lns[j].style.opacity=a<.98?0:1;
-    lns[j].setAttribute('x1',q[0]*100);lns[j].setAttribute('y1',q[1]*100);lns[j].setAttribute('x2',F.c[0]*100);lns[j].setAttribute('y2',F.c[1]*100);
+    var q0=[lp(A.l[j][0],B.l[j][0],t),lp(A.l[j][1],B.l[j][1],t)], fx=key==='m'?1.0:.12, fy=key==='m'?.1:.42, q=[q0[0]+(q0[0]-c0)*fx, q0[1]+(q0[1]-c1)*fy], a2=Math.min(1,Math.max(0,(p-.62-j*.035)/.16));
+    d.style.setProperty('--x',(q[0]*TW).toFixed(1)+'px');d.style.setProperty('--y',(q[1]*TH).toFixed(1)+'px');d.style.setProperty('--in',(1-a2).toFixed(3));
+    lns[j].style.opacity=a2<.98?0:1;
+    lns[j].setAttribute('x1',q[0]*100);lns[j].setAttribute('y1',q[1]*100);lns[j].setAttribute('x2',c0*100);lns[j].setAttribute('y2',c1*100);
   });
   stat.classList.toggle('on',p>.7);
-  mkt.style.setProperty('--a',Math.min(1,Math.max(0,(p-.86)/.13)).toFixed(3));
+  var ma=Math.min(1,Math.max(0,(p-.86)/.13)).toFixed(3); if(ma!==lastMa){mkt.style.setProperty('--a',ma);lastMa=ma}
   if(p>.9&&!started){started=true;run()}
   if(p<.6&&started){started=false;T.forEach(clearTimeout);T=[];reset()}
 }
@@ -975,13 +991,17 @@ function finish(ids,w){
 }
 
 var par=document.getElementById('par'), cbg=document.getElementById('cbg'), hero=document.getElementById('hero');
-function frame(){
+var sp=-1, lastDrawn=-2, lt=0, lastPar=null, lastCb=null, lastSc=0;
+addEventListener('scroll',function(){lastSc=performance.now()},{passive:true});
+function frame(now){
   var vh=innerHeight, r=ts.getBoundingClientRect();
-  var p=Math.min(1,Math.max(0,-r.top/(r.height-vh)));
-  draw(RM?1:p);
+  var tp=Math.min(1,Math.max(0,-r.top/(r.height-vh))), dt=lt?Math.min(64,now-lt):16.7; lt=now;
+  if(now-lastSc>140) tp=Math.round(tp*(TN-1))/(TN-1);
+  if(RM) sp=1; else if(sp<0||r.bottom<0||r.top>vh) sp=tp; else {sp+=(tp-sp)*(1-Math.pow(.78,dt/16.7)); if(Math.abs(tp-sp)<.0004) sp=tp}
+  if(dirty||Math.abs(sp-lastDrawn)>.0002){draw(sp);lastDrawn=sp;dirty=false}
   var y=scrollY;
-  if(!RM&&y<hero.offsetHeight*1.2) par.style.transform='translateY('+(y*.28).toFixed(1)+'px)';
-  var cr=cbg.parentNode.getBoundingClientRect(); if(!RM&&cr.top<vh&&cr.bottom>0) cbg.style.transform='translateY('+((cr.top-vh/2)*-.12).toFixed(1)+'px)';
+  if(!RM&&y<hero.offsetHeight*1.2){var v=(y*.28).toFixed(1);if(v!==lastPar){par.style.transform='translate3d(0,'+v+'px,0)';lastPar=v}}
+  var cr=cbg.parentNode.getBoundingClientRect(); if(!RM&&cr.top<vh&&cr.bottom>0){var v2=((cr.top-vh/2)*-.12).toFixed(1);if(v2!==lastCb){cbg.style.transform='translate3d(0,'+v2+'px,0)';lastCb=v2}}
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
