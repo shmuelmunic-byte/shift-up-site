@@ -1009,7 +1009,7 @@ function FailedNotice({ failed }) {
     setGone(next);
     try { localStorage.setItem(DISMISSED_KEY, JSON.stringify([...next].slice(-50))); } catch { /* private mode */ }
   };
-  const what = { task_done: 'בוצע', task_postpone: 'דחייה', task_add: 'משימה חדשה', task_irrelevant: 'לא רלוונטי', payment_received: 'תשלום שנכנס' };
+  const what = { task_done: 'בוצע', task_postpone: 'דחייה', task_add: 'משימה חדשה', task_irrelevant: 'לא רלוונטי', payment_received: 'תשלום שנכנס', stage_set: 'שינוי שלב' };
   return (
     <div className="hub-failed" role="status">
       <details>
@@ -1142,7 +1142,39 @@ export function ClientsView() {
   );
 }
 
+/* 16.11: last real WhatsApp contact, straight from wa.db (no AI in between).
+   They wrote last → my turn (orange after 24h). I wrote last → waiting on them. */
+function lastContact(cl, now) {
+  const tin = cl.last_in_at ? new Date(cl.last_in_at).getTime() : 0;
+  const tout = cl.last_out_at ? new Date(cl.last_out_at).getTime() : 0;
+  if (!tin && !tout) return null;
+  const theirs = tin > tout;
+  const at = theirs ? cl.last_in_at : cl.last_out_at;
+  const hours = (now - new Date(at).getTime()) / 3600000;
+  return { theirs, at, text: theirs ? `💬 כתב ${ago(at, now)}` : `📤 כתבתי ${ago(at, now)}`, late: theirs && hours > 24 };
+}
+
+const STAGES = ['שוטף', 'חי', 'כדור אצלם', 'מוקפא', 'סגור'];
+function StagePicker({ cl }) {
+  const { act, data } = useHub();
+  const pending = (data?.hub_actions || []).find((a) => a.kind === 'stage_set' && a.target_id === cl.id && a.status === 'pending');
+  const cur = pending?.payload?.stage || cl.stage || '';
+  const set = (st) => {
+    if (st === cur) return;
+    if (st === 'סגור' && !window.confirm('להעביר לנסגרו? הלקוח ייעלם מהמסך (התיקייה נשמרת במחשב)')) return;
+    act('stage_set', cl.id, { client_id: cl.id, stage: st, label: cl.name }, `שלב: ${st}`);
+  };
+  return (
+    <div className="hub-drawer-tabs" role="group" aria-label="שלב">
+      {STAGES.map((st) => (
+        <button key={st} type="button" aria-selected={cur === st} onClick={() => set(st)}>{st}{pending && cur === st ? ' ⏳' : ''}</button>
+      ))}
+    </div>
+  );
+}
+
 function ClientCard({ cl, c, onOpen }) {
+  const lc = lastContact(cl, c.now);
   const pct = cl.tasks_total ? Math.round((cl.tasks_done / cl.tasks_total) * 100) : 0;
   const open = c.tasks.filter((t) => t.client_id === cl.id && isOpen(t));
   const late = open.filter((t) => isMine(t) && t.due && t.due < c.today).length;
@@ -1160,6 +1192,7 @@ function ClientCard({ cl, c, onOpen }) {
         </span>
         {cl.next_action && <span className="hub-card-next"><span>הצעד הבא</span>{shortTitle(cl.next_action)}</span>}
         <span className="hub-card-chips">
+          {lc && <span className={`hub-chip${lc.late ? ' late' : lc.theirs ? ' now' : ''}`} title={cl.last_preview || ''}>{lc.text}</span>}
           {late > 0 && <span className="hub-chip late">{late} באיחור</span>}
           {mineNow > 0 && !late && <span className="hub-chip now">{mineNow} לסיים היום</span>}
           {cl.next_meeting_at && <span className="hub-chip">📅 {fmtDay(cl.next_meeting_at)} {fmtTime(cl.next_meeting_at)}</span>}
@@ -1281,6 +1314,8 @@ function ClientDrawer({ cl, c, onClose }) {
           </div>
           <button type="button" className="hub-close" onClick={onClose} aria-label="סגור">✕</button>
         </div>
+        <StagePicker cl={cl} />
+        {(() => { const lc = lastContact(cl, c.now); return lc && <p className="hub-drawer-next"><span>וואטסאפ</span>{lc.text}{cl.last_preview ? `: ${cl.last_preview}` : ''}</p>; })()}
         {cl.next_action && <p className="hub-drawer-next"><span>הצעד הבא</span>{cl.next_action}</p>}
         <div className="hub-drawer-tabs" role="tablist">
           <button type="button" role="tab" aria-selected={tab === 'tasks'} onClick={() => setTab('tasks')}>משימות <b>{mine.length + theirs.length + agentTasks.length}</b></button>
