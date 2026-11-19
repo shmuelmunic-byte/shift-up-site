@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Design A · Davar Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<!-- Photo credits (Unsplash License, free to use): books-desk.jpg = Debby Hudson (unsplash.com/photos/asviIGR3CPE); library-shelves.jpg = Mikheil Kuzmidi (unsplash.com/photos/qk571N206So); laptop-wood.jpg = Markus Spiske (unsplash.com/photos/Pd6F7auNy38) -->
+<style>
+
+.dswitch{position:sticky;top:0;z-index:60;background:#1d1d1f;color:#e8e8ea;font:500 13px/1 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;display:flex;gap:6px 14px;align-items:center;justify-content:center;flex-wrap:wrap;padding:9px 16px;letter-spacing:.01em}
+.dswitch b{color:#fff;font-weight:600}
+.dswitch a{color:#e8e8ea;text-decoration:underline;text-underline-offset:3px}
+.dswitch a:hover{color:#fff}
+.dswitch .sep{opacity:.45}
+.ph{background:#FFF3B0;color:#5a4a00;font:500 .82em/1.4 system-ui,Arial,sans-serif;padding:1px 6px;border:1px dashed #C9A800;white-space:normal}
+
+
+:root{--paper:#F6F1E7;--paper2:#FBF8F1;--navy:#0D3079;--ink:#14161C;--leather:#785C2E;--rule:#D9CDB3;--mute:#5C5446}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.6 'Public Sans',Arial,sans-serif}
+a{color:var(--navy)}
+img{max-width:100%;height:auto;display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.serif{font-family:'Source Serif 4',Georgia,serif}
+h1,h2,h3{font-family:'Source Serif 4',Georgia,serif;font-weight:500;color:var(--navy);margin:0}
+h2{font-size:clamp(30px,4vw,44px);line-height:1.12;letter-spacing:-.01em}
+.eyebrow{font:600 12px/1 'Public Sans',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--leather);margin:0 0 14px}
+/* header */
+.hdr{position:sticky;top:32px;z-index:50;background:var(--paper);border-bottom:1px solid var(--rule)}
+.hdr .wrap{display:flex;align-items:center;gap:28px;height:76px}
+.hdr nav{display:flex;gap:26px;margin-left:auto;font-size:15px}
+.hdr nav a{color:var(--ink);text-decoration:none}
+.hdr nav a:hover{color:var(--navy);text-decoration:underline;text-underline-offset:4px}
+.btn{display:inline-block;background:var(--navy);color:var(--paper);text-decoration:none;font:600 16px/1 'Public Sans',sans-serif;padding:17px 26px;border:1px solid var(--navy)}
+.btn:hover{background:#0a2560}
+.btn-sm{padding:11px 16px;font-size:14px}
+.signin{color:var(--navy);font-size:15px;font-weight:500}
+.mmenu{display:none}
+/* hero */
+.hero{padding:64px 0 72px;border-bottom:1px solid var(--rule)}
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:64px;align-items:center}
+.hero h1{font-size:clamp(42px,5.6vw,72px);line-height:1.03;letter-spacing:-.02em}
+.hero h1 em{font-style:italic}
+.hero .sub{font-size:19px;line-height:1.6;color:#2b2d33;margin:24px 0 32px;max-width:34em}
+.under{font-size:15px;color:var(--mute);margin:14px 0 0;max-width:30em}
+.proof{margin:34px 0 0;padding:18px 0 0;border-top:1px solid var(--rule);max-width:32em}
+.proof q{font:italic 400 20px/1.45 'Source Serif 4',serif;color:var(--ink);quotes:"\201C" "\201D"}
+.proof cite{display:block;font:500 14px/1 'Public Sans',sans-serif;font-style:normal;color:var(--leather);margin-top:10px;letter-spacing:.02em}
+.disc{font-size:13px;color:var(--mute);margin:22px 0 0;max-width:34em}
+.hero-vis{position:relative;padding-bottom:70px}
+.hero-vis .photo{aspect-ratio:4/3.3;object-fit:cover;width:100%;filter:saturate(.9)}
+.ledger{position:absolute;left:-40px;bottom:0;width:min(360px,80%);background:var(--paper2);border:1px solid #BFAF8C;padding:20px 22px 18px;box-shadow:0 18px 40px -22px rgba(20,22,28,.45)}
+.ledger .lh{display:flex;justify-content:space-between;border-bottom:1px solid var(--rule);padding-bottom:9px;margin-bottom:12px;font:600 11px/1 'Public Sans',sans-serif;letter-spacing:.16em;color:var(--leather)}
+.ledger .code{font:500 21px/1.25 'Source Serif 4',serif;color:var(--navy)}
+.ledger ul{list-style:none;margin:12px 0 0;padding:0;font-size:14px;color:#3b3b3b}
+.ledger li{padding:6px 0;border-top:1px dotted var(--rule)}
+/* trust */
+.trust{border-bottom:1px solid var(--rule)}
+.trust ul{list-style:none;margin:0 auto;padding:0;display:grid;grid-template-columns:repeat(4,1fr)}
+.trust li{padding:22px 20px;font:500 16px/1.35 'Source Serif 4',serif;color:var(--navy);border-left:1px solid var(--rule)}
+.trust li:first-child{border-left:0;padding-left:0}
+.trust a{text-decoration-color:var(--rule);text-underline-offset:4px}
+/* pillars */
+.sec{padding:88px 0}
+.pillars-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:44px;gap:20px}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid var(--navy)}
+.pillar{padding:30px 32px 8px 0}
+.pillar+.pillar{padding-left:32px;border-left:1px solid var(--rule)}
+.pillar .num{font:400 15px/1 'Source Serif 4',serif;color:var(--leather);margin-bottom:16px;display:block}
+.pillar h3{font-size:25px;line-height:1.2;margin-bottom:14px}
+.pillar p{margin:0 0 12px;color:#2b2d33;font-size:16px}
+.pillar blockquote{margin:18px 0;padding-left:14px;border-left:2px solid var(--leather);font:italic 400 17px/1.5 'Source Serif 4',serif}
+.pillar blockquote cite{display:block;font:500 13px 'Public Sans',sans-serif;font-style:normal;color:var(--mute);margin-top:6px}
+.arrow{font-weight:600;font-size:15px;text-underline-offset:4px}
+/* how */
+.how{background:var(--navy);color:var(--paper)}
+.how h2{color:var(--paper)}
+.how .grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:64px;align-items:start}
+.how ol{list-style:none;margin:0;padding:0;counter-reset:s}
+.how li{counter-increment:s;display:grid;grid-template-columns:64px 1fr;padding:22px 0;border-top:1px solid rgba(246,241,231,.25);font-size:18px}
+.how li:last-child{border-bottom:1px solid rgba(246,241,231,.25)}
+.how li::before{content:counter(s,upper-roman) ".";font:400 22px/1.2 'Source Serif 4',serif;color:#D9C29A}
+.how strong{font-weight:600}
+.how a{color:var(--paper)}
+.how .side img{margin-top:34px;aspect-ratio:4/3;object-fit:cover;width:100%;opacity:.95}
+/* checker */
+.check{border-bottom:1px solid var(--rule)}
+.check .grid{display:grid;grid-template-columns:1fr 1.1fr;gap:64px;align-items:start}
+.check .sub{font-size:18px;color:#2b2d33;margin:16px 0 0}
+.ck-form fieldset{border:0;margin:0;padding:0;border-top:1px solid var(--rule)}
+.ck-opt{display:flex;gap:14px;align-items:center;padding:16px 4px;border-bottom:1px solid var(--rule);cursor:pointer;font-size:17px}
+.ck-opt input{accent-color:var(--navy);width:18px;height:18px;margin:0}
+.ck-opt:has(input:checked){background:var(--paper2);color:var(--navy);font-weight:500}
+.ck-btn{margin-top:24px;background:var(--navy);color:var(--paper);border:0;font:600 16px/1 'Public Sans',sans-serif;padding:17px 26px;cursor:pointer}
+.ck-small{font-size:14px;color:var(--mute);margin:14px 0 0}
+/* courses */
+.cats-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:56px;align-items:start;margin-top:40px}
+.cat{display:grid;grid-template-columns:1fr auto;gap:6px 24px;padding:24px 0;border-top:1px solid var(--rule)}
+.cat:last-child{border-bottom:1px solid var(--rule)}
+.cat h3{font-size:28px}
+.cat .count{font:400 15px/1 'Public Sans',sans-serif;color:var(--leather);align-self:center;letter-spacing:.04em}
+.cat p{grid-column:1/-1;margin:0;color:#2b2d33;font-size:16px;max-width:40em}
+.cat a{grid-column:1/-1;font-weight:600;font-size:15px}
+.cats-side .ledger{position:static;width:100%;box-shadow:none}
+.cats-side .all{display:inline-block;margin-top:22px;font-weight:600}
+.cats-side .shelves{margin-bottom:22px;aspect-ratio:16/10;object-fit:cover;width:100%}
+/* testimonials */
+.testi{background:var(--paper2);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.tq{display:grid;grid-template-columns:repeat(2,1fr);gap:0 64px;margin-top:40px}
+.tq figure{margin:0;padding:28px 0;border-top:1px solid var(--rule)}
+.tq blockquote{margin:0;font:400 20px/1.5 'Source Serif 4',serif;color:var(--ink)}
+.tq blockquote::before{content:"\201C";font-size:52px;line-height:0;vertical-align:-18px;color:var(--leather);margin-right:4px}
+.tq figcaption{margin-top:12px;font-size:14px;font-weight:600;color:var(--leather)}
+/* faq */
+.faq .grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:64px}
+.faq details{border-top:1px solid var(--rule);padding:4px 0}
+.faq details:last-of-type{border-bottom:1px solid var(--rule)}
+.faq summary{cursor:pointer;list-style:none;padding:18px 36px 18px 0;font:500 21px/1.3 'Source Serif 4',serif;color:var(--navy);position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:4px;top:14px;font:300 28px 'Public Sans';color:var(--leather)}
+.faq details[open] summary::after{content:"\2013"}
+.faq details p{margin:0 0 20px;color:#2b2d33;max-width:40em}
+.faq .all{display:inline-block;margin-top:22px;font-weight:600}
+/* close */
+.close{text-align:center;border-top:2px solid var(--navy)}
+.close h2{font-size:clamp(34px,4.6vw,56px)}
+.close .sub{font-size:19px;color:#2b2d33;max-width:32em;margin:18px auto 30px}
+.close .second{margin:20px 0 0;font-size:16px}
+.close .disc{margin:26px auto 0}
+/* footer */
+footer{background:#14161C;color:#CFC8B8;padding:56px 0 110px;font-size:14px}
+footer a{color:#F6F1E7}
+footer p{margin:0 0 14px;max-width:60em}
+footer .flogo{display:inline-block;background:var(--paper);padding:10px 14px;margin-bottom:24px}
+.mbar{display:none}
+@media (max-width:960px){
+ .hdr nav,.hdr .btn-sm{display:none}
+ .hdr .wrap{height:64px;justify-content:space-between}
+ .signin{margin-left:auto}
+ .mmenu{display:block;position:relative}
+ .mmenu summary{list-style:none;cursor:pointer;border:1px solid var(--navy);color:var(--navy);padding:9px 14px;font-weight:600;font-size:14px}
+ .mmenu summary::-webkit-details-marker{display:none}
+ .mmenu ul{position:absolute;right:0;top:46px;background:var(--paper);border:1px solid var(--rule);list-style:none;margin:0;padding:8px 0;min-width:230px;box-shadow:0 12px 30px -16px rgba(0,0,0,.4)}
+ .mmenu li a{display:block;padding:12px 18px;color:var(--ink);text-decoration:none}
+ .hero{padding:36px 0 48px}
+ .hero .wrap,.how .grid,.check .grid,.cats-grid,.faq .grid{grid-template-columns:1fr;gap:36px}
+ .hero-vis{padding-bottom:150px}
+ .hero-vis .photo{aspect-ratio:4/3.2;object-position:50% 85%}
+ .ledger{left:16px;right:16px;width:auto}
+ .trust ul{grid-template-columns:1fr 1fr}
+ .trust li{padding:16px 14px;font-size:15px;border-left:0;border-top:1px solid var(--rule)}
+ .trust li:nth-child(even){border-left:1px solid var(--rule)}
+ .trust li:nth-child(-n+2){border-top:0}
+ .trust li:first-child{padding-left:14px}
+ .sec{padding:60px 0}
+ .pillars-head{display:block}
+ .pillars{grid-template-columns:1fr}
+ .pillar,.pillar+.pillar{padding:26px 0 10px;border-left:0}
+ .pillar+.pillar{border-top:1px solid var(--rule)}
+ .tq{grid-template-columns:1fr}
+ .mbar{display:grid;grid-template-columns:1.6fr 1fr;position:fixed;left:0;right:0;bottom:0;z-index:55;background:var(--paper);border-top:1px solid var(--rule);padding:10px 12px calc(10px + env(safe-area-inset-bottom));gap:10px}
+ .mbar a{display:flex;align-items:center;justify-content:center;min-height:48px;font-weight:600;font-size:15px;text-decoration:none}
+ .mb-primary{background:var(--navy);color:var(--paper)!important}
+ .mb-secondary{border:1px solid var(--navy);color:var(--navy)}
+}
+
+</style></head><body>
+<div class="dswitch" role="navigation" aria-label="Design preview switcher"><b>Design A of 3</b> <span class="sep">·</span> <a href="/s/davar/b/">See B</a> <span class="sep">·</span> <a href="/s/davar/c/">See C</a> <span class="sep">·</span> <a href="/s/davar/">All designs</a></div>
+<header class="hdr"><div class="wrap"><a href="/s/davar/a/" class="logo" aria-label="Davar Academy home"><img src="../assets/davar-logo.png" alt="Davar Academy" height="50" width="108"></a><nav aria-label="Main"><a href="#">Courses</a><a href="#">Transfer credit</a><a href="#">How it works</a><a href="#">Full degree path</a><a href="#">About</a></nav>
+<a class="btn btn-sm" href="#check">Check your college</a><a class="signin" href="#">Sign in</a><details class="mmenu"><summary>Menu</summary><ul><li><a href="#">Courses</a></li><li><a href="#">Transfer credit</a></li><li><a href="#">How it works</a></li><li><a href="#">Full degree path</a></li><li><a href="#">About</a></li><li><a href="#check">Check your college</a></li></ul></details></div></header>
+<main>
+<section class="hero"><div class="wrap">
+ <div>
+  <h1 data-slot="hero-h1">The exam is real.<br><em>So is the credit.</em></h1>
+  <p data-slot="hero-sub" class="sub">Start any day and study at your own pace, around your sedarim or your work. When you&#x27;re ready, take the final from home and earn an NCCRS credit recommendation any college can look up.</p>
+  <a class="btn" href="#check">Check your college</a>
+  <p data-slot="hero-under-cta" class="under">Tell us where you&#x27;re headed, and we&#x27;ll send you the courses that fit your degree.</p>
+  <figure class="proof"><q data-slot="hero-proof-quote">The lessons learned were real, the study was real and the tests were convenient to take!</q><cite data-slot="hero-proof-name">Y.W., Davar student</cite></figure>
+  <p class="disc">Davar Academy is not a college. Each college decides which credit recommendations it accepts, and how many.</p>
+ </div>
+ <div class="hero-vis">
+  <img class="photo" src="../assets/books-desk.jpg" alt="A stack of old books and an open notebook on a wooden desk" width="1800" height="1192">
+  <div class="ledger" aria-label="Example course record"><div class="lh"><span>TRANSCRIPT</span><span>NCCRS</span></div>
+   <div class="code">ACCT 301 · Financial Accounting</div>
+   <ul><li>3 credits</li><li>Upper division</li><li>NCCRS credit recommendation</li></ul></div>
+ </div>
+</div></section>
+
+<section class="trust"><div class="wrap"><ul>
+ <li><a href="https://www.nationalccrs.org/organizations/davar-academy-llc" rel="noopener">NCCRS member since 2016</a></li><li>A real final, taken from home</li><li>Start any day, finish when you&#x27;re ready</li><li>First transcript free</li>
+</ul></div></section>
+
+<section class="sec"><div class="wrap">
+ <div class="pillars-head"><h2>Credit you can stand behind</h2></div>
+ <div class="pillars">
+  <article class="pillar" data-slot-group="pillar1"><span class="num">I.</span><h3 data-slot="pillar1-title">A real exam, on your schedule</h3><p data-slot="pillar1-body-1">Every course ends with a real final exam, which is what gives the credit its weight, and you take it online from home, whenever you&#x27;re ready.</p><p data-slot="pillar1-body-2">NCCRS reviews every Davar course and recommends how many credits it&#x27;s worth and at what level, from lower to upper division.</p><blockquote><span data-slot="pillar1-quote">&ldquo;Without compromising on the level of learning required for a bachelor&#x27;s degree.&rdquo;</span><cite data-slot="pillar1-quote-name">Davar student</cite></blockquote><a class="arrow" href="#">See how it works →</a></article>
+  <article class="pillar" data-slot-group="pillar2"><span class="num">II.</span><h3 data-slot="pillar2-title">Check where it fits before you pay</h3><p>Start from the college you&#x27;re working toward and see which Davar courses line up with its degree requirements.</p><p>Your first transcript to that college is free.</p><blockquote><span data-slot="pillar2-quote">&ldquo;I needed a few upper level credits to complete my degree at Excelsior College.&rdquo;</span><cite data-slot="pillar2-quote-name">A.M.</cite></blockquote><a class="arrow" href="#">Check your college →</a></article>
+  <article class="pillar" data-slot-group="pillar3"><span class="num">III.</span><h3 data-slot="pillar3-title">Judaic Studies, on a college transcript</h3><p>34 Judaic Studies courses with NCCRS credit recommendations, from Bereishis and the Laws of Shabbat to Chofetz Chaim and Mesechet Brachos.</p><p>They sit next to business and general education, so one transcript can carry all three.</p><blockquote><span data-slot="pillar3-quote">&ldquo;Davar Academy has been an avenue for me to earn real college credit towards earning a degree.&rdquo;</span><cite data-slot="pillar3-quote-name">Lisa</cite></blockquote><a class="arrow" href="#">See the Judaic Studies courses →</a></article>
+</div></div></section>
+
+<section class="sec how"><div class="wrap grid">
+ <div class="side"><p class="eyebrow" style="color:#D9C29A">Four steps</p><h2>How it works</h2>
+  <img src="../assets/laptop-wood.jpg" alt="A laptop and a blank sheet of paper on a wooden desk" loading="lazy" width="1200" height="800"></div>
+ <div><ol><li><span><strong>Create your account</strong> in the student portal and choose your course.</span></li><li><span><strong>Study at your own pace</strong> with the course materials and practice quizzes, there are no deadlines.</span></li><li><span><strong>Take your final from home</strong>, online, whenever you&#x27;re ready.</span></li><li><span><strong>Send your transcript</strong> to your college, the first one is free.</span></li></ol>
+ <p style="margin:26px 0 0"><a class="arrow" href="#">See the full process →</a></p></div>
+</div></section>
+
+<section class="sec check" id="check"><div class="wrap grid">
+ <div><h2>Where are you headed?</h2><p class="sub">Pick your college and we&#x27;ll show you which Davar courses fit its degree.</p></div>
+ <div><form class="ck-form" action="#" onsubmit="return false"><fieldset><legend class="sr">Your college</legend><label class="ck-opt"><input type="radio" name="college" value="0" checked><span>Thomas Edison State University (TESU)</span></label><label class="ck-opt"><input type="radio" name="college" value="1"><span>Excelsior University</span></label><label class="ck-opt"><input type="radio" name="college" value="2"><span>Bellevue University</span></label><label class="ck-opt"><input type="radio" name="college" value="3"><span>Other / not sure yet</span></label></fieldset><button type="submit" class="ck-btn">Check my college</button></form><p class="ck-small">You&#x27;ll get an unofficial estimate, and we&#x27;ll email you the list that fits your degree.</p></div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+ <h2>Courses</h2>
+ <div class="cats-grid">
+  <div><div class="cat"><h3>Business</h3><span class="count">18 courses</span><p>Most carry upper-division credit recommendations, from accounting and finance to management and marketing.</p><a href="#">Browse business →</a></div><div class="cat"><h3>General Education</h3><span class="count">13 courses</span><p>English composition, public speaking, math, science, computers and American government.</p><a href="#">Browse general education →</a></div><div class="cat"><h3>Judaic Studies</h3><span class="count">34 courses</span><p>Chumash, the Laws of Shabbat, Brachos, Jewish law and custom, history, Hebrew and Talmud.</p><a href="#">Browse Judaic Studies →</a></div></div>
+  <div class="cats-side">
+   <img class="shelves" src="../assets/library-shelves.jpg" alt="Old books on wooden library shelves" loading="lazy" width="1400" height="933">
+   <div class="ledger"><div class="lh"><span>TRANSCRIPT</span><span>EXAMPLE</span></div><div class="code">ACCT 301 · Financial Accounting</div>
+   <ul><li>3 credits</li><li>Upper division</li><li>NCCRS credit recommendation</li></ul></div>
+   <a class="all" href="#">See all courses →</a>
+  </div>
+ </div>
+</div></section>
+
+<section class="sec testi"><div class="wrap">
+ <h2>From students who finished</h2>
+ <div class="tq"><figure><blockquote>I needed a few upper level credits to complete my degree at Excelsior College and stumbled upon Davar Academy. I was impressed with the study material provided with each course as it set me on a clear path for studying for the exams.&rdquo;</blockquote><figcaption>A.M. <span class="ph" title="Waiting for Dad's answer">[DAD: year]</span></figcaption></figure><figure><blockquote>The courses offered were able to fill a few last requirements for graduation. If I had known how good Davar courses would be I would have taken more.&rdquo;</blockquote><figcaption>Y.W. <span class="ph" title="Waiting for Dad's answer">[DAD: year]</span></figcaption></figure><figure><blockquote>Davar academy offers a truly professional staff eager to help with your trek through an undergraduate degree.&rdquo;</blockquote><figcaption>Davar student <span class="ph" title="Waiting for Dad's answer">[DAD: name or initials, year]</span></figcaption></figure><figure><blockquote>It was a pleasure to use Davar, they are always available to answer questions and their service is efficient and reliable&rdquo;</blockquote><figcaption>Chaim M., 2019 </figcaption></figure></div>
+</div></section>
+
+<section class="sec faq"><div class="wrap grid">
+ <div><h2>Questions people ask before they start</h2></div>
+ <div><details class="" open><summary>Will my credits count?</summary><p>Davar courses carry NCCRS credit recommendations, and each college decides which recommendations it accepts and how many, so the safest way is to start from the college you&#x27;re aiming for, use Check your college, and confirm with your advisor before you register.</p></details>
+<details class=""><summary>How long does a course take?</summary><p>There&#x27;s no semester to wait for and no deadlines, so you can start any day, move through the material as fast as you&#x27;re ready to, and schedule the college-level final when you are.</p></details>
+<details class=""><summary>How does the final exam work?</summary><p>It&#x27;s a real college-level final, and you take it online from home on a day that suits you, with calculators and scratch paper allowed on math, finance and economics exams. <a href="#" class="arrow">What you need on exam day →</a></p></details>
+<details class=""><summary>What if I don&#x27;t pass?</summary><p><span class="ph" title="Waiting for Dad's answer">[DAD: retake policy, waiting period, and what a retake costs]</span></p></details>
+<details class=""><summary>Can I do a full degree?</summary><p>Yes, we offer a full degree path, email us and we&#x27;ll work it out with you. <a href="#" class="arrow">See the full degree path →</a></p></details><a class="all" href="#">All questions →</a></div>
+</div></section>
+
+<section class="sec close"><div class="wrap">
+ <h2>Start with where you&#x27;re headed.</h2><p class="sub">Tell us which college you&#x27;re working toward, and we&#x27;ll send you the courses that fit your degree.</p>
+ <a class="btn" href="#check">Check your college</a>
+ <p class="second">Already know your course? <a href="#">Create your account</a></p>
+ <p class="disc">Davar Academy is not a college. Each college decides which credit recommendations it accepts, and how many.</p>
+</div></section>
+</main>
+<footer><div class="wrap"><span class="flogo"><img src="../assets/davar-logo.png" alt="Davar Academy" height="44" width="95"></span>
+<p class="f-nccrs">Davar Academy LLC is a member of the National College Credit Recommendation Service (NCCRS) since November 2016. <a href="https://www.nationalccrs.org/organizations/davar-academy-llc" rel="noopener">View our NCCRS listing</a></p>
+<p class="f-disc">Davar Academy is not a college. Each college decides which credit recommendations it accepts, and how many.</p>
+<p class="f-contact"><a href="mailto:support@davaracademy.com">support@davaracademy.com</a> · <span class="ph" title="Waiting for Dad's answer">[DAD: phone and address to publish]</span></p>
+<p class="f-links"><a href="#">Courses</a> · <a href="#">Transfer credit</a> · <a href="#">How it works</a> · <a href="#">Full degree path</a> · <a href="#">Transcripts</a> · <a href="#">FAQ</a> · <a href="#">About</a> · <a href="#">Contact</a></p>
+<p class="f-legal"><a href="#">Terms of Service</a> · <a href="#">Privacy Policy</a> · © 2026 Davar Academy LLC</p>
+</div></footer>
+<div class="mbar"><a class="mb-primary" href="#check">Check your college</a><a class="mb-secondary" href="mailto:support@davaracademy.com">Email us</a></div>
+</body></html>

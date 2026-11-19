@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Design B · Davar Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter+Tight:wght@300;400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Photo credits (Unsplash License, free to use): laptop-desk.jpg = Andrew Neel (unsplash.com/photos/cckf4TsHAuw) -->
+<style>
+
+.dswitch{position:sticky;top:0;z-index:60;background:#1d1d1f;color:#e8e8ea;font:500 13px/1 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;display:flex;gap:6px 14px;align-items:center;justify-content:center;flex-wrap:wrap;padding:9px 16px;letter-spacing:.01em}
+.dswitch b{color:#fff;font-weight:600}
+.dswitch a{color:#e8e8ea;text-decoration:underline;text-underline-offset:3px}
+.dswitch a:hover{color:#fff}
+.dswitch .sep{opacity:.45}
+.ph{background:#FFF3B0;color:#5a4a00;font:500 .82em/1.4 system-ui,Arial,sans-serif;padding:1px 6px;border:1px dashed #C9A800;white-space:normal}
+
+
+:root{--navy:#0D3079;--ink:#0B1530;--slate:#5B6478;--line:#E3E7EE;--bg2:#F5F7FA;--green:#1F7A4D;--dark:#0B1530}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#fff;color:var(--ink);font:400 16px/1.6 Inter,Arial,sans-serif}
+a{color:var(--navy)}
+img{max-width:100%;height:auto;display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:'Inter Tight',Inter,sans-serif;color:var(--ink);margin:0;font-weight:400;letter-spacing:-.02em}
+h2{font-size:clamp(30px,3.6vw,46px);line-height:1.1;font-weight:300}
+.tag{font:500 12px/1 'IBM Plex Mono',monospace;color:var(--slate);letter-spacing:.06em;text-transform:uppercase;margin:0 0 16px}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--navy);color:#fff;text-decoration:none;font:600 15px/1 Inter,sans-serif;padding:16px 22px;border-radius:6px;border:0;cursor:pointer}
+.btn:hover{background:#0a2663}
+.btn .ar{font-family:'IBM Plex Mono';font-weight:400}
+.btn-sm{padding:10px 14px;font-size:14px}
+/* header */
+.hdr{position:sticky;top:32px;z-index:50;background:rgba(255,255,255,.97);border-bottom:1px solid var(--line)}
+.hdr .wrap{display:flex;align-items:center;gap:28px;height:68px}
+.hdr nav{display:flex;gap:24px;margin-left:auto;font-size:14px}
+.hdr nav a{color:var(--slate);text-decoration:none}
+.hdr nav a:hover{color:var(--ink)}
+.signin{font-size:14px;color:var(--ink);font-weight:500;text-decoration:none}
+.mmenu{display:none}
+/* hero */
+.hero{padding:80px 0 0}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:72px;align-items:end}
+.hero h1{font-size:clamp(44px,6vw,80px);line-height:1;font-weight:300;letter-spacing:-.035em}
+.hero .sub{font-size:19px;color:var(--slate);margin:26px 0 32px;max-width:32em}
+.under{font-size:14px;color:var(--slate);margin:14px 0 0;max-width:30em}
+.disc{font-size:13px;color:var(--slate);margin:20px 0 0;max-width:34em}
+.panel{border:1px solid var(--line);border-radius:8px;background:#fff;overflow:hidden}
+.panel .ph-row{display:flex;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--bg2);font:500 12px/1 'IBM Plex Mono',monospace;color:var(--slate);letter-spacing:.04em}
+.panel .row{display:grid;grid-template-columns:1fr auto;padding:15px 18px;border-bottom:1px solid var(--line);font-size:15px}
+.panel .row:last-child{border-bottom:0}
+.panel .row span:last-child{font-family:'IBM Plex Mono';color:var(--ink)}
+.panel .big{padding:20px 18px 18px;border-bottom:1px solid var(--line)}
+.panel .big .c{font:500 14px 'IBM Plex Mono';color:var(--navy)}
+.panel .big .t{font:400 26px/1.2 'Inter Tight';margin-top:6px;letter-spacing:-.02em}
+.ok{color:var(--green)!important}
+.proof{margin:0;padding:22px 0 0;border-top:1px solid var(--line)}
+.proof q{font:300 21px/1.45 'Inter Tight';quotes:"\201C" "\201D";color:var(--ink)}
+.proof cite{display:block;font:500 13px 'IBM Plex Mono';font-style:normal;color:var(--slate);margin-top:10px}
+.hero-band{margin-top:72px;border-top:1px solid var(--line)}
+/* trust: dark data strip */
+.trust{background:var(--dark);color:#fff}
+.trust ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr)}
+.trust li{padding:26px 24px;border-left:1px solid rgba(255,255,255,.12);font:400 15px/1.4 'IBM Plex Mono',monospace;color:#DDE3EE}
+.trust li:first-child{border-left:0;padding-left:0}
+.trust li::before{content:"✓";color:#5FD39B;margin-right:10px}
+.trust a{color:#fff}
+.sec{padding:96px 0}
+.sec.alt{background:var(--bg2)}
+/* pillars */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.pillar{background:#fff;border:1px solid var(--line);border-radius:8px;padding:28px 26px;display:flex;flex-direction:column}
+.pillar .n{font:500 13px 'IBM Plex Mono';color:var(--navy)}
+.pillar h3{font-size:24px;line-height:1.2;margin:18px 0 14px;font-weight:400}
+.pillar p{margin:0 0 10px;color:var(--slate);font-size:15.5px}
+.pillar blockquote{margin:14px 0 18px;padding:14px 16px;background:var(--bg2);border-radius:6px;font-size:15px;color:var(--ink)}
+.pillar blockquote cite{display:block;font:500 12px 'IBM Plex Mono';font-style:normal;color:var(--slate);margin-top:8px}
+.pillar .arrow{margin-top:auto}
+.arrow{font-weight:600;font-size:15px;text-decoration:none}
+.arrow:hover{text-decoration:underline}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:48px;border-top:1px solid var(--line)}
+.steps li{list-style:none;padding:26px 24px 0 0}
+.steps li+li{padding-left:24px;border-left:1px solid var(--line)}
+.steps .n{font:400 40px/1 'IBM Plex Mono';color:var(--navy);display:block;margin-bottom:18px}
+.steps p{margin:0;color:var(--slate);font-size:15.5px}
+.steps strong{font:500 19px/1.35 'Inter Tight';color:var(--ink)}
+.steps-wrap{padding:0;margin:0}
+.how-foot{display:flex;justify-content:space-between;align-items:center;margin-top:40px;gap:20px}
+.how-img{margin-top:48px;border-radius:8px;aspect-ratio:21/8;object-fit:cover;width:100%}
+/* checker */
+.check .grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
+.check .sub{font-size:18px;color:var(--slate);margin:16px 0 0}
+.ck-form fieldset{border:0;margin:0;padding:0;display:grid;gap:10px}
+.ck-opt{display:flex;gap:14px;align-items:center;padding:16px 18px;border:1px solid var(--line);border-radius:6px;cursor:pointer;background:#fff;font-size:16px}
+.ck-opt input{accent-color:var(--navy);width:18px;height:18px;margin:0}
+.ck-opt:has(input:checked){border-color:var(--navy);box-shadow:inset 0 0 0 1px var(--navy)}
+.ck-btn{margin-top:18px;width:100%;justify-content:center;background:var(--navy);color:#fff;border:0;border-radius:6px;font:600 16px/1 Inter;padding:18px;cursor:pointer}
+.ck-small{font-size:14px;color:var(--slate);margin:12px 0 0}
+/* courses table */
+.ctable{margin-top:44px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.crow{display:grid;grid-template-columns:240px 110px 1fr 220px;gap:24px;align-items:center;padding:22px 24px;border-bottom:1px solid var(--line);background:#fff}
+.crow:last-child{border-bottom:0}
+.crow h3{font-size:22px;font-weight:400}
+.crow .cnt{font:500 15px 'IBM Plex Mono';color:var(--navy)}
+.crow p{margin:0;color:var(--slate);font-size:15px}
+.crow a{justify-self:end}
+.chead{display:grid;grid-template-columns:240px 110px 1fr 220px;gap:24px;padding:12px 24px;background:var(--bg2);border-bottom:1px solid var(--line);font:500 12px 'IBM Plex Mono';color:var(--slate);letter-spacing:.05em;text-transform:uppercase}
+.sample{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-top:22px;flex-wrap:wrap}
+.sample .panel{flex:1 1 420px}
+/* testimonials */
+.tq{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:44px}
+.tq figure{margin:0;padding:28px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.tq blockquote{margin:0;font:300 20px/1.5 'Inter Tight';color:var(--ink)}
+.tq figcaption{margin-top:16px;font:500 13px 'IBM Plex Mono';color:var(--slate)}
+/* faq */
+.faq .grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:72px}
+.faq details{border-bottom:1px solid var(--line)}
+.faq details:first-of-type{border-top:1px solid var(--line)}
+.faq summary{cursor:pointer;list-style:none;padding:20px 40px 20px 0;font:400 20px/1.3 'Inter Tight';position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:6px;top:18px;font:400 22px 'IBM Plex Mono';color:var(--navy)}
+.faq details[open] summary::after{content:"−"}
+.faq details p{margin:0 0 22px;color:var(--slate);max-width:42em}
+.faq .all{display:inline-block;margin-top:24px}
+/* close */
+.close{background:var(--dark);color:#fff}
+.close h2{color:#fff;font-size:clamp(34px,4.6vw,60px)}
+.close .sub{color:#B9C3D6;font-size:19px;max-width:32em;margin:18px 0 32px}
+.close .btn{background:#fff;color:var(--navy)}
+.close .second{color:#B9C3D6;margin:20px 0 0}
+.close .second a{color:#fff}
+.close .disc{color:#9AA6BF}
+footer{background:#fff;color:var(--slate);padding:56px 0 110px;font-size:14px;border-top:1px solid var(--line)}
+footer p{margin:0 0 14px;max-width:62em}
+footer .flogo{margin-bottom:22px}
+.mbar{display:none}
+@media (max-width:960px){
+ .hdr nav,.hdr .btn-sm{display:none}
+ .hdr .wrap{height:60px}
+ .signin{margin-left:auto}
+ .mmenu{display:block;position:relative}
+ .mmenu summary{list-style:none;cursor:pointer;border:1px solid var(--line);border-radius:6px;padding:8px 13px;font-weight:600;font-size:14px}
+ .mmenu summary::-webkit-details-marker{display:none}
+ .mmenu ul{position:absolute;right:0;top:44px;background:#fff;border:1px solid var(--line);border-radius:8px;list-style:none;margin:0;padding:6px 0;min-width:230px;box-shadow:0 14px 30px -18px rgba(11,21,48,.5)}
+ .mmenu li a{display:block;padding:12px 18px;color:var(--ink);text-decoration:none}
+ .hero{padding:40px 0 0}
+ .hero .wrap,.check .grid,.faq .grid{grid-template-columns:1fr;gap:40px}
+ .hero-band{margin-top:48px}
+ .trust ul{grid-template-columns:1fr 1fr}
+ .trust li{padding:18px 12px;font-size:13.5px;border-left:0;border-top:1px solid rgba(255,255,255,.12)}
+ .trust li:first-child{padding-left:12px}
+ .trust li:nth-child(-n+2){border-top:0}
+ .trust li:nth-child(even){border-left:1px solid rgba(255,255,255,.12)}
+ .sec{padding:64px 0}
+ .pillars,.tq{grid-template-columns:1fr}
+ .steps{grid-template-columns:1fr 1fr;gap:0}
+ .steps li,.steps li+li{padding:22px 14px 22px 0;border-left:0;border-bottom:1px solid var(--line)}
+ .steps li:nth-child(even){padding-left:14px;border-left:1px solid var(--line)}
+ .steps .n{font-size:30px}
+ .how-foot{display:block}
+ .chead{display:none}
+ .crow{grid-template-columns:1fr auto;gap:8px 16px}
+ .crow p,.crow a{grid-column:1/-1;justify-self:start}
+ .mbar{display:grid;grid-template-columns:1.6fr 1fr;position:fixed;left:0;right:0;bottom:0;z-index:55;background:#fff;border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom));gap:10px}
+ .mbar a{display:flex;align-items:center;justify-content:center;min-height:48px;font-weight:600;font-size:15px;text-decoration:none;border-radius:6px}
+ .mb-primary{background:var(--navy);color:#fff!important}
+ .mb-secondary{border:1px solid var(--line);color:var(--ink)}
+}
+
+</style></head><body>
+<div class="dswitch" role="navigation" aria-label="Design preview switcher"><b>Design B of 3</b> <span class="sep">·</span> <a href="/s/davar/a/">See A</a> <span class="sep">·</span> <a href="/s/davar/c/">See C</a> <span class="sep">·</span> <a href="/s/davar/">All designs</a></div>
+<header class="hdr"><div class="wrap"><a href="/s/davar/a/" class="logo" aria-label="Davar Academy home"><img src="../assets/davar-logo.png" alt="Davar Academy" height="46" width="99"></a><nav aria-label="Main"><a href="#">Courses</a><a href="#">Transfer credit</a><a href="#">How it works</a><a href="#">Full degree path</a><a href="#">About</a></nav>
+<a class="btn btn-sm" href="#check">Check your college</a><a class="signin" href="#">Sign in</a><details class="mmenu"><summary>Menu</summary><ul><li><a href="#">Courses</a></li><li><a href="#">Transfer credit</a></li><li><a href="#">How it works</a></li><li><a href="#">Full degree path</a></li><li><a href="#">About</a></li><li><a href="#check">Check your college</a></li></ul></details></div></header>
+<main>
+<section class="hero"><div class="wrap">
+ <div>
+  <h1 data-slot="hero-h1">The exam is real. So is the credit.</h1>
+  <p data-slot="hero-sub" class="sub">Start any day and study at your own pace, around your sedarim or your work. When you&#x27;re ready, take the final from home and earn an NCCRS credit recommendation any college can look up.</p>
+  <a class="btn" href="#check">Check your college <span class="ar">→</span></a>
+  <p data-slot="hero-under-cta" class="under">Tell us where you&#x27;re headed, and we&#x27;ll send you the courses that fit your degree.</p>
+  <p class="disc">Davar Academy is not a college. Each college decides which credit recommendations it accepts, and how many.</p>
+ </div>
+ <div>
+  <div class="panel" aria-label="Example course record">
+   <div class="ph-row"><span>COURSE</span><span>NCCRS</span></div>
+   <div class="big"><div class="c">ACCT 301</div><div class="t">Financial Accounting</div></div>
+   <div class="row"><span>Credits</span><span>3 credits</span></div>
+   <div class="row"><span>Level</span><span>Upper division</span></div>
+   <div class="row"><span>Recommendation</span><span class="ok">✓ NCCRS credit recommendation</span></div>
+  </div>
+  <figure class="proof" style="margin-top:28px"><q data-slot="hero-proof-quote">The lessons learned were real, the study was real and the tests were convenient to take!</q><cite data-slot="hero-proof-name">Y.W., Davar student</cite></figure>
+ </div>
+</div><div class="hero-band"></div></section>
+
+<section class="trust"><div class="wrap"><ul>
+ <li><a href="https://www.nationalccrs.org/organizations/davar-academy-llc" rel="noopener">NCCRS member since 2016</a></li><li>A real final, taken from home</li><li>Start any day, finish when you&#x27;re ready</li><li>First transcript free</li>
+</ul></div></section>
+
+<section class="sec alt"><div class="wrap">
+ <h2>Credit you can stand behind</h2>
+ <div class="pillars">
+  <article class="pillar"><span class="n">01</span><h3 data-slot="pillar1-title">A real exam, on your schedule</h3><p data-slot="pillar1-body-1">Every course ends with a real final exam, which is what gives the credit its weight, and you take it online from home, whenever you&#x27;re ready.</p><p data-slot="pillar1-body-2">NCCRS reviews every Davar course and recommends how many credits it&#x27;s worth and at what level, from lower to upper division.</p><blockquote><span data-slot="pillar1-quote">&ldquo;Without compromising on the level of learning required for a bachelor&#x27;s degree.&rdquo;</span><cite data-slot="pillar1-quote-name">Davar student</cite></blockquote><a class="arrow" href="#">See how it works →</a></article>
+  <article class="pillar"><span class="n">02</span><h3 data-slot="pillar2-title">Check where it fits before you pay</h3><p>Start from the college you&#x27;re working toward and see which Davar courses line up with its degree requirements.</p><p>Your first transcript to that college is free.</p><blockquote><span data-slot="pillar2-quote">&ldquo;I needed a few upper level credits to complete my degree at Excelsior College.&rdquo;</span><cite data-slot="pillar2-quote-name">A.M.</cite></blockquote><a class="arrow" href="#">Check your college →</a></article>
+  <article class="pillar"><span class="n">03</span><h3 data-slot="pillar3-title">Judaic Studies, on a college transcript</h3><p>34 Judaic Studies courses with NCCRS credit recommendations, from Bereishis and the Laws of Shabbat to Chofetz Chaim and Mesechet Brachos.</p><p>They sit next to business and general education, so one transcript can carry all three.</p><blockquote><span data-slot="pillar3-quote">&ldquo;Davar Academy has been an avenue for me to earn real college credit towards earning a degree.&rdquo;</span><cite data-slot="pillar3-quote-name">Lisa</cite></blockquote><a class="arrow" href="#">See the Judaic Studies courses →</a></article>
+</div></div></section>
+
+<section class="sec"><div class="wrap">
+ <h2>How it works</h2>
+ <ol class="steps steps-wrap"><li><span class="n">01</span><p><strong>Create your account</strong> in the student portal and choose your course.</p></li><li><span class="n">02</span><p><strong>Study at your own pace</strong> with the course materials and practice quizzes, there are no deadlines.</p></li><li><span class="n">03</span><p><strong>Take your final from home</strong>, online, whenever you&#x27;re ready.</p></li><li><span class="n">04</span><p><strong>Send your transcript</strong> to your college, the first one is free.</p></li></ol>
+ <img class="how-img" src="../assets/laptop-desk.jpg" alt="A laptop, a mug and a notepad on a wooden table by a window" loading="lazy" width="1400" height="933">
+ <div class="how-foot"><span></span><a class="arrow" href="#">See the full process →</a></div>
+</div></section>
+
+<section class="sec alt check" id="check"><div class="wrap grid">
+ <div><p class="tag">Check your college</p><h2>Where are you headed?</h2><p class="sub">Pick your college and we&#x27;ll show you which Davar courses fit its degree.</p></div>
+ <div><form class="ck-form" action="#" onsubmit="return false"><fieldset><legend class="sr">Your college</legend><label class="ck-opt"><input type="radio" name="college" value="0" checked><span>Thomas Edison State University (TESU)</span></label><label class="ck-opt"><input type="radio" name="college" value="1"><span>Excelsior University</span></label><label class="ck-opt"><input type="radio" name="college" value="2"><span>Bellevue University</span></label><label class="ck-opt"><input type="radio" name="college" value="3"><span>Other / not sure yet</span></label></fieldset><button type="submit" class="ck-btn">Check my college</button></form><p class="ck-small">You&#x27;ll get an unofficial estimate, and we&#x27;ll email you the list that fits your degree.</p></div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+ <h2>Courses</h2>
+ <div class="ctable">
+  <div class="chead"><span>Category</span><span>Courses</span><span>What's in it</span><span></span></div>
+  <div class="crow"><h3>Business</h3><span class="cnt">18 courses</span><p>Most carry upper-division credit recommendations, from accounting and finance to management and marketing.</p><a class="arrow" href="#">Browse business →</a></div><div class="crow"><h3>General Education</h3><span class="cnt">13 courses</span><p>English composition, public speaking, math, science, computers and American government.</p><a class="arrow" href="#">Browse general education →</a></div><div class="crow"><h3>Judaic Studies</h3><span class="cnt">34 courses</span><p>Chumash, the Laws of Shabbat, Brachos, Jewish law and custom, history, Hebrew and Talmud.</p><a class="arrow" href="#">Browse Judaic Studies →</a></div>
+ </div>
+ <div class="sample">
+  <div class="panel"><div class="row"><span class="mono" style="color:var(--navy)">ACCT 301 · Financial Accounting</span><span>3 credits · Upper division · NCCRS credit recommendation</span></div></div>
+  <a class="arrow" href="#">See all courses →</a>
+ </div>
+</div></section>
+
+<section class="sec alt"><div class="wrap">
+ <h2>From students who finished</h2>
+ <div class="tq"><figure><blockquote>&ldquo;I needed a few upper level credits to complete my degree at Excelsior College and stumbled upon Davar Academy. I was impressed with the study material provided with each course as it set me on a clear path for studying for the exams.&rdquo;</blockquote><figcaption>A.M. <span class="ph" title="Waiting for Dad's answer">[DAD: year]</span></figcaption></figure><figure><blockquote>&ldquo;The courses offered were able to fill a few last requirements for graduation. If I had known how good Davar courses would be I would have taken more.&rdquo;</blockquote><figcaption>Y.W. <span class="ph" title="Waiting for Dad's answer">[DAD: year]</span></figcaption></figure><figure><blockquote>&ldquo;Davar academy offers a truly professional staff eager to help with your trek through an undergraduate degree.&rdquo;</blockquote><figcaption>Davar student <span class="ph" title="Waiting for Dad's answer">[DAD: name or initials, year]</span></figcaption></figure><figure><blockquote>&ldquo;It was a pleasure to use Davar, they are always available to answer questions and their service is efficient and reliable&rdquo;</blockquote><figcaption>Chaim M., 2019 </figcaption></figure></div>
+</div></section>
+
+<section class="sec faq"><div class="wrap grid">
+ <div><h2>Questions people ask before they start</h2></div>
+ <div><details class="" open><summary>Will my credits count?</summary><p>Davar courses carry NCCRS credit recommendations, and each college decides which recommendations it accepts and how many, so the safest way is to start from the college you&#x27;re aiming for, use Check your college, and confirm with your advisor before you register.</p></details>
+<details class=""><summary>How long does a course take?</summary><p>There&#x27;s no semester to wait for and no deadlines, so you can start any day, move through the material as fast as you&#x27;re ready to, and schedule the college-level final when you are.</p></details>
+<details class=""><summary>How does the final exam work?</summary><p>It&#x27;s a real college-level final, and you take it online from home on a day that suits you, with calculators and scratch paper allowed on math, finance and economics exams. <a href="#" class="arrow">What you need on exam day →</a></p></details>
+<details class=""><summary>What if I don&#x27;t pass?</summary><p><span class="ph" title="Waiting for Dad's answer">[DAD: retake policy, waiting period, and what a retake costs]</span></p></details>
+<details class=""><summary>Can I do a full degree?</summary><p>Yes, we offer a full degree path, email us and we&#x27;ll work it out with you. <a href="#" class="arrow">See the full degree path →</a></p></details><a class="all arrow" href="#">All questions →</a></div>
+</div></section>
+
+<section class="sec close"><div class="wrap">
+ <h2>Start with where you&#x27;re headed.</h2><p class="sub">Tell us which college you&#x27;re working toward, and we&#x27;ll send you the courses that fit your degree.</p>
+ <a class="btn" href="#check">Check your college <span class="ar">→</span></a>
+ <p class="second">Already know your course? <a href="#">Create your account</a></p>
+ <p class="disc">Davar Academy is not a college. Each college decides which credit recommendations it accepts, and how many.</p>
+</div></section>
+</main>
+<footer><div class="wrap"><div class="flogo"><img src="../assets/davar-logo.png" alt="Davar Academy" height="42" width="91"></div>
+<p class="f-nccrs">Davar Academy LLC is a member of the National College Credit Recommendation Service (NCCRS) since November 2016. <a href="https://www.nationalccrs.org/organizations/davar-academy-llc" rel="noopener">View our NCCRS listing</a></p>
+<p class="f-disc">Davar Academy is not a college. Each college decides which credit recommendations it accepts, and how many.</p>
+<p class="f-contact"><a href="mailto:support@davaracademy.com">support@davaracademy.com</a> · <span class="ph" title="Waiting for Dad's answer">[DAD: phone and address to publish]</span></p>
+<p class="f-links"><a href="#">Courses</a> · <a href="#">Transfer credit</a> · <a href="#">How it works</a> · <a href="#">Full degree path</a> · <a href="#">Transcripts</a> · <a href="#">FAQ</a> · <a href="#">About</a> · <a href="#">Contact</a></p>
+<p class="f-legal"><a href="#">Terms of Service</a> · <a href="#">Privacy Policy</a> · © 2026 Davar Academy LLC</p>
+</div></footer>
+<div class="mbar"><a class="mb-primary" href="#check">Check your college</a><a class="mb-secondary" href="mailto:support@davaracademy.com">Email us</a></div>
+</body></html>

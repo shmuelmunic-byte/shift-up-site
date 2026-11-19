@@ -21,8 +21,44 @@
       "destination": "/s/dd-privacy/index.html"
     },
     {
+      "source": "/s/davar",
+      "destination": "/s/davar/index.html"
+    },
+    {
+      "source": "/s/davar/a",
+      "destination": "/s/davar/a/index.html"
+    },
+    {
+      "source": "/s/davar/b",
+      "destination": "/s/davar/b/index.html"
+    },
+    {
+      "source": "/s/davar/c",
+      "destination": "/s/davar/c/index.html"
+    },
+    {
       "source": "/((?!assets|.*\\..*).*)",
       "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/s/davar/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/s/davar",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     }
   ]
 }
