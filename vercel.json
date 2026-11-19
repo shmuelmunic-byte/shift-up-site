@@ -25,16 +25,16 @@
       "destination": "/s/davar/index.html"
     },
     {
-      "source": "/s/davar/a",
-      "destination": "/s/davar/a/index.html"
+      "source": "/s/davar/a2",
+      "destination": "/s/davar/a2/index.html"
     },
     {
-      "source": "/s/davar/b",
-      "destination": "/s/davar/b/index.html"
+      "source": "/s/davar/b2",
+      "destination": "/s/davar/b2/index.html"
     },
     {
-      "source": "/s/davar/c",
-      "destination": "/s/davar/c/index.html"
+      "source": "/s/davar/c2",
+      "destination": "/s/davar/c2/index.html"
     },
     {
       "source": "/((?!assets|.*\\..*).*)",
@@ -59,6 +59,23 @@
           "value": "noindex, nofollow"
         }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/s/davar/a",
+      "destination": "/s/davar/a2/",
+      "permanent": true
+    },
+    {
+      "source": "/s/davar/b",
+      "destination": "/s/davar/b2/",
+      "permanent": true
+    },
+    {
+      "source": "/s/davar/c",
+      "destination": "/s/davar/c2/",
+      "permanent": true
     }
   ]
 }
