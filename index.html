@@ -1,8 +1,11 @@
 <!doctype html>
 <html lang="he" dir="rtl">
   <head>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    <!-- Google Tag Manager (also loads Clarity). Not loaded on internal pages
+         (/admin, /login) so the owner's dashboard use doesn't pollute Clarity/GA4
+         and client data isn't recorded. -->
+    <script>window.__internalPage=/^\/(admin|login)(\/|$)/.test(location.pathname);
+    if(!window.__internalPage)(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
@@ -218,7 +221,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-RCGQNYG1V8');
+      if (!window.__internalPage) gtag('config', 'G-RCGQNYG1V8');
     </script>
 
     <!-- Fonts are self-hosted (see src/fonts.css + public/fonts) — filter-safe, no Google CDN dependency -->
