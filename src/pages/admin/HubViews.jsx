@@ -519,6 +519,10 @@ function useComputed() {
       return (c?.name || id.split(' - ')[0]).replace(/\s*\(.*\)\s*$/, '');
     };
     const quiet = (t) => QUIET_STAGES.test(clients.get(t.client_id)?.stage || '');
+    /* 23.11 (Shmuel): paying clients' work comes before leads and follow-ups.
+       0 = active client, 1 = lead / pipeline, 2 = Shift Up's own work (no client) */
+    const rank = (id) => { const st = clients.get(id)?.stage; return st === 'שוטף' ? 0 : id && st ? 1 : 2; };
+    const byRank = (key) => (a, b) => rank(a.client_id) - rank(b.client_id) || String(key(a) || '9999').localeCompare(String(key(b) || '9999'));
     const openAll = d.hub_tasks.filter((t) => isOpen(t) && !quiet(t));
     const proposed = openAll.filter(isProposed).sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999'));
     const open = openAll.filter((t) => !isProposed(t));
@@ -526,14 +530,14 @@ function useComputed() {
     const approvals = open.filter((t) => t.file?.k).sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999'));
     const mine = open.filter(isMine);
     const agents = open.filter(isAgents).sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999'));
-    const soonMine = mine.filter((t) => t.due && goalOf(t) > today && goalOf(t) <= addDays(today, 7)).sort((a, b) => a.due.localeCompare(b.due));
+    const soonMine = mine.filter((t) => t.due && goalOf(t) > today && goalOf(t) <= addDays(today, 7)).sort(byRank((t) => t.due));
     const noDateMine = mine.filter((t) => !t.due);
 
     const calls = d.hub_events.filter((e) => e.starts_at && isoDay(new Date(e.starts_at)) === today).sort((a, b) => a.starts_at.localeCompare(b.starts_at));
     const timed = calls.filter(hasTime); // "about to start" only for an item with a real hour, not the 09:00 placeholder
-    const replies = d.hub_inbox.filter((x) => x.kind === 'reply').sort((a, b) => b.priority - a.priority || String(a.last_message_at).localeCompare(String(b.last_message_at)));
+    const replies = d.hub_inbox.filter((x) => x.kind === 'reply').sort((a, b) => rank(a.client_id) - rank(b.client_id) || b.priority - a.priority || String(a.last_message_at).localeCompare(String(b.last_message_at)));
     const reach = d.hub_inbox.filter((x) => x.kind === 'reach_out').sort((a, b) => b.priority - a.priority).slice(0, 5);
-    const dueAll = mine.filter((t) => t.due && goalOf(t) <= today).sort((a, b) => a.due.localeCompare(b.due)); // by the internal target
+    const dueAll = mine.filter((t) => t.due && goalOf(t) <= today).sort(byRank((t) => t.due)); // clients first, then by deadline
     /* a task due today for a client who is on today's calendar belongs to that calendar row,
        so it shows once (with the time) and can still be marked done or postponed there */
     const linked = new Map();
@@ -563,9 +567,14 @@ function useComputed() {
     const soonCall = timed.find((e) => { const t = new Date(e.starts_at).getTime(); return t > now - 30 * 60000 && t < now + 90 * 60000; });
     const nextCall = timed.find((e) => new Date(e.starts_at).getTime() > now);
     const hotReply = replies.find((r) => r.priority >= 3);
+    const clientReply = replies.find((r) => rank(r.client_id) === 0);
     let one = null;
     const callOne = (e) => ({ text: clean(e.title), why: `ביומן ב-${fmtTime(e.starts_at)}`, phone: clients.get(e.client_id)?.phone, prep: e.prep_pdf });
     if (soonCall) one = callOne(soonCall);
+    else if (due[0] && rank(due[0].client_id) === 0) {
+      const dm = deadlineMeta(due[0], today);
+      one = { text: clean(due[0].title), why: [clientName(due[0].client_id), dm.meta].filter(Boolean).join(' · '), late: dm.metaTone === 'late', task: due[0] };
+    } else if (clientReply) one = { text: `לענות ל${clientName(clientReply.client_id)}`, why: clientReply.preview, phone: clientReply.phone };
     else if (due[0]) {
       const dm = deadlineMeta(due[0], today);
       one = { text: clean(due[0].title), why: [clientName(due[0].client_id), dm.meta].filter(Boolean).join(' · '), late: dm.metaTone === 'late', task: due[0] };
@@ -608,7 +617,7 @@ function useComputed() {
     const added = acts.filter((a) => a.status === 'pending' && a.kind === 'task_add');
     const failed = acts.filter((a) => a.status === 'failed' && now - new Date(a.created_at).getTime() < 2 * 86400000);
 
-    return { now, today, clients, clientName, calls, linked, replies, reach, due, dueAll, proposed, approvals, waiting, collect, stuck, goal, week, replyMin, upcoming, one, agents, soonMine, noDateMine, tasks: d.hub_tasks, events: d.hub_events, pending, added, failed, recentOk, reopening };
+    return { now, today, clients, clientName, rank, calls, linked, replies, reach, due, dueAll, proposed, approvals, waiting, collect, stuck, goal, week, replyMin, upcoming, one, agents, soonMine, noDateMine, tasks: d.hub_tasks, events: d.hub_events, pending, added, failed, recentOk, reopening };
   }, [hub?.data, today, now]);
 }
 
@@ -729,18 +738,22 @@ export function TodayView({ newLeads = 0, onGo }) {
     <>
       <OneThing c={c} />
       {c.failed.length ? <FailedNotice failed={c.failed} /> : null}
-      <ul className="hub-tiles" aria-label="הכי דחוף">
-        {tiles.filter((t) => t.size === 'big').map((t) => <Tile key={t.key} t={t} i={tiles.indexOf(t)} onOpen={openQ} />)}
-      </ul>
       <NextActions c={c} />
-      <ul className="hub-tiles hub-tiles-small" aria-label="עוד">
-        {tiles.filter((t) => t.size !== 'big').map((t) => <Tile key={t.key} t={t} i={tiles.indexOf(t)} onOpen={openQ} />)}
-      </ul>
-      <div className="hub-stats">
-        {c.goal?.target ? <GoalStrip goal={c.goal} /> : null}
-        {c.week.length ? <WeekNumbers week={c.week} replyMin={c.replyMin} /> : null}
-      </div>
-      <p className="hub-keys">מקשים: <kbd>1</kbd>-<kbd>9</kbd> פותחים כרטיס</p>
+      {/* 23.11: the cards and the numbers are one tap away, not on the first screen */}
+      <details className="hub-pipe hub-all-cards">
+        <summary><span>כל הכרטיסים והמספרים</span><span className="n">{tiles.filter((t) => t.n).length}</span></summary>
+        <ul className="hub-tiles" aria-label="הכי דחוף">
+          {tiles.filter((t) => t.size === 'big').map((t) => <Tile key={t.key} t={t} i={tiles.indexOf(t)} onOpen={openQ} />)}
+        </ul>
+        <ul className="hub-tiles hub-tiles-small" aria-label="עוד">
+          {tiles.filter((t) => t.size !== 'big').map((t) => <Tile key={t.key} t={t} i={tiles.indexOf(t)} onOpen={openQ} />)}
+        </ul>
+        <div className="hub-stats">
+          {c.goal?.target ? <GoalStrip goal={c.goal} /> : null}
+          {c.week.length ? <WeekNumbers week={c.week} replyMin={c.replyMin} /> : null}
+        </div>
+        <p className="hub-keys">מקשים: <kbd>1</kbd>-<kbd>9</kbd> פותחים כרטיס</p>
+      </details>
     </>
   );
 }
@@ -768,21 +781,28 @@ function OneThing({ c }) {
   );
 }
 
-/* up to 5 next steps right under the big cards (3 on a phone): late first, then who waits for an answer, then today */
+/* 23.11 (Shmuel: "לא יודע מה לעשות עכשיו", "ים כפתורים", לקוחות לפני לידים):
+   the home screen is one ordered list. Active clients' tasks and replies first, then leads and
+   follow-ups, then Shift Up's own work. Today's and late tasks only; the rest lives in the cards. */
+const NEXT_GROUPS = [['לקוחות', 0], ['לידים ופולואפים', 1], ['Shift Up', 2]];
 function NextActions({ c }) {
-  const late = c.dueAll.filter((t) => goalOf(t) < c.today);
-  const today = c.dueAll.filter((t) => goalOf(t) === c.today);
   const oneId = c.one?.task?.id;
-  const items = [
-    ...late.filter((t) => t.id !== oneId).map((t) => ({ k: t.id, t })),
-    ...c.replies.slice(0, 3).map((r) => ({ k: r.id, r })),
-    ...today.filter((t) => t.id !== oneId).map((t) => ({ k: t.id, t })),
-  ].slice(0, 5);
-  if (!items.length) return null;
+  const groups = NEXT_GROUPS.map(([title, rk]) => [title, [
+    ...c.dueAll.filter((t) => t.id !== oneId && c.rank(t.client_id) === rk).map((t) => ({ k: t.id, t })),
+    ...c.replies.filter((r) => c.rank(r.client_id) === rk).slice(0, 4).map((r) => ({ k: r.id, r })),
+  ]]).filter(([, items]) => items.length);
+  const calls = c.calls.filter((e) => !hasTime(e) || new Date(e.starts_at).getTime() > c.now - 45 * 60000);
+  if (!groups.length && !calls.length) return null;
   return (
     <section className="hub-next" aria-labelledby="s-next">
-      <h2 id="s-next">הצעדים הבאים</h2>
-      <ul className="hub-rows">
+      <h2 id="s-next">היום, לפי הסדר</h2>
+      <Group title="ביומן היום">{calls.map((e) => (
+        <Row key={e.id} main={<><span className="hub-time">{hasTime(e) ? fmtTime(e.starts_at) : 'היום'}</span>{clean(e.title)}</>}
+          action={<>{e.prep_pdf && <PrepButton path={e.prep_pdf} />}{isCall(e) && <WaButton phone={c.clients.get(e.client_id)?.phone} />}</>}
+          details={[['מתי', e.when_text], ['לקוח', c.clientName(e.client_id)]]} />
+      ))}</Group>
+      {groups.map(([title, items]) => (
+      <Group key={title} title={title}>
         {items.map(({ k, t, r }) => {
           if (r) {
             const preview = String(r.preview || '').replace(/^\[איש קשר\]\s*/, 'שלח איש קשר: ');
@@ -797,7 +817,8 @@ function NextActions({ c }) {
               details={[['אחראי', t.owner], ['ממתין ל', t.waiting_on], ['סטטוס', t.status_note]]} />
           );
         })}
-      </ul>
+      </Group>
+      ))}
     </section>
   );
 }
