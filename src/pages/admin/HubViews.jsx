@@ -723,7 +723,7 @@ function useComputed() {
     doneToday.sort((a, b) => (a.at && b.at ? b.at.localeCompare(a.at) : a.at ? -1 : b.at ? 1 : 0)); // newest first, lines without an hour after them
     const weekStart = addDays(today, -weekday(today)); // the week runs from Sunday
     const weekDone = d.hub_tasks.filter((t) => t.status === 'done' && t.done_at && t.done_at >= weekStart && t.done_at < today && notNote(t)).length + doneToday.length;
-    const leftToday = dueAll.filter((t) => !gone(t)).length;
+    const leftToday = dueAll.filter((t) => !gone(t)).length + replies.length; // replies are on today's list too, so "X מתוך Y" never reads full while work is open
     const nextDay = nextWorkday(today);
     const tomorrowN = mine.filter((t) => t.due && goalOf(t) > today && goalOf(t) <= nextDay).length;
     const nextEvent = d.hub_events.filter((e) => e.starts_at && (hasTime(e) ? new Date(e.starts_at).getTime() > now : isoDay(new Date(e.starts_at)) > today))
