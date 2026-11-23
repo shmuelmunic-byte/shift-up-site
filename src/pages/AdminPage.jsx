@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { TodayView, ClientsView, SyncBar, HebrewDates, HubProvider } from './admin/HubViews';
+import { TodayView, ClientsView, SyncBar, HebrewDates, HubProvider, HubSearch } from './admin/HubViews';
 import './admin/admin.css';
 import { CATS, SEG_LABEL, Q } from '../lib/auditQuestions';
 
@@ -1390,6 +1390,7 @@ export default function AdminPage() {
           <div className="adm-top-row" style={{ flexWrap: 'wrap', gap: '6px 16px' }}>
             <HebrewDates />
             <SyncBar />
+            {(section === 'today' || section === 'clients') && <HubSearch onType={() => { if (section !== 'clients') go('clients'); }} />}
           </div>
         </header>
 
