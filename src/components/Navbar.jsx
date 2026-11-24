@@ -6,7 +6,7 @@ const logoSrc = '/logo.png';
 const links = [
   { label: 'התהליך', id: 'strategy' },
   { label: 'למה אני', id: 'why' },
-  { label: 'מי אני',  id: 'about' },
+  { label: 'עדויות',  id: 'testimonials' },
   { label: 'שאלות',  id: 'faq' },
 ];
 
@@ -129,7 +129,8 @@ export default function Navbar({ onCta }) {
           </a>
 
           <a
-            href="/audit"
+            href="#contact"
+            onClick={(e) => { e.preventDefault(); if (onCta) onCta(); }}
             style={{
               background: 'var(--brand-prime)',
               color: 'oklch(0.12 0.02 160)',
@@ -145,7 +146,7 @@ export default function Navbar({ onCta }) {
             onMouseEnter={e => { e.target.style.background = 'var(--brand-glow)'; }}
             onMouseLeave={e => { e.target.style.background = 'var(--brand-prime)'; }}
           >
-            אבחון שיווק חינם
+            לשיחת היכרות
           </a>
         </div>
 
@@ -193,8 +194,8 @@ export default function Navbar({ onCta }) {
               </button>
             ))}
             <a
-              href="/audit"
-              onClick={() => setOpen(false)}
+              href="#contact"
+              onClick={(e) => { e.preventDefault(); setOpen(false); if (onCta) onCta(); }}
               style={{
                 background: 'var(--brand-prime)',
                 color: 'oklch(0.12 0.02 160)',
@@ -209,7 +210,7 @@ export default function Navbar({ onCta }) {
                 textDecoration: 'none',
               }}
             >
-              אבחון שיווק חינם
+              לשיחת היכרות
             </a>
 
             <a

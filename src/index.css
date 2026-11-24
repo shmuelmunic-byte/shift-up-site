@@ -1345,3 +1345,33 @@ html.a11y-big-cursor .cursor-ring { display: none !important; }
 body:has(.adm-app) :is(.a11y-trigger, .a11y-panel, .a11y-overlay, .cookie-banner),
 body:has(.private-page) :is(.a11y-trigger, .a11y-panel, .a11y-overlay, .cookie-banner) { display: none !important; }
 
+
+/* ══ רענון עומק (24.11.2026): שכבות, צל ותאורה במקום פלאט ══
+   שפת המותג: בלוק סגול בהיסט (כמו בתמונת ההירו), פס ירוק, פינות חדות. */
+.su-depth {
+  position: relative;
+  background: linear-gradient(160deg, var(--surface-2) 0%, var(--surface-1) 45%, var(--surface-0) 100%) !important;
+  box-shadow: 0 1px 0 oklch(1 0 0 / 0.06) inset, 0 30px 60px -30px oklch(0 0 0 / 0.75), 0 8px 20px -10px oklch(0 0 0 / 0.5);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
+}
+.su-depth:hover { transform: translateY(-4px); box-shadow: 0 1px 0 oklch(1 0 0 / 0.08) inset, 0 40px 70px -30px oklch(0 0 0 / 0.85), 0 0 0 1px oklch(0.785 0.173 156.6 / 0.25); }
+.su-offset { position: relative; isolation: isolate; }
+.su-offset::before {
+  content: ''; position: absolute; inset: 0; transform: translate(14px, 14px); z-index: -1;
+  background: oklch(0.62 0.19 292 / 0.16); border: 1px solid oklch(0.62 0.19 292 / 0.45);
+}
+.su-glow { position: relative; overflow: hidden; }
+.su-glow::after {
+  content: ''; position: absolute; width: 720px; height: 720px; inset-inline-start: -260px; top: -280px; pointer-events: none; z-index: 0;
+  background: radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.09), transparent 65%);
+}
+.su-glow.su-glow--violet::after { inset-inline-start: auto; inset-inline-end: -260px; top: auto; bottom: -300px; background: radial-gradient(circle, oklch(0.62 0.19 292 / 0.12), transparent 65%); }
+.su-quote-mark { position: absolute; top: -18px; inset-inline-end: 22px; font-size: 7rem; line-height: 1; font-weight: 900; color: var(--brand-prime); opacity: .22; pointer-events: none; font-family: Georgia, serif; }
+.su-chip { display: inline-block; padding: 4px 10px; font-size: .75rem; font-weight: 700; background: oklch(0.785 0.173 156.6 / 0.14); color: var(--brand-prime); transform: skewX(-10deg); }
+.su-chip > span { display: inline-block; transform: skewX(10deg); }
+
+/* עומק גם לכרטיסים הקיימים (כאב, מה מקבלים) */
+.grid-2x2 > * { box-shadow: 0 1px 0 oklch(1 0 0 / 0.05) inset, 0 26px 50px -28px oklch(0 0 0 / 0.75); transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.grid-2x2 > *:hover { transform: translateY(-3px); }
+@media (prefers-reduced-motion: reduce) { .su-depth, .grid-2x2 > * { transition: none; } .su-depth:hover, .grid-2x2 > *:hover { transform: none; } }
+@media (max-width: 600px) { .su-offset::before { transform: translate(8px, 8px); } .su-quote-mark { font-size: 5rem; } }

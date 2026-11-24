@@ -219,7 +219,7 @@ export default function LeadForm() {
                   cursor: status === 'sending' ? 'default' : 'pointer',
                   boxShadow: '0 8px 24px rgba(31,157,87,0.35)', transition: 'background 0.2s, transform 0.15s',
                 }}>
-                  {status === 'sending' ? 'שולח…' : 'קבל הצעה מותאמת'}
+                  {status === 'sending' ? 'שולח…' : 'קבע לי שיחת היכרות'}
                 </button>
                 <p style={{ textAlign: 'center', fontSize: '0.76rem', color: '#8190a3', marginTop: 12 }}>
                   הפרטים נשמרים אצלי בלבד, בלי ספאם ובלי שיתוף.

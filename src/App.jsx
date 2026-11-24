@@ -8,12 +8,9 @@ import Navbar         from './components/Navbar';
 import Hero           from './components/Hero';
 import TrustStrip     from './components/TrustStrip';
 import PainSection    from './components/PainSection';
-import AuditBanner     from './components/AuditBanner';
 import Process        from './components/Process';
 import WhatYouGet     from './components/WhatYouGet';
-import WhyMe          from './components/WhyMe';
-import Proof          from './components/Proof';
-import Manifesto      from './components/Manifesto';
+import { Testimonials, Guarantee, Fit, Comparison } from './components/SaarSections';
 import About          from './components/About';
 import FAQ                  from './components/FAQ';
 import LeadForm             from './components/LeadForm';
@@ -114,16 +111,13 @@ export default function App() {
         <div className="section-divider" />
         <PainSection />
         <div className="section-divider" />
-        <AuditBanner />
-        <Manifesto />
-        <div className="section-divider" />
         <Process />
+        <Testimonials />
         <div className="section-divider" />
         <WhatYouGet />
-        <div className="section-divider" />
-        <WhyMe />
-        <div className="section-divider" />
-        <Proof />
+        <Guarantee onContact={scrollToContact} />
+        <Fit />
+        <Comparison />
         <div className="section-divider" />
         <About />
         <div className="section-divider" />

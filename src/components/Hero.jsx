@@ -8,7 +8,7 @@ const DEFAULT_WA =
   encodeURIComponent('היי שמואל, יש לי שאלה על השירות');
 
 const DEFAULT_SUBTITLE =
-  'קמפיינים מבוססי-מחקר שמחזירים לעסק פניות ושקט, לעסקים שכבר מבינים שיווק, עם הבטחת ביצוע על חודש הניהול הראשון.';
+  'אני חוקר את הקהל והמתחרים שלך לפני שנכנס שקל לפרסום, ובונה קמפיין שמביא פניות, ואם בחודש הניהול הראשון אין פניות, אני מנהל עוד חודש בחינם';
 
 const profileSrc = '/shmuel.jpg';
 
@@ -79,7 +79,8 @@ export default function Hero({ onContact }) {
   };
 
   const handlePrimary = () => {
-    if (typeof window.gtag === 'function') window.gtag('event', 'cta_click', { location: 'hero', target: 'audit' });
+    if (typeof window.gtag === 'function') window.gtag('event', 'cta_click', { location: 'hero', target: 'contact' });
+    if (onContact) onContact();
   };
 
   useEffect(() => {
@@ -145,11 +146,9 @@ export default function Hero({ onContact }) {
             {subtitle}
           </p>
 
-          {/* CTA — one dominant action: the free audit (low-commitment entry) */}
+          {/* CTA — one dominant action: the lead form on this page (no traffic leak, Saar Bell) */}
           <div className="hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16, marginTop: 32, marginBottom: 20, opacity: 0 }}>
             <MagneticBtn
-              href="/audit"
-              newTab={false}
               onClick={handlePrimary}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 10,
@@ -158,8 +157,8 @@ export default function Hero({ onContact }) {
                 border: 'none', cursor: 'pointer', textDecoration: 'none', transition: 'background 0.2s',
               }}
             >
-              אבחון שיווק חינם
-              <span style={{ fontSize: '0.72rem', fontWeight: 600, background: 'oklch(0.12 0.02 160 / 0.18)', borderRadius: 2, padding: '2px 7px' }}>3 דקות</span>
+              לשיחת היכרות
+              <span style={{ fontSize: '0.72rem', fontWeight: 600, background: 'oklch(0.12 0.02 160 / 0.18)', borderRadius: 2, padding: '2px 7px' }}>חצי שעה</span>
             </MagneticBtn>
 
             <a
@@ -176,7 +175,7 @@ export default function Hero({ onContact }) {
 
           {/* fast 3-step — the whole offer at a glance */}
           <div className="hero-trust" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, opacity: 0 }}>
-            {[['1', 'אבחון'], ['2', 'ניתוח העסק'], ['3', 'תוצאות, בהבטחה']].map(([n, label], i, arr) => (
+            {[['1', 'שיחת היכרות'], ['2', 'מחקר ותוכנית'], ['3', 'קמפיין עם הבטחה']].map(([n, label], i, arr) => (
               <Fragment key={n}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                   <span style={{ width: 22, height: 22, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'oklch(0.785 0.173 156.6 / 0.14)', color: 'var(--brand-prime)', fontSize: '0.72rem', fontWeight: 700, transform: 'skewX(-10deg)' }}>{n}</span>
@@ -186,6 +185,16 @@ export default function Hero({ onContact }) {
               </Fragment>
             ))}
           </div>
+
+          {/* real client quote above the fold (Saar Bell: proof in the hero) */}
+          <figure className="hero-anchor" style={{ margin: '28px 0 0', paddingInlineStart: 14, borderInlineStart: '3px solid var(--brand-prime)', maxWidth: 520, opacity: 0 }}>
+            <blockquote style={{ margin: 0, fontSize: '0.98rem', color: 'var(--text-primary)', lineHeight: 1.6 }}>
+              "הכל בשקיפות... הוא זמין ממש... ואתה רואה שהוא עושה את זה מכל הלב ומכל הנשמה"
+            </blockquote>
+            <figcaption style={{ marginTop: 6, fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+              רועי קפח, מנהל מכינה קדם צבאית אורות
+            </figcaption>
+          </figure>
         </div>
 
         {/* ── Image column — clean, sharp, one flat green accent block ── */}
