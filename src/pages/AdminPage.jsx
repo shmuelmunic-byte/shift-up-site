@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { TodayView, ClientsView, SyncBar, HebrewDates, HubProvider, HubSearch } from './admin/HubViews';
+import GroupsTab from './admin/GroupsTab';
 import './admin/admin.css';
 import { CATS, SEG_LABEL, Q } from '../lib/auditQuestions';
 
@@ -1248,6 +1249,7 @@ const SECTIONS = [
 const LEADS_TABS = [
   { id: 'leads',      label: 'לידים' },
   { id: 'auditstats', label: 'שאלון אבחון' },
+  { id: 'groups',     label: 'קבוצות שירה' },
 ];
 
 // existing content tabs, grouped under "האתר"
@@ -1275,7 +1277,7 @@ const TAB_COMPONENTS = {
   leads: LeadsTab, auditstats: AuditStatsTab, contact: ContactTab, trust: TrustTab, pain: PainTab,
   process: ProcessTab, outcomes: OutcomesTab, whyme: WhyMeTab, proofcases: ProofCasesTab,
   proofgrid: ProofGridTab, faqs: FaqsTab, testimonials: TestimonialsTab, stats: StatsTab,
-  prompts: PromptsTab, ig: IgLinksTab,
+  prompts: PromptsTab, ig: IgLinksTab, groups: GroupsTab,
 };
 
 function SubTabs({ items, active, onPick, className = '', badge }) {
