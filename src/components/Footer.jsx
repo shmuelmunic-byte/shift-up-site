@@ -1,5 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
-import { gsap } from 'gsap';
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { WhatsAppIcon } from './icons';
 
@@ -46,62 +45,23 @@ function onEmailClick(e) {
   // touch device → mailto: fires naturally
 }
 
+/* כיוון C: אייקון מרובע וחד, בלי אפקט מגנטי */
 function MagneticIcon({ children, href, label, target, emailBtn }) {
-  const ref = useRef(null);
-
-  const onMove = (e) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const dx = e.clientX - (rect.left + rect.width / 2);
-    const dy = e.clientY - (rect.top + rect.height / 2);
-    gsap.to(el, { x: dx * 0.35, y: dy * 0.35, duration: 0.4, ease: 'power2.out' });
-  };
-
-  const onLeave = () => {
-    gsap.to(ref.current, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
-  };
-
   return (
-    <div ref={ref} onMouseMove={onMove} onMouseLeave={onLeave} style={{ display: 'inline-block' }}>
-      <a
-        href={href}
-        aria-label={label}
-        target={target || undefined}
-        rel={target ? 'noopener noreferrer' : undefined}
-        onClick={emailBtn ? onEmailClick : undefined}
-        style={{
-          width: 44, height: 44,
-          borderRadius: '50%',
-          background: 'var(--surface-1)',
-          border: '1px solid var(--surface-2)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'var(--text-muted)',
-          transition: 'background 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s',
-          textDecoration: 'none',
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.background = 'oklch(0.785 0.173 156.6 / 0.15)';
-          e.currentTarget.style.color = 'var(--brand-prime)';
-          e.currentTarget.style.borderColor = 'oklch(0.785 0.173 156.6 / 0.35)';
-          e.currentTarget.style.boxShadow = '0 0 16px oklch(0.785 0.173 156.6 / 0.2)';
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.background = 'var(--surface-1)';
-          e.currentTarget.style.color = 'var(--text-muted)';
-          e.currentTarget.style.borderColor = 'var(--surface-2)';
-          e.currentTarget.style.boxShadow = 'none';
-        }}
-      >
-        {children}
-      </a>
-    </div>
+    <a
+      href={href}
+      aria-label={label}
+      target={target || undefined}
+      rel={target ? 'noopener noreferrer' : undefined}
+      onClick={emailBtn ? onEmailClick : undefined}
+      className="c-social"
+    >
+      {children}
+    </a>
   );
 }
 
-const legalLinkStyle = { fontSize: '0.78rem', color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s', cursor: 'pointer' };
+const legalLinkStyle = { fontSize: '0.78rem', color: '#8A9097', textDecoration: 'none', transition: 'color 0.2s', cursor: 'pointer' };
 
 const quickLinks = [
   { label: 'התהליך', id: 'strategy' },
@@ -182,16 +142,16 @@ export default function Footer() {
             <img
               src={logoSrc}
               alt="Shift Up"
-              style={{ height: 80, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite', display: 'block', marginBottom: 14 }}
+              style={{ height: 80, width: 'auto', objectFit: 'contain', display: 'block', marginBottom: 14 }}
             />
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.65, maxWidth: 240 }}>
-              אסטרטגיה חכמה + קריאייטיב נועז.<br />שיווק שמביא תוצאות אמיתיות.
+              אסטרטגיה חכמה + קריאייטיב נועז<br />שיווק שמביא תוצאות אמיתיות
             </p>
           </div>
 
           {/* Quick nav */}
           <nav aria-label="ניווט מהיר">
-            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 16 }}>
+            <div style={{ fontSize: '0.68rem', color: '#8A9097', fontWeight: 700, marginBottom: 16 }}>
               ניווט
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -216,7 +176,7 @@ export default function Footer() {
 
           {/* Contact + socials */}
           <div>
-            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 16 }}>
+            <div style={{ fontSize: '0.68rem', color: '#8A9097', fontWeight: 700, marginBottom: 16 }}>
               יצירת קשר
             </div>
             <a
@@ -227,7 +187,7 @@ export default function Footer() {
               onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
               onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
             >
-              {contacts.phone}
+              <bdi dir="ltr">{contacts.phone}</bdi>
             </a>
             <a
               href={`mailto:${contacts.email}`}
@@ -252,25 +212,25 @@ export default function Footer() {
 
         {/* Bottom row */}
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-          <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-            © {new Date().getFullYear()} Shift Up · שמואל מוניץ. כל הזכויות שמורות.
+          <p style={{ fontSize: '0.78rem', color: '#8A9097' }}>
+            © {new Date().getFullYear()} Shift Up · שמואל מוניץ · כל הזכויות שמורות
           </p>
           <nav aria-label="קישורים משפטיים" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 18 }}>
             <a href="/accessibility" style={legalLinkStyle}
               onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
-              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+              onMouseLeave={e => e.currentTarget.style.color = '#8A9097'}
             >
               הצהרת נגישות
             </a>
             <a href="/privacy" style={legalLinkStyle}
               onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
-              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+              onMouseLeave={e => e.currentTarget.style.color = '#8A9097'}
             >
               מדיניות פרטיות
             </a>
             <a href="/en" style={legalLinkStyle}
               onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
-              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+              onMouseLeave={e => e.currentTarget.style.color = '#8A9097'}
             >
               English Version →
             </a>

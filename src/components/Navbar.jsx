@@ -10,6 +10,7 @@ const links = [
   { label: 'שאלות',  id: 'faq' },
 ];
 
+/* כיוון C (25.11.2026): שקוף מעל ההירו, רקע לילה מלא אחרי גלילה (בלי blur/glass), לוגו בלי אנימציית צבע */
 export default function Navbar({ onCta }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -17,6 +18,7 @@ export default function Navbar({ onCta }) {
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 30);
+    handler();
     window.addEventListener('scroll', handler, { passive: true });
     return () => window.removeEventListener('scroll', handler);
   }, []);
@@ -42,196 +44,50 @@ export default function Navbar({ onCta }) {
     setOpen(false);
   };
 
+  const cta = (e) => { e.preventDefault(); setOpen(false); if (onCta) onCta(); };
+
   return (
-    <nav
-      style={{
-        position: 'fixed',
-        top: 0,
-        width: '100%',
-        zIndex: 900,
-        transition: 'background 0.5s ease, padding 0.4s ease',
-        padding: scrolled ? '10px 0' : '18px 0',
-        background: scrolled ? 'oklch(0.09 0.012 240 / 0.92)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(24px) saturate(1.8)' : 'none',
-        WebkitBackdropFilter: scrolled ? 'blur(24px) saturate(1.8)' : 'none',
-        borderBottom: scrolled ? '1px solid oklch(0.22 0.025 240 / 0.6)' : '1px solid transparent',
-        boxShadow: scrolled ? '0 1px 40px oklch(0 0 0 / 0.25)' : 'none',
-      }}
-    >
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <button
-          onClick={() => goto('hero')}
-          aria-label="Shift Up — חזרה לתחילה"
-          style={{ background: 'none', border: 'none', padding: 0, display: 'flex', alignItems: 'center' }}
-        >
-          <img
-            src={logoSrc}
-            alt="Shift Up"
-            style={{ height: 'clamp(64px, 14vw, 120px)', width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite' }}
-          />
+    <nav className={`c-nav${scrolled || open ? ' is-solid' : ''}`} aria-label="ניווט ראשי">
+      <div className="c-wrap c-nav__row">
+        <button type="button" className="c-nav__logo" onClick={() => goto('hero')} aria-label="Shift Up, חזרה לתחילת העמוד">
+          <img src={logoSrc} alt="Shift Up" width="1600" height="600" />
         </button>
 
-        {/* Desktop links — uses .nav-desktop CSS class (not inline display) to avoid Tailwind conflict */}
-        <div className="nav-desktop">
-          {links.map(l => {
-            const isActive = activeId === l.id;
-            return (
-              <button
-                key={l.id}
-                onClick={() => goto(l.id)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: isActive ? 'var(--brand-prime)' : 'var(--text-secondary)',
-                  fontSize: '0.88rem',
-                  fontWeight: isActive ? 700 : 600,
-                  letterSpacing: '0.02em',
-                  fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-                  transition: 'color 0.25s',
-                  position: 'relative',
-                  cursor: 'pointer',
-                  padding: '4px 0',
-                }}
-                onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = 'var(--brand-prime)'; }}
-                onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = 'var(--text-secondary)'; }}
-              >
+        <ul className="c-nav__links">
+          {links.map(l => (
+            <li key={l.id}>
+              <button type="button" onClick={() => goto(l.id)} aria-current={activeId === l.id ? 'true' : undefined}>
                 {l.label}
-                {isActive && (
-                  <span style={{
-                    position: 'absolute', bottom: -2, right: 0, left: 0,
-                    height: 2, borderRadius: 3,
-                    background: 'var(--brand-prime)',
-                  }} />
-                )}
               </button>
-            );
-          })}
+            </li>
+          ))}
+          <li><a href="/en" lang="en">EN</a></li>
+        </ul>
 
-          {/* English page link */}
-          <a
-            href="/en"
-            style={{
-              background: 'none',
-              border: '1px solid var(--surface-2)',
-              borderRadius: 3,
-              padding: '8px 16px',
-              color: 'var(--text-muted)',
-              fontSize: '0.8rem',
-              fontWeight: 700,
-              letterSpacing: '0.1em',
-              textDecoration: 'none',
-              transition: 'border-color 0.25s, color 0.25s',
-            }}
-            onMouseEnter={e => { e.target.style.borderColor = 'var(--brand-prime)'; e.target.style.color = 'var(--brand-prime)'; }}
-            onMouseLeave={e => { e.target.style.borderColor = 'var(--surface-2)'; e.target.style.color = 'var(--text-muted)'; }}
+        <div className="c-nav__end">
+          <a className="c-nav__cta" href="#contact" onClick={cta}>לשיחת היכרות</a>
+          {/* מקום שמור לכפתור הנגישות במובייל ובטאבלט (הוא fixed ויושב כאן, ראו c-design.css) */}
+          <span className="c-nav__a11y-slot" aria-hidden="true" />
+          <button
+            type="button"
+            className="c-nav__burger"
+            onClick={() => setOpen(!open)}
+            aria-label={open ? 'סגירת התפריט' : 'פתיחת התפריט'}
+            aria-expanded={open}
+            aria-controls="c-nav-menu"
           >
-            EN
-          </a>
-
-          <a
-            href="#contact"
-            onClick={(e) => { e.preventDefault(); if (onCta) onCta(); }}
-            style={{
-              background: 'var(--brand-prime)',
-              color: 'oklch(0.12 0.02 160)',
-              border: 'none',
-              borderRadius: 3,
-              padding: '10px 22px',
-              fontWeight: 700,
-              fontSize: '0.88rem',
-              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-              textDecoration: 'none',
-              transition: 'background 0.2s',
-            }}
-            onMouseEnter={e => { e.target.style.background = 'var(--brand-glow)'; }}
-            onMouseLeave={e => { e.target.style.background = 'var(--brand-prime)'; }}
-          >
-            לשיחת היכרות
-          </a>
+            {open ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
+          </button>
         </div>
-
-        {/* Mobile hamburger */}
-        <button
-          className="nav-mobile-btn"
-          onClick={() => setOpen(!open)}
-          aria-label="תפריט"
-          style={{ background: 'none', border: 'none', color: 'var(--text-primary)', padding: 4 }}
-        >
-          {open ? <X size={26} /> : <Menu size={26} />}
-        </button>
       </div>
 
-      {/* Mobile menu */}
       {open && (
-        <div
-          className="mobile-menu-enter"
-          style={{
-            position: 'absolute',
-            top: '100%',
-            width: '100%',
-            background: 'oklch(0.11 0.015 240 / 0.97)',
-            backdropFilter: 'blur(24px)',
-            borderBottom: '1px solid var(--surface-2)',
-          }}
-        >
-          <div style={{ padding: '20px 28px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div id="c-nav-menu" className="c-nav__menu">
+          <div className="c-wrap">
             {links.map(l => (
-              <button
-                key={l.id}
-                onClick={() => goto(l.id)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--text-secondary)',
-                  fontSize: '1rem',
-                  fontWeight: 600,
-                  textAlign: 'right',
-                  fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-                  padding: '4px 0',
-                }}
-              >
-                {l.label}
-              </button>
+              <button type="button" key={l.id} onClick={() => goto(l.id)}>{l.label}</button>
             ))}
-            <a
-              href="#contact"
-              onClick={(e) => { e.preventDefault(); setOpen(false); if (onCta) onCta(); }}
-              style={{
-                background: 'var(--brand-prime)',
-                color: 'oklch(0.12 0.02 160)',
-                border: 'none',
-                borderRadius: 3,
-                padding: '13px 0',
-                fontWeight: 700,
-                fontSize: '1rem',
-                fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-                marginTop: 8,
-                textAlign: 'center',
-                textDecoration: 'none',
-              }}
-            >
-              לשיחת היכרות
-            </a>
-
-            <a
-              href="/en"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'block',
-                textAlign: 'center',
-                border: '1px solid var(--surface-2)',
-                borderRadius: 3,
-                padding: '12px 0',
-                color: 'var(--text-muted)',
-                fontSize: '0.9rem',
-                fontWeight: 700,
-                letterSpacing: '0.12em',
-                textDecoration: 'none',
-              }}
-            >
-              EN · English Version
-            </a>
+            <a href="/en" lang="en">EN · English Version</a>
           </div>
         </div>
       )}

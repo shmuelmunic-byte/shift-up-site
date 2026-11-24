@@ -1,26 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { supabase } from '../lib/supabase';
-
-gsap.registerPlugin(ScrollTrigger);
-
-const STEP_ICONS = [
-  <svg key="0" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>,
-  <svg key="1" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>,
-  <svg key="2" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>,
-];
+import { nd } from '../content/heroCopy';
 
 const FALLBACK_STEPS = [
-  { title: 'המחקר',   description: 'אני חופר פנימה: מי הקהל שבאמת משלם, מה המתחרים עושים ולמה שיבחרו בך, ומזקק מסר מדויק ותוכנית עבודה על דאטה ולא על ניחוש.', bullets: ['מחקר קהל ומתחרים', 'זיקוק מסר והצעת ערך', 'תוכנית עבודה ברורה'] },
-  { title: 'השיפט',   description: 'לפני שקל אחד נכנס לממומן אני בונה את המגרש: איזה משפך מביא פניות, איזה תוכן מניע לפעולה ובאילו ערוצים משחקים, מפת דרכים ולא הימור.', bullets: ['בניית משפך שיווקי', 'תוכנית תוכן ומסרים', 'בחירת הערוצים הנכונים'] },
-  { title: 'האקשן',   description: 'הקמפיין יוצא לדרך: אני מקים ומנהל את הקמפיינים ב-Meta וב-Google ומייצר קריאייטיב שמוכר, ואם בחודש הניהול הראשון אין פניות, אני מנהל חודש נוסף בחינם.', bullets: ['קמפיינים ב-Meta + Google', 'קריאייטיב שמוכר', 'הבטחת ביצוע על החודש הראשון'] },
+  { title: 'שיחת היכרות', description: 'חצי שעה בטלפון, בלי עלות: נבין מה העסק שלך צריך, ותצא עם מחיר סגור', bullets: [] },
+  { title: 'פגישת עומק', description: 'אני שואל ואתה מספר: איך מגיעים אליך לקוחות, מה הם אומרים, מה ניסית ומה יצא מזה', bullets: [] },
+  { title: 'תוכנית כתובה', description: 'אני קורא את השיחות שלך עם לקוחות, חוקר את השוק ואת המתחרים, ומציג לך תוכנית ברורה', bullets: [] },
+  { title: 'הקמה', description: 'על התוכנית אני מקים את הקמפיין במטא ובגוגל: המודעות, הטופס והמדידה, ובודק בעצמי שכל פנייה מגיעה אליך', bullets: [] },
+  { title: 'ניהול', description: 'אני מנהל ומדווח לך כל שבוע כמה פניות נכנסו ומה שיניתי, עם הבטחת ביצוע על החודש הראשון', bullets: [] },
 ];
 
+/* ── שלבי העבודה: Sticky Scroll Reveal (Pally P11), פעם אחת בדף ──
+   גנרי: מקבל כל מספר שלבים (fallback כאן או process_steps ב-DB), המספור והפס נגזרים מהמערך.
+   דסקטופ: עמודה דביקה עם מספר ושם השלב הפעיל, והשלבים נגללים לידה.
+   מובייל / prefers-reduced-motion: רשימה רגילה, כל השלבים בעוצמה מלאה. */
 export default function Process() {
-  const sectionRef = useRef(null);
-  const [active, setActive] = useState(null);
   const [steps, setSteps] = useState(FALLBACK_STEPS);
+  const [active, setActive] = useState(0);
+  const itemRefs = useRef([]);
 
   useEffect(() => {
     supabase.from('process_steps').select('*').order('position')
@@ -34,173 +31,66 @@ export default function Process() {
   }, []);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.process-header',
-        { y: 50, opacity: 0 },
-        {
-          y: 0, opacity: 1, duration: 0.9, ease: 'expo.out',
-          scrollTrigger: { trigger: '.process-header', start: 'top 80%', once: true },
-        }
-      );
+    const els = itemRefs.current.filter(Boolean);
+    if (!els.length || !('IntersectionObserver' in window)) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive(Number(e.target.dataset.i));
+        });
+      },
+      { rootMargin: '-45% 0px -45% 0px' }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, [steps]);
 
-      gsap.fromTo(
-        '.process-card',
-        { y: 60, opacity: 0 },
-        {
-          y: 0, opacity: 1, duration: 0.85, ease: 'expo.out',
-          stagger: 0.12,
-          scrollTrigger: { trigger: '.process-cards-grid', start: 'top 78%', once: true },
-        }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  const cur = steps[active] || steps[0];
 
   return (
-    <section
-      id="strategy"
-      ref={sectionRef}
-      style={{
-        padding: 'clamp(52px, 7vw, 88px) 28px',
-        background: 'var(--surface-0)',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      {/* ambient blobs */}
-      <div
-        className="fluid-blob"
-        style={{
-          width: 500, height: 500,
-          top: '10%', left: '-5%',
-          background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.07), transparent 70%)',
-          '--dur': '22s',
-        }}
-      />
-      <div
-        className="fluid-blob"
-        style={{
-          width: 400, height: 400,
-          bottom: '0', right: '10%',
-          background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.08), transparent 70%)',
-          '--dur': '26s', '--delay': '-8s',
-        }}
-      />
-
-      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-
-        {/* Header */}
-        <div className="process-header" style={{ textAlign: 'right', maxWidth: 680, marginBottom: 64, opacity: 0 }}>
-          <div className="section-label">התהליך</div>
-          <h2
-            style={{
-              fontSize: 'clamp(2.2rem, 5vw, 4rem)',
-              fontWeight: 900,
-              lineHeight: 1.05,
-              letterSpacing: '-0.02em',
-              marginBottom: 20,
-              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-            }}
-          >
-            זה לא ה-PPC,
-            <br />
-            <span className="text-gradient">זה המסר.</span>
+    <section id="strategy" className="c-sec c-dark c-proc" aria-labelledby="proc-h">
+      <div className="c-wrap">
+        <div className="c-proc__head">
+          <div className="c-lbl">התהליך</div>
+          <h2 id="proc-h" className="c-h2">
+            קודם תוכנית
+            <span className="c-g c-block">אחר כך קמפיין</span>
           </h2>
-          <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 520 }}>
-            רוב העסקים רצים לעשות קמפיין לפני שהבינו מה הם מוכרים ולמי,
-            והתהליך שלי מתחיל בחדר הניתוח ולא במערכת המודעות.
+          <p className="c-lead">
+            אפשר לעצור אחרי התוכנית ולהחליט, ואת הקמפיין אני בונה רק על תוכנית
           </p>
         </div>
 
-        {/* Cards */}
-        <div
-          className="process-cards-grid"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: 20,
-          }}
-        >
-          {steps.map((step, i) => {
-            const isActive = active === i;
-            const num = String(i + 1).padStart(2, '0');
-
-            return (
-              <div
-                key={i}
-                className={`process-card shimmer-card${isActive ? ' is-active' : ''}`}
-                onMouseEnter={() => setActive(i)}
-                onMouseLeave={() => setActive(null)}
-                style={{ opacity: 0, padding: 'clamp(24px, 3vw, 36px)' }}
-              >
-                {/* animated accent bar */}
-                <div className="accent-bar" />
-
-                {/* ambient glow */}
-                <div style={{
-                  position: 'absolute',
-                  top: -40, left: -40,
-                  width: 220, height: 220,
-                  background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.10), transparent 70%)',
-                  transition: 'opacity 0.4s',
-                  opacity: isActive ? 1 : 0,
-                  pointerEvents: 'none',
-                }} />
-
-                {/* Header row */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
-                  <div style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }} aria-hidden="true">
-                    <span style={{ width: 20, height: 20, background: isActive ? 'var(--brand-prime)' : 'oklch(0.785 0.173 156.6 / 0.5)', transform: 'skewX(-12deg)', transition: 'background 0.35s ease' }} />
-                  </div>
-
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '0.58rem', textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-muted)', fontWeight: 700 }}>שלב</div>
-                    <div style={{
-                      fontSize: '3.2rem', fontWeight: 700, lineHeight: 1,
-                      fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-                      color: 'oklch(0.785 0.173 156.6 / 0.32)',
-                      direction: 'ltr',
-                    }}>
-                      {num}
-                    </div>
-                  </div>
-                </div>
-
-                <h3 style={{
-                  fontSize: 'clamp(1.5rem, 2.5vw, 1.9rem)',
-                  fontWeight: 900,
-                  letterSpacing: '-0.01em',
-                  marginBottom: 16,
-                  fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-                  color: isActive ? 'var(--text-primary)' : 'oklch(0.90 0.005 240)',
-                  transition: 'color 0.3s',
-                }}>
-                  {step.title}
-                </h3>
-
-                <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: 24 }}>
-                  {step.description}
-                </p>
-
-                {/* Bullets */}
-                <div style={{ borderTop: '1px solid oklch(0.22 0.02 240 / 0.5)', paddingTop: 18, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {step.bullets.map((b, j) => (
-                    <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      <span style={{
-                        width: 5, height: 5, borderRadius: '50%',
-                        background: 'var(--brand-prime)', flexShrink: 0,
-                        boxShadow: isActive ? '0 0 6px var(--brand-prime)' : 'none',
-                        transition: 'box-shadow 0.3s',
-                      }} />
-                      {b}
-                    </div>
-                  ))}
-                </div>
+        <div className="c-proc__grid">
+          <div className="c-proc__sticky" aria-hidden="true">
+            <div className="c-proc__panel">
+              <div className="c-proc__big" key={`n${active}`}>{String(active + 1).padStart(2, '0')}</div>
+              <div className="c-proc__name" key={`t${active}`}>{nd(cur.title)}</div>
+              <div className="c-proc__bar">
+                {steps.map((_, i) => <span key={i} className={i <= active ? 'on' : ''} />)}
               </div>
-            );
-          })}
+            </div>
+          </div>
+
+          <ol className="c-proc__steps">
+            {steps.map((s, i) => (
+              <li
+                key={i}
+                ref={(el) => { itemRefs.current[i] = el; }}
+                data-i={i}
+                className={`c-proc__step${i === active ? ' is-active' : ''}`}
+              >
+                <span className="c-proc__n">שלב {String(i + 1).padStart(2, '0')}</span>
+                <h3>{nd(s.title)}</h3>
+                <p>{nd(s.description)}</p>
+                {s.bullets?.length > 0 && (
+                  <ul>
+                    {s.bullets.map((b, j) => <li key={j}>{nd(b)}</li>)}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </section>

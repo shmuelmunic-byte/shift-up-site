@@ -1,221 +1,105 @@
-import { useEffect, useRef, useState, Fragment } from 'react';
-import { gsap } from 'gsap';
-import { supabase } from '../lib/supabase';
+import { useLayoutEffect, useMemo, useRef } from 'react';
 import { WhatsAppIcon } from './icons';
+import Tied from '../content/Tied';
+import { useContent } from '../lib/useContent';
+import { getHeroVariant } from '../lib/heroVariant';
+import {
+  HERO_HEADLINES, HERO_EYEBROW, HERO_SUBTITLE, HERO_BULLETS, HERO_UNDER_CTA, HERO_STEPS,
+  nd,
+} from '../content/heroCopy';
 
 const DEFAULT_WA =
   'https://wa.me/972534673151?text=' +
   encodeURIComponent('היי שמואל, יש לי שאלה על השירות');
 
-const DEFAULT_SUBTITLE =
-  'אני חוקר את הקהל והמתחרים שלך לפני שנכנס שקל לפרסום, ובונה קמפיין שמביא פניות, ואם בחודש הניהול הראשון אין פניות, אני מנהל עוד חודש בחינם';
-
-const profileSrc = '/shmuel.jpg';
-
-/* ── Word-level kinetic reveal (motion kept — CSS-driven so it's cheap) ── */
-function KineticWords({ text, delay = 0 }) {
-  return (
-    <span translate="no" style={{ display: 'inline' }} aria-label={text}>
-      {text.split(' ').map((word, i, arr) => (
-        <Fragment key={i}>
-          <span className="kword-plain" style={{ '--word-delay': `${delay + i * 0.075}s` }}>{word}</span>
-          {i < arr.length - 1 ? ' ' : ''}
-        </Fragment>
-      ))}
-    </span>
-  );
-}
-
-/* ── Magnetic button (motion kept) ── */
-function MagneticBtn({ children, href, onClick, style, newTab = true }) {
-  const wrapRef = useRef(null);
-
-  const onMove = (e) => {
-    const el = wrapRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const dx = e.clientX - (rect.left + rect.width  / 2);
-    const dy = e.clientY - (rect.top  + rect.height / 2);
-    if (Math.sqrt(dx * dx + dy * dy) < 90) {
-      gsap.to(el, { x: dx * 0.3, y: dy * 0.3, duration: 0.4, ease: 'power2.out' });
-    }
-  };
-  const onLeave = () => gsap.to(wrapRef.current, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.6)' });
-
-  const Tag = href ? 'a' : 'button';
-  const extra = href
-    ? { href, onClick, ...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}) }
-    : { onClick };
-
-  return (
-    <div ref={wrapRef} className="magnetic-outer" onMouseMove={onMove} onMouseLeave={onLeave}>
-      <Tag style={style} {...extra}>{children}</Tag>
-    </div>
-  );
-}
-
-/* ── Hero (v2: sharp corners, green-only, no glass/aurora, motion kept) ── */
+/* ── Hero, כיוון C "בגובה העיניים": האדם הוא הגיבור ──
+   סבב 2 (25.11.2026): קופי "התוכנית קודם", A/B בכותרת (lib/heroVariant), ציר 4 שלבים.
+   במובייל הכפתור עולה מעל הבולטים (CSS order) כדי שיישאר במסך הראשון גם מעל באנר העוגיות.
+   הקו הצבעוני (edge) מעוגן מתחת לציר השלבים, כדי שלא יחצה טקסט בשום רוחב (AD בנייה 1, #3). */
 export default function Hero({ onContact }) {
+  const variant = useMemo(() => getHeroVariant(), []);
+  const c = useContent({
+    'hero.headline_a': HERO_HEADLINES.a,
+    'hero.headline_b': HERO_HEADLINES.b,
+    'hero.subtitle': HERO_SUBTITLE,
+    'contact.whatsapp_url': DEFAULT_WA,
+  });
+  const headline = c[`hero.headline_${variant}`];
   const sectionRef = useRef(null);
-  const [whatsappLink, setWhatsappLink] = useState(DEFAULT_WA);
-  const [subtitle, setSubtitle] = useState(DEFAULT_SUBTITLE);
+  const tlRef = useRef(null);
 
-  useEffect(() => {
-    supabase.from('site_content')
-      .select('key, value')
-      .in('key', ['contact.whatsapp_url', 'hero.subtitle'])
-      .then(({ data }) => {
-        if (!data) return;
-        data.forEach(row => {
-          if (row.key === 'contact.whatsapp_url') setWhatsappLink(row.value);
-          if (row.key === 'hero.subtitle')        setSubtitle(row.value);
-        });
-      });
+  useLayoutEffect(() => {
+    const sec = sectionRef.current;
+    const tl = tlRef.current;
+    if (!sec || !tl) return;
+    const place = () => {
+      const top = tl.getBoundingClientRect().bottom - sec.getBoundingClientRect().top + 24;
+      sec.style.setProperty('--edge-top', `${Math.round(top)}px`);
+    };
+    place();
+    const ro = new ResizeObserver(place);
+    ro.observe(sec);
+    ro.observe(tl);
+    return () => ro.disconnect();
   }, []);
 
   const trackWhatsApp = () => {
     if (typeof window.fbq === 'function') window.fbq('track', 'Contact', { content_name: 'Hero WhatsApp' });
-    if (typeof window.gtag === 'function') window.gtag('event', 'contact', { method: 'whatsapp', location: 'hero' });
+    if (typeof window.gtag === 'function') window.gtag('event', 'contact', { method: 'whatsapp', location: 'hero', variant });
   };
 
   const handlePrimary = () => {
-    if (typeof window.gtag === 'function') window.gtag('event', 'cta_click', { location: 'hero', target: 'contact' });
+    if (typeof window.gtag === 'function') window.gtag('event', 'cta_click', { location: 'hero', target: 'contact', variant });
     if (onContact) onContact();
   };
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.hero-eyebrow', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'expo.out', delay: 0.15 });
-      gsap.fromTo('.hero-sub',     { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', delay: 0.9 });
-      gsap.fromTo('.hero-ctas',    { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 1.05 });
-      gsap.fromTo('.hero-anchor',  { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 1.2 });
-      gsap.fromTo('.hero-trust',   { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 1.35 });
-      gsap.fromTo('.hero-image',   { y: 32, opacity: 0 }, { y: 0, opacity: 1, duration: 1.0, ease: 'expo.out', delay: 0.35 });
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section
-      id="hero"
-      ref={sectionRef}
-      style={{ position: 'relative', paddingTop: 'clamp(110px, 18vw, 150px)', paddingBottom: 'clamp(60px, 10vw, 100px)', overflow: 'hidden', minHeight: '100vh', display: 'flex', alignItems: 'center' }}
-    >
-      {/* one static, restrained green wash (no multi-color aurora) */}
-      <div aria-hidden="true" style={{
-        position: 'absolute', top: '-20%', insetInlineEnd: '-10%', width: 620, height: 620,
-        background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.10), transparent 68%)',
-        pointerEvents: 'none', zIndex: 0,
-      }} />
+    <section id="hero" className="c-hero" ref={sectionRef} data-variant={variant}>
+      <div className="c-hero__photo">
+        <img src="/shmuel.jpg" alt="שמואל מוניץ, אסטרטג שיווק" fetchPriority="high" />
+        <span className="c-hero__edge" aria-hidden="true" />
+        <div className="c-hero__cap" aria-hidden="true">שמואל מוניץ<span>Shift Up</span></div>
+      </div>
 
-      <div className="hero-layout" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 28px', position: 'relative', zIndex: 2, width: '100%' }}>
+      <div className="c-wrap">
+        <div className="c-hero__copy">
+          <div className="c-eyebrow c-rise">{HERO_EYEBROW}</div>
 
-        {/* ── Copy column ── */}
-        <div style={{ textAlign: 'right' }}>
-
-          {/* eyebrow — Hebrew, sharp, green square echoing the logo mark */}
-          <div className="hero-eyebrow" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 26, opacity: 0 }}>
-            <span style={{ display: 'inline-flex' }} aria-hidden="true">
-              <span style={{ width: 9, height: 9, background: 'var(--brand-prime)', display: 'block', transform: 'skewX(-14deg)' }} />
-              <span style={{ width: 9, height: 9, background: 'var(--accent)', display: 'block', transform: 'skewX(-14deg)', marginInlineStart: 3 }} />
-            </span>
-            <span style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', fontWeight: 600, letterSpacing: '0.02em' }}>
-              אסטרטג שיווק · קמפיינים מבוססי-מחקר
-            </span>
-          </div>
-
-          {/* headline — locked copy, solid green accent (no gradient text) */}
-          <h1
-            translate="no"
-            style={{
-              fontSize: 'clamp(2.1rem, 7vw, 5rem)',
-              fontWeight: 700,
-              lineHeight: 1.06,
-              letterSpacing: '-0.02em',
-              marginBottom: 24,
-            }}
-          >
-            <span style={{ color: 'var(--text-primary)' }}>תחזור לנהל את העסק.</span>
-            <br />
-            <span style={{ color: 'var(--text-primary)' }}>את השיווק </span>
-            <span style={{ color: 'var(--brand-prime)' }}><KineticWords text="תשאיר לי" delay={0.2} />.</span>
+          <h1 translate="no" className="c-hero__h1 c-rise">
+            <Tied text={nd(headline)} />
           </h1>
 
-          {/* subtext */}
-          <p className="hero-sub" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.16rem)', color: 'var(--text-secondary)', lineHeight: 1.7, maxWidth: 520, opacity: 0 }}>
-            {subtitle}
-          </p>
+          <p className="c-hero__sub c-rise">{nd(c['hero.subtitle'])}</p>
 
-          {/* CTA — one dominant action: the lead form on this page (no traffic leak, Saar Bell) */}
-          <div className="hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16, marginTop: 32, marginBottom: 20, opacity: 0 }}>
-            <MagneticBtn
-              onClick={handlePrimary}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 10,
-                padding: '15px 30px', background: 'var(--brand-prime)', color: 'oklch(0.12 0.02 160)',
-                borderRadius: 'var(--radius)', fontWeight: 700, fontSize: '1.02rem',
-                border: 'none', cursor: 'pointer', textDecoration: 'none', transition: 'background 0.2s',
-              }}
-            >
-              לשיחת היכרות
-              <span style={{ fontSize: '0.72rem', fontWeight: 600, background: 'oklch(0.12 0.02 160 / 0.18)', borderRadius: 2, padding: '2px 7px' }}>חצי שעה</span>
-            </MagneticBtn>
+          <ul className="c-hero__bullets c-rise">
+            {HERO_BULLETS.map((b) => <li key={b}>{nd(b)}</li>)}
+          </ul>
 
-            <a
-              href={whatsappLink}
-              onClick={trackWhatsApp}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: 'var(--text-secondary)', fontSize: '0.95rem', fontWeight: 500, textDecoration: 'none' }}
-            >
-              <WhatsAppIcon size={17} />
-              יש לי שאלה
-            </a>
-          </div>
-
-          {/* fast 3-step — the whole offer at a glance */}
-          <div className="hero-trust" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, opacity: 0 }}>
-            {[['1', 'שיחת היכרות'], ['2', 'מחקר ותוכנית'], ['3', 'קמפיין עם הבטחה']].map(([n, label], i, arr) => (
-              <Fragment key={n}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ width: 22, height: 22, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'oklch(0.785 0.173 156.6 / 0.14)', color: 'var(--brand-prime)', fontSize: '0.72rem', fontWeight: 700, transform: 'skewX(-10deg)' }}>{n}</span>
-                  <span style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{label}</span>
-                </span>
-                {i < arr.length - 1 && <span style={{ color: 'var(--text-muted)', fontWeight: 300 }}>←</span>}
-              </Fragment>
-            ))}
-          </div>
-
-          {/* real client quote above the fold (Saar Bell: proof in the hero) */}
-          <figure className="hero-anchor" style={{ margin: '28px 0 0', paddingInlineStart: 14, borderInlineStart: '3px solid var(--brand-prime)', maxWidth: 520, opacity: 0 }}>
-            <blockquote style={{ margin: 0, fontSize: '0.98rem', color: 'var(--text-primary)', lineHeight: 1.6 }}>
-              "הכל בשקיפות... הוא זמין ממש... ואתה רואה שהוא עושה את זה מכל הלב ומכל הנשמה"
-            </blockquote>
-            <figcaption style={{ marginTop: 6, fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              רועי קפח, מנהל מכינה קדם צבאית אורות
-            </figcaption>
-          </figure>
-        </div>
-
-        {/* ── Image column — clean, sharp, one flat green accent block ── */}
-        <div className="hero-image" style={{ display: 'flex', justifyContent: 'center', opacity: 0 }}>
-          <div style={{ position: 'relative', width: '100%', maxWidth: 360 }}>
-            {/* flat purple offset block (echoes the logo's purple parallelogram) */}
-            <div aria-hidden="true" style={{
-              position: 'absolute', inset: 0, transform: 'translate(14px, 14px)',
-              background: 'oklch(0.62 0.19 292 / 0.16)', border: '1px solid oklch(0.62 0.19 292 / 0.4)',
-              borderRadius: 'var(--radius-lg)', zIndex: 0,
-            }} />
-            <div style={{ position: 'relative', zIndex: 1, borderRadius: 'var(--radius-lg)', overflow: 'hidden', border: '1px solid oklch(0.25 0.02 160)', aspectRatio: '4/5', animation: 'float 7s ease-in-out infinite' }}>
-              <img src={profileSrc} alt="שמואל מוניץ, אסטרטג שיווק דיגיטלי" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, oklch(0.08 0.01 160 / 0.5), transparent 55%)' }} />
-              {/* one small flat caption chip, sharp */}
-              <div style={{ position: 'absolute', bottom: 0, insetInlineStart: 0, padding: '10px 14px' }}>
-                <div style={{ fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 700 }}>שמואל מוניץ</div>
-                <div style={{ fontSize: '0.74rem', color: 'var(--brand-glow)', fontWeight: 500 }}>Shift Up</div>
-              </div>
+          <div className="c-hero__ctas c-rise">
+            <div className="c-hero__ctarow">
+              <button type="button" className="c-btn" onClick={handlePrimary}>
+                לשיחת היכרות <span className="c-btn__tag">חצי שעה</span>
+              </button>
+              <a className="c-q" href={c['contact.whatsapp_url']} onClick={trackWhatsApp} target="_blank" rel="noopener noreferrer">
+                <WhatsAppIcon size={17} />
+                יש לי שאלה
+              </a>
             </div>
+            <p className="c-hero__under">{HERO_UNDER_CTA}</p>
           </div>
+
+          <figure className="c-hero__proof c-rise">
+            <blockquote>"הכל בשקיפות... הוא זמין ממש... ואתה רואה שהוא עושה את זה מכל הלב ומכל הנשמה"</blockquote>
+            <figcaption>רועי קפח, מנהל מכינה קדם צבאית אורות</figcaption>
+          </figure>
+
+          <ol className="c-tl c-rise" aria-label="איך זה עובד" ref={tlRef}>
+            {HERO_STEPS.map((s, i) => (
+              <li key={s} className="c-tl__s">
+                <i aria-hidden="true">{i + 1}</i>{s}
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </section>

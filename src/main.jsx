@@ -8,6 +8,7 @@ import RequireAuth from './components/RequireAuth.jsx'
 import A11yWidget from './components/A11yWidget.jsx'
 import CookieBanner from './components/CookieBanner.jsx'
 import './index.css'
+import './c-design.css'
 
 // Secondary routes are code-split so the primary Hebrew homepage ("/")
 // ships the smallest possible bundle and loads in well under a second.

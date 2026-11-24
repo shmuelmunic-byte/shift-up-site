@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -52,13 +52,31 @@ export default function CookieBanner() {
     setVisible(false);
   };
 
+  // גובה הבאנר כמשתנה CSS, כדי שכפתור הנגישות יעלה מעליו ולא יסתיר את "דחייה" (AD בנייה 1, #2)
+  const ref = useRef(null);
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    if (!visible || !ref.current) { root.style.removeProperty('--cookie-h'); return; }
+    const set = () => root.style.setProperty('--cookie-h', `${ref.current.offsetHeight}px`);
+    set();
+    const ro = new ResizeObserver(set);
+    ro.observe(ref.current);
+    return () => { ro.disconnect(); root.style.removeProperty('--cookie-h'); };
+  }, [visible]);
+
   if (!visible) return null;
 
+  // "ו-Meta Pixel" לא נשבר בין שורות (AD בנייה 1, #8ג). הטקסט עצמו לא השתנה
+  const NOWRAP = 'ו-Meta Pixel';
+  const body = L.body.includes(NOWRAP)
+    ? <>{L.body.split(NOWRAP)[0]}<span className="cookie-nowrap">{NOWRAP}</span>{L.body.split(NOWRAP)[1]}</>
+    : L.body;
+
   return (
-    <div className="cookie-banner" role="region" aria-label={L.aria} dir={L.dir}>
+    <div className="cookie-banner" role="region" aria-label={L.aria} dir={L.dir} ref={ref}>
       <div className="cookie-inner">
         <p className="cookie-text">
-          {L.body}{' '}
+          {body}{' '}
           <a href="/privacy" className="cookie-link">{L.link}</a>
         </p>
         <div className="cookie-actions">

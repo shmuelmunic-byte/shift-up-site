@@ -54,7 +54,7 @@ body {
 }
 
 @media (pointer: fine) {
-  *, *::before, *::after { cursor: none !important; }
+  body:has(.cursor-dot) *, body:has(.cursor-dot) *::before, body:has(.cursor-dot) *::after { cursor: none !important; }
 }
 
 @media (pointer: coarse) {

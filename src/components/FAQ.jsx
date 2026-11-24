@@ -1,172 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-
-gsap.registerPlugin(ScrollTrigger);
+import { nd } from '../content/heroCopy';
 
 const FALLBACK_FAQS = [
-  { q: 'כבר נכוויתי מספק קודם, למה שהפעם יהיה שונה?', a: 'כי הסיכון אצלי: אם בחודש הניהול הראשון אין פניות, אני מנהל עוד חודש בחינם, ואם גם אז אין, אני אומר לך את זה ועוצרים, ובנוסף אני מתחיל במחקר ולא בקמפיין, אז אתה רואה על מה כל החלטה נשענת לפני שנכנס שקל' },
-  { q: 'כמה זה עולה?', a: 'מחיר קבוע וסגור שנקבע בשיחת ההיכרות, לפי היקף העבודה: הקמה חד-פעמית + ניהול חודשי (ההשקעה בפרסום נפרדת), בלי חבילות מעורפלות ובלי הפתעות, ותדע בדיוק כמה לפני שמתחילים' },
-  { q: 'כמה זמן לוקח לראות תוצאות?', a: 'המחקר והאסטרטגיה לוקחים כשבועיים, ולראות פניות איכותיות זורמות לוקח בין 30 ל-60 יום, תלוי בענף, כי אני בונה איתך לטווח ארוך ולא מבטיח "תוצאות בעוד שבוע"' },
-  { q: 'אתה גם מבצע או רק מייעץ?', a: 'שניהם: אחרי שסוגרים אסטרטגיה, אני בונה ומפעיל לך את הקמפיינים הממומנים ב-Meta וב-Google ומטפל במסרים ובקריאייטיב, מהמחקר ועד שהקמפיין באוויר' },
-  { q: 'מה כולל שלב המחקר והאסטרטגיה?', a: 'מסמך אסטרטגי מלא: ניתוח מתחרים, מיפוי קהל יעד, הצעת ערך מדויקת, מסרים מרכזיים, ערוצי שיווק מומלצים, ומפת דרכים יישומית של 90 יום' },
-  { q: 'מה קורה אחרי שאני משאיר פרטים?', a: 'אני חוזר אליך לשיחת היכרות של חצי שעה, שבה נחשב יחד כמה שווה לך לקוח אחד, נבדוק אם יש התאמה, ותצא ממנה עם מחיר סגור' },
+  { q: 'למה לשלם על תוכנית, אם אפשר פשוט להעלות קמפיין?', a: 'כי קמפיין בלי תוכנית הוא ניסוי על חשבונך, והתוכנית אומרת מראש למי מפרסמים, מה אומרים ומה נחשב הצלחה, ועליה אני מקים את הקמפיין' },
+  { q: 'אפשר לקנות רק את התוכנית?', a: 'כן, אפשר לקנות רק את התוכנית ולהחליט אחר כך, ואת ההקמה והניהול אני בונה רק על תוכנית' },
+  { q: 'ואם הקמפיין לא מביא פניות?', a: 'אם בחודש הניהול הראשון אין פניות, אני מנהל חודש נוסף בחינם, ואם גם אז אין, אני אומר לך את זה ועוצרים, וההבטחה חלה על הניהול ולא על התוכנית' },
+  { q: 'כמה זה עולה?', a: 'מחיר קבוע וסגור לכל שלב, שנקבע בשיחת ההיכרות לפי היקף העבודה, וההשקעה בפרסום נפרדת, ככה שתדע בדיוק כמה לפני שמתחילים' },
+  { q: 'כמה זמן זה לוקח?', a: 'התוכנית מוכנה בערך שבוע אחרי פגישת העומק, והקמפיין עולה בערך שבועיים אחרי שאישרת אותה' },
+  { q: 'של מי התוכנית?', a: 'שלך, וגם אם תחליט לא להמשיך איתי היא נשארת אצלך' },
+  { q: 'מה אני צריך להכין לפגישת העומק?', a: 'את המספרים של העסק, ואם אפשר צילומי מסך משיחות עם לקוחות, כי משם מגיע המסר' },
+  { q: 'כבר נכוויתי מספק קודם, למה שהפעם יהיה שונה?', a: 'כי הפעם מתחילים בתוכנית ולא בקמפיין, אז אתה רואה על מה כל החלטה נשענת לפני שנכנס שקל, ובניהול הסיכון של החודש הראשון עליי' },
+  { q: 'מה קורה אחרי שאני משאיר פרטים?', a: 'אני חוזר אליך לשיחת היכרות של חצי שעה, שבה נבין מה העסק שלך צריך, נחשב כמה שווה לך לקוח אחד, ותצא ממנה עם מחיר סגור' },
 ];
 
-function ChatItem({ item, isActive, onOpen }) {
-  const [displayed, setDisplayed] = useState('');
-  const [thinking,  setThinking]  = useState(false);
-  const timerRef  = useRef(null);
-  const thinkRef  = useRef(null);
-
-  useEffect(() => {
-    if (!isActive) {
-      setDisplayed('');
-      setThinking(false);
-      clearInterval(timerRef.current);
-      clearTimeout(thinkRef.current);
-      return;
-    }
-
-    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (reducedMotion) {
-      setThinking(false);
-      setDisplayed(item.a);
-      return;
-    }
-
-    setDisplayed('');
-    setThinking(true);
-
-    thinkRef.current = setTimeout(() => {
-      setThinking(false);
-      let i = 0;
-      timerRef.current = setInterval(() => {
-        i++;
-        setDisplayed(item.a.slice(0, i));
-        if (i >= item.a.length) clearInterval(timerRef.current);
-      }, 16);
-    }, 450);
-
-    return () => {
-      clearInterval(timerRef.current);
-      clearTimeout(thinkRef.current);
-    };
-  }, [isActive, item.a]);
-
-  return (
-    <div
-      style={{
-        marginBottom: 14,
-        opacity: 0,
-      }}
-      className="faq-item"
-    >
-      {/* Question bubble */}
-      <button
-        onClick={onOpen}
-        style={{
-          width: '100%',
-          textAlign: 'right',
-          background: isActive ? 'var(--surface-2)' : 'var(--surface-1)',
-          border: `1px solid ${isActive ? 'oklch(0.785 0.173 156.6 / 0.3)' : 'oklch(0.22 0.02 240)'}`,
-          borderRadius: isActive ? '16px 16px 0 16px' : 16,
-          padding: '16px 20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 12,
-          transition: 'background 0.3s, border-color 0.3s, border-radius 0.3s',
-          fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-        }}
-        aria-expanded={isActive}
-      >
-        <span
-          style={{
-            fontSize: 'clamp(0.9rem, 1.5vw, 1rem)',
-            fontWeight: 700,
-            color: 'var(--text-primary)',
-            lineHeight: 1.5,
-            flex: 1,
-          }}
-        >
-          {item.q}
-        </span>
-        {/* arrow icon */}
-        <span
-          style={{
-            flexShrink: 0,
-            width: 28, height: 28,
-            borderRadius: '50%',
-            background: isActive ? 'oklch(0.785 0.173 156.6 / 0.2)' : 'oklch(0.18 0.025 240)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'transform 0.35s var(--ease-spring), background 0.3s',
-            transform: isActive ? 'rotate(45deg)' : 'rotate(0deg)',
-          }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-        </span>
-      </button>
-
-      {/* Answer bubble */}
-      {isActive && (
-        <div
-          style={{
-            background: 'oklch(0.11 0.015 240)',
-            border: '1px solid oklch(0.22 0.02 240)',
-            borderTop: 'none',
-            borderRadius: '0 0 16px 16px',
-            padding: '16px 20px 18px',
-          }}
-        >
-          {thinking ? (
-            <div
-              className="chat-thinking"
-              style={{ display: 'flex', gap: 5, alignItems: 'center', height: 24 }}
-              aria-label="...חושב"
-            >
-              <span /><span /><span />
-            </div>
-          ) : (
-            <p
-              style={{
-                fontSize: 'clamp(0.88rem, 1.5vw, 0.96rem)',
-                color: 'var(--text-secondary)',
-                lineHeight: 1.78,
-                minHeight: 24,
-              }}
-            >
-              {displayed}
-              {displayed.length < item.a.length && displayed.length > 0 && (
-                <span
-                  style={{
-                    display: 'inline-block',
-                    width: 2,
-                    height: '1em',
-                    background: 'var(--brand-prime)',
-                    marginRight: 2,
-                    verticalAlign: 'text-bottom',
-                    animation: 'breathing 0.8s ease-in-out infinite',
-                  }}
-                />
-              )}
-            </p>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
+/* ── שאלות: Accordion לפי shadcn (Pally P11), בלי מעטפת כרטיס ──
+   נבנה על <details>/<summary>: מקלדת, קורא מסך ו"חיפוש בעמוד" עובדים בלי JS.
+   לא בלעדי (אפשר לפתוח כמה), אנימציית גובה רק בלי prefers-reduced-motion. */
 export default function FAQ() {
-  const sectionRef = useRef(null);
-  const [activeIdx, setActiveIdx] = useState(null);
   const [faqs, setFaqs] = useState(FALLBACK_FAQS);
 
   useEffect(() => {
@@ -176,103 +27,26 @@ export default function FAQ() {
       });
   }, []);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.faq-header',
-        { y: 50, opacity: 0 },
-        {
-          y: 0, opacity: 1, duration: 0.9, ease: 'expo.out',
-          scrollTrigger: { trigger: '.faq-header', start: 'top 80%', once: true },
-        }
-      );
-
-      gsap.fromTo(
-        '.faq-item',
-        { y: 30, opacity: 0 },
-        {
-          y: 0, opacity: 1, duration: 0.65, ease: 'expo.out',
-          stagger: 0.08,
-          scrollTrigger: { trigger: '.faq-list', start: 'top 78%', once: true },
-        }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  const handleOpen = (i) => {
-    setActiveIdx(prev => (prev === i ? null : i));
-  };
-
   return (
-    <section
-      id="faq"
-      ref={sectionRef}
-      style={{
-        padding: 'clamp(52px, 7vw, 88px) 28px',
-        background: 'var(--bedrock)',
-        position: 'relative',
-      }}
-    >
-      <div style={{ maxWidth: 760, margin: '0 auto' }}>
-
-        <div className="faq-header" style={{ textAlign: 'right', marginBottom: 52, opacity: 0 }}>
-          <div className="section-label">שאלות ותשובות</div>
-          <h2
-            style={{
-              fontSize: 'clamp(2rem, 4.5vw, 3.4rem)',
-              fontWeight: 900,
-              letterSpacing: '-0.02em',
-              lineHeight: 1.1,
-              marginBottom: 14,
-              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-            }}
-          >
-            שאלות נפוצות
-          </h2>
-        </div>
-
-        <div className="faq-list">
-          {faqs.map((item, i) => (
-            <ChatItem
-              key={i}
-              item={item}
-              isActive={activeIdx === i}
-              onOpen={() => handleOpen(i)}
-            />
-          ))}
-        </div>
-
-        {/* bottom note */}
-        <div
-          style={{
-            marginTop: 32,
-            textAlign: 'center',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 10,
-          }}
-        >
-          <span style={{ height: 1, width: 20, background: 'var(--surface-2)', display: 'block' }} />
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+    <section id="faq" className="c-sec c-light" aria-labelledby="faq-h">
+      <div className="c-wrap c-faq">
+        <div className="c-faq__head">
+          <div className="c-lbl">שאלות ותשובות</div>
+          <h2 id="faq-h" className="c-h2">שאלות נפוצות</h2>
+          <p className="c-faq__note">
             שאלה שלא מופיעה כאן?{' '}
-            <a
-              href="https://wa.me/972534673151"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                color: 'var(--brand-prime)',
-                fontWeight: 700,
-                textDecoration: 'none',
-              }}
-            >
-              שלח הודעה
-            </a>{' '}
-            ואחזור אליך מהר.
+            <a href="https://wa.me/972534673151" target="_blank" rel="noopener noreferrer">שלח הודעה</a>{' '}
+            ואחזור אליך מהר
           </p>
-          <span style={{ height: 1, width: 20, background: 'var(--surface-2)', display: 'block' }} />
+        </div>
+
+        <div className="c-acc">
+          {faqs.map((item, i) => (
+            <details key={i} className="c-acc__item">
+              <summary>{item.q}</summary>
+              <div className="c-acc__a"><p>{nd(item.a)}</p></div>
+            </details>
+          ))}
         </div>
       </div>
     </section>

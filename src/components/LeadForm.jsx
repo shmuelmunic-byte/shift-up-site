@@ -1,13 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { supabase } from '../lib/supabase';
 import { useSiteLinks } from '../lib/useSiteLinks';
 import { useContent } from '../lib/useContent';
 import { WhatsAppIcon } from './icons';
+import { nd } from '../content/heroCopy';
+import { getHeroVariant } from '../lib/heroVariant';
 
-gsap.registerPlugin(ScrollTrigger);
 
 const PHONE = '972534673151';
 
@@ -34,8 +33,9 @@ function buildWaLink(form) {
 }
 
 function fireLead() {
-  if (typeof window.fbq === 'function') window.fbq('track', 'Lead', { content_name: 'Lead Form' });
-  if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { method: 'form' });
+  const variant = getHeroVariant();
+  if (typeof window.fbq === 'function') window.fbq('track', 'Lead', { content_name: 'Lead Form', variant });
+  if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { method: 'form', variant });
 }
 
 export default function LeadForm() {
@@ -43,13 +43,13 @@ export default function LeadForm() {
   const navigate = useNavigate();
   const { whatsapp_url: waLinkRaw } = useSiteLinks();
   const c = useContent({
-    'leadform.scarcity': 'מקום קייס מייסדים אחד פנוי · בתנאים מיוחדים',
-    'leadform.title': 'בוא נעשה לעסק שלך',
-    'leadform.title_accent': 'Shift Up.',
-    'leadform.subtitle': 'השאר פרטים ואחזור אליך לשיחת היכרות קצרה, שבה נבדוק יחד אם יש התאמה.',
-    'leadform.price_note': 'מחיר סגור וברור בשיחת ההיכרות · אם בחודש הניהול הראשון אין פניות, חודש ניהול נוסף בחינם.',
+    'leadform.scarcity': 'אני לוקח מעט לקוחות במקביל',
+    'leadform.title': 'תחזור לנהל את העסק',
+    'leadform.title_accent': 'את השיווק תשאיר לי',
+    'leadform.subtitle': 'השאר פרטים ואחזור אליך לשיחת היכרות של חצי שעה, שבה נבין מה העסק שלך צריך, ותצא ממנה עם מחיר סגור',
+    'leadform.price_note': 'מחיר סגור לכל שלב בשיחת ההיכרות · אם בחודש הניהול הראשון אין פניות, חודש ניהול נוסף בחינם',
     'leadform.wa_title': 'מעדיף לדבר עכשיו?',
-    'leadform.soft_door': 'עוד לא בשל? זה בסדר, תוכל פשוט לעקוב ולקבל ערך בקהילת ה-WhatsApp למטה.',
+    'leadform.soft_door': 'עוד לא הזמן? זה בסדר, אפשר להצטרף לקהילת השיווק שלי בוואטסאפ, כאן למטה',
   });
   const [form, setForm] = useState({ name: '', phone: '', business: '', message: '' });
   const [consent, setConsent] = useState(false);
@@ -58,15 +58,6 @@ export default function LeadForm() {
 
   const waSecondary = waLinkRaw || `https://wa.me/${PHONE}?text=${encodeURIComponent('היי שמואל, אשמח לשמוע פרטים על השירות')}`;
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.lf-inner', { y: 40, opacity: 0 }, {
-        y: 0, opacity: 1, duration: 0.9, ease: 'expo.out',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 78%', once: true },
-      });
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
 
   const nameValid = form.name.trim().length > 1;
   const phoneValid = /\d{7,}/.test(form.phone.replace(/\D/g, ''));
@@ -85,7 +76,7 @@ export default function LeadForm() {
         phone: normalizePhone(form.phone),
         business: form.business.trim() || null,
         message: form.message.trim() || null,
-        source: 'landing_form',
+        source: 'landing_form_' + getHeroVariant(),
       });
       if (error) throw error;
       // מעבר לעמוד תודה ייעודי (URL נפרד) - שם יורה אירוע ההמרה (Lead + generate_lead).
@@ -99,164 +90,107 @@ export default function LeadForm() {
     }
   };
 
-  const inputStyle = {
-    width: '100%', padding: '13px 16px', borderRadius: 3,
-    border: '1px solid #cdd7e3', background: '#fff', color: '#0c1118',
-    fontSize: '1rem', fontFamily: 'var(--font)', outline: 'none',
-    transition: 'border-color 0.2s, box-shadow 0.2s',
-  };
-  const errorInputStyle = { ...inputStyle, borderColor: '#c0392b' };
-  const labelStyle = { display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#3a4757', marginBottom: 6 };
-  const errorTextStyle = { color: '#c0392b', fontSize: '0.78rem', marginTop: 6 };
-  const focusOn = (e) => { e.target.style.borderColor = '#1f9d57'; e.target.style.boxShadow = '0 0 0 3px rgba(52,217,123,0.15)'; };
-  const makeFocusOff = (hasError) => (e) => {
-    e.target.style.borderColor = hasError ? '#c0392b' : '#cdd7e3';
-    e.target.style.boxShadow = 'none';
-  };
   const nameError = touched && !nameValid;
   const phoneError = touched && !phoneValid;
   const consentError = touched && !consent;
 
   return (
-    <section
-      id="contact"
-      ref={sectionRef}
-      style={{ padding: 'clamp(52px, 7vw, 88px) 28px', background: 'linear-gradient(180deg, #eef3f8 0%, #e6edf5 100%)', position: 'relative', overflow: 'hidden' }}
-    >
-      <div className="lf-inner" style={{ maxWidth: 920, margin: '0 auto', opacity: 0 }}>
-
-        {/* scarcity pill */}
-        <div style={{ textAlign: 'center', marginBottom: 18 }}>
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: 'rgba(52,217,123,0.12)', border: '1px solid rgba(31,157,87,0.35)',
-            borderRadius: 3, padding: '6px 16px', fontSize: '0.82rem', fontWeight: 700, color: '#117a41',
-          }}>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#1f9d57', display: 'block', boxShadow: '0 0 6px #1f9d57' }} />
-            {c['leadform.scarcity']}
-          </span>
+    <section id="contact" ref={sectionRef} className="c-sec c-dark c-lf" aria-labelledby="lf-h">
+      <div className="c-wrap">
+        <div className="c-lf__head">
+          <span className="c-tag">{nd(c['leadform.scarcity'])}</span>
+          {/* הטאגליין (החלטת שמואל 25.11): שתי שורות בשבירה ידנית, בלי פסיק בסוף השורה */}
+          <h2 id="lf-h" className="c-h2 c-lf__h">
+            {nd(c['leadform.title']).replace(/,$/, '')}
+            <span className="c-g c-block">{nd(c['leadform.title_accent'])}</span>
+          </h2>
+          <p className="c-lead">{nd(c['leadform.subtitle'])}</p>
+          <p className="c-lf__note">{nd(c['leadform.price_note'])}</p>
         </div>
 
-        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.15, color: '#0c1118', marginBottom: 12 }}>
-          {c['leadform.title']} <span style={{ color: '#117a41' }}>{c['leadform.title_accent']}</span>
-        </h2>
-        <p style={{ textAlign: 'center', fontSize: 'clamp(1rem, 2.4vw, 1.15rem)', color: '#4a5868', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 8px' }}>
-          {c['leadform.subtitle']}
-        </p>
-        <p style={{ textAlign: 'center', fontSize: '0.9rem', color: '#6b7d92', fontWeight: 600, marginBottom: 36 }}>
-          {c['leadform.price_note']}
-        </p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.3fr) minmax(0, 1fr)', gap: 'clamp(20px, 3vw, 36px)', alignItems: 'start' }} className="lf-grid">
-
+        <div className="c-lf__grid">
           {/* ── טופס (דלת ראשית) ── */}
-          <div style={{ background: '#fff', borderRadius: 4, padding: 'clamp(24px, 3vw, 36px)', boxShadow: '0 10px 40px rgba(12,17,24,0.08)', border: '1px solid #e1e8f0' }}>
+          <div className="c-lf__panel">
             {status === 'done' ? (
-              <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                <div style={{ width: 60, height: 60, borderRadius: '50%', background: 'rgba(52,217,123,0.15)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#117a41" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                </div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0c1118', marginBottom: 8 }}>קיבלתי! אחזור אליך בקרוב.</h3>
-                <p style={{ color: '#4a5868', lineHeight: 1.6, marginBottom: 20 }}>רוצה לקצר? שלח לי הודעה ישירות בוואטסאפ עכשיו.</p>
-                <a href={buildWaLink(form)} target="_blank" rel="noopener noreferrer" style={waBtnStyle}>
+              <div className="c-lf__state">
+                <h3>קיבלתי! אחזור אליך בקרוב</h3>
+                <p>רוצה לקצר? שלח לי הודעה ישירות בוואטסאפ עכשיו</p>
+                <a href={buildWaLink(form)} target="_blank" rel="noopener noreferrer" className="c-wa-btn">
                   {waIcon}פתח שיחה בוואטסאפ
                 </a>
               </div>
             ) : status === 'error' ? (
-              <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                <h3 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0c1118', marginBottom: 8 }}>כמעט שם</h3>
-                <p style={{ color: '#4a5868', lineHeight: 1.6, marginBottom: 20 }}>הכי מהיר להמשיך בוואטסאפ, הפרטים שלך כבר מוכנים בהודעה.</p>
-                <a href={buildWaLink(form)} target="_blank" rel="noopener noreferrer" style={waBtnStyle}>
+              <div className="c-lf__state">
+                <h3>כמעט שם</h3>
+                <p>הכי מהיר להמשיך בוואטסאפ, הפרטים שלך כבר מוכנים בהודעה</p>
+                <a href={buildWaLink(form)} target="_blank" rel="noopener noreferrer" className="c-wa-btn">
                   {waIcon}המשך בוואטסאפ
                 </a>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} noValidate>
-                <div style={{ marginBottom: 16 }}>
-                  <label style={labelStyle} htmlFor="lf-name">שם מלא *</label>
-                  <input id="lf-name" type="text" value={form.name} onFocus={focusOn} onBlur={makeFocusOff(nameError)}
+              <form onSubmit={handleSubmit} noValidate className="c-form">
+                <div className="c-field">
+                  <label htmlFor="lf-name">שם מלא *</label>
+                  <input id="lf-name" type="text" value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    style={nameError ? errorInputStyle : inputStyle} placeholder="איך לפנות אליך?" autoComplete="name"
+                    className={nameError ? 'is-err' : ''} placeholder="איך לפנות אליך?" autoComplete="name"
                     aria-invalid={nameError} aria-describedby={nameError ? 'lf-name-error' : undefined} />
-                  {nameError && <p id="lf-name-error" style={errorTextStyle}>נא למלא שם (לפחות 2 תווים).</p>}
+                  {nameError && <p id="lf-name-error" className="c-err">נא למלא שם (לפחות 2 תווים)</p>}
                 </div>
-                <div style={{ marginBottom: 16 }}>
-                  <label style={labelStyle} htmlFor="lf-phone">טלפון *</label>
-                  <input id="lf-phone" type="tel" value={form.phone} onFocus={focusOn} onBlur={makeFocusOff(phoneError)}
+                <div className="c-field">
+                  <label htmlFor="lf-phone">טלפון *</label>
+                  <input id="lf-phone" type="tel" value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    style={{ ...(phoneError ? errorInputStyle : inputStyle), direction: 'ltr', textAlign: 'right' }} placeholder="050-0000000" autoComplete="tel"
+                    className={phoneError ? 'is-err' : ''} style={{ direction: 'ltr', textAlign: 'right' }} placeholder="050-0000000" autoComplete="tel"
                     aria-invalid={phoneError} aria-describedby={phoneError ? 'lf-phone-error' : undefined} />
-                  {phoneError && <p id="lf-phone-error" style={errorTextStyle}>נא למלא מספר טלפון תקין (לפחות 7 ספרות).</p>}
+                  {phoneError && <p id="lf-phone-error" className="c-err">נא למלא מספר טלפון תקין (לפחות 7 ספרות)</p>}
                 </div>
-                <div style={{ marginBottom: 16 }}>
-                  <label style={labelStyle} htmlFor="lf-business">תחום העסק</label>
-                  <input id="lf-business" type="text" value={form.business} onFocus={focusOn} onBlur={makeFocusOff(false)}
+                <div className="c-field">
+                  <label htmlFor="lf-business">תחום העסק</label>
+                  <input id="lf-business" type="text" value={form.business}
                     onChange={(e) => setForm({ ...form, business: e.target.value })}
-                    style={inputStyle} placeholder="למשל: מסעדה, נדל״ן, קליניקה…" />
+                    placeholder="למשל: מסעדה, נדל״ן, קליניקה…" />
                 </div>
-                <div style={{ marginBottom: 20 }}>
-                  <label style={labelStyle} htmlFor="lf-message">מה הכי בוער? (אופציונלי)</label>
-                  <textarea id="lf-message" rows={3} value={form.message} onFocus={focusOn} onBlur={makeFocusOff(false)}
+                <div className="c-field">
+                  <label htmlFor="lf-message">מה הכי בוער? (אופציונלי)</label>
+                  <textarea id="lf-message" rows={3} value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    style={{ ...inputStyle, resize: 'vertical' }} placeholder="כמה מילים על האתגר השיווקי שלך" />
+                    placeholder="למשל: לא ברור לי מה מביא לי לקוחות" />
                 </div>
 
-                <div style={{ marginBottom: 16 }}>
-                  <label htmlFor="lf-consent" style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer', fontSize: '0.86rem', color: '#3a4757', lineHeight: 1.5 }}>
+                <div className="c-field">
+                  <label htmlFor="lf-consent" className="c-consent">
                     <input id="lf-consent" type="checkbox" checked={consent}
                       onChange={(e) => setConsent(e.target.checked)}
-                      aria-invalid={consentError} aria-describedby={consentError ? 'lf-consent-error' : undefined}
-                      style={{ width: 18, height: 18, marginTop: 2, flexShrink: 0, accentColor: '#1f9d57', cursor: 'pointer' }} />
-                    <span>קראתי ואני מסכים/ה ל<a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#117a41', fontWeight: 700 }}>מדיניות הפרטיות</a>, כולל אחסון הפרטים בשרת בחו"ל, ולכך שתיצרו איתי קשר בעקבות פנייתי. *</span>
+                      aria-invalid={consentError} aria-describedby={consentError ? 'lf-consent-error' : undefined} />
+                    <span>קראתי ואני מסכים/ה ל<a href="/privacy" target="_blank" rel="noopener noreferrer">מדיניות הפרטיות</a>, כולל אחסון הפרטים בשרת בחו"ל, ולכך שתיצרו איתי קשר בעקבות פנייתי *</span>
                   </label>
-                  {consentError && <p id="lf-consent-error" style={errorTextStyle}>יש לאשר את מדיניות הפרטיות כדי להמשיך.</p>}
+                  {consentError && <p id="lf-consent-error" className="c-err">יש לאשר את מדיניות הפרטיות כדי להמשיך</p>}
                 </div>
 
-                <button type="submit" disabled={status === 'sending'} style={{
-                  width: '100%', padding: '15px', borderRadius: 3, border: 'none',
-                  background: status === 'sending' ? '#7fc89e' : '#1f9d57', color: '#fff',
-                  fontSize: '1.08rem', fontWeight: 800, fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-                  cursor: status === 'sending' ? 'default' : 'pointer',
-                  boxShadow: '0 8px 24px rgba(31,157,87,0.35)', transition: 'background 0.2s, transform 0.15s',
-                }}>
+                <button type="submit" disabled={status === 'sending'} className="c-btn c-btn--full">
                   {status === 'sending' ? 'שולח…' : 'קבע לי שיחת היכרות'}
                 </button>
-                <p style={{ textAlign: 'center', fontSize: '0.76rem', color: '#8190a3', marginTop: 12 }}>
-                  הפרטים נשמרים אצלי בלבד, בלי ספאם ובלי שיתוף.
-                </p>
+                <p className="c-form__fine">הפרטים נשארים אצלי, בלי ספאם ובלי שיתוף עם אף אחד</p>
               </form>
             )}
           </div>
 
           {/* ── דלת משנית (וואטסאפ) + שלישית רכה ── */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div style={{ background: '#fff', borderRadius: 4, padding: 'clamp(22px, 3vw, 30px)', border: '1px solid #e1e8f0', boxShadow: '0 10px 40px rgba(12,17,24,0.05)' }}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0c1118', marginBottom: 8 }}>{c['leadform.wa_title']}</h3>
-              <p style={{ fontSize: '0.92rem', color: '#4a5868', lineHeight: 1.6, marginBottom: 18 }}>
-                שלח לי הודעה בוואטסאפ ואחזור אליך מהר.
-              </p>
-              <a href={waSecondary} target="_blank" rel="noopener noreferrer" style={waBtnStyle}>
+          <div className="c-lf__side">
+            <div className="c-lf__wa">
+              <h3>{nd(c['leadform.wa_title'])}</h3>
+              <p>שלח לי הודעה בוואטסאפ ואחזור אליך מהר</p>
+              <a href={waSecondary} target="_blank" rel="noopener noreferrer" className="c-wa-btn">
                 {waIcon}דבר איתי בוואטסאפ
               </a>
             </div>
-
-            <div style={{ background: 'rgba(12,17,24,0.04)', borderRadius: 4, padding: '20px 22px', border: '1px dashed #c3cedb' }}>
-              <p style={{ fontSize: '0.92rem', color: '#3a4757', lineHeight: 1.6 }}>
-                {c['leadform.soft_door']}
-              </p>
-            </div>
+            <p className="c-lf__soft">{nd(c['leadform.soft_door'])}</p>
           </div>
         </div>
       </div>
     </section>
   );
 }
-
-const waBtnStyle = {
-  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%',
-  padding: '13px 22px', borderRadius: 3, background: '#25955a', color: '#fff',
-  fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", textDecoration: 'none',
-  boxShadow: '0 6px 20px rgba(37,149,90,0.3)',
-};
 
 const waIcon = <WhatsAppIcon size={20} />;

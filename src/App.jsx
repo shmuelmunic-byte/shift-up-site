@@ -3,19 +3,18 @@ import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import Cursor         from './components/Cursor';
 import Navbar         from './components/Navbar';
 import Hero           from './components/Hero';
 import TrustStrip     from './components/TrustStrip';
 import PainSection    from './components/PainSection';
 import Process        from './components/Process';
-import WhatYouGet     from './components/WhatYouGet';
 import { Testimonials, Guarantee, Fit, Comparison } from './components/SaarSections';
 import About          from './components/About';
 import FAQ                  from './components/FAQ';
 import LeadForm             from './components/LeadForm';
 import WhatsAppGroup        from './components/WhatsAppGroup';
 import Footer         from './components/Footer';
+import PlanSection    from './components/PlanSection';
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.defaults({ ease: 'expo.out', duration: 0.8 });
@@ -92,35 +91,32 @@ export default function App() {
     <div
       ref={rootRef}
       dir="rtl"
+      className="c-site"
       style={{
         minHeight: '100vh',
         background: 'var(--bedrock)',
         color: 'var(--text-primary)',
         fontFamily: 'var(--font)',
-        overflowX: 'hidden',
+        overflowX: 'clip',
         position: 'relative',
       }}
     >
       <ScrollProgress />
-      <div className="noise-overlay" aria-hidden="true" />
-      <Cursor />
       <Navbar onCta={scrollToContact} />
       <main>
+        {/* כיוון C, סבב 2 (25.11.2026). סדר לפי מיצוב_תוכנית_קודם.md סעיף 3. קצב: כהה (הירו, אמון, כאב)
+            · בהיר (התוכנית) · כהה (תהליך) · בהיר (עדויות) · כהה (הבטחה) · בהיר (התאמה, השוואה)
+            · כהה (מי אני) · בהיר (שאלות) · כהה (טופס, קהילה, פוטר). "מה מקבלים" הוחלף ב"התוכנית" */}
         <Hero onContact={scrollToContact} onProcess={scrollToProcess} />
         <TrustStrip />
-        <div className="section-divider" />
         <PainSection />
-        <div className="section-divider" />
+        <PlanSection />
         <Process />
         <Testimonials />
-        <div className="section-divider" />
-        <WhatYouGet />
         <Guarantee onContact={scrollToContact} />
         <Fit />
         <Comparison />
-        <div className="section-divider" />
         <About />
-        <div className="section-divider" />
         <FAQ />
         <LeadForm />
         <WhatsAppGroup />
