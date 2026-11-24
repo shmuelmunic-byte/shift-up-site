@@ -200,7 +200,7 @@ export default function WhatsAppGroup() {
             }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'oklch(0.65 0.22 145)', display: 'block', boxShadow: '0 0 6px oklch(0.65 0.22 145)' }} />
               <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'oklch(0.75 0.18 145)' }}>
-                2 הודעות בשבוע · קצר, חד, לעניין
+                קצר, חד, לעניין
               </span>
             </div>
 
