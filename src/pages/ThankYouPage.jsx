@@ -110,7 +110,7 @@ export default function ThankYouPage() {
           border: '1px solid var(--hairline, #2a3543)', color: 'var(--text-primary)',
           fontWeight: 700, fontSize: '0.98rem', textDecoration: 'none',
         }}>
-          בינתיים, הצטרף לקהילת השיווק השקטה
+          בינתיים, הצטרף לקהילת השיווק
         </a>
       </div>
 

@@ -49,7 +49,7 @@ export default function LeadForm() {
     'leadform.subtitle': 'השאר פרטים ואחזור אליך לשיחת היכרות קצרה, שבה נבדוק יחד אם יש התאמה.',
     'leadform.price_note': 'מחיר סגור וברור בשיחת ההיכרות · אם בחודש הניהול הראשון אין פניות, חודש ניהול נוסף בחינם.',
     'leadform.wa_title': 'מעדיף לדבר עכשיו?',
-    'leadform.soft_door': 'עוד לא בשל? זה בסדר, תוכל פשוט לעקוב ולקבל ערך בקהילת ה-WhatsApp השקטה למטה.',
+    'leadform.soft_door': 'עוד לא בשל? זה בסדר, תוכל פשוט לעקוב ולקבל ערך בקהילת ה-WhatsApp למטה.',
   });
   const [form, setForm] = useState({ name: '', phone: '', business: '', message: '' });
   const [consent, setConsent] = useState(false);
