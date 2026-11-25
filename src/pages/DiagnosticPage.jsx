@@ -720,8 +720,8 @@ export default function DiagnosticPage() {
             {/* lead capture — value already given above; form is soft/optional */}
             {status !== 'done' ? (
               <div className="dg-card dg-lead">
-                <h2>קח את התוצאה ורוץ, <em>ואם בא <span className="c-nw">לך -</span></em></h2>
-                <p className="dg-lead-p">{'התוצאה שלמעלה שלך, בחינם, בלי תנאי, ואם מתחשק לך שאעבור על זה איתך אישית, אשלח לך את 3 הצעדים המדויקים לתיקון, מותאמים לעסק שלך, ונדבר בשיחת היכרות קצרה בטלפון, בלי עלות, רק תשאיר איך לחזור אליך'}</p>
+                <h2>התוצאה כבר שלך, <em>רוצה גם את 3 הצעדים <span className="c-nw">לתיקון?</span></em></h2>
+                <p className="dg-lead-p">{'אני עובר על התוצאה שלך, שולח לך 3 צעדים מדויקים לעסק שלך, ונדבר עליהם בשיחת היכרות קצרה בטלפון, בלי עלות'}</p>
                 <form onSubmit={submitLead} noValidate>
                   <div className="dg-field">
                     <label htmlFor="dg-name">שם מלא</label>
@@ -758,7 +758,7 @@ export default function DiagnosticPage() {
                   {touched && nameValid && !phoneValid && <p style={{ color: 'var(--dg-danger-ink)', fontSize: '.82rem', marginBottom: 8 }}>{nd('נא למלא מספר טלפון תקין.')}</p>}
                   {touched && nameValid && phoneValid && !consent && <p style={{ color: 'var(--dg-danger-ink)', fontSize: '.82rem', marginBottom: 8 }}>{nd('יש לאשר את מדיניות הפרטיות כדי להמשיך.')}</p>}
                   <button type="submit" className="dg-btn dg-btn-primary" disabled={status === 'sending'}>
-                    {status === 'sending' ? 'שולח…' : 'בוא נדבר - שלח לי את הצעדים ←'}
+                    {status === 'sending' ? 'שולח…' : 'שלח לי את 3 הצעדים ←'}
                   </button>
                   <p className="dg-consent">{'אין חובה, משאירים פרטים רק אם רוצים שאחזור, בלי ספאם, ואפשר להסיר בכל רגע'}</p>
                   <p className="dg-consent" style={{ marginTop: 6 }}>{'התוצאות נשמרות אנונימית לצורך סטטיסטיקה, כדי שאדע איפה עסקים נתקעים, בלי שם, בלי טלפון ובלי קשר אליך'}</p>
