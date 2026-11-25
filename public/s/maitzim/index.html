@@ -391,6 +391,9 @@ form .note{font-size:12px;color:var(--onnight-m);margin-top:12px;text-align:cent
 .aimg figcaption{margin-top:26px;font-size:12px;letter-spacing:.08em;color:var(--mute)}
 .quotes{display:grid;gap:40px;margin-top:52px}
 .quotes .quote{margin:0}
+.quote .mono{flex:none;display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid var(--gold);color:var(--gold-d);font-size:17px;font-weight:600;letter-spacing:.04em}
+.quote.short blockquote p{font-size:21px;line-height:1.65}
+@media(max-width:760px){.quote.short blockquote p{font-size:18px}.quote .mono{width:40px;height:40px;font-size:15px}}
 
 /* שאלות */
 .faq{background:var(--paper);border-top:1px solid var(--line)}
@@ -800,11 +803,17 @@ footer .credit a{color:var(--onnight);border-bottom:1px solid rgba(255,255,255,.
         <p class="q2">לאורך כל הדרך הוא הפגין זמינות מלאה, נגישות יוצאת דופן וליווי צמוד בכל שלב ושלב</p></blockquote>
         <figcaption><img src="img/logo_levsorek.png" alt="לב שורק"><span><b>לב לוזינסקי</b>שותף, קבוצת לב-שורק</span></figcaption>
       </figure>
-      <!-- המלצות נוספות: מעתיקים את הבלוק לכל המלצה ומורידים את hidden. עד שמגיעות לא מוצג כלום -->
-      <figure class="quote rv" hidden>
+      <!-- המלצה נוספת: מעתיקים figure, מחליפים טקסט, שם ותפקיד. יש לוגו = img כמו אצל לב, אין = מונוגרמה של החברה (span.mono) -->
+      <figure class="quote rv d3">
         <span class="qm" aria-hidden="true">&rdquo;</span>
-        <blockquote><p>[טקסט ההמלצה]</p></blockquote>
-        <figcaption><img src="img/[לוגו].png" alt=""><span><b>[שם]</b>[תפקיד, חברה]</span></figcaption>
+        <blockquote><p>בסיום תהליך קבלת המימון לרכישת קרקע רציתי להודות לך אישית על יחסך המקצועי והבין אישי המצוין. מקצועית, ידעת לתת מענה לכל עניין ובזמינות גבוהה. <em>לקחת אחריות ודאגת להתקדמות מהירה ושוטפת</em></p>
+        <p class="q2">בין אישית היה תמיד נעים לעבוד מולך, הנעימות והזמינות מעבר לציפיות. אשמח להמשיך לעבוד איתך ולהעזר בך בהמשך הדרך</p></blockquote>
+        <figcaption><span class="mono" aria-hidden="true">ו&middot;ה</span><span><b>יצחק וינר</b>מנכ"ל, ויניש השקעות</span></figcaption>
+      </figure>
+      <figure class="quote short rv d3">
+        <span class="qm" aria-hidden="true">&rdquo;</span>
+        <blockquote><p>אריאל היקר!<br>שמחתי לעבוד איתך! עם שירות מעולה ומקצועי!<br><em>מעריך מאוד את המאמץ שעשית!</em></p></blockquote>
+        <figcaption><span class="mono" aria-hidden="true">א&middot;ע</span><span><b>פיני עזרא</b>בעלים, אבן העזר נדל"ן והשקעות</span></figcaption>
       </figure>
       </div>
     </div>
