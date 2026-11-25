@@ -101,6 +101,14 @@ function computeResult(answers) {
   return { seg, pct, catPcts, leaks, moreLeaks, strengths, skipped, verdict: v, verdictPre: prefix, verdictSub: vs };
 }
 
+// נרמול טלפון לפני שמירה, כמו בטופס הבית: ספרות בלבד, +972 → 0, 5XXXXXXXX → 05XXXXXXXX
+const normalizePhone = (v) => {
+  let d = String(v || '').replace(/\D/g, '');
+  if (d.startsWith('972')) d = '0' + d.slice(3);
+  if (d.length === 9 && d[0] === '5') d = '0' + d;
+  return d || String(v || '').trim();
+};
+
 /* ── תמונת תוצאה לשיתוף (1080×1527, A4 פורטרט) ──
    מובילה במה שכבר עובד (חוזקות) ורק אז מה כדאי לחדד — כי אנשים משתפים
    תמונה שמראה במה הם טובים, ובלי לוותר על מה שצריך תיקון.
@@ -126,114 +134,122 @@ function loadShareLogo() {
     const im = new Image();
     im.onload = () => { _shareLogo = im; res(im); };
     im.onerror = () => res(null);
-    im.src = '/logo-onlight.png';
+    im.src = '/logo.png';
   });
   return _shareLogoPromise;
 }
 
-function roundRectPath(ctx, x0, y0, w, h, r) {
-  if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x0, y0, w, h, r); return; }
-  ctx.beginPath();
-  ctx.moveTo(x0 + r, y0);
-  ctx.arcTo(x0 + w, y0, x0 + w, y0 + h, r);
-  ctx.arcTo(x0 + w, y0 + h, x0, y0 + h, r);
-  ctx.arcTo(x0, y0 + h, x0, y0, r);
-  ctx.arcTo(x0, y0, x0 + w, y0, r);
-  ctx.closePath();
-}
-
+/* תמונת השיתוף בעיצוב C (25.11): לילה כהה, Secular One לכותרות, Heebo לגוף,
+   מספר ב-Space Grotesk, פס ציון ישר עם סימון ממוצע. בלי פינות מעוגלות ובלי גרדיאנטים */
 function drawShareImage(result, logo, stats) {
   const W = 1080, H = 1527;               // A4 פורטרט (יחס 1:√2)
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const x = c.getContext('2d');
   const pct = result.pct != null ? result.pct : 0;
-  // ממוצע חי (מגיע מ-audit_stats). aboveAvg קובע מסגור חיובי לשיתוף.
   const avg = stats && typeof stats.avg === 'number' ? stats.avg : null;
   const aboveAvg = avg != null && pct >= avg;
   const belowAvg = avg != null && pct < avg;
-  // צבעי "דיו" כהים מספיק כדי להיקרא על רקע בהיר, לכל רמת ציון.
-  const col = pct >= 70 ? '#12a163' : pct >= 45 ? '#d68a1c' : '#e0455e';
-  const INK = '#0e1319', DIM = '#5a6674', GREEN = '#0f9a5b';
+  const NIGHT = '#070A0E', PAPER = '#F5F7F8', MUTED = '#B3BCC5', DIM = '#8A949F', LINE = '#1E262F';
+  const GREEN = '#36D98A', AMBER = '#F2B544', PURPLE = '#8468D0';
+  const col = pct >= 70 ? GREEN : pct >= 45 ? AMBER : '#FF6B7F';
+  const M = 90, R = W - M, TW = W - M * 2;
 
-  // רקע בהיר + נגיעות צבע עדינות בפינות
-  x.fillStyle = '#ffffff'; x.fillRect(0, 0, W, H);
-  let g = x.createRadialGradient(W * 0.85, H * 0.05, 0, W * 0.85, H * 0.05, 680);
-  g.addColorStop(0, 'rgba(54,217,138,.12)'); g.addColorStop(1, 'rgba(54,217,138,0)');
-  x.fillStyle = g; x.fillRect(0, 0, W, H);
-  g = x.createRadialGradient(W * 0.10, H * 0.45, 0, W * 0.10, H * 0.45, 680);
-  g.addColorStop(0, 'rgba(106,79,181,.10)'); g.addColorStop(1, 'rgba(106,79,181,0)');
-  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  x.fillStyle = NIGHT; x.fillRect(0, 0, W, H);
+  // פס מותג דק בקצה הימני (סגול → ירוק כמו בלוגו), כדי שהרקע לא יהיה אחיד
+  x.fillStyle = PURPLE; x.fillRect(W - 14, 0, 14, H * 0.35);
+  x.fillStyle = GREEN; x.fillRect(W - 14, H * 0.35, 14, H * 0.65);
 
-  x.direction = 'rtl'; x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.direction = 'rtl'; x.textAlign = 'right'; x.textBaseline = 'middle';
 
-  // לוגו למעלה (דיו כהה על שקוף). נפילה לטקסט אם לא נטען.
+  // לוגו
   if (logo && logo.width) {
-    const lw = 380, lh = lw * logo.height / logo.width;
-    x.drawImage(logo, (W - lw) / 2, 70, lw, lh);
+    const lw = 300, lh = lw * logo.height / logo.width;
+    x.direction = 'ltr'; x.drawImage(logo, M - 10, 62, lw, lh); x.direction = 'rtl';
   } else {
-    x.fillStyle = INK; x.font = '800 46px "Secular One"';
-    x.fillText('Shift Up · אבחון שיווק', W / 2, 130);
+    x.direction = 'ltr'; x.textAlign = 'left';
+    x.fillStyle = PAPER; x.font = '700 44px "Space Grotesk"'; x.fillText('Shift Up', M, 112);
+    x.direction = 'rtl'; x.textAlign = 'right';
   }
+  x.fillStyle = DIM; x.font = '500 30px "Heebo"';
+  x.fillText('אבחון שיווק', R, 112);
 
-  // כותרת חיובית - לא ממוקדת דליפה. מתחת לממוצע = מסגור של פעולה ("יצאתי לתקן"),
-  // כדי שגם ציון נמוך יהיה שווה שיתוף ולא ייראה כדוח ציונים.
-  x.fillStyle = INK; x.font = '900 58px "Secular One"';
-  x.fillText(belowAvg ? 'יצאתי לתקן את השיווק של העסק' : 'ככה נראה השיווק של העסק שלי', W / 2, 276);
+  x.fillStyle = LINE; x.fillRect(M, 196, TW, 2);
 
-  // מד ציון
-  const cx = W / 2, cy = 536, r = 188, lw2 = 38;
-  x.lineCap = 'round';
-  x.strokeStyle = '#e4e9ef'; x.lineWidth = lw2;
-  x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.stroke();
-  x.strokeStyle = col;
-  x.beginPath(); x.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pct / 100); x.stroke();
-  x.fillStyle = col; x.font = '900 160px "Secular One"';
-  x.fillText(String(pct), cx, cy - 4);
-  x.fillStyle = DIM; x.font = '400 38px "Secular One"';
-  x.fillText('מתוך 100', cx, cy + 104);
+  // כותרת
+  x.fillStyle = PAPER; x.font = '400 64px "Secular One"';
+  let y = 290;
+  y += wrapCanvasText(x, belowAvg ? 'יצאתי לתקן את השיווק של העסק' : 'ככה נראה השיווק של העסק שלי', R, y, TW, 80);
 
-  // תג "מעל הממוצע" - רק כשזה חיובי. יושב מתחת לטבעת המד (תחתית הטבעת ~y743),
-  // והוורדיקט נדחף למטה כדי שלא יהיה חפיפה. סטטוס שמשתפים בגאווה.
-  let y = 812;
+  // ציון: מספר גדול ופס ישר
+  y += 70;
+  x.fillStyle = col; x.font = '700 230px "Space Grotesk"';
+  x.direction = 'ltr'; x.textAlign = 'right';
+  x.fillText(String(pct), R, y + 60);
+  const numW = x.measureText(String(pct)).width;
+  x.fillStyle = DIM; x.font = '700 64px "Space Grotesk"';
+  x.textAlign = 'left';
+  x.fillText('/100', R - numW - 150 < M ? M : R - numW - 150, y + 120);
+  x.direction = 'rtl'; x.textAlign = 'right';
   if (aboveAvg) {
-    const pillW = 340, pillH = 62, pillY = 772;
-    x.fillStyle = 'rgba(15,154,91,.12)';
-    roundRectPath(x, cx - pillW / 2, pillY, pillW, pillH, pillH / 2); x.fill();
-    x.fillStyle = GREEN; x.font = '700 34px "Secular One"';
-    x.fillText('מעל הממוצע', cx, pillY + pillH / 2 + 2);
-    y = 900; // מפנה מקום לתג בין הטבעת לוורדיקט
+    x.font = '700 32px "Heebo"';
+    const tw = x.measureText('מעל הממוצע').width + 44;
+    x.strokeStyle = GREEN; x.lineWidth = 3;
+    x.strokeRect(M + 1.5, y - 10, tw, 60);
+    x.fillStyle = GREEN; x.textAlign = 'center';
+    x.fillText('מעל הממוצע', M + 1.5 + tw / 2, y + 21);
+    x.textAlign = 'right';
   }
+  y += 220;
+
+  // פס: מתמלא מימין לשמאל (RTL)
+  const barH = 22;
+  x.fillStyle = LINE; x.fillRect(M, y, TW, barH);
+  const fw = TW * Math.max(0, Math.min(100, pct)) / 100;
+  x.fillStyle = col; x.fillRect(R - fw, y, fw, barH);
+  if (avg != null) {
+    const ax = R - TW * avg / 100;
+    x.fillStyle = PAPER; x.fillRect(ax - 2, y - 14, 4, barH + 28);
+    x.fillStyle = MUTED; x.font = '500 28px "Heebo"'; x.textAlign = 'center';
+    x.fillText('ממוצע ' + Math.round(avg), Math.max(M + 70, Math.min(R - 70, ax)), y + barH + 44);
+    x.textAlign = 'right';
+  }
+  y += barH + 160;
 
   // ורדיקט
-  x.fillStyle = INK; x.font = '800 46px "Secular One"';
-  y += wrapCanvasText(x, result.verdict, W / 2, y, W - 150, 58);
+  x.fillStyle = PAPER; x.font = '400 54px "Secular One"';
+  y += wrapCanvasText(x, result.verdict, R, y, TW, 70);
 
-  // מה שכבר עובד - מוביל בחיובי
-  y += 42;
-  x.fillStyle = GREEN; x.font = '700 38px "Secular One"';
-  x.fillText('מה שכבר עובד לי', W / 2, y); y += 58;
-  x.fillStyle = INK; x.font = '600 42px "Secular One"';
+  // מה שכבר עובד
+  y += 70;
+  x.fillStyle = GREEN; x.font = '700 38px "Heebo"';
+  x.fillText('מה שכבר עובד לי', R, y); y += 70;
+  x.font = '500 44px "Heebo"';
   (result.strengths || []).slice(0, 2).forEach((s) => {
-    y += wrapCanvasText(x, '✓ ' + s.t, W / 2, y, W - 150, 52) + 14;
+    x.fillStyle = GREEN; x.fillRect(R - 16, y - 8, 16, 16);
+    x.fillStyle = PAPER;
+    y += wrapCanvasText(x, s.t, R - 36, y, TW - 36, 60) + 12;
   });
 
-  // מה כדאי לחדד - נשמר, בניסוח רך
-  y += 34;
+  // מה כדאי לחדד
+  y += 50;
   if (result.leaks && result.leaks.length) {
-    x.fillStyle = '#b9741a'; x.font = '700 36px "Secular One"';
-    x.fillText(belowAvg ? 'מה שאני משפר עכשיו:' : 'ומה כדאי לחדד:', W / 2, y); y += 52;
-    x.fillStyle = INK; x.font = '600 40px "Secular One"';
-    wrapCanvasText(x, result.leaks[0].fb.t, W / 2, y, W - 150, 50);
+    x.fillStyle = AMBER; x.font = '700 38px "Heebo"';
+    x.fillText(belowAvg ? 'מה שאני משפר עכשיו' : 'ומה כדאי לחדד', R, y); y += 70;
+    x.fillStyle = AMBER; x.fillRect(R - 16, y - 8, 16, 16);
+    x.fillStyle = PAPER; x.font = '500 44px "Heebo"';
+    wrapCanvasText(x, result.leaks[0].fb.t, R - 36, y, TW - 36, 60);
   } else {
-    x.fillStyle = GREEN; x.font = '600 40px "Secular One"';
-    wrapCanvasText(x, 'אין דליפות גדולות - הבסיס שלך חזק', W / 2, y, W - 150, 50);
+    x.fillStyle = GREEN; x.font = '500 44px "Heebo"';
+    wrapCanvasText(x, 'אין דליפות גדולות, הבסיס שלך חזק', R, y, TW, 52);
   }
 
-  // פוטר CTA
-  x.fillStyle = DIM; x.font = '500 40px "Secular One"';
-  x.fillText('אבחון שיווק חינמי לבעלי עסקים', W / 2, H - 96);
-  x.fillStyle = GREEN; x.font = '800 46px "Secular One"';
-  x.fillText('shiftup.marketing', W / 2, H - 44);
+  // פוטר
+  x.fillStyle = LINE; x.fillRect(M, H - 150, TW, 2);
+  x.fillStyle = MUTED; x.font = '500 32px "Heebo"';
+  x.fillText('אבחון שיווק חינמי לבעלי עסקים', R, H - 82);
+  x.direction = 'ltr'; x.textAlign = 'left';
+  x.fillStyle = GREEN; x.font = '700 38px "Space Grotesk"';
+  x.fillText('shiftup.marketing', M, H - 82);
 
   return c;
 }
@@ -443,7 +459,10 @@ export default function DiagnosticPage() {
       canvas.toBlob((b) => { shareBlobRef.current = b; }, 'image/png');
     };
     // ממתינים גם לפונטים וגם ללוגו לפני שמציירים, כדי שהתמונה תצא שלמה.
-    const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    const fontsReady = document.fonts && document.fonts.load
+      ? Promise.all(['400 64px "Secular One"', '500 38px "Heebo"', '700 34px "Heebo"', '700 230px "Space Grotesk"']
+          .map((f) => document.fonts.load(f, 'אב 0'))).catch(() => null)
+      : Promise.resolve();
     Promise.all([fontsReady, loadShareLogo()]).then(([, logo]) => make(logo));
     return () => { cancelled = true; };
   }, [stage, result, stats]);
@@ -517,7 +536,7 @@ export default function DiagnosticPage() {
     try {
       const { error } = await supabase.from('leads').insert({
         name: form.name.trim(),
-        phone: form.phone.trim(),
+        phone: normalizePhone(form.phone),
         business: form.business.trim() || null,
         message,
         source: 'diagnostic',
