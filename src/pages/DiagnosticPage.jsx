@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import Cursor from '../components/Cursor';
+import PageNav from '../components/PageNav';
+import Footer from '../components/Footer';
+import { nd } from '../content/heroCopy';
 import { CATS, SEG_LABEL, Q } from '../lib/auditQuestions';
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -11,28 +13,28 @@ import { CATS, SEG_LABEL, Q } from '../lib/auditQuestions';
 
 
 const SEG_LINE = {
-  time:  'אתה משקיע בעיקר זמן - אז כל דליפה כאן היא שעות מהחיים שלך, לא רק כסף. ',
-  both:  'אתה משקיע גם זמן וגם כסף - יש כאן כמה מקומות למקד. ',
-  money: 'אתה משקיע בעיקר כסף - הדליפות כאן שורפות תקציב בשקט. ',
-  none:  'עדיין לא השקעת הרבה בשיווק - וזו בדיוק ההזדמנות: לבנות נכון מההתחלה, בלי הרגלים לתקן אחר כך. ',
+  time:  'אתה משקיע בעיקר זמן - אז כל דליפה כאן היא שעות מהחיים שלך, לא רק כסף',
+  both:  'אתה משקיע גם זמן וגם כסף - יש כאן כמה מקומות למקד',
+  money: 'אתה משקיע בעיקר כסף - הדליפות כאן שורפות תקציב בשקט',
+  none:  'עדיין לא השקעת הרבה בשיווק - וזו בדיוק ההזדמנות: לבנות נכון מההתחלה, בלי הרגלים לתקן אחר כך',
 };
 
 // גרסה למקרה שאין דליפות בכלל - בלי אזכור של בעיות שלא קיימות.
 const SEG_LINE_CLEAN = {
-  time:  'אתה משקיע בעיקר זמן - והוא חוזר אליך טוב. ',
-  both:  'אתה משקיע גם זמן וגם כסף - ורואים שזה מנוהל נכון. ',
-  money: 'אתה משקיע בעיקר כסף - והוא עובד בשבילך. ',
-  none:  'עדיין כמעט לא השקעת בשיווק, ובכל זאת הבסיס שלך מסודר. ',
+  time:  'אתה משקיע בעיקר זמן - והוא חוזר אליך טוב',
+  both:  'אתה משקיע גם זמן וגם כסף - ורואים שזה מנוהל נכון',
+  money: 'אתה משקיע בעיקר כסף - והוא עובד בשבילך',
+  none:  'עדיין כמעט לא השקעת בשיווק, ובכל זאת הבסיס שלך מסודר',
 };
 
 // חוזקה לכל תחום שקיבל ציון גבוה - כדי לפתוח את התוצאה בחיובי, במה שכבר עובד.
 // מוצג רק כשהתחום באמת חזק, אז הניסוח נשאר כן.
 const CAT_WIN = {
-  offer:    { t: 'ההצעה שלך חדה', b: 'אתה יודע למה בוחרים בך ולמי אתה מתאים. זה הבסיס שכל השיווק נשען עליו, ואצלך הוא מסודר.' },
-  funnel:   { t: 'המסע ללקוח ברור', b: 'מי שמתעניין יודע מה הצעד הבא ואתה לא מאבד אותו בדרך. ככה תנועה הופכת למכירות.' },
-  measure:  { t: 'אתה יודע מה עובד', b: 'אתה מנווט על נתונים ולא על תחושה, ולכן כל שקל וכל שעה הולכים למקום הנכון.' },
-  presence: { t: 'הנוכחות שלך יציבה', b: 'אתה שם באופן עקבי, והקהל לא שוכח אותך בין מגע למגע. עקביות בונה אמון שמבשיל למכירות.' },
-  retain:   { t: 'לקוחות חוזרים אליך', b: 'יש לך מנוע של לקוחות חוזרים והפניות, הערוץ הזול והחם ביותר. זה משאיר לך יותר רווח על כל לקוח.' },
+  offer:    { t: 'ההצעה שלך חדה', b: 'אתה יודע למה בוחרים בך ולמי אתה מתאים, וזה הבסיס שכל השיווק נשען עליו, ואצלך הוא מסודר' },
+  funnel:   { t: 'המסע ללקוח ברור', b: 'מי שמתעניין יודע מה הצעד הבא ואתה לא מאבד אותו בדרך, ככה תנועה הופכת למכירות' },
+  measure:  { t: 'אתה יודע מה עובד', b: 'אתה מנווט על נתונים ולא על תחושה, ולכן כל שקל וכל שעה הולכים למקום הנכון' },
+  presence: { t: 'הנוכחות שלך יציבה', b: 'אתה שם באופן עקבי, והקהל לא שוכח אותך בין מגע למגע, ועקביות בונה אמון שמבשיל למכירות' },
+  retain:   { t: 'לקוחות חוזרים אליך', b: 'יש לך מנוע של לקוחות חוזרים והפניות, הערוץ הזול והחם ביותר, וזה משאיר לך יותר רווח על כל לקוח' },
 };
 
 function computeResult(answers) {
@@ -76,27 +78,27 @@ function computeResult(answers) {
     const top = measuredCats[0];
     if (top.p >= 45) {
       // אין תחום "ירוק" - מציגים את החזק ביותר כחוזקה יחסית, בלי להגזים.
-      strengths = [{ cat: top.c, p: top.p, t: `הכי חזק אצלך: ${CATS[top.c]}`, b: 'זה התחום שבו אתה במצב הכי טוב יחסית. יש על מה לבנות, ומכאן מחזקים גם את השאר.' }];
+      strengths = [{ cat: top.c, p: top.p, t: `הכי חזק אצלך: ${CATS[top.c]}`, b: 'זה התחום שבו אתה במצב הכי טוב יחסית, יש על מה לבנות, ומכאן מחזקים גם את השאר' }];
     }
   }
   if (strengths.length === 0) {
-    strengths = [{ cat: null, p: null, t: 'עצם זה שעצרת לבדוק', b: 'רוב בעלי העסקים לא עוצרים לבדוק איפה השיווק דולף. שעשית את זה אומר שאתה מוכן לתקן, וזו נקודת הפתיחה של כל שיפור.' }];
+    strengths = [{ cat: null, p: null, t: 'עצם זה שעצרת לבדוק', b: 'רוב בעלי העסקים לא עוצרים לבדוק איפה השיווק דולף, ושעשית את זה אומר שאתה מוכן לתקן, וזו נקודת הפתיחה של כל שיפור' }];
   }
 
   // ללא דליפות (כל התשובות חזקות) — ניסוח נפרד, אחרת מדברים על דליפות שלא קיימות.
   let v, vs, prefix;
   if (leaks.length === 0) {
-    v = 'השיווק שלך על בסיס חזק 💪';
-    vs = 'יש יסודות חזקים באמת. מכאן זה כבר ליטוש ודיוק, לא תיקון.';
+    v = 'השיווק שלך על בסיס חזק';
+    vs = 'יש יסודות חזקים באמת, ומכאן זה כבר ליטוש ודיוק, לא תיקון';
     prefix = seg && SEG_LINE_CLEAN[seg] ? SEG_LINE_CLEAN[seg] : '';
   } else {
-    if (pct >= 70) { v = 'השיווק שלך על בסיס בריא 💪'; vs = 'יש יסודות טובים. הדליפות שנשארו הן דיוקים ששווים הרבה.'; }
-    else if (pct >= 45) { v = 'יש פוטנציאל שנשפך בדרך ⚠️'; vs = 'הבסיס קיים אבל דולף בכמה נקודות קריטיות. אלה בדיוק הדברים שאפשר לתקן מהר.'; }
-    else { v = 'הרבה מההשקעה שלך דולפת בשקט 🩹'; vs = 'הבשורה הטובה: כשהבסיס חלש, כל תיקון קטן מזיז הרבה. יש כאן הזדמנות ענקית.'; }
+    if (pct >= 70) { v = 'השיווק שלך על בסיס בריא'; vs = 'יש יסודות טובים, והדליפות שנשארו הן דיוקים ששווים הרבה'; }
+    else if (pct >= 45) { v = 'יש פוטנציאל שנשפך בדרך'; vs = 'הבסיס קיים אבל דולף בכמה נקודות קריטיות, ואלה בדיוק הדברים שאפשר לתקן מהר'; }
+    else { v = 'הרבה מההשקעה שלך דולפת בשקט'; vs = 'הבשורה הטובה: כשהבסיס חלש, כל תיקון קטן מזיז הרבה, ויש כאן הזדמנות ענקית'; }
     prefix = seg && SEG_LINE[seg] ? SEG_LINE[seg] : '';
   }
 
-  return { seg, pct, catPcts, leaks, moreLeaks, strengths, skipped, verdict: v, verdictSub: prefix + vs };
+  return { seg, pct, catPcts, leaks, moreLeaks, strengths, skipped, verdict: v, verdictPre: prefix, verdictSub: vs };
 }
 
 /* ── תמונת תוצאה לשיתוף (1080×1527, A4 פורטרט) ──
@@ -198,7 +200,7 @@ function drawShareImage(result, logo, stats) {
     x.fillStyle = 'rgba(15,154,91,.12)';
     roundRectPath(x, cx - pillW / 2, pillY, pillW, pillH, pillH / 2); x.fill();
     x.fillStyle = GREEN; x.font = '700 34px "Secular One"';
-    x.fillText('🎯 מעל הממוצע', cx, pillY + pillH / 2 + 2);
+    x.fillText('מעל הממוצע', cx, pillY + pillH / 2 + 2);
     y = 900; // מפנה מקום לתג בין הטבעת לוורדיקט
   }
 
@@ -209,7 +211,7 @@ function drawShareImage(result, logo, stats) {
   // מה שכבר עובד - מוביל בחיובי
   y += 42;
   x.fillStyle = GREEN; x.font = '700 38px "Secular One"';
-  x.fillText('מה שכבר עובד לי 💪', W / 2, y); y += 58;
+  x.fillText('מה שכבר עובד לי', W / 2, y); y += 58;
   x.fillStyle = INK; x.font = '600 42px "Secular One"';
   (result.strengths || []).slice(0, 2).forEach((s) => {
     y += wrapCanvasText(x, '✓ ' + s.t, W / 2, y, W - 150, 52) + 14;
@@ -224,7 +226,7 @@ function drawShareImage(result, logo, stats) {
     wrapCanvasText(x, result.leaks[0].fb.t, W / 2, y, W - 150, 50);
   } else {
     x.fillStyle = GREEN; x.font = '600 40px "Secular One"';
-    wrapCanvasText(x, 'אין דליפות גדולות - הבסיס שלך חזק 🎯', W / 2, y, W - 150, 50);
+    wrapCanvasText(x, 'אין דליפות גדולות - הבסיס שלך חזק', W / 2, y, W - 150, 50);
   }
 
   // פוטר CTA
@@ -234,6 +236,44 @@ function drawShareImage(result, logo, stats) {
   x.fillText('shiftup.marketing', W / 2, H - 44);
 
   return c;
+}
+
+/* תצוגה מקדימה של התוצאה בפתיחה (AD דפים 1, #4): אותו כרטיס ציון ואותם פסים, עם ציון לדוגמה.
+   רק דוגמה, מסומנת aria-hidden, ומוצגת מ-1024px ומעלה */
+const PREVIEW = { pct: 63, verdict: 'יש פוטנציאל שנשפך בדרך', cats: [78, 45, 30, 67, 52] };
+function IntroPreview() {
+  const C = 553;
+  return (
+    <aside className="dg-preview" aria-hidden="true">
+      <div className="dg-card dg-score">
+        <div className="dg-gauge-wrap">
+          <div className="dg-gauge">
+            <svg width="200" height="200" viewBox="0 0 200 200">
+              <circle cx="100" cy="100" r="88" fill="none" stroke="var(--dg-track)" strokeWidth="14" />
+              <circle cx="100" cy="100" r="88" fill="none" stroke="var(--dg-warn-ink)" strokeWidth="14" strokeLinecap="butt"
+                strokeDasharray={C} strokeDashoffset={C - (C * PREVIEW.pct) / 100}
+                style={{ transform: 'rotate(-90deg)', transformOrigin: '100px 100px' }} />
+            </svg>
+            <div className="dg-gauge-num"><b style={{ color: 'var(--dg-warn-ink)' }}>{PREVIEW.pct}</b><small>מתוך 100</small></div>
+          </div>
+        </div>
+        <div className="dg-verdict">{PREVIEW.verdict}</div>
+      </div>
+      <div className="dg-preview__bars">
+        <div className="dg-qcat">פירוט לפי תחום</div>
+        {Object.keys(CATS).map((c, i) => {
+          const p = PREVIEW.cats[i % PREVIEW.cats.length];
+          const fill = p >= 67 ? 'var(--dg-green)' : p >= 34 ? 'var(--dg-warn)' : 'var(--dg-danger)';
+          return (
+            <div className="dg-bar-row" key={c}>
+              <div className="dg-bar-top"><b>{CATS[c]}</b><span>{p}%</span></div>
+              <div className="dg-bar-track"><div className="dg-bar-fill" style={{ width: p + '%', background: fill }} /></div>
+            </div>
+          );
+        })}
+      </div>
+    </aside>
+  );
 }
 
 export default function DiagnosticPage() {
@@ -268,7 +308,7 @@ export default function DiagnosticPage() {
   const savedRef = useRef(false); // מונע שמירה כפולה של תוצאה אנונימית
 
   useEffect(() => {
-    document.title = 'אבחון שיווק ב-10 דקות | Shift Up';
+    document.title = 'אבחון שיווק ב-3 דקות | Shift Up';
     // תחילת שאלון - נמדד בשני הפיקסלים (מטא ViewContent + GA view_item), כדי ש-GA יראה גם הוא כמה התחילו
     if (typeof window.fbq === 'function') window.fbq('track', 'ViewContent', { content_name: 'Marketing Audit', content_category: 'lead_magnet' });
     if (typeof window.gtag === 'function') window.gtag('event', 'view_item', { item_id: 'marketing_audit', item_name: 'Marketing Audit' });
@@ -286,10 +326,22 @@ export default function DiagnosticPage() {
   const total = Q.length;
   const progress = Math.round((cur / total) * 100);
 
+  /* מעבר אוטומטי כ-300ms אחרי בחירה (AD דפים 1, #1): במובייל "המשך" יורד מתחת לקפל ולבאנר,
+     אז לא צריך אותו כדי להתקדם. "המשך" ו"חזור" נשארים בשביל מי שחוזר אחורה.
+     שאלה עם בחירה מרובה (q.multi, אין כרגע) לא עוברת לבד */
+  const advanceRef = useRef(null);
+  useEffect(() => () => clearTimeout(advanceRef.current), []);
   const pick = (i) => {
     const next = [...answers];
     next[cur] = i;
     setAnswers(next);
+    clearTimeout(advanceRef.current);
+    if (q.multi) return;
+    const at = cur;
+    advanceRef.current = setTimeout(() => {
+      if (at < total - 1) { setCur(at + 1); window.scrollTo(0, 0); }
+      else finish(next);
+    }, 300);
   };
 
   const goNext = () => {
@@ -297,7 +349,7 @@ export default function DiagnosticPage() {
     if (cur < total - 1) { setCur(cur + 1); window.scrollTo(0, 0); }
     else finish();
   };
-  const goPrev = () => { if (cur > 0) { setCur(cur - 1); window.scrollTo(0, 0); } };
+  const goPrev = () => { clearTimeout(advanceRef.current); if (cur > 0) { setCur(cur - 1); window.scrollTo(0, 0); } };
 
   // דילוג על שאלה שלא רלוונטית לעסק. לחיצה חוזרת מבטלת. בשאלה האחרונה — מסיים עם התשובות המעודכנות.
   const skip = () => {
@@ -410,12 +462,12 @@ export default function DiagnosticPage() {
     const avg = stats && typeof stats.avg === 'number' ? stats.avg : null;
     const aboveAvg = s != null && avg != null && s >= avg;
     if (aboveAvg) {
-      return `קיבלתי ${s}/100 באבחון השיווק של Shift Up, מעל הממוצע 🎯\n` +
-        `10 שאלות, 3 דקות, תוצאה מיידית. שווה לכל בעל עסק. בדוק איפה אתה:`;
+      return `קיבלתי ${s}/100 באבחון השיווק של Shift Up, מעל הממוצע\n` +
+        `10 שאלות, 3 דקות ותוצאה מיידית, שווה לכל בעל עסק, בדוק איפה אתה:`;
     }
     // מתחת לממוצע או בלי נתון: ממסגרים את האירוע, בלי להוביל עם ציון שנראה פחות טוב.
-    return `עשיתי אבחון שיווק לעסק שלי, גיליתי מה שכבר עובד לי וגם כמה דברים ששווה לתקן.\n` +
-      `10 שאלות, 3 דקות, תוצאה מיידית. שווה לכל בעל עסק. בדוק את שלך:`;
+    return `עשיתי אבחון שיווק לעסק שלי, גיליתי מה שכבר עובד לי וגם כמה דברים ששווה לתקן\n` +
+      `10 שאלות, 3 דקות ותוצאה מיידית, שווה לכל בעל עסק, בדוק את שלך:`;
   };
   const shareCaption = () => buildShareText() + '\n' + shareUrl();
 
@@ -484,36 +536,26 @@ export default function DiagnosticPage() {
   const CIRC = 553;
 
   return (
-    <div className="dg-root" dir="rtl">
-      <Cursor />
+    <div className="dg-root c-page" dir="rtl" data-stage={stage}>
       <style>{CSS}</style>
+      <PageNav back="חזרה לאתר" tag="אבחון שיווק" />
 
       <div className="dg-wrap">
-        <div className="dg-brand" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-          <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none', color: 'inherit' }}>
-            <img src="/logo-onlight.png" alt="Shift Up" style={{ height: 24, width: 'auto' }} />
-            <span>· אבחון שיווק</span>
-          </a>
-          <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#8b97a3', fontSize: '0.82rem', fontWeight: 600, textDecoration: 'none' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-            חזרה לאתר
-          </a>
-        </div>
-
         {/* ── INTRO ── */}
         {stage === 'intro' && (
-          <section>
+          <section className="dg-intro">
             <div className="dg-hero">
               <span className="dg-pill">בדיקה חינמית · 10 שאלות · 3 דקות</span>
               <h1>איפה השיווק שלך <em>דולף</em>?</h1>
-              <p className="dg-sub">לא משנה אם אתה משקיע בשיווק כסף או שעות של עבודה - רוב העסקים מבזבזים חלק גדול מההשקעה בלי לראות, ובכמה שאלות קצרות תקבל אבחון אישי: הציון שלך, האזורים החלשים, ו-3 הדברים לתקן קודם.</p>
+              <p className="dg-sub">{nd('לא משנה אם אתה משקיע בשיווק כסף או שעות של עבודה - רוב העסקים מבזבזים חלק גדול מההשקעה בלי לראות, ובכמה שאלות קצרות תקבל אבחון אישי: הציון שלך, האזורים החלשים, ו-3 הדברים לתקן קודם.')}</p>
               <div className="dg-card" style={{ textAlign: 'right', padding: '22px 24px' }}>
                 <div className="dg-benefit"><i>✓</i><span>מבוסס על שיטת האבחון של Shift Up</span></div>
                 <div className="dg-benefit"><i>✓</i><span>תוצאה מיידית, מותאמת לעסק שלך</span></div>
                 <div className="dg-benefit" style={{ marginBottom: 0 }}><i>✓</i><span>בלי הרצאות - רק מה לתקן קודם</span></div>
               </div>
-              <button className="dg-btn dg-btn-primary" onClick={start}>בוא נתחיל את האבחון →</button>
+              <button className="dg-btn dg-btn-primary" onClick={start}>בוא נתחיל את האבחון ←</button>
             </div>
+            <IntroPreview />
           </section>
         )}
 
@@ -545,9 +587,9 @@ export default function DiagnosticPage() {
                 </button>
               )}
               <div className="dg-nav-row">
-                <button className="dg-btn dg-btn-ghost" style={{ visibility: cur === 0 ? 'hidden' : 'visible' }} onClick={goPrev}>← חזור</button>
+                <button className="dg-btn dg-btn-ghost" style={{ visibility: cur === 0 ? 'hidden' : 'visible' }} onClick={goPrev}>→ חזור</button>
                 <button className="dg-btn dg-btn-primary" onClick={goNext} disabled={answers[cur] == null}>
-                  {cur === total - 1 ? 'קבל תוצאה →' : 'המשך →'}
+                  {cur === total - 1 ? 'קבל תוצאה ←' : 'המשך ←'}
                 </button>
               </div>
             </div>
@@ -557,12 +599,12 @@ export default function DiagnosticPage() {
         {/* ── RESULT ── */}
         {stage === 'result' && result && (
           <section>
-            <div className="dg-card">
+            <div className="dg-card dg-score">
               <div className="dg-gauge-wrap">
                 <div className="dg-gauge">
                   <svg width="200" height="200" viewBox="0 0 200 200">
-                    <circle cx="100" cy="100" r="88" fill="none" stroke="#131a22" strokeWidth="14" />
-                    <circle cx="100" cy="100" r="88" fill="none" stroke={gaugeColor} strokeWidth="14" strokeLinecap="round"
+                    <circle cx="100" cy="100" r="88" fill="none" stroke="var(--dg-track)" strokeWidth="14" />
+                    <circle cx="100" cy="100" r="88" fill="none" stroke={gaugeColor} strokeWidth="14" strokeLinecap="butt"
                       strokeDasharray={CIRC} strokeDashoffset={anim ? CIRC - (CIRC * result.pct) / 100 : CIRC}
                       style={{ transition: 'stroke-dashoffset 1.2s ease', transform: 'rotate(-90deg)', transformOrigin: '100px 100px' }} />
                   </svg>
@@ -570,10 +612,11 @@ export default function DiagnosticPage() {
                 </div>
               </div>
               <div className="dg-verdict">{result.verdict}</div>
-              <div className="dg-verdict-sub">{result.verdictSub}</div>
+              {result.verdictPre && <div className="dg-verdict-sub">{nd(result.verdictPre)}</div>}
+              <div className="dg-verdict-sub">{nd(result.verdictSub)}</div>
               {result.skipped > 0 && (
                 <div className="dg-verdict-sub" style={{ fontSize: '.82rem', opacity: .75, marginTop: 6 }}>
-                  דילגת על {result.skipped} {result.skipped === 1 ? 'שאלה שלא רלוונטית' : 'שאלות שלא רלוונטיות'} לעסק שלך. הציון והתחומים מחושבים רק על מה שענית.
+                  דילגת על {result.skipped} {result.skipped === 1 ? 'שאלה שלא רלוונטית' : 'שאלות שלא רלוונטיות'} לעסק שלך. {nd('הציון והתחומים מחושבים רק על מה שענית.')}
                 </div>
               )}
             </div>
@@ -582,26 +625,26 @@ export default function DiagnosticPage() {
                 כלום כאן, כדי לא להבליט מה שנראה פחות טוב. המידע מתעדכן בכל מילוי. */}
             {stats && typeof stats.avg === 'number' && result.pct >= stats.avg && (
               <div className="dg-card" style={{ textAlign: 'center', borderColor: 'var(--dg-green)' }}>
-                <div style={{ color: 'var(--dg-green-ink)', fontWeight: 800, fontSize: '1.1rem' }}>🎯 מעל הממוצע</div>
+                <div style={{ color: 'var(--dg-green-ink)', fontWeight: 800, fontSize: '1.1rem' }}>מעל הממוצע</div>
                 <p style={{ color: 'var(--dg-text-dim)', fontSize: '.92rem', marginTop: 6 }}>
                   {typeof stats.better_than === 'number' && stats.better_than > 0
-                    ? `התוצאה שלך גבוהה מ-${stats.better_than}% מבעלי העסקים שעשו את האבחון. אתה בחצי החזק.`
-                    : 'התוצאה שלך מעל הציון הממוצע של בעלי העסקים שעשו את האבחון.'}
+                    ? nd(`התוצאה שלך גבוהה מ-${stats.better_than}% מבעלי העסקים שעשו את האבחון. אתה בחצי החזק.`)
+                    : nd('התוצאה שלך מעל הציון הממוצע של בעלי העסקים שעשו את האבחון.')}
                 </p>
               </div>
             )}
 
             {/* רמז שיתוף קומפקטי בשיא הרגש — הכרטיס המלא נשאר למטה, אחרי הטופס */}
             <div className="dg-share-mini">
-              <span>מכיר עוד בעל עסק שזה יעזור לו? שלח לו 👇</span>
-              <button className="dg-btn dg-share-wa" onClick={miniShare}>{canNativeShare ? '📲 שתף' : '📸 תמונה לשיתוף'}</button>
+              <span>מכיר עוד בעל עסק שזה יעזור לו? שלח לו</span>
+              <button className="dg-btn dg-share-wa" onClick={miniShare}>{canNativeShare ? 'שתף' : 'תמונה לשיתוף'}</button>
             </div>
 
             {/* מובילים בחיובי — מה שכבר עובד — לפני מה שצריך תיקון */}
             {result.strengths && result.strengths.length > 0 && (
               <div className="dg-card">
                 <div className="dg-qcat" style={{ marginBottom: 6, color: 'var(--dg-green-ink)' }}>
-                  {result.strengths.length === 1 ? 'מה שכבר עובד לך 💪' : `מה שכבר עובד לך 💪 (${result.strengths.length})`}
+                  {result.strengths.length === 1 ? 'מה שכבר עובד לך' : `מה שכבר עובד לך (${result.strengths.length})`}
                 </div>
                 <p style={{ color: 'var(--dg-text-dim)', fontSize: '.9rem', marginBottom: 18 }}>
                   לפני מה שכדאי לחדד, זה מה שכבר חזק אצלך:
@@ -609,7 +652,7 @@ export default function DiagnosticPage() {
                 {result.strengths.map((s, i) => (
                   <div className="dg-win" key={s.cat || i}>
                     <span className="dg-win-i">✓</span>
-                    <div><h4>{s.t}</h4><p>{s.b}</p></div>
+                    <div><h4>{s.t}</h4><p>{nd(s.b)}</p></div>
                   </div>
                 ))}
               </div>
@@ -644,22 +687,22 @@ export default function DiagnosticPage() {
                 {result.leaks.map((w, i) => (
                   <div className="dg-leak" key={w.qi}>
                     <span className="dg-leak-n">{i + 1}</span>
-                    <div><h4>{w.fb.t}</h4><p>{w.fb.b}</p></div>
+                    <div><h4>{w.fb.t}</h4><p>{nd(w.fb.b)}</p></div>
                   </div>
                 ))}
               </div>
             ) : (
               <div className="dg-card" style={{ textAlign: 'center' }}>
-                <div className="dg-qcat" style={{ marginBottom: 8, color: 'var(--dg-green-ink)' }}>אין דליפות גדולות 🎯</div>
-                <p style={{ color: 'var(--dg-text-dim)' }}>כל התחומים שלך במצב טוב, וזה נדיר. סימן שהבסיס חזק. אם נדבר, זה יהיה על דיוק ואופטימיזציה, לא כיבוי שריפות.</p>
+                <div className="dg-qcat" style={{ marginBottom: 8, color: 'var(--dg-green-ink)' }}>אין דליפות גדולות</div>
+                <p style={{ color: 'var(--dg-text-dim)' }}>{'כל התחומים שלך במצב טוב, וזה נדיר, סימן שהבסיס חזק, ואם נדבר זה יהיה על דיוק ואופטימיזציה, לא על כיבוי שריפות'}</p>
               </div>
             )}
 
             {/* lead capture — value already given above; form is soft/optional */}
             {status !== 'done' ? (
               <div className="dg-card dg-lead">
-                <h2>קח את התוצאה ורוץ. <em>ואם בא לך</em> -</h2>
-                <p className="dg-lead-p">התוצאה שלמעלה שלך, בחינם, בלי תנאי. ואם מתחשק לך שאעבור על זה איתך אישית - אשלח לך את 3 הצעדים המדויקים לתיקון מותאמים לעסק שלך + שיחת אבחון קצרה, בלי עלות. רק תשאיר איך לחזור אליך.</p>
+                <h2>קח את התוצאה ורוץ, <em>ואם בא <span className="c-nw">לך -</span></em></h2>
+                <p className="dg-lead-p">{'התוצאה שלמעלה שלך, בחינם, בלי תנאי, ואם מתחשק לך שאעבור על זה איתך אישית, אשלח לך את 3 הצעדים המדויקים לתיקון, מותאמים לעסק שלך, ונדבר בשיחת היכרות קצרה בטלפון, בלי עלות, רק תשאיר איך לחזור אליך'}</p>
                 <form onSubmit={submitLead} noValidate>
                   <div className="dg-field">
                     <label htmlFor="dg-name">שם מלא</label>
@@ -692,39 +735,39 @@ export default function DiagnosticPage() {
                       </span>
                     </label>
                   </div>
-                  {touched && !nameValid && <p style={{ color: 'var(--dg-danger-ink)', fontSize: '.82rem', marginBottom: 8 }}>נא למלא שם.</p>}
-                  {touched && nameValid && !phoneValid && <p style={{ color: 'var(--dg-danger-ink)', fontSize: '.82rem', marginBottom: 8 }}>נא למלא מספר טלפון תקין.</p>}
-                  {touched && nameValid && phoneValid && !consent && <p style={{ color: 'var(--dg-danger-ink)', fontSize: '.82rem', marginBottom: 8 }}>יש לאשר את מדיניות הפרטיות כדי להמשיך.</p>}
+                  {touched && !nameValid && <p style={{ color: 'var(--dg-danger-ink)', fontSize: '.82rem', marginBottom: 8 }}>{nd('נא למלא שם.')}</p>}
+                  {touched && nameValid && !phoneValid && <p style={{ color: 'var(--dg-danger-ink)', fontSize: '.82rem', marginBottom: 8 }}>{nd('נא למלא מספר טלפון תקין.')}</p>}
+                  {touched && nameValid && phoneValid && !consent && <p style={{ color: 'var(--dg-danger-ink)', fontSize: '.82rem', marginBottom: 8 }}>{nd('יש לאשר את מדיניות הפרטיות כדי להמשיך.')}</p>}
                   <button type="submit" className="dg-btn dg-btn-primary" disabled={status === 'sending'}>
                     {status === 'sending' ? 'שולח…' : 'בוא נדבר - שלח לי את הצעדים ←'}
                   </button>
-                  <p className="dg-consent">אין חובה. משאירים פרטים רק אם רוצים שאחזור. בלי ספאם, אפשר להסיר בכל רגע.</p>
-                  <p className="dg-consent" style={{ marginTop: 6 }}>התוצאות נשמרות אנונימית לצורך סטטיסטיקה - כדי שאדע איפה עסקים נתקעים. בלי שם, בלי טלפון, בלי קשר אליך.</p>
+                  <p className="dg-consent">{'אין חובה, משאירים פרטים רק אם רוצים שאחזור, בלי ספאם, ואפשר להסיר בכל רגע'}</p>
+                  <p className="dg-consent" style={{ marginTop: 6 }}>{'התוצאות נשמרות אנונימית לצורך סטטיסטיקה, כדי שאדע איפה עסקים נתקעים, בלי שם, בלי טלפון ובלי קשר אליך'}</p>
                 </form>
                 <div className="dg-trust">
                   <b style={{ color: 'var(--dg-text)' }}>מי עומד מאחורי זה?</b><br />
-                  Shift Up - אסטרטגיית שיווק מבוססת-מחקר לעסקים שמוכנים להשקיע בשיווק. מבוסס מחקר · הבטחת ביצוע · בגובה העיניים.
+                  {'Shift Up, שמואל מוניץ, אסטרטג שיווק: אחרי פגישת עומק אני כותב לך תוכנית ברורה, ועליה אני מקים לך את הקמפיין · תוכנית לפני תקציב · הבטחת ביצוע · בגובה העיניים'}
                 </div>
               </div>
             ) : (
               <div className="dg-card dg-thanks">
                 <div className="dg-check">✓</div>
-                <h2>קיבלנו! נדבר בקרוב 🚀</h2>
-                <p>אחזור אליך תוך 24 שעות עם 3 הצעדים המדויקים לתיקון + הצעה לשיחת אבחון קצרה. בינתיים - שמור את הציון שלך.</p>
+                <h2>קיבלתי! נדבר בקרוב</h2>
+                <p>{'אחזור אליך תוך 24 שעות עם 3 הצעדים המדויקים לתיקון ועם הצעה לשיחת היכרות קצרה, ובינתיים שמור את הציון שלך'}</p>
               </div>
             )}
 
             {/* שיתוף — תמונה ממותגת + כיתוב, לסטטוס וואטסאפ ושליחה לחברים */}
             <div className="dg-card" ref={shareCardRef}>
-              <div className="dg-qcat" style={{ marginBottom: 8 }}>📣 שתף את התוצאה</div>
+              <div className="dg-qcat" style={{ marginBottom: 8 }}>שתף את התוצאה</div>
               <p style={{ color: 'var(--dg-text-dim)', fontSize: '.92rem', marginBottom: 16 }}>מכיר עוד בעל עסק שמנחש בשיווק? שלח לו את זה, ייקח לו 3 דקות. או שתף בסטטוס. הטקסט והלינק מתלווים לתמונה:</p>
               {shareImg && <div className="dg-share-img"><img src={shareImg} alt="תמונת התוצאה לשיתוף" /></div>}
               <p style={{ fontSize: '.82rem', color: 'var(--dg-text-dim)', marginBottom: 8, fontWeight: 500 }}>הטקסט שילווה את התמונה:</p>
               <div className="dg-share-cap">{shareCaption()}</div>
               <div className="dg-share-btns">
-                {canNativeShare && <button className="dg-btn dg-share-wa" onClick={shareNative}>📲 שתף בוואטסאפ (תמונה + טקסט)</button>}
-                <button className="dg-btn dg-btn-ghost" onClick={downloadShareImg}>📸 הורד את התמונה</button>
-                <button className="dg-btn dg-btn-ghost" onClick={copyCaption}>{copied ? '✓ הועתק!' : '📋 העתק טקסט + לינק'}</button>
+                {canNativeShare && <button className="dg-btn dg-share-wa" onClick={shareNative}>שתף בוואטסאפ (תמונה + טקסט)</button>}
+                <button className="dg-btn dg-btn-ghost" onClick={downloadShareImg}>הורד את התמונה</button>
+                <button className="dg-btn dg-btn-ghost" onClick={copyCaption}>{copied ? '✓ הועתק!' : 'העתק טקסט + לינק'}</button>
               </div>
             </div>
 
@@ -732,112 +775,188 @@ export default function DiagnosticPage() {
           </section>
         )}
 
-        <div className="dg-footer">Shift Up · תחזור לנהל את העסק. את השיווק תשאיר לי.</div>
+        <div className="dg-footer">{nd('Shift Up · תחזור לנהל את העסק · את השיווק תשאיר לי')}</div>
       </div>
+      <Footer />
     </div>
   );
 }
 
 const CSS = `
+/* /audit בכיוון C (סבב 2, 25.11.2026): פתיחה כהה, שאלון ותוצאה על נייר בהיר (טקסט לקריאה),
+   פס הציון כהה, פאנלים לבנים חדים עם פס ירוק, בלי פינות מעוגלות, בלי צל ובלי הילות */
 .dg-root{
-  --dg-green:#36d98a; --dg-green-ink:#0f9a5b; --dg-green-dim:rgba(54,217,138,.16);
-  --dg-bg:#f4f6f9; --dg-card:#ffffff; --dg-card-2:#eef2f6;
-  --dg-purple:#6a4fb5; --dg-text:#0e1319; --dg-text-dim:#5a6674;
-  --dg-border:rgba(14,19,25,.10);
-  --dg-danger:#ff5c72; --dg-danger-ink:#d83a54; --dg-warn:#f0a12a; --dg-warn-ink:#b9741a;
-  position:relative; min-height:100vh; background:var(--dg-bg); color:var(--dg-text);
-  font-family:'Space Grotesk','Rubik',sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  --dg-green:#36D98A; --dg-green-ink:#0E8A4C; --dg-green-dim:rgba(14,138,76,.09);
+  --dg-bg:var(--c-paper); --dg-card:#ffffff; --dg-card-2:var(--c-paper);
+  --dg-purple:#6A4FB5; --dg-text:var(--c-ink); --dg-text-dim:var(--c-ink3);
+  --dg-border:#D6DCE1; --dg-track:#DCE1E5;
+  --dg-danger:#E5546A; --dg-danger-ink:#B3261E; --dg-warn:#E8A33A; --dg-warn-ink:#8A520C;
+  position:relative; min-height:100vh; background:var(--dg-bg); color:var(--c-ink2);
+  font-family:'Heebo',sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased;
 }
-.dg-root::before{
-  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
-  background:
-    radial-gradient(600px 400px at 80% -5%, rgba(54,217,138,.12), transparent 60%),
-    radial-gradient(500px 400px at 10% 20%, rgba(106,79,181,.10), transparent 60%);
-}
-.dg-wrap{position:relative; z-index:1; max-width:720px; margin:0 auto; padding:24px 20px 80px}
-.dg-brand{display:flex; align-items:center; gap:10px; justify-content:center; margin-bottom:40px; opacity:.95}
-.dg-brand .dg-dot{width:10px; height:10px; border-radius:50%; background:var(--dg-green); box-shadow:0 0 16px var(--dg-green)}
-.dg-brand b{font-weight:800; letter-spacing:.5px}
-.dg-brand span{color:var(--dg-text-dim); font-weight:400; font-size:.9rem}
-.dg-hero{text-align:center; margin-bottom:36px}
-.dg-pill{display:inline-block; font-size:.8rem; font-weight:600; color:var(--dg-green-ink); background:var(--dg-green-dim); border:1px solid rgba(54,217,138,.30); padding:6px 14px; border-radius:3px; margin-bottom:20px}
-.dg-root h1{font-size:clamp(1.9rem,6vw,2.8rem); font-weight:900; line-height:1.15; margin-bottom:16px; letter-spacing:-.5px}
-.dg-root h1 em{color:var(--dg-green-ink); font-style:normal}
-.dg-sub{color:var(--dg-text-dim); font-size:1.05rem; max-width:520px; margin:0 auto 28px}
-.dg-benefit{display:flex; align-items:center; gap:10px; justify-content:flex-start; margin-bottom:14px; color:var(--dg-text-dim); font-size:.92rem}
-.dg-benefit i{color:var(--dg-green-ink); font-style:normal; font-weight:700}
-.dg-btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:inherit; font-size:1.05rem; font-weight:700; cursor:pointer; padding:16px 32px; border-radius:4px; border:none; transition:.2s; width:100%}
-.dg-btn-primary{background:var(--dg-green); color:#04120a; box-shadow:0 8px 26px rgba(54,217,138,.35)}
-.dg-btn-primary:hover{transform:translateY(-2px); box-shadow:0 12px 34px rgba(54,217,138,.5)}
-.dg-btn-primary:disabled{opacity:.4; cursor:not-allowed; transform:none; box-shadow:none}
-.dg-btn-ghost{background:var(--dg-card); color:var(--dg-text); border:1px solid var(--dg-border)}
-.dg-btn-ghost:hover{border-color:var(--dg-green); color:var(--dg-green-ink)}
-.dg-card{background:var(--dg-card); border:1px solid var(--dg-border); border-radius:4px; padding:28px 24px; margin-bottom:20px; box-shadow:0 1px 3px rgba(14,19,25,.05), 0 8px 24px rgba(14,19,25,.04)}
-.dg-progress-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:.85rem; color:var(--dg-text-dim)}
-.dg-progress-bar{height:6px; background:var(--dg-card-2); border-radius:3px; overflow:hidden; margin-bottom:28px}
-.dg-progress-fill{height:100%; background:linear-gradient(90deg,var(--dg-purple),var(--dg-green)); transition:width .35s ease; border-radius:3px}
-.dg-qcat{font-size:.8rem; color:var(--dg-green-ink); font-weight:700; letter-spacing:.5px; margin-bottom:8px}
-.dg-qtext{font-size:1.35rem; font-weight:700; line-height:1.35; margin-bottom:24px}
-.dg-opts{display:flex; flex-direction:column; gap:12px}
-.dg-opt{text-align:right; font-family:inherit; font-size:1rem; color:var(--dg-text); background:var(--dg-card-2); border:1.5px solid var(--dg-border); border-radius:4px; padding:16px 18px; cursor:pointer; transition:.15s; display:flex; align-items:center; gap:14px}
-.dg-opt:hover{border-color:rgba(54,217,138,.5); background:#e6edf4}
-.dg-opt.sel{border-color:var(--dg-green); background:var(--dg-green-dim)}
-.dg-mark{width:22px; height:22px; border-radius:50%; border:2px solid var(--dg-text-dim); flex-shrink:0; display:grid; place-items:center; transition:.15s}
-.dg-opt.sel .dg-mark{border-color:var(--dg-green); background:var(--dg-green)}
-.dg-opt.sel .dg-mark::after{content:''; width:8px; height:8px; border-radius:50%; background:#04120a}
+.dg-wrap{position:relative; max-width:760px; margin:0 auto; padding:56px 20px 88px}
+
+/* ── פתיחה (כהה) ── */
+.dg-root[data-stage="intro"] .dg-wrap{max-width:1320px; padding:64px 64px 112px}
+.dg-hero{text-align:start; max-width:860px; display:flex; flex-direction:column; align-items:flex-start}
+.dg-hero > *{max-width:100%}
+/* הכפתור לפני הבולטים: במסך הראשון גם מעל באנר העוגיות */
+.dg-hero .dg-btn-primary{order:3; margin-bottom:36px}
+.dg-hero .dg-card{order:4}
+.dg-pill{display:inline-block; font-family:'Heebo',sans-serif; font-size:15px; font-weight:600; color:var(--c-night); background:var(--c-mint); padding:5px 14px; margin-bottom:24px}
+.dg-root h1{font-family:'Secular One',sans-serif; font-weight:400; font-size:clamp(44px,6vw,84px); line-height:1.02; color:var(--c-white); margin-bottom:22px; letter-spacing:-.01em}
+.dg-root h1 em{color:var(--c-green); font-style:normal}
+.dg-sub{color:var(--c-muted); font-size:20px; line-height:1.7; max-width:640px; margin:0 0 32px}
+.dg-hero .dg-card{background:transparent; border:0; border-top:1px solid var(--c-line); padding:0 !important; margin:0; width:100%; max-width:640px}
+.dg-benefit{display:flex; align-items:baseline; gap:14px; padding:14px 0; margin:0 !important; border-bottom:1px solid var(--c-line); color:var(--c-white); font-size:18px}
+.dg-benefit i{color:var(--c-green); font-style:normal; font-weight:700; flex-shrink:0}
+
+/* ── כפתורים ── */
+.dg-btn{display:inline-flex; align-items:center; justify-content:center; gap:10px; font-family:'Heebo',sans-serif; font-size:19px; font-weight:600; line-height:1.2; cursor:pointer; padding:18px 34px; border-radius:0; border:0; transition:background .2s, color .2s, border-color .2s; width:100%}
+.dg-btn-primary{background:var(--c-green); color:var(--c-ink)}
+.dg-btn-primary:hover{background:var(--c-mint)}
+.dg-btn-primary:disabled{opacity:.45; cursor:not-allowed}
+.dg-btn-primary:disabled:hover{background:var(--c-green)}
+.dg-hero .dg-btn-primary{width:auto}
+.dg-btn-ghost{background:transparent; color:var(--c-ink); border:1.5px solid var(--c-ink)}
+.dg-btn-ghost:hover{background:var(--c-ink); color:var(--c-white)}
+
+/* ── שאלון ── */
+.dg-card{background:transparent; border:0; border-top:2px solid var(--c-ink); padding:28px 0 8px; margin-bottom:32px}
+.dg-progress-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; font-family:'Heebo',sans-serif; font-size:15px; font-weight:500; color:var(--c-ink3)}
+.dg-progress-head span:last-child{font-family:'Space Grotesk','Heebo',sans-serif; font-weight:700; color:var(--c-glight)}
+.dg-progress-bar{height:4px; background:var(--dg-track); margin-bottom:32px}
+.dg-progress-fill{height:100%; background:var(--c-glight); transition:width .35s ease}
+.dg-progress-bar + .dg-card{background:#fff; border:1px solid var(--dg-border); border-inline-start:5px solid var(--c-green); padding:34px 36px 32px}
+.dg-qcat{font-family:'Heebo',sans-serif; font-size:15px; color:var(--c-glight); font-weight:600; margin-bottom:10px}
+.dg-qtext{font-family:'Secular One',sans-serif; font-size:30px; line-height:1.25; color:var(--c-ink); margin-bottom:26px; text-wrap:balance}
+.dg-opts{display:flex; flex-direction:column; gap:10px}
+.dg-opt{text-align:start; font-family:'Heebo',sans-serif; font-size:17px; line-height:1.5; color:var(--c-ink2); background:var(--c-paper); border:1.5px solid #C9D0D6; border-radius:0; padding:16px 18px; cursor:pointer; transition:border-color .15s, background .15s; display:flex; align-items:center; gap:14px}
+.dg-opt:hover{border-color:var(--c-ink3); background:#fff}
+.dg-opt.sel{border-color:var(--c-glight); background:var(--dg-green-dim); color:var(--c-ink)}
+.dg-mark{width:20px; height:20px; border:2px solid #8A949F; flex-shrink:0; display:grid; place-items:center; transition:.15s}
+.dg-opt.sel .dg-mark{border-color:var(--c-glight); background:var(--c-glight)}
+.dg-opt.sel .dg-mark::after{content:''; width:8px; height:8px; background:#fff}
 .dg-nav-row{display:flex; gap:12px; margin-top:28px}
 .dg-nav-row .dg-btn{width:auto; flex:1}
-.dg-gauge-wrap{text-align:center; margin-bottom:8px}
+.dg-skip{background:none; border:none; font-family:'Heebo',sans-serif; color:var(--c-ink3); font-size:15px; cursor:pointer; margin-top:18px; padding:6px 0; text-decoration:underline; text-underline-offset:4px; display:block; text-align:start}
+.dg-skip:hover{color:var(--c-glight)}
+.dg-skip.active{color:var(--c-glight); font-weight:600; text-decoration:none}
+
+/* ── תוצאה: פס הציון כהה ── */
+.dg-score{
+  --dg-green-ink:#36D98A; --dg-warn-ink:#F0A12A; --dg-danger-ink:#FF7A8A; --dg-track:#1E262F; --dg-text-dim:var(--c-muted);
+  background:var(--c-night); color:var(--c-white); border-top:0; border-inline-start:6px solid var(--c-green); padding:40px 36px 34px; margin-bottom:40px
+}
+.dg-gauge-wrap{text-align:center; margin-bottom:10px}
 .dg-gauge{position:relative; width:200px; height:200px; margin:0 auto 8px}
 .dg-gauge-num{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center}
-.dg-gauge-num b{font-size:3.2rem; font-weight:900; line-height:1}
-.dg-gauge-num small{color:var(--dg-text-dim); font-size:.85rem}
-.dg-verdict{text-align:center; font-size:1.25rem; font-weight:800; margin:4px 0 6px}
-.dg-verdict-sub{text-align:center; color:var(--dg-text-dim); margin-bottom:8px}
-.dg-bar-row{margin-bottom:16px}
-.dg-bar-top{display:flex; justify-content:space-between; font-size:.92rem; margin-bottom:6px}
-.dg-bar-top b{font-weight:600}
-.dg-bar-top span{font-weight:700}
-.dg-bar-track{height:8px; background:var(--dg-card-2); border-radius:3px; overflow:hidden}
-.dg-bar-fill{height:100%; border-radius:3px; transition:width .8s ease}
-.dg-leak{display:flex; gap:14px; align-items:flex-start; background:var(--dg-card-2); border:1px solid var(--dg-border); border-right:3px solid var(--dg-danger); border-radius:4px; padding:16px; margin-bottom:12px}
-.dg-leak-n{font-weight:900; color:var(--dg-danger-ink); font-size:1.1rem; flex-shrink:0}
-.dg-leak h4{font-size:1.02rem; margin-bottom:4px}
-.dg-leak p{color:var(--dg-text-dim); font-size:.92rem}
-.dg-win{display:flex; gap:14px; align-items:flex-start; background:var(--dg-card-2); border:1px solid var(--dg-border); border-right:3px solid var(--dg-green); border-radius:4px; padding:16px; margin-bottom:12px}
-.dg-win-i{font-weight:900; color:var(--dg-green-ink); font-size:1.1rem; flex-shrink:0; line-height:1.4}
-.dg-win h4{font-size:1.02rem; margin-bottom:4px}
-.dg-win p{color:var(--dg-text-dim); font-size:.92rem}
-.dg-lead{text-align:center}
-.dg-lead h2{font-size:1.5rem; font-weight:900; margin-bottom:8px}
-.dg-lead h2 em{color:var(--dg-green-ink); font-style:normal}
-.dg-lead-p{color:var(--dg-text-dim); margin-bottom:24px}
-.dg-field{margin-bottom:14px; text-align:right}
-.dg-field label{display:block; font-size:.85rem; color:var(--dg-text-dim); margin-bottom:6px; font-weight:500}
-.dg-field input{width:100%; font-family:inherit; font-size:1rem; color:var(--dg-text); background:var(--dg-card-2); border:1.5px solid var(--dg-border); border-radius:4px; padding:14px 16px; transition:.15s}
-.dg-field input:focus{outline:none; border-color:var(--dg-green)}
-.dg-field input::placeholder{color:#9aa5b1}
-.dg-consent{font-size:.78rem; color:var(--dg-text-dim); margin-top:14px}
-.dg-trust{margin-top:22px; padding-top:20px; border-top:1px solid var(--dg-border); color:var(--dg-text-dim); font-size:.85rem; line-height:1.7}
-.dg-thanks{text-align:center; padding:20px 0}
-.dg-thanks .dg-check{width:70px; height:70px; border-radius:50%; background:var(--dg-green-dim); border:2px solid var(--dg-green); display:grid; place-items:center; margin:0 auto 20px; font-size:2rem; color:var(--dg-green-ink)}
-.dg-thanks h2{font-size:1.4rem; font-weight:900; margin-bottom:8px}
-.dg-thanks p{color:var(--dg-text-dim)}
-.dg-skip{background:none; border:none; font-family:inherit; color:var(--dg-text-dim); font-size:.88rem; cursor:pointer; margin-top:18px; padding:6px 2px; text-decoration:underline; text-underline-offset:3px; transition:.15s; display:block}
-.dg-skip:hover{color:var(--dg-green-ink)}
-.dg-skip.active{color:var(--dg-green-ink); font-weight:600; text-decoration:none}
-.dg-share-img{margin-bottom:18px; border-radius:4px; overflow:hidden; border:1px solid var(--dg-border); background:var(--dg-card-2)}
+.dg-gauge-num b{font-family:'Space Grotesk','Heebo',sans-serif; font-size:64px; font-weight:700; line-height:1}
+.dg-gauge-num small{color:var(--c-muted); font-size:14px; margin-top:4px}
+.dg-verdict{text-align:center; font-family:'Secular One',sans-serif; font-size:30px; line-height:1.25; margin:6px 0 10px; color:var(--c-white)}
+.dg-verdict-sub{text-align:center; color:var(--c-muted); font-size:17px; line-height:1.65; max-width:560px; margin:0 auto 6px}
+.dg-score .dg-verdict-sub[style]{color:var(--c-dim)}
+
+.dg-bar-row{margin-bottom:18px}
+.dg-bar-top{display:flex; justify-content:space-between; align-items:baseline; font-size:16px; margin-bottom:7px; color:var(--c-ink)}
+.dg-bar-top b{font-weight:500}
+.dg-bar-top span{font-family:'Space Grotesk','Heebo',sans-serif; font-weight:700}
+.dg-bar-track{height:6px; background:var(--dg-track)}
+.dg-bar-fill{height:100%; transition:width .8s ease}
+
+.dg-leak, .dg-win{display:flex; gap:16px; align-items:flex-start; padding:18px 0; border-bottom:1px solid var(--dg-border); margin:0}
+.dg-leak:last-child, .dg-win:last-child{border-bottom:0}
+.dg-leak-n{font-family:'Space Grotesk','Heebo',sans-serif; font-weight:700; color:var(--dg-danger-ink); font-size:20px; flex-shrink:0; min-width:22px; line-height:1.3}
+.dg-win-i{font-weight:700; color:var(--c-glight); font-size:19px; flex-shrink:0; min-width:22px; line-height:1.35}
+.dg-leak h4, .dg-win h4{font-size:19px; font-weight:700; color:var(--c-ink); margin-bottom:4px; line-height:1.35}
+.dg-leak p, .dg-win p{color:var(--c-ink3); font-size:16px; line-height:1.65}
+
+/* ── הטופס: אותו פאנל לבן חד של הטופס בעמוד הראשי ── */
+.dg-lead{text-align:start; background:#fff; border:1px solid var(--dg-border); border-inline-start:5px solid var(--c-green); padding:34px 36px 30px}
+.dg-lead h2{font-family:'Secular One',sans-serif; font-weight:400; font-size:32px; line-height:1.2; color:var(--c-ink); margin-bottom:10px}
+.dg-lead h2 em{color:var(--c-glight); font-style:normal}
+.dg-lead-p{color:var(--c-ink3); font-size:17px; line-height:1.7; margin-bottom:26px}
+.dg-field{margin-bottom:16px; text-align:start}
+.dg-field label{display:block; font-family:'Heebo',sans-serif; font-size:15px; color:var(--c-ink2); margin-bottom:7px; font-weight:600}
+.dg-field input:not([type="checkbox"]){width:100%; font-family:'Heebo',sans-serif; font-size:17px; color:var(--c-ink); background:#fff; border:1.5px solid #B9C2CA; border-radius:0; padding:14px 16px; transition:border-color .2s, box-shadow .2s}
+.dg-field input:focus{outline:none; border-color:var(--c-glight); box-shadow:0 0 0 3px rgba(14,138,76,.18)}
+.dg-field input::placeholder{color:#737D87}
+.dg-field label[for="dg-consent"] span{color:var(--c-ink3); font-size:15px !important}
+.dg-consent{font-size:14px; line-height:1.6; color:var(--c-ink3); margin-top:14px}
+.dg-trust{margin-top:24px; padding-top:20px; border-top:1px solid var(--dg-border); color:var(--c-ink3); font-size:15px; line-height:1.7}
+.dg-thanks{text-align:start; background:var(--c-night); color:var(--c-white); border-top:0; border-inline-start:6px solid var(--c-green); padding:36px}
+.dg-thanks .dg-check{width:56px; height:56px; background:var(--c-green); display:grid; place-items:center; margin:0 0 20px; font-size:28px; font-weight:700; color:var(--c-ink)}
+.dg-thanks h2{font-family:'Secular One',sans-serif; font-weight:400; font-size:32px; margin-bottom:8px; color:var(--c-white)}
+.dg-thanks p{color:var(--c-muted); font-size:17px}
+
+/* ── שיתוף ── */
+.dg-share-img{margin-bottom:18px; border:1px solid var(--dg-border); background:#fff}
 .dg-share-img img{display:block; width:100%; max-height:520px; object-fit:contain; margin:0 auto}
-.dg-share-cap{background:var(--dg-card-2); border:1px solid var(--dg-border); border-radius:4px; padding:14px 16px; font-size:.9rem; color:var(--dg-text-dim); white-space:pre-wrap; line-height:1.6; margin-bottom:18px}
-.dg-share-mini{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; background:var(--dg-card); border:1px solid var(--dg-border); border-radius:4px; padding:14px 18px; margin-bottom:20px}
-.dg-share-mini span{font-weight:600; font-size:.95rem}
-.dg-share-mini .dg-btn{width:auto; padding:11px 20px; font-size:.95rem; white-space:nowrap; flex-shrink:0}
+.dg-share-cap{background:#fff; border:1px solid var(--dg-border); border-inline-start:4px solid var(--c-ink); padding:14px 16px; font-size:15px; color:var(--c-ink3); white-space:pre-wrap; line-height:1.65; margin-bottom:18px; overflow-wrap:anywhere}
+.dg-share-mini{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; border-top:1px solid var(--dg-border); border-bottom:1px solid var(--dg-border); padding:16px 0; margin-bottom:32px}
+.dg-share-mini span{font-weight:500; font-size:17px; color:var(--c-ink)}
+.dg-share-mini .dg-btn{width:auto; padding:11px 20px; font-size:16px; white-space:nowrap; flex-shrink:0}
 .dg-share-btns{display:flex; flex-direction:column; gap:10px}
-.dg-share-wa{background:#25d366; color:#04120a}
-.dg-share-wa:hover{transform:translateY(-2px); box-shadow:0 8px 24px rgba(37,211,102,.3)}
-.dg-footer{text-align:center; color:var(--dg-text-dim); font-size:.8rem; margin-top:40px; opacity:.7}
-.dg-btn:focus-visible,.dg-opt:focus-visible{outline:2px solid var(--dg-green); outline-offset:3px}
-.dg-field input:focus-visible{outline:2px solid var(--dg-green); outline-offset:1px}
+.dg-share-wa{background:#1E8A50; color:#fff}
+.dg-share-wa:hover{background:#18764A}
+.dg-footer{text-align:start; color:var(--c-ink3); font-size:15px; margin-top:48px; padding-top:18px; border-top:1px solid var(--dg-border)}
+.dg-root[data-stage="intro"] .dg-footer{color:var(--c-dim); border-top-color:var(--c-line); margin-top:72px}
+.dg-btn:focus-visible,.dg-opt:focus-visible,.dg-skip:focus-visible{outline:2px solid var(--c-glight); outline-offset:3px}
+.dg-root[data-stage="intro"] .dg-btn:focus-visible{outline-color:var(--c-mint)}
+.dg-field input:focus-visible{outline:2px solid var(--c-glight); outline-offset:1px}
+
+/* AD דפים 1 #4: בפתיחה, מ-1024px, תצוגה מקדימה של התוצאה בצד השמאלי */
+.dg-preview{display:none}
+@media (min-width:1024px){
+  .dg-intro{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:72px; align-items:start}
+  .dg-preview{display:block; background:var(--c-paper); border-inline-start:6px solid var(--c-green); margin-top:8px}
+  .dg-preview .dg-score{margin:0; border-inline-start:0; padding:28px 28px 22px}
+  .dg-preview .dg-gauge{width:150px; height:150px}
+  .dg-preview .dg-gauge svg{width:150px; height:150px}
+  .dg-preview .dg-gauge-num b{font-size:46px}
+  .dg-preview .dg-verdict{font-size:24px; margin-bottom:0}
+  .dg-preview__bars{padding:22px 28px 10px}
+  .dg-preview .dg-bar-row{margin-bottom:12px}
+  .dg-preview .dg-bar-top{font-size:15px}
+}
+
+/* AD דפים 1 #1: בחירה אחת = עיגול (לא תיבת סימון) */
+.dg-mark{border-radius:50%}
+.dg-opt.sel .dg-mark::after{border-radius:50%}
+
+@media (max-width:760px){
+  .dg-wrap{padding:36px 20px 64px}
+  /* השאלון במובייל: כל 4 התשובות במסך הראשון, גם מעל באנר העוגיות */
+  .dg-root[data-stage="quiz"] .dg-wrap{padding:14px 16px 48px}
+  .dg-progress-head{font-size:13px; margin-bottom:6px}
+  .dg-progress-bar{margin-bottom:12px}
+  .dg-progress-bar + .dg-card{padding:16px 14px 18px}
+  .dg-qcat{font-size:13px; margin-bottom:4px}
+  .dg-root .dg-qtext{font-size:21px; line-height:1.22; margin-bottom:12px}
+  .dg-opts{gap:7px}
+  .dg-root .dg-opt{font-size:15px; line-height:1.4; padding:10px 12px; gap:10px}
+  .dg-mark{width:18px; height:18px}
+  .dg-skip{margin-top:10px; font-size:14px}
+  .dg-nav-row{margin-top:14px}
+  .dg-nav-row .dg-btn{padding:13px 10px; font-size:16px; white-space:nowrap}
+  .dg-root[data-stage="intro"] .dg-wrap{padding:32px 20px 64px}
+  .dg-pill{margin-bottom:16px}
+  .dg-root h1{font-size:40px; margin-bottom:12px}
+  .dg-sub{font-size:16px; line-height:1.6; margin-bottom:20px}
+  .dg-hero .dg-btn-primary{margin-bottom:28px}
+  .dg-benefit{font-size:16px; padding:12px 0}
+  .dg-hero .dg-btn-primary{width:100%}
+  .dg-btn{font-size:17px; padding:16px 22px}
+  .dg-score{padding:30px 18px 26px}
+  .dg-verdict{font-size:25px}
+  .dg-verdict-sub{font-size:16px}
+  .dg-lead{padding:26px 18px 24px}
+  .dg-lead h2{font-size:27px}
+  .dg-lead-p{font-size:16px}
+  .dg-thanks{padding:28px 20px}
+  .dg-leak h4, .dg-win h4{font-size:17px}
+  .dg-leak p, .dg-win p{font-size:15px}
+}
 @media (prefers-reduced-motion: reduce){
   .dg-root *{animation-duration:.01ms!important; transition-duration:.01ms!important}
 }

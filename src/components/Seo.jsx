@@ -12,13 +12,13 @@ import { useLocation } from 'react-router-dom';
 
 const BASE = 'https://www.shiftup.marketing';
 
-const HE_TITLE = 'Shift Up | קמפיינים מבוססי-מחקר עם הבטחת ביצוע - שמואל מוניץ';
-const HE_DESC  = 'תחזור לנהל את העסק. את השיווק תשאיר לי. קמפיינים מבוססי-מחקר ב-Meta וב-Google עם הבטחת ביצוע על חודש הניהול הראשון. שיחת היכרות חינם.';
+const HE_TITLE = 'Shift Up | תוכנית שיווק כתובה, ועליה הקמפיין - שמואל מוניץ';
+const HE_DESC  = 'תדע בדיוק איך להביא לקוחות לעסק שלך: תוכנית שיווק כתובה תוך שבוע מפגישת העומק, וקמפיין ב-Meta וב-Google שאני מקים עליה, עם הבטחת ביצוע על חודש הניהול הראשון, ושיחת היכרות בטלפון בלי עלות';
 
 const ROUTES = {
   '/':            { canonical: '/',            title: HE_TITLE, description: HE_DESC, markdown: '/index.md' },
-  '/en':          { canonical: '/en',          title: 'Shift Up | Research-based marketing with a performance guarantee - Shmuel Munitz', description: 'Get back to running your business. Leave the marketing to me. Research-based Meta & Google campaigns with a performance guarantee on the first month. Free intro call.', markdown: '/en.md' },
-  '/testimonials':{ canonical: '/testimonials', title: 'עדויות לקוחות | Shift Up - שמואל מוניץ', description: 'עדויות ולקוחות של שמואל מוניץ (Shift Up). שיטה מבוססת-מחקר, הבטחת ביצוע, ותוצאות שמדברות בעצמן.' },
+  '/en':          { canonical: '/en',          title: 'Shift Up | A written marketing plan, then the campaign - Shmuel Munitz', description: 'Know exactly how to bring clients to your business: a written plan within a week of our deep-dive session, and a Meta and Google campaign I build on it, with a performance guarantee on the first month of management', markdown: '/en.md' },
+  '/testimonials':{ canonical: '/testimonials', title: 'עדויות לקוחות | Shift Up - שמואל מוניץ', description: 'עדויות של לקוחות Shift Up, מילה במילה: מה אמרו על העבודה עם שמואל מוניץ, מהתוכנית ועד הקמפיין' },
   '/freebies':    { canonical: '/freebies',    title: 'ספריית פרומפטים חינמית ל-AI | Shift Up', description: 'ספריית פרומפטים חינמית של Shift Up: כלי AI מוכנים לשיווק, תוכן ומכירות לבעלי עסקים. העתק, הדבק, תרוויח זמן.' },
   '/audit':       { canonical: '/audit',       title: 'אבחון שיווק חינם ב-3 דקות | Shift Up', description: '10 שאלות קצרות, ואתה מקבל אבחון אישי: הציון שלך, האזורים החלשים, ו-3 הדברים לתקן קודם, בחינם ובלי להשאיר פרטים.' },
   '/ig':          { canonical: '/ig',          noindex: true },

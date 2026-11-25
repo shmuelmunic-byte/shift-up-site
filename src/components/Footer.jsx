@@ -78,7 +78,7 @@ export default function Footer() {
     email: 'shmuelmunic@gmail.com',
     linkedin: 'https://www.linkedin.com/in/shmuel-munitz-marketing',
     facebook: 'https://www.facebook.com/share/1BZ8HrpBeo/',
-    instagram: 'https://www.instagram.com/shiftup.il?igsh=MTZod2E3NTk4dXI5Zg==',
+    instagram: 'https://www.instagram.com/shiftup.marketing',
   });
 
   useEffect(() => {
@@ -111,6 +111,7 @@ export default function Footer() {
   const goto = (id) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
+    else window.location.href = `/#${id}`;  // בדפים הפנימיים (סבב 2): הסקשן נמצא בעמוד הראשי
   };
 
   return (
@@ -145,7 +146,7 @@ export default function Footer() {
               style={{ height: 80, width: 'auto', objectFit: 'contain', display: 'block', marginBottom: 14 }}
             />
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.65, maxWidth: 240 }}>
-              אסטרטגיה חכמה + קריאייטיב נועז<br />שיווק שמביא תוצאות אמיתיות
+              אסטרטג שיווק<br />קודם תוכנית, אחר כך קמפיין
             </p>
           </div>
 

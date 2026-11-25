@@ -1,100 +1,42 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import PageNav from '../components/PageNav';
+import Footer from '../components/Footer';
+import { nd } from '../content/heroCopy';
+import Tied, { fin } from '../content/Tied';
+import { TESTIMONIALS } from '../components/SaarSections';
 
-// עדות אמיתית, מילה במילה מהודעה קולית של מנהל מכינת אורות (15.10.2026). שם המכינה עוד לא אושר לפרסום, לכן בלי שם.
-// אם יתווספו עדויות בטבלת testimonials ב-Supabase, הן יחליפו את זו.
-const FALLBACK = [
-  {
-    id: 'orot-2026-10',
-    quote: 'לעבוד עם שמואל זה ממש באווירה טובה, הכל בשקיפות, בכיף, הוא זמין ממש... ואתה רואה שהוא עושה את זה מכל הלב ומכל הנשמה',
-    name: 'מנהל המכינה',
-    company: 'מכינה קדם-צבאית',
-  },
-];
+// שני הכרטיסים כמו בעמוד הראשי (SaarSections.jsx), מילה במילה. השמות אושרו ועלו בבית.
+// אם יש עדויות בטבלת testimonials ב-Supabase, הן מחליפות את אלה.
+const FALLBACK = TESTIMONIALS.map((t) => ({ id: t.name, quote: t.quote, name: t.name, role: t.role, logo_url: t.logo }));
 
-function StarIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--brand-prime)" aria-hidden="true">
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-    </svg>
-  );
-}
+/* כל הטקסטים של הדף במקום אחד, כדי שיהיה קל להחליף כשהקופי החדש יגיע (סבב 2, 25.11.2026) */
+const COPY = {
+  back: 'חזרה לאתר',
+  label: 'עדויות',
+  title: 'מה אומרים',
+  titleAccent: 'הלקוחות',
+  lead: 'מה שלקוחות אמרו לי, מילה במילה',
+  empty: 'אני לוקח מעט לקוחות במקביל, בכוונה, והבאים יהיו הראשונים לספר.',
+  cta: 'העסק הבא יכול להיות שלך, וזה מתחיל בשיחת היכרות בטלפון, בלי עלות, ואם בחודש הניהול הראשון אין פניות, חודש ניהול נוסף בחינם',
+  ctaBtn: 'לשיחת היכרות חינם',
+};
 
+/* כיוון C: הודעה חדה עם זנב, כמו בעמוד הראשי (c-msg / c-bubble / c-who) */
 function TestimonialCard({ t }) {
   return (
-    <div style={{
-      background: 'var(--surface-1)',
-      border: '1px solid oklch(0.22 0.02 240)',
-      borderRadius: 4,
-      padding: 'clamp(24px, 3vw, 36px)',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 20,
-      position: 'relative',
-      overflow: 'hidden',
-      transition: 'border-color 0.3s, box-shadow 0.3s',
-    }}
-      onMouseEnter={e => {
-        e.currentTarget.style.borderColor = 'oklch(0.785 0.173 156.6 / 0.35)';
-        e.currentTarget.style.boxShadow = '0 0 30px oklch(0.785 0.173 156.6 / 0.08)';
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.borderColor = 'oklch(0.22 0.02 240)';
-        e.currentTarget.style.boxShadow = 'none';
-      }}
-    >
-      {/* top accent */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-        background: 'linear-gradient(to right, transparent, oklch(0.785 0.173 156.6 / 0.4), transparent)',
-      }} />
-
-      {/* Stars */}
-      <div style={{ display: 'flex', gap: 3 }}>
-        {[1,2,3,4,5].map(i => <StarIcon key={i} />)}
-      </div>
-
-      {/* Quote */}
-      <p style={{
-        fontSize: '0.96rem',
-        color: 'var(--text-secondary)',
-        lineHeight: 1.78,
-        flex: 1,
-        fontStyle: 'italic',
-      }}>
-        "{t.quote}"
-      </p>
-
-      {/* Logo + name row */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, borderTop: '1px solid oklch(0.22 0.02 240)', paddingTop: 16 }}>
-        {t.logo_url ? (
-          <img
-            src={t.logo_url}
-            alt={t.company || t.name}
-            style={{ height: 36, width: 'auto', maxWidth: 80, objectFit: 'contain', filter: 'brightness(0.9) saturate(0.8)', borderRadius: 6 }}
-          />
-        ) : (
-          <div style={{
-            width: 40, height: 40, borderRadius: '50%',
-            background: 'oklch(0.785 0.173 156.6 / 0.15)',
-            border: '1px solid oklch(0.785 0.173 156.6 / 0.25)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: 'var(--brand-prime)', fontWeight: 800, fontSize: '1rem',
-            flexShrink: 0,
-          }}>
-            {t.name[0]}
-          </div>
-        )}
+    <figure className="c-msg">
+      <blockquote className="c-bubble">"{t.quote}"</blockquote>
+      <figcaption className="c-who">
+        <span className="c-who__tile">
+          {t.logo_url ? <img src={t.logo_url} alt={t.company || t.name} loading="lazy" /> : <b aria-hidden="true">{t.name[0]}</b>}
+        </span>
         <div>
-          <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)' }}>{t.name}</div>
-          {(t.role || t.company) && (
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-              {[t.role, t.company].filter(Boolean).join(' · ')}
-            </div>
-          )}
+          <div className="c-who__nm">{t.name}</div>
+          {(t.role || t.company) && <div className="c-who__rl">{[t.role, t.company].filter(Boolean).join(' · ')}</div>}
         </div>
-      </div>
-    </div>
+      </figcaption>
+    </figure>
   );
 }
 
@@ -108,105 +50,37 @@ export default function TestimonialsPage() {
   }, []);
 
   return (
-    <div
-      dir="rtl"
-      style={{
-        minHeight: '100vh',
-        background: 'var(--bedrock)',
-        color: 'var(--text-primary)',
-        fontFamily: 'var(--font)',
-        padding: 'clamp(60px, 10vw, 100px) 28px clamp(80px, 12vw, 120px)',
-      }}
-    >
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: 64 }}>
-          <a
-            href="/"
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              color: 'var(--text-muted)', fontSize: '0.82rem', fontWeight: 600,
-              textDecoration: 'none', marginBottom: 40,
-              transition: 'color 0.2s',
-            }}
-            onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m15 18-6-6 6-6"/>
-            </svg>
-            חזרה לאתר
-          </a>
-
-          <div style={{ fontSize: '0.7rem', color: 'var(--brand-prime)', letterSpacing: '0.22em', textTransform: 'uppercase', fontWeight: 700, marginBottom: 16 }}>
-            Testimonials
+    <div dir="rtl" className="c-page">
+      <PageNav back={COPY.back} />
+      <main>
+        <section className="c-dark c-phead c-phead--sm" aria-labelledby="t-h">
+          <div className="c-wrap">
+            <div className="c-lbl">{COPY.label}</div>
+            <h1 id="t-h" className="c-phead__h1">{COPY.title} <span className="c-g">{COPY.titleAccent}</span></h1>
+            <p className="c-lead">{nd(COPY.lead)}</p>
           </div>
-          <h1 style={{
-            fontSize: 'clamp(2.4rem, 6vw, 4.5rem)',
-            fontWeight: 900,
-            letterSpacing: '-0.025em',
-            lineHeight: 1.05,
-            marginBottom: 20,
-            fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-          }}>
-            מה אומרים{' '}
-            <span style={{
-              background: 'linear-gradient(120deg, var(--brand-glow), var(--brand-prime) 60%, var(--accent-void))',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}>הלקוחות</span>
-          </h1>
-          <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', maxWidth: 500, margin: '0 auto', lineHeight: 1.7 }}>
-            שיטה מבוססת-מחקר, הבטחת ביצוע ותוצאות שמדברות, ופה הלקוחות מספרים במילים שלהם.
-          </p>
-        </div>
+        </section>
 
-        {/* Grid */}
-        {testimonials.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--text-muted)' }}>
-            <div style={{ fontSize: '3rem', marginBottom: 20 }}>⭐</div>
-            <p style={{ fontSize: '1.1rem' }}>אני לוקח מעט לקוחות במקביל, בכוונה, והבאים יהיו הראשונים לספר.</p>
+        <section className="c-sec c-light" aria-label="עדויות">
+          <div className="c-wrap">
+            {testimonials.length === 0 ? (
+              <p className="c-tpage__empty">{nd(COPY.empty)}</p>
+            ) : (
+              <div className="c-tg c-tg--page">
+                {testimonials.map((t) => <TestimonialCard key={t.id} t={t} />)}
+              </div>
+            )}
           </div>
-        ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-            gap: 20,
-          }}>
-            {testimonials.map(t => (
-              <TestimonialCard key={t.id} t={t} />
-            ))}
-          </div>
-        )}
+        </section>
 
-        {/* CTA */}
-        <div style={{ textAlign: 'center', marginTop: 80 }}>
-          <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: 20 }}>
-            רוצה להיות בין הראשונים? יש מקום קייס מייסדים אחד פנוי, ואם בחודש הניהול הראשון אין פניות, חודש ניהול נוסף בחינם.
-          </p>
-          <a
-            href="https://wa.me/972534673151"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 10,
-              padding: '14px 32px',
-              background: 'var(--brand-prime)',
-              color: 'oklch(0.08 0.01 240)',
-              borderRadius: 3,
-              fontWeight: 800,
-              fontSize: '1rem',
-              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-              textDecoration: 'none',
-              boxShadow: '0 0 40px oklch(0.785 0.173 156.6 / 0.35)',
-            }}
-          >
-            לשיחת היכרות חינם
-          </a>
-        </div>
-      </div>
+        <section className="c-sec c-dark c-dark--2 c-pcta">
+          <div className="c-wrap c-pcta__grid">
+            <p><Tied text={fin(nd(COPY.cta)).replace('ואם בחודש', 'ואם~בחודש')} /></p>
+            <a className="c-btn" href="https://wa.me/972534673151" target="_blank" rel="noopener noreferrer">{COPY.ctaBtn}</a>
+          </div>
+        </section>
+      </main>
+      <Footer />
     </div>
   );
 }

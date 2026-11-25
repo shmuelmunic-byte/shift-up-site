@@ -1,76 +1,46 @@
-import { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
-import Cursor from '../components/Cursor';
 import { supabase } from '../lib/supabase';
 import { useSiteLinks } from '../lib/useSiteLinks';
+import PageNav from '../components/PageNav';
+import Tied from '../content/Tied';
+import { nd } from '../content/heroCopy';
+import PlanSection from '../components/PlanSection';
+import { TESTIMONIALS } from '../components/SaarSections';
 
-gsap.registerPlugin(ScrollTrigger);
-gsap.defaults({ ease: 'expo.out', duration: 0.8 });
+/* ════════════════════════════════════════════════════════════════════
+   /en בכיוון C (סבב 2, 25.11.2026). LTR.
+   כותרות Space Grotesk 700 (Secular One לא נבנה ללטינית), גוף Heebo, מספרים Space Grotesk.
+   אותם רכיבים כמו בעמוד הראשי (c-design.css + c-pages.css): קצב כהה ובהיר, כפתורים מרובעים,
+   בלי glass, הילות, כרטיסים מעוגלים או אייקונים גנריים. הטקסטים לא השתנו (רק בלי נקודה בסוף שורה),
+   והם מרוכזים בקבועים כדי שיהיה קל להחליף
+   ════════════════════════════════════════════════════════════════════ */
 
 const WA_TEXT = encodeURIComponent("Hi Shmuel, I'd like to learn more about your services");
 const profileSrc = '/shmuel.jpg';
 const logoSrc    = '/logo.png';
 
-/* ─── Shared helpers ─────────────────────────────────────────────────── */
-
-function FluidBlob({ style }) {
-  return <div className="fluid-blob" style={style} />;
-}
-
-function MagneticWrap({ children, href, onClick, style }) {
-  const ref = useRef(null);
-  const onMove = (e) => {
-    const el = ref.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const dx = e.clientX - (r.left + r.width  / 2);
-    const dy = e.clientY - (r.top  + r.height / 2);
-    if (Math.sqrt(dx*dx + dy*dy) < 90)
-      gsap.to(el, { x: dx * 0.38, y: dy * 0.38, duration: 0.4, ease: 'power2.out' });
-  };
-  const onLeave = () =>
-    gsap.to(ref.current, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1,0.6)' });
-
-  const Tag  = href ? 'a' : 'button';
-  const xtra = href
-    ? { href, target: '_blank', rel: 'noopener noreferrer' }
-    : { onClick };
-
-  return (
-    <div ref={ref} className="magnetic-outer" onMouseMove={onMove} onMouseLeave={onLeave}>
-      <Tag style={style} {...xtra}>{children}</Tag>
-    </div>
-  );
-}
-
 const WA_ICON = (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
   </svg>
 );
 
+const goto = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+
 /* ─── Navbar ─────────────────────────────────────────────────────────── */
 
 const navLinks = [
+  { label: 'The Plan',    id: 'plan'        },
   { label: 'The Process', id: 'en-strategy' },
   { label: 'Why Me',      id: 'en-why'      },
-  { label: 'Work',        id: 'en-work'     },
   { label: 'About',       id: 'en-about'    },
   { label: 'FAQ',         id: 'en-faq'      },
 ];
 
 function EnNavbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen]         = useState(false);
+  const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState('');
-
-  useEffect(() => {
-    const h = () => setScrolled(window.scrollY > 30);
-    window.addEventListener('scroll', h, { passive: true });
-    return () => window.removeEventListener('scroll', h);
-  }, []);
 
   useEffect(() => {
     const ids = ['en-hero', ...navLinks.map(l => l.id), 'en-contact'];
@@ -87,187 +57,102 @@ function EnNavbar() {
     return () => obs.forEach(o => o?.disconnect());
   }, []);
 
-  const goto = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-    setOpen(false);
-  };
-
-  const navStyle = {
-    position: 'fixed', top: 0, width: '100%', zIndex: 900,
-    transition: 'background 0.5s, padding 0.4s',
-    padding: scrolled ? '10px 0' : '18px 0',
-    background: scrolled ? 'oklch(0.08 0.01 240 / 0.88)' : 'transparent',
-    backdropFilter: scrolled ? 'blur(20px) saturate(1.5)' : 'none',
-    WebkitBackdropFilter: scrolled ? 'blur(20px) saturate(1.5)' : 'none',
-    borderBottom: scrolled ? '1px solid oklch(0.18 0.025 240)' : '1px solid transparent',
-  };
+  const go = (id) => { goto(id); setOpen(false); };
 
   return (
-    <nav style={navStyle}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <button onClick={() => goto('en-hero')} aria-label="Shift Up" style={{ background: 'none', border: 'none', padding: 0 }}>
-          <img src={logoSrc} alt="Shift Up" style={{ height: 'clamp(64px, 14vw, 120px)', width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite' }} />
-        </button>
-
-        <div className="nav-desktop" style={{ alignItems: 'center', gap: 28 }}>
-          {navLinks.map(l => {
-            const isActive = activeId === l.id;
-            return (
-              <button key={l.id} onClick={() => goto(l.id)}
-                style={{ background: 'none', border: 'none', color: isActive ? 'var(--brand-prime)' : 'var(--text-secondary)', fontSize: '0.88rem', fontWeight: isActive ? 700 : 600, letterSpacing: '0.02em', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", transition: 'color 0.25s', position: 'relative', cursor: 'pointer', padding: '4px 0' }}
-                onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = 'var(--brand-prime)'; }}
-                onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = 'var(--text-secondary)'; }}
-              >
-                {l.label}
-                {isActive && <span style={{ position: 'absolute', bottom: -2, left: 0, right: 0, height: 2, borderRadius: 3, background: 'var(--brand-prime)' }} />}
-              </button>
-            );
-          })}
-
-          {/* Back to Hebrew */}
-          <a href="/" style={{ background: 'none', border: '1px solid var(--surface-2)', borderRadius: 3, padding: '8px 16px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.1em', textDecoration: 'none', transition: 'border-color 0.25s, color 0.25s' }}
-            onMouseEnter={e => { e.target.style.borderColor='var(--brand-prime)'; e.target.style.color='var(--brand-prime)'; }}
-            onMouseLeave={e => { e.target.style.borderColor='var(--surface-2)'; e.target.style.color='var(--text-muted)'; }}
-          >עב</a>
-
-          <button onClick={() => goto('en-contact')} style={{ background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', border: 'none', borderRadius: 3, padding: '10px 22px', fontWeight: 800, fontSize: '0.88rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", boxShadow: 'none', transition: 'background 0.25s, box-shadow 0.25s' }}
-            onMouseEnter={e => { e.target.style.background='var(--brand-glow)'; e.target.style.boxShadow='0 0 44px oklch(0.785 0.173 156.6 / 0.6)'; }}
-            onMouseLeave={e => { e.target.style.background='var(--brand-prime)'; e.target.style.boxShadow='0 0 28px oklch(0.785 0.173 156.6 / 0.35)'; }}
-          >Let's Talk</button>
-        </div>
-
-        <button className="nav-mobile-btn" onClick={() => setOpen(!open)} aria-label="Menu"
-          style={{ background: 'none', border: 'none', color: 'var(--text-primary)', padding: 4 }}>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+    <>
+      <PageNav
+        logoHref="#en-hero"
+        onLogo={(e) => { e.preventDefault(); go('en-hero'); }}
+        logoLabel="Shift Up, back to top"
+        navLabel="Main navigation"
+      >
+        <ul className="c-nav__links">
+          {navLinks.map(l => (
+            <li key={l.id}>
+              <button type="button" onClick={() => go(l.id)} aria-current={activeId === l.id ? 'true' : undefined}>{l.label}</button>
+            </li>
+          ))}
+          <li><a href="/" lang="he" dir="rtl">עב</a></li>
+        </ul>
+        <a className="c-nav__cta" href="#en-contact" onClick={(e) => { e.preventDefault(); go('en-contact'); }}>Let's Talk</a>
+        <button
+          type="button"
+          className="c-nav__burger"
+          onClick={() => setOpen(!open)}
+          aria-label={open ? 'Close menu' : 'Menu'}
+          aria-expanded={open}
+          aria-controls="c-en-menu"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="square" aria-hidden="true">
             {open ? <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></> : <><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></>}
           </svg>
         </button>
-      </div>
+      </PageNav>
 
       {open && (
-        <div className="mobile-menu-enter" style={{ position: 'absolute', top: '100%', width: '100%', background: 'oklch(0.11 0.015 240 / 0.97)',  borderBottom: '1px solid var(--surface-2)' }}>
-          <div style={{ padding: '20px 28px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div id="c-en-menu" className="c-nav__menu c-en-menu">
+          <div className="c-wrap">
             {navLinks.map(l => (
-              <button key={l.id} onClick={() => goto(l.id)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', fontSize: '1rem', fontWeight: 600, textAlign: 'left', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", padding: '4px 0' }}>{l.label}</button>
+              <button type="button" key={l.id} onClick={() => go(l.id)}>{l.label}</button>
             ))}
-            <a href="/" style={{ color: 'var(--text-muted)', fontSize: '0.88rem', fontWeight: 700 }}>עברית →</a>
-            <button onClick={() => { goto('en-contact'); setOpen(false); }} style={{ background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', border: 'none', borderRadius: 3, padding: '13px 0', fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", marginTop: 8 }}>Let's Talk</button>
+            <a href="/" lang="he" dir="rtl">עברית →</a>
           </div>
         </div>
       )}
-    </nav>
+    </>
   );
 }
 
-/* ─── Hero ───────────────────────────────────────────────────────────── */
+/* ─── Hero (5.1) ─────────────────────────────────────────────────────── */
 
-const EN_TRUST_CHIPS = [
-  'Research-based',
-  'Performance guarantee',
-  'Creative that sells',
-  'Eye-level execution partner',
-];
+const EN_HERO = {
+  eyebrow: 'Shmuel Munitz · Marketing strategist',
+  h1: 'Know exactly how to bring clients to your business, within a week of our deep-dive session, *without~burning budget on experiments*',
+  sub: 'After a deep-dive session I research your customers, your competitors and your market, and write you a clear plan that I build your campaign on',
+  bullets: [
+    'A written plan: what your customers say, who to advertise to, the message, three ad directions and the numbers',
+    'I set up and run your campaign on it, on Meta and Google',
+    'No inquiries in the first month of management? Another month of management is free',
+  ],
+  cta: 'Book a 30-minute intro call',
+  under: "On the call we'll figure out what your business needs, and you'll leave with a fixed price",
+  ctaWa: 'Got a question? Message me',
+  steps: ['Intro call', 'Deep-dive session', 'Plan', 'Campaign'],
+  badges: [['AVAILABILITY', 'A few clients at a time'], ['FIRST', 'A written plan']],
+};
 
-function EnHero({ onProcess, onForm }) {
-  const ref = useRef(null);
+function EnHero({ onForm }) {
   const links = useSiteLinks();
   const WA_LINK = links.whatsapp_url.split('?')[0] + '?text=' + WA_TEXT;
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.en-hero-h1',   { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1.0, ease: 'expo.out', delay: 0.1 });
-      gsap.fromTo('.en-hero-sub',  { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', delay: 0.4 });
-      gsap.fromTo('.en-hero-ctas', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 0.55 });
-      gsap.fromTo('.en-hero-img',  { y: 40, opacity: 0, scale: 0.96 }, { y: 0, opacity: 1, scale: 1, duration: 1.1, ease: 'expo.out', delay: 0.3 });
-      gsap.fromTo('.en-hero-quote',{ y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: 0.7 });
-    }, ref);
-    return () => ctx.revert();
-  }, []);
+  const h = EN_HERO;
 
   return (
-    <section id="en-hero" ref={ref} style={{ position: 'relative', paddingTop: 'clamp(100px, 18vw, 140px)', paddingBottom: 'clamp(60px, 10vw, 100px)', overflow: 'hidden', minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
-      {/* Background */}
-      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
-        <FluidBlob style={{ width: 700, height: 700, top: '-15%', left: '-8%', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.20), transparent 65%)', '--dur': '20s' }} />
-        <FluidBlob style={{ width: 550, height: 550, top: '25%', right: '-10%', background: 'radial-gradient(circle, oklch(0.65 0.22 145 / 0.13), transparent 70%)', '--dur': '26s', '--delay': '-6s' }} />
-        <FluidBlob style={{ width: 450, height: 450, bottom: '-5%', left: '28%', background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.15), transparent 70%)', '--dur': '30s', '--delay': '-11s' }} />
-        <FluidBlob style={{ width: 280, height: 280, top: '12%', left: '22%', background: 'radial-gradient(circle, oklch(0.876 0.148 155.7 / 0.09), transparent 70%)', '--dur': '16s', '--delay': '-4s' }} />
+    <section id="en-hero" className="c-hero c-en-hero">
+      <div className="c-hero__photo">
+        <img src={profileSrc} alt="Shmuel Munitz, marketing strategist" fetchPriority="high" />
       </div>
-      <div className="hero-layout" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 28px', position: 'relative', zIndex: 2, width: '100%' }}>
 
-        {/* Copy */}
-        <div style={{ textAlign: 'left' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
-            <span style={{ height: 1, width: 36, background: 'var(--brand-prime)', opacity: 0.6, display: 'block' }} />
-            <span style={{ color: 'var(--brand-prime)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Strategy First. Budget Second.</span>
-          </div>
-
-          <h1 className="en-hero-h1" style={{ fontSize: 'clamp(1.9rem, 7vw, 5.2rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 28, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", opacity: 0 }}>
-            <span style={{ color: 'var(--text-primary)' }}>Get back to running your business.</span>
-            <br />
-            <span style={{ color: 'var(--text-primary)' }}>Leave the </span>
-            <span className="text-gradient">marketing to me</span>
-            <span style={{ color: 'var(--brand-prime)' }}>.</span>
-          </h1>
-
-          <p className="en-hero-sub" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.18rem)', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 520, marginBottom: 8, opacity: 0 }}>
-            Research-based campaigns for businesses that already get marketing,{' '}
-            <strong style={{ color: 'var(--text-primary)' }}>with a performance guarantee on the first month</strong>.
-          </p>
-
-          {/* guarantee anchor */}
-          <p className="en-hero-sub" style={{ fontSize: '0.92rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: 14, opacity: 0 }}>
-            Performance guarantee: no inquiries in the first month, <span style={{ color: 'var(--brand-prime)' }}>the next month of management is on me</span>
-          </p>
-
-          <div className="en-hero-ctas hero-ctas" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 32, marginBottom: 32, opacity: 0 }}>
-            <MagneticWrap onClick={onForm} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 32px', background: 'var(--brand-prime)', color: 'oklch(0.08 0.01 240)', borderRadius: 3, fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", textDecoration: 'none', border: 'none', boxShadow: 'none', transition: 'background 0.25s, box-shadow 0.25s' }}>
-              Get a tailored proposal
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-            </MagneticWrap>
-            <MagneticWrap href={WA_LINK} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', background: 'oklch(0.14 0.02 240 / 0.7)', color: 'var(--text-primary)', borderRadius: 3, fontWeight: 600, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", border: '1px solid oklch(0.25 0.02 240)',  transition: 'background 0.25s, border-color 0.25s' }}>
-              {WA_ICON} Got a question? Message me
-            </MagneticWrap>
-          </div>
-
-          {/* trust chips */}
-          <div className="en-hero-quote" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, opacity: 0 }}>
-            {EN_TRUST_CHIPS.map((chip, i) => (
-              <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '6px 13px', borderRadius: 3, background: 'oklch(0.14 0.02 240 / 0.6)', border: '1px solid oklch(0.22 0.02 240)', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', flexShrink: 0 }} />
-                {chip}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Image */}
-        <div className="en-hero-img" style={{ display: 'flex', justifyContent: 'center', opacity: 0 }}>
-          <div style={{ position: 'relative', width: '100%', maxWidth: 340 }}>
-            <div aria-hidden="true" style={{ position: 'absolute', inset: 0, transform: 'translate(14px, 14px)', background: 'oklch(0.62 0.19 292 / 0.16)', border: '1px solid oklch(0.62 0.19 292 / 0.4)', borderRadius: 4, zIndex: 0 }} />
-            <div style={{ position: 'relative', zIndex: 1, borderRadius: 4, overflow: 'hidden', border: '1px solid oklch(0.25 0.02 160)', aspectRatio: '4/5' }}>
-              <img src={profileSrc} alt="Shmuel Munitz" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.45), transparent 50%)' }} />
+      <div className="c-wrap">
+        <div className="c-hero__copy">
+          <div className="c-eyebrow c-rise">{h.eyebrow}</div>
+          <h1 className="c-hero__h1 c-rise"><Tied text={h.h1} /></h1>
+          <p className="c-hero__sub c-rise">{nd(h.sub)}</p>
+          <ul className="c-hero__bullets c-rise">
+            {h.bullets.map((b) => <li key={b}>{nd(b)}</li>)}
+          </ul>
+          <div className="c-hero__ctas c-rise">
+            <div className="c-hero__ctarow">
+              <button type="button" className="c-btn" onClick={onForm}>{h.cta}</button>
+              <a className="c-q" href={WA_LINK} target="_blank" rel="noopener noreferrer">{WA_ICON} {h.ctaWa}</a>
             </div>
-            {/* badge — bottom right */}
-            <div className="float-badge" style={{ position: 'absolute', bottom: -24, right: -16, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', boxShadow: 'none', flexShrink: 0, animation: 'pulse-ring 1.8s ease-out infinite' }} />
-              <div>
-                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>AVAILABILITY</div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>1 founding case-study spot</div>
-              </div>
-            </div>
-
-            {/* badge — top left */}
-            <div className="float-badge float-badge-alt" style={{ position: 'absolute', top: -20, left: -16, border: '1px solid oklch(0.785 0.173 156.6 / 0.25)', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-              </svg>
-              <div>
-                <div style={{ fontSize: '0.62rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 700 }}>SPECIALTY</div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 800 }}>AI + Marketing</div>
-              </div>
-            </div>
+            <p className="c-hero__under">{nd(h.under)}</p>
+          </div>
+          <ol className="c-tl c-rise" aria-label="How it works">
+            {h.steps.map((s, i) => <li key={s} className="c-tl__s"><i aria-hidden="true">{i + 1}</i>{s}</li>)}
+          </ol>
+          <div className="c-en-hero__badges c-rise">
+            {h.badges.map(([k, v]) => <div key={k} className="c-en-badge"><span>{k}</span><b>{v}</b></div>)}
           </div>
         </div>
       </div>
@@ -275,263 +160,309 @@ function EnHero({ onProcess, onForm }) {
   );
 }
 
-/* ─── isOnlineNow helper (used by TrustStrip) ────────────────────────── */
+/* ─── Trust (5.2) ────────────────────────────────────────────────────── */
 
 function isOnlineNow() {
   const h = parseInt(new Intl.DateTimeFormat('he-IL', { hour: 'numeric', hour12: false, timeZone: 'Asia/Jerusalem' }).format(new Date()), 10);
   return h >= 8 && h < 17;
 }
 
-/* ─── TrustStrip (section 2) ─────────────────────────────────────────── */
-
-const EN_PILLAR_ICONS = [
-  (<><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" /><circle cx="12" cy="12" r="0.6" fill="currentColor" stroke="none" /></>),
-  (<><circle cx="12" cy="8" r="3.5" /><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7" /></>),
-  (<><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4L3 21l1.1-4.1A8.4 8.4 0 1 1 21 11.5Z" /></>),
-];
-
-const EN_PILLARS = [
-  { title: 'Research-based', text: 'Not a single shekel goes into a campaign before research: audience, competitors, message. Decisions on data, not gut feeling.' },
-  { title: 'Performance guarantee', text: 'This isn\'t a "free first month". It\'s accountability: if the first month of management brings no inquiries, I manage the next month for free.' },
-  { title: 'Eye-level partner', text: "An execution partner, not a salesman. Free intro call, we'll check the fit with no pressure and no buzzwords." },
-];
-
-function EnPillar({ pillar, index }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    gsap.fromTo(el, { y: 28, opacity: 0 }, {
-      y: 0, opacity: 1, duration: 0.7, ease: 'expo.out', delay: index * 0.1,
-      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-    });
-  }, [index]);
-
-  return (
-    <div ref={ref} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, flex: '1 1 240px', minWidth: 0, opacity: 0, textAlign: 'left' }}>
-      <span style={{ flexShrink: 0, width: 44, height: 44, borderRadius: 3, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1px solid oklch(0.785 0.173 156.6 / 0.22)' }}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          {EN_PILLAR_ICONS[index] || EN_PILLAR_ICONS[0]}
-        </svg>
-      </span>
-      <div>
-        <div style={{ fontSize: '1.02rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 4 }}>{pillar.title}</div>
-        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{pillar.text}</p>
-      </div>
-    </div>
-  );
-}
+const EN_TRUST = {
+  title: 'Why trust me?',
+  accent: 'Because the risk is on me',
+  pillars: [
+    { title: 'A plan before budget', text: 'Before a single shekel goes into ads, you get a written plan: who we advertise to, what we say, and how we\'ll know it works' },
+    { title: 'Performance guarantee', text: "You pay for setup and management as usual, and if the first month of management brings no inquiries, I manage another month for free, and if there's still nothing, I tell you straight and we stop" },
+    { title: 'Eye-level', text: 'The person who writes your plan is the person who runs your campaign, and picks up when you call' },
+  ],
+};
 
 function EnTrustStrip() {
-  const headRef = useRef(null);
   const [online, setOnline] = useState(isOnlineNow);
-
   useEffect(() => {
     const id = setInterval(() => setOnline(isOnlineNow()), 60000);
     return () => clearInterval(id);
   }, []);
 
-  useEffect(() => {
-    const el = headRef.current;
-    if (!el) return;
-    gsap.fromTo(el, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
-  }, []);
-
   return (
-    <section style={{ padding: 'clamp(40px, 7vw, 72px) 28px', background: 'var(--surface-0)' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <div ref={headRef} style={{ textAlign: 'center', marginBottom: 'clamp(32px, 5vw, 48px)', opacity: 0 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: online ? 'oklch(0.785 0.173 156.6 / 0.1)' : 'oklch(0.14 0.02 240)', border: `1px solid ${online ? 'oklch(0.785 0.173 156.6 / 0.3)' : 'oklch(0.22 0.02 240)'}`, borderRadius: 3, padding: '5px 14px', marginBottom: 20, transition: 'all 0.4s ease' }}>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: online ? 'var(--brand-prime)' : 'oklch(0.4 0.01 240)', display: 'block', flexShrink: 0, boxShadow: online ? '0 0 6px var(--brand-prime)' : 'none', animation: online ? 'pulse-ring 2s ease-out infinite' : 'none' }} />
-            <span style={{ fontSize: '0.74rem', fontWeight: 700, color: online ? 'var(--brand-prime)' : 'var(--text-muted)', letterSpacing: '0.04em' }}>
-              {online ? 'Available now' : 'Usually replies within an hour'}
-            </span>
-          </div>
-          <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.4rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.2, color: 'var(--text-primary)' }}>
-            Why trust me? <span style={{ color: 'var(--brand-prime)' }}>Because the risk is on me.</span>
-          </h2>
+    <section className="c-sec c-dark c-dark--2 c-trust" aria-labelledby="en-trust-h">
+      <div className="c-wrap">
+        <div className="c-trust__head">
+          <h2 id="en-trust-h" className="c-h2">{EN_TRUST.title} <span className="c-g">{EN_TRUST.accent}</span></h2>
+          <p className={`c-live${online ? ' is-on' : ''}`}>
+            <span aria-hidden="true" />
+            {online ? 'Available now' : 'Usually replies within an hour'}
+          </p>
         </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'clamp(24px, 4vw, 40px)', justifyContent: 'center' }}>
-          {EN_PILLARS.map((p, i) => <EnPillar key={i} pillar={p} index={i} />)}
-        </div>
+        <ol className="c-pillars">
+          {EN_TRUST.pillars.map((p, i) => (
+            <li key={p.title}>
+              <span className="c-num" aria-hidden="true">0{i + 1}</span>
+              <h3>{p.title}</h3>
+              <p>{nd(p.text)}</p>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
 }
 
-/* ─── Pain (section 3) ───────────────────────────────────────────────── */
+/* ─── Pain (5.3) ─────────────────────────────────────────────────────── */
 
-const EN_PAINS = [
-  { text: 'Burning budget on paid ads, and the leads just never show up.' },
-  { text: "You're advertising, but not really sure which message works, or for whom." },
-  { text: 'Instead of running your business, you chase campaigns and posts.' },
-  { text: 'You got burned by an agency that promised the world, then handed you to an intern.' },
-];
-
-function EnPainCard({ text, index }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    gsap.fromTo(el, { y: 30, opacity: 0 }, {
-      y: 0, opacity: 1, duration: 0.7, ease: 'expo.out', delay: index * 0.08,
-      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-    });
-  }, [index]);
-
-  return (
-    <div ref={ref} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '20px 22px', borderRadius: 4, background: 'oklch(0.11 0.015 240 / 0.6)', border: '1px solid oklch(0.20 0.02 240)', textAlign: 'left', opacity: 0 }}>
-      <span style={{ flexShrink: 0, width: 30, height: 30, borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'oklch(0.18 0.025 240)', border: '1px solid oklch(0.30 0.02 240)', marginTop: 2 }}>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
-      </span>
-      <p style={{ fontSize: '1.02rem', color: 'var(--text-secondary)', fontWeight: 600, lineHeight: 1.55 }}>{text}</p>
-    </div>
-  );
-}
+const EN_PAIN = {
+  label: 'A moment of truth',
+  title: "You're advertising, and not really sure what brings you clients?",
+  items: [
+    "There are too many ways to advertise, and it's not clear where to start",
+    "You worked with a campaign manager, and what came out wasn't focused",
+    "You asked ChatGPT, and what you got didn't speak to you",
+    'Most of your clients come by word of mouth, and what comes, comes',
+  ],
+  bridge: 'Before the next ad, you need to know',
+  bridgeAccent: "who it's for and what it says",
+};
 
 function EnPain() {
-  const headRef = useRef(null);
-  const bridgeRef = useRef(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.en-pain-head', { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: { trigger: headRef.current, start: 'top 85%', once: true } });
-      gsap.fromTo('.en-pain-bridge', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: { trigger: bridgeRef.current, start: 'top 90%', once: true } });
-    });
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section style={{ padding: 'clamp(64px, 10vw, 110px) 28px', background: 'var(--bedrock)' }}>
-      <div style={{ maxWidth: 920, margin: '0 auto' }}>
-        <div ref={headRef} className="en-pain-head" style={{ textAlign: 'center', marginBottom: 'clamp(36px, 6vw, 56px)', opacity: 0 }}>
-          <span style={{ color: 'var(--text-muted)', fontSize: '0.74rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase' }}>A moment of truth</span>
-          <h2 style={{ fontSize: 'clamp(1.7rem, 5vw, 3rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.2, color: 'var(--text-primary)', marginTop: 14, maxWidth: 680, marginInline: 'auto' }}>
-            Tired of chasing your marketing, and seeing no results?
-          </h2>
+    <section className="c-sec c-dark c-pain" aria-labelledby="en-pain-h">
+      <div className="c-wrap">
+        <div className="c-lbl">{EN_PAIN.label}</div>
+        <h2 id="en-pain-h" className="c-h2 c-pain__h"><Tied text={EN_PAIN.title} /></h2>
+        <ul className="c-pain__list">
+          {EN_PAIN.items.map((t) => <li key={t}>{nd(t)}</li>)}
+        </ul>
+        <p className="c-pain__bridge">{EN_PAIN.bridge} <span className="c-g">{EN_PAIN.bridgeAccent}</span></p>
+      </div>
+    </section>
+  );
+}
+
+/* ─── The plan (5.4): אותו רכיב של הבית, עם קופי באנגלית ─────────────── */
+
+const EN_PLAN = {
+  label: 'The plan',
+  title: "What's in your plan",
+  titleAccent: 'chapter by chapter',
+  lead: 'A written, designed plan built on your business, and I walk you through it in a meeting',
+  items: [
+    { title: 'Your business today', text: 'Where you stand and where you want to get, in numbers' },
+    { title: 'What your customers say', text: 'Real quotes from your calls and WhatsApp chats with customers, and what keeps coming up' },
+    { title: 'Who your customer is', text: "What excites them, what scares them, and what they've already tried" },
+    { title: 'The market', text: "Who else is advertising, what everyone says, and where there's room" },
+    { title: 'The strategy', text: 'Who to advertise to, your one line and the message' },
+    { title: 'The ads', text: 'Three directions, and a sample ad for each' },
+    { title: "The customer's path", text: 'From the ad to the deal, and where people drop off' },
+    { title: 'The numbers', text: "What one client is worth to you, how much makes sense to invest, and how we'll know it works" },
+    { title: 'Bottom line', text: 'The first 90 days, and what we do tomorrow morning' },
+  ],
+  summary: "D&D Projects' plan, for example, came to about 90 pages, and their campaign went live on it",
+};
+
+/* ─── Process (5.5) ──────────────────────────────────────────────────── */
+
+const EN_PROC = {
+  label: 'The process',
+  title: 'Plan first, *campaign second*',
+  sub: 'You can stop after the plan and decide, and I only build a campaign on a plan',
+  steps: [
+    { n: '01', title: 'Intro call', text: 'Half an hour on the phone, at no cost: we figure out what your business needs, and you leave with a fixed price' },
+    { n: '02', title: 'Deep-dive session', text: "I ask and you tell me: how clients find you, what they say, what you've tried and what came of it" },
+    { n: '03', title: 'Written plan', text: 'I read your conversations with customers, research the market and the competitors, and present you a clear plan' },
+    { n: '04', title: 'Setup', text: 'On the plan I set up the campaign on Meta and Google: the ads, the form and the tracking, and I check myself that every inquiry reaches you' },
+    { n: '05', title: 'Management', text: 'I run it and report to you every week on how many inquiries came in and what I changed, with a performance guarantee on the first month' },
+  ],
+};
+
+function EnProcess() {
+  return (
+    <section id="en-strategy" className="c-sec c-dark c-proc" aria-labelledby="en-proc-h">
+      <div className="c-wrap">
+        <div className="c-proc__head">
+          <div className="c-lbl">{EN_PROC.label}</div>
+          <h2 id="en-proc-h" className="c-h2"><Tied text={EN_PROC.title} /></h2>
+          <p className="c-lead">{nd(EN_PROC.sub)}</p>
         </div>
-        <div className="grid-2x2">
-          {EN_PAINS.map((p, i) => <EnPainCard key={i} text={p.text} index={i} />)}
-        </div>
-        <div ref={bridgeRef} className="en-pain-bridge" style={{ textAlign: 'center', marginTop: 'clamp(40px, 6vw, 60px)', opacity: 0 }}>
-          <p style={{ fontSize: 'clamp(1.15rem, 3vw, 1.6rem)', fontWeight: 800, lineHeight: 1.5, color: 'var(--text-primary)' }}>
-            It doesn't have to be this way. <span style={{ color: 'var(--brand-prime)' }}>There's one orderly path.</span>
-          </p>
+        <ol className="c-en-steps">
+          {EN_PROC.steps.map((s) => (
+            <li key={s.n}>
+              <div className="c-proc__big" aria-hidden="true">{s.n}</div>
+              <h3>{s.title}</h3>
+              <p>{nd(s.text)}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Testimonials (5.6, החלטת שמואל 25.11): המקור בעברית מילה במילה, ומתחתיו תרגום ─── */
+
+const EN_TESTI = {
+  label: 'Testimonials',
+  lead: 'What clients said to me, word for word',
+  translated: 'Translated from Hebrew',
+  // התרגום מילולי, בלי תוספות (אותו נוסח כמו ב-public/en.md)
+  items: [
+    { en: "It came out very nice, this is the ad we added at the end, it's this one I connect with the most, the credit goes to you", who: 'Daniel Ezran', role: 'D&D Projects, renovations and finishing', src: 'From WhatsApp' },
+    { en: "Working with Shmuel is really a good atmosphere, everything is transparent... he's really available... and you can see he does it with all his heart and all his soul", who: 'Roi Kapach', role: 'Director, Orot pre-military academy', src: 'From a voice message' },
+  ],
+};
+
+function EnTestimonials() {
+  return (
+    <section id="en-testimonials" className="c-sec c-light" aria-labelledby="en-tst-h">
+      <div className="c-wrap">
+        <div className="c-lbl">{EN_TESTI.label}</div>
+        <h2 id="en-tst-h" className="c-h2" style={{ marginBottom: 48 }}>{EN_TESTI.lead}</h2>
+        <div className="c-tg">
+          {TESTIMONIALS.map((t, i) => {
+            const e = EN_TESTI.items[i];
+            return (
+              <figure key={t.name} className="c-msg">
+                <div className="c-msg__src">{e.src}</div>
+                <blockquote className="c-bubble c-bubble--he" lang="he" dir="rtl">"{t.quote}"</blockquote>
+                <p className="c-tr"><span>{EN_TESTI.translated}</span>"{e.en}"</p>
+                <figcaption className="c-who">
+                  <span className="c-who__tile"><img src={t.logo} alt={`${e.role} logo`} loading="lazy" /></span>
+                  <div>
+                    <div className="c-who__nm">{e.who}</div>
+                    <div className="c-who__rl">{e.role}</div>
+                  </div>
+                </figcaption>
+              </figure>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── WhatYouGet (section 6) ─────────────────────────────────────────── */
+/* ─── Guarantee (5.7) ────────────────────────────────────────────────── */
 
-const EN_OUTCOME_ICONS = [
-  (<><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></>),
-  (<><path d="M9 12l2 2 4-4" /><path d="M12 3c-1.5 2-4 3-7 3 0 5.5 2.5 9.5 7 12 4.5-2.5 7-6.5 7-12-3 0-5.5-1-7-3Z" /></>),
-  (<><path d="M3 11l19-9-9 19-2-8-8-2Z" /></>),
-  (<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>),
-];
-
-const EN_OUTCOMES = [
-  { title: 'Leads that come in, not impressions', text: 'Campaigns that bring real inquiries from people who actually fit you, inquiries you can close. Not likes, not vague "brand awareness".' },
-  { title: 'Peace of mind, one person owns it', text: 'You stop chasing posts, campaigns and numbers. One person takes all of the marketing, executes it, and reports back to you.' },
-  { title: 'A sharp message you\'re proud of', text: 'Finally your marketing sounds like you. It distills what makes you different and sets you apart from competitors, no discounts.' },
-  { title: 'Your time comes back to you', text: 'Instead of dealing with marketing, you go back to what you do best: running and growing your business.' },
-];
-
-function EnOutcomeCard({ outcome, index }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    gsap.fromTo(el, { y: 30, opacity: 0 }, {
-      y: 0, opacity: 1, duration: 0.7, ease: 'expo.out', delay: index * 0.08,
-      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-    });
-  }, [index]);
-
+function EnGuarantee({ onForm }) {
   return (
-    <div ref={ref} style={{ display: 'flex', alignItems: 'flex-start', gap: 16, padding: '24px 24px', borderRadius: 4, background: 'oklch(0.11 0.015 240 / 0.6)', border: '1px solid oklch(0.20 0.02 240)', textAlign: 'left', opacity: 0 }}>
-      <span style={{ flexShrink: 0, width: 46, height: 46, borderRadius: 3, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1px solid oklch(0.785 0.173 156.6 / 0.22)' }}>
-        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          {EN_OUTCOME_ICONS[index] || EN_OUTCOME_ICONS[0]}
-        </svg>
-      </span>
-      <div>
-        <h3 style={{ fontSize: '1.08rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>{outcome.title}</h3>
-        <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>{outcome.text}</p>
+    <section className="c-sec c-dark c-gsec" aria-labelledby="en-g-h">
+      <div className="c-wrap">
+        <div className="c-ggrid">
+          <div className="c-gtext">
+            <span className="c-tag">My promise to you</span>
+            <h2 id="en-g-h" className="c-h2">
+              If the first month of management brings no inquiries
+              <span className="c-block c-g">I manage another month for free</span>
+            </h2>
+            <p>This isn't a "free first month", you pay for setup and management as usual, but if the first month didn't bring inquiries, the second month is on me</p>
+            <p>And if there are still no inquiries after two months, I tell you so to your face and we stop, without burning more of your money</p>
+            <p className="c-gtext__fine">The promise covers management, the plan is work that's delivered to you and has no refund</p>
+            <button type="button" className="c-btn" onClick={onForm}>Book an intro call</button>
+          </div>
+          <div className="c-gface">
+            <div className="c-gface__frame" aria-hidden="true" />
+            <div className="c-gface__crop"><img src={profileSrc} alt="Shmuel Munitz" loading="lazy" /></div>
+            <div className="c-gface__nm">Shmuel Munitz<span>Shift Up</span></div>
+          </div>
+        </div>
       </div>
+    </section>
+  );
+}
+
+/* ─── Fit (5.8) ──────────────────────────────────────────────────────── */
+
+const EN_FIT = {
+  title: "I don't work with everyone, *and that's on purpose*",
+  yesTitle: "It's a fit if",
+  noTitle: "It's not for you if",
+  yes: [
+    "You have a business that works and clients who are happy with you, and you're missing a steady flow of inquiries",
+    'You want to understand why something works, not just have someone run ads',
+    "You're ready to invest in advertising and measure it by what one client is worth to you",
+    'You want someone who owns the marketing and reports to you, without you chasing them',
+  ],
+  no: [
+    "You're just starting and it's not clear yet what you sell and to whom",
+    'You want someone to run an ad tomorrow morning',
+    "You're looking for the cheapest price on the market",
+    'You expect results in the first week',
+  ],
+};
+
+function EnFit() {
+  const col = (title, items, yes) => (
+    <div className={`c-fit__col${yes ? ' is-yes' : ''}`}>
+      <h3>{title}</h3>
+      <ul>
+        {items.map((it) => <li key={it}><span aria-hidden="true">{yes ? '✓' : '✕'}</span><span>{it}</span></li>)}
+      </ul>
     </div>
   );
-}
-
-function EnWhatYouGet() {
-  const headRef = useRef(null);
-  const lineRef = useRef(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.en-wyg-head', { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: { trigger: headRef.current, start: 'top 85%', once: true } });
-      gsap.fromTo('.en-wyg-line', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: { trigger: lineRef.current, start: 'top 90%', once: true } });
-    });
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section style={{ padding: 'clamp(64px, 10vw, 110px) 28px', background: 'var(--bedrock)' }}>
-      <div style={{ maxWidth: 920, margin: '0 auto' }}>
-        <div ref={headRef} className="en-wyg-head" style={{ textAlign: 'center', marginBottom: 'clamp(36px, 6vw, 56px)', opacity: 0 }}>
-          <span style={{ color: 'var(--brand-prime)', fontSize: '0.74rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase' }}>What You Get</span>
-          <h2 style={{ fontSize: 'clamp(1.7rem, 5vw, 3rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.2, color: 'var(--text-primary)', marginTop: 14, maxWidth: 700, marginInline: 'auto' }}>
-            Bottom line? <span style={{ color: 'var(--brand-prime)' }}>Leads and peace of mind.</span>
-          </h2>
-          <p style={{ fontSize: 'clamp(1rem, 2.5vw, 1.15rem)', color: 'var(--text-secondary)', lineHeight: 1.7, marginTop: 14, maxWidth: 560, marginInline: 'auto' }}>
-            You keep running the business. I take the marketing on myself, and this is what you get back.
-          </p>
-        </div>
-        <div className="grid-2x2">
-          {EN_OUTCOMES.map((o, i) => <EnOutcomeCard key={i} outcome={o} index={i} />)}
-        </div>
-        <div ref={lineRef} className="en-wyg-line" style={{ textAlign: 'center', marginTop: 'clamp(40px, 6vw, 60px)', opacity: 0 }}>
-          <p style={{ fontSize: 'clamp(1.1rem, 3vw, 1.5rem)', fontWeight: 800, lineHeight: 1.5, color: 'var(--text-primary)' }}>
-            Stop being a part-time marketing manager. <span style={{ color: 'var(--brand-prime)' }}>Be the owner again.</span>
-          </p>
+    <section className="c-sec c-light c-light--alt" aria-labelledby="en-fit-h">
+      <div className="c-wrap">
+        <h2 id="en-fit-h" className="c-h2"><Tied text={EN_FIT.title} /></h2>
+        <div className="c-fit">
+          {col(EN_FIT.yesTitle, EN_FIT.yes, true)}
+          {col(EN_FIT.noTitle, EN_FIT.no, false)}
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── Proof (section 8) ──────────────────────────────────────────────── */
+/* ─── Comparison (5.9) ───────────────────────────────────────────────── */
 
-const EN_CASES = [
-  {
-    tag: 'Process example',
-    title: 'Boutique dessert business',
-    subtitle: 'Premium positioning in a saturated market',
-    quote: "We don't sell cakes, we sell style.",
-    steps: [
-      { k: 'The pain', v: 'In a saturated market, the customer doesn\'t ask "how much", she asks "what will people think?". Price isn\'t the problem, status is.' },
-      { k: 'Positioning', v: 'Not another bakery. A design house that sells an experience and prestige, not a kilo of chocolate.' },
-      { k: 'The funnel', v: 'A clear persona ("the hosting perfectionist"), a message that speaks to status, and visual channels that signal luxury.' },
-    ],
-  },
-  {
-    tag: 'Process example · course project',
-    title: 'City Transformer',
-    subtitle: 'Creating a new category',
-    quote: 'Easy for you.',
-    steps: [
-      { k: 'The problem', v: 'A folding electric vehicle, a category that has no shelf yet in the consumer\'s mind.' },
-      { k: 'Positioning', v: 'Instead of fighting for existing space, create a new category. The "easy for you" concept.' },
-      { k: 'The creative', v: 'An Urban Luxury brand language, personas, and a video storyboard that tells the story.' },
-    ],
-  },
-];
+const EN_CMP = {
+  label: 'Why me',
+  title: "What's the difference between a strategist",
+  accent: 'and a campaign manager?',
+  sub: "Both can launch a campaign, the difference is what you're holding before it goes live",
+  me: 'With me',
+  them: 'A campaign manager who starts with the ads',
+  rows: [
+    ['Where we start', 'A deep-dive session and research on your customers', '"Let\'s launch a campaign and see"'],
+    ['What you hold before a shekel goes into ads', 'A written plan: audience, message, ads and the numbers', 'A price quote'],
+    ['Where the message comes from', 'What your customers say', 'What worked for a previous client'],
+    ['If the first month brought no inquiries', 'Another month of management for free', 'You keep paying'],
+    ["What isn't working", 'Said out loud, every week', 'Shows up in the report at the end of the month'],
+    ['Running campaigns on Meta and Google', '✓', '✓'],
+  ],
+};
+
+function EnComparison() {
+  const col = (title, idx, me) => (
+    <div className={`c-cmp__col${me ? ' is-me' : ''}`}>
+      <h3>{title}</h3>
+      <dl>
+        {EN_CMP.rows.map((r) => <div key={r[0]} className="c-cmp__row"><dt>{r[0]}</dt><dd>{r[idx]}</dd></div>)}
+      </dl>
+    </div>
+  );
+  return (
+    <section id="en-why" className="c-sec c-light c-light--alt c-cmp" aria-labelledby="en-why-h">
+      <div className="c-wrap">
+        <div className="c-split">
+          <div>
+            <div className="c-lbl">{EN_CMP.label}</div>
+            <h2 id="en-why-h" className="c-h2">{EN_CMP.title} <span className="c-g c-block">{EN_CMP.accent}</span></h2>
+          </div>
+          <p className="c-lead">{nd(EN_CMP.sub)}</p>
+        </div>
+        <div className="c-cmp__grid">
+          {col(EN_CMP.me, 1, true)}
+          {col(EN_CMP.them, 2, false)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Proof: הפורטפוליו נשאר (סעיף 5.14), אחרי העדויות ─────────────── */
 
 const EN_GRID = [
   { file: 'events-yehuda.jpg',      client: 'Yehuda Siman-Tov', field: 'Events' },
-  { file: 'realestate-villas.jpg',  client: 'Real Estate',      field: 'Real Estate' },
+  { file: 'realestate-villas.jpg',  client: 'Real Estate',      field: '' },  // אין מקור לשם הלקוח, אז בלי תחום כפול (AD דפים 1, #7ג)
   { file: 'legal-skler.jpg',        client: 'Skler Law',        field: 'Legal' },
   { file: 'retail-kehilot-card.jpg',client: 'Kehilot Card',     field: 'Retail' },
   { file: 'food-shira-events.jpg',  client: 'SHIRA',            field: 'Food' },
@@ -541,86 +472,18 @@ const EN_GRID = [
   { file: 'education-imahot.jpg',   client: 'Mothers Workshop',  field: 'Parenting' },
 ];
 
-function EnCaseCard({ item, index }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    gsap.fromTo(el, { y: 40, opacity: 0 }, {
-      y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: index * 0.1,
-      scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-    });
-  }, [index]);
-
-  return (
-    <div ref={ref} className="shimmer-card" style={{ opacity: 0, textAlign: 'left', padding: 'clamp(24px, 3vw, 34px)', borderRadius: 4, background: 'var(--surface-1)', border: '1px solid oklch(0.22 0.02 240)', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', top: 0, right: 0, left: 0, height: 2, background: 'linear-gradient(to right, var(--brand-prime), oklch(0.65 0.22 200 / 0.6), transparent)' }} />
-      <span style={{ display: 'inline-block', fontSize: '0.66rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', background: 'oklch(0.18 0.025 240)', border: '1px solid oklch(0.28 0.02 240)', borderRadius: 3, padding: '4px 12px', marginBottom: 16 }}>
-        {item.tag}
-      </span>
-      <h3 style={{ fontSize: 'clamp(1.4rem, 3vw, 1.9rem)', fontWeight: 900, letterSpacing: '-0.01em', color: 'var(--text-primary)', marginBottom: 4 }}>{item.title}</h3>
-      <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 18 }}>{item.subtitle}</div>
-      <blockquote style={{ margin: '0 0 22px', padding: '12px 16px', borderRadius: 3, background: 'oklch(0.785 0.173 156.6 / 0.08)', borderLeft: '3px solid var(--brand-prime)', fontSize: '1.02rem', fontWeight: 800, color: 'var(--brand-glow)', textAlign: 'left' }}>
-        {item.quote}
-      </blockquote>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-        {item.steps.map((s, i) => (
-          <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-            <span style={{ flexShrink: 0, fontSize: '0.72rem', fontWeight: 800, color: 'var(--brand-prime)', minWidth: 84, paddingTop: 2 }}>{s.k}</span>
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{s.v}</p>
-          </div>
-        ))}
-      </div>
-      <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 20, fontStyle: 'italic' }}>
-        A thinking & process example, not a results claim.
-      </p>
-    </div>
-  );
-}
-
-function EnGridTile({ item, index, onOpen }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    gsap.fromTo(el, { y: 30, opacity: 0, scale: 0.96 }, {
-      y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'expo.out', delay: (index % 3) * 0.07,
-      scrollTrigger: { trigger: el, start: 'top 92%', once: true },
-    });
-  }, [index]);
-
-  return (
-    <button ref={ref} onClick={() => onOpen(item)} style={{ opacity: 0, position: 'relative', display: 'block', width: '100%', aspectRatio: '4 / 5', borderRadius: 3, overflow: 'hidden', border: '1px solid oklch(0.22 0.02 240)', background: 'var(--surface-1)', cursor: 'pointer', padding: 0, textAlign: 'left' }} aria-label={`Enlarge ad — ${item.client}`}>
-      <img src={`/portfolio/${item.file}`} alt={`${item.client} creative · ${item.field}`} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-      <div style={{ position: 'absolute', insetInline: 0, bottom: 0, padding: '28px 14px 12px', background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.92), transparent)' }}>
-        <div style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-primary)' }}>{item.client}</div>
-        <div style={{ fontSize: '0.74rem', color: 'var(--brand-glow)', fontWeight: 600 }}>{item.field}</div>
-      </div>
-    </button>
-  );
-}
-
 function EnLightbox({ item, onClose }) {
   if (!item) return null;
   return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'oklch(0.05 0.01 240 / 0.9)',  display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <button onClick={onClose} aria-label="Close" style={{ position: 'absolute', top: 20, right: 20, width: 44, height: 44, borderRadius: '50%', background: 'oklch(0.14 0.02 240)', border: '1px solid oklch(0.3 0.02 240)', color: 'var(--text-primary)', fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}>×</button>
-      <img src={`/portfolio/${item.file}`} alt={`${item.client} creative · ${item.field}`} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '92vw', maxHeight: '88vh', borderRadius: 3, objectFit: 'contain', boxShadow: '0 20px 80px oklch(0 0 0 / 0.6)' }} />
+    <div className="c-en-lb" onClick={onClose} role="dialog" aria-modal="true" aria-label={`${item.client} creative`}>
+      <button type="button" onClick={onClose} aria-label="Close">×</button>
+      <img src={`/portfolio/${item.file}`} alt={`${item.client} creative${item.field ? ` · ${item.field}` : ''}`} onClick={(e) => e.stopPropagation()} />
     </div>
   );
 }
 
 function EnProof() {
-  const headRef = useRef(null);
   const [open, setOpen] = useState(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.en-proof-head', { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: { trigger: headRef.current, start: 'top 85%', once: true } });
-    });
-    return () => ctx.revert();
-  }, []);
-
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') setOpen(null); };
     window.addEventListener('keydown', onKey);
@@ -628,19 +491,23 @@ function EnProof() {
   }, []);
 
   return (
-    <section id="en-work" style={{ padding: 'clamp(80px, 10vw, 130px) 28px', background: 'var(--surface-0)', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        <div ref={headRef} className="en-proof-head" style={{ textAlign: 'left', maxWidth: 680, marginBottom: 'clamp(32px, 5vw, 48px)', opacity: 0 }}>
-          <div className="section-label">Work</div>
-          <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.4rem)', fontWeight: 700, lineHeight: 1.08, letterSpacing: '-0.02em', marginBottom: 16, fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}>
-            Creative I've made, <span style={{ color: 'var(--brand-prime)' }}>every field.</span>
-          </h2>
-          <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
-            Real ads I put in the air for businesses across different fields. Click any ad to enlarge.
-          </p>
+    <section id="en-work" className="c-sec c-dark" aria-labelledby="en-work-h">
+      <div className="c-wrap">
+        <div className="c-split">
+          <div>
+            <div className="c-lbl">Work</div>
+            <h2 id="en-work-h" className="c-h2">Creative I've made, <span className="c-g">every field</span></h2>
+          </div>
+          <p className="c-lead">{nd('Real ads I put in the air for businesses across different fields. Click any ad to enlarge.')}</p>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14 }}>
-          {EN_GRID.map((g, i) => <EnGridTile key={g.file} item={g} index={i} onOpen={setOpen} />)}
+        <div className="c-en-grid">
+          {EN_GRID.map((g) => (
+            <button type="button" key={g.file} className="c-en-tile" onClick={() => setOpen(g)} aria-label={`Enlarge ad: ${g.client}`}>
+              <span className="c-en-tile__img"><img src={`/portfolio/${g.file}`} alt={`${g.client} creative${g.field ? ` · ${g.field}` : ''}`} loading="lazy" /></span>
+              <b>{g.client}</b>
+              {g.field && <small>{g.field}</small>}
+            </button>
+          ))}
         </div>
       </div>
       <EnLightbox item={open} onClose={() => setOpen(null)} />
@@ -648,465 +515,75 @@ function EnProof() {
   );
 }
 
-/* ─── Process ────────────────────────────────────────────────────────── */
-
-const enSteps = [
-  {
-    n: '01', title: 'The Research', sub: 'Discovery',
-    desc: "I dig deep. Who's actually paying, what competitors are doing, and why they'd choose you. I distill a precise message and a clear work plan, on data, not guesswork.",
-    bullets: ['Audience + competitor research', 'Sharp value proposition', 'Clear work plan'],
-    icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>,
-  },
-  {
-    n: '02', title: 'The Shift', sub: 'Strategy',
-    desc: 'I turn the insights into a clear plan and creative that sells: the funnel that fits you, the message that drives action, and where the money goes, all locked in before a single shekel goes in.',
-    bullets: ['Marketing funnel design', 'Creative that sells', 'Channel-specific messaging'],
-    icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>,
-  },
-  {
-    n: '03', title: 'The Action', sub: 'Execution',
-    desc: 'A ready-to-run campaign goes live: I set up and manage your paid campaigns on Meta and Google, create the creative that sells. And if the first month brings no inquiries, I manage the next month for free.',
-    bullets: ['Meta + Google Campaigns', 'Creative that sells', 'First-month performance guarantee'],
-    icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>,
-  },
-];
-
-function EnProcess() {
-  const ref = useRef(null);
-  const [active, setActive] = useState(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.en-process-header', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: '.en-process-header', start: 'top 80%', once: true } });
-      gsap.fromTo('.en-process-card', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.85, ease: 'expo.out', stagger: 0.12, scrollTrigger: { trigger: '.en-process-grid', start: 'top 78%', once: true } });
-    }, ref);
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <section id="en-strategy" ref={ref} style={{ padding: 'clamp(80px, 10vw, 130px) 28px', background: 'var(--surface-0)', position: 'relative', overflow: 'hidden' }}>
-      <FluidBlob style={{ width: 500, height: 500, top: '10%', right: '-5%', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.07), transparent 70%)', '--dur': '22s' }} />
-      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        <div className="en-process-header" style={{ textAlign: 'left', maxWidth: 680, marginBottom: 64, opacity: 0 }}>
-          <div className="section-label">The Process</div>
-          <h2 style={{ fontSize: 'clamp(2.2rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 20, fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}>
-            It's not the PPC,
-            <br /><span className="text-gradient">it's the message.</span>
-          </h2>
-          <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 520 }}>
-            Most businesses rush to run campaigns before understanding what they're selling and to whom.
-            My process starts in the operating room, not in the ad platform.
-          </p>
-        </div>
-
-        <div className="en-process-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
-          {enSteps.map((step, i) => {
-            const isActive = active === i;
-            return (
-              <div key={i} className={`en-process-card process-card shimmer-card${isActive ? ' is-active' : ''}`}
-                onMouseEnter={() => setActive(i)} onMouseLeave={() => setActive(null)}
-                style={{ opacity: 0, padding: 'clamp(24px,3vw,36px)' }}>
-                <div className="accent-bar" style={{ right: 'auto', left: 0, borderRadius: '20px 0 0 20px' }} />
-                <div style={{ position: 'absolute', top: -40, right: -40, width: 220, height: 220, background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.10), transparent 70%)', transition: 'opacity 0.4s', opacity: isActive ? 1 : 0, pointerEvents: 'none' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
-                  <div style={{ width: 52, height: 52, borderRadius: 3, background: isActive ? 'var(--brand-prime)' : 'oklch(0.785 0.173 156.6 / 0.12)', border: `1px solid ${isActive ? 'transparent' : 'oklch(0.785 0.173 156.6 / 0.2)'}`, color: isActive ? 'oklch(0.08 0.01 240)' : 'var(--brand-prime)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.35s, color 0.35s' }}>{step.icon}</div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '0.58rem', textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-muted)', fontWeight: 700 }}>Step</div>
-                    <div style={{ fontSize: '3.2rem', fontWeight: 700, lineHeight: 1, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", color: 'oklch(0.785 0.173 156.6 / 0.32)' }}>{step.n}</div>
-                  </div>
-                </div>
-                <h3 style={{ fontSize: 'clamp(1.5rem,2.5vw,1.9rem)', fontWeight: 900, letterSpacing: '-0.01em', marginBottom: 4, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", color: isActive ? 'var(--text-primary)' : 'oklch(0.90 0.005 240)', transition: 'color 0.3s' }}>{step.title}</h3>
-                <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.18em', color: isActive ? 'var(--brand-prime)' : 'var(--text-muted)', fontWeight: 700, marginBottom: 18, transition: 'color 0.3s' }}>{step.sub}</div>
-                <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: 24 }}>{step.desc}</p>
-                <div style={{ borderTop: '1px solid oklch(0.22 0.02 240 / 0.5)', paddingTop: 18, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {step.bullets.map((b, j) => (
-                    <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--brand-prime)', flexShrink: 0, boxShadow: isActive ? '0 0 6px var(--brand-prime)' : 'none', transition: 'box-shadow 0.3s' }} />{b}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── Why Me ─────────────────────────────────────────────────────────── */
-
-const enReasons = [
-  { title: 'Research-Based', en: 'Research-Based', desc: "I don't run campaigns on gut feeling. Audience, competitors, message, everything is researched and distilled before a single shekel goes into paid.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>, accent: 'var(--brand-prime)', wide: true },
-  { title: 'AI-First', en: 'AI-First', desc: 'What takes others a week, I execute in hours, at higher quality.', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.64"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.64"/></svg>, accent: 'var(--accent-void)', wide: false },
-  { title: 'Performance Guarantee', en: 'Guarantee', desc: "If the first month of management brings no inquiries, I manage the next month for free. The risk is on me, not you.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>, accent: 'var(--brand-prime)', wide: false },
-  { title: 'Eye-Level Partner', en: 'No Buzzwords', desc: "An execution partner, not a salesman. No buzzwords, no inflated decks. Straight talk: what we do, why, and what it costs.", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>, accent: 'var(--brand-prime)', wide: true },
-];
-
-function EnBentoCard({ reason, index }) {
-  const cardRef = useRef(null);
-  const onMove = (e) => {
-    const card = cardRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    card.style.setProperty('--mx', `${((e.clientX - rect.left) / rect.width) * 100}%`);
-    card.style.setProperty('--my', `${((e.clientY - rect.top) / rect.height) * 100}%`);
-  };
-
-  return (
-    <div ref={cardRef} className={`en-whyme-card bento-card shimmer-card${reason.wide ? ' bento-wide' : ''}`} onMouseMove={onMove} style={{ opacity: 0, minHeight: reason.wide ? 180 : 200 }}>
-      <div style={{ position: 'absolute', top: 20, right: 20, width: 6, height: 6, borderRadius: '50%', background: reason.accent, boxShadow: `0 0 12px ${reason.accent}`, opacity: 0.7 }} />
-      <div className="accent-number" style={{ position: 'absolute', bottom: -20, right: 12, fontSize: '7rem', zIndex: 0 }}>0{index + 1}</div>
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 3, background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1px solid oklch(0.785 0.173 156.6 / 0.2)', color: 'var(--brand-prime)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{reason.icon}</div>
-          <span style={{ fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.16em', color: 'var(--text-muted)', fontWeight: 700 }}>{reason.en}</span>
-        </div>
-        <h3 style={{ fontSize: reason.wide ? 'clamp(1.25rem, 2.5vw, 1.6rem)' : 'clamp(1.1rem, 2vw, 1.35rem)', fontWeight: 900, letterSpacing: '-0.01em', marginBottom: 10, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", color: 'var(--text-primary)' }}>{reason.title}</h3>
-        <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: reason.wide ? 480 : '100%' }}>{reason.desc}</p>
-      </div>
-    </div>
-  );
-}
-
-function EnWhyMe() {
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.en-whyme-header', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: '.en-whyme-header', start: 'top 80%', once: true } });
-      gsap.fromTo('.en-whyme-card', { y: 50, opacity: 0, scale: 0.97 }, { y: 0, opacity: 1, scale: 1, duration: 0.75, ease: 'expo.out', stagger: 0.1, scrollTrigger: { trigger: '.en-whyme-cards', start: 'top 78%', once: true } });
-    }, ref);
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <section id="en-why" ref={ref} style={{ padding: 'clamp(80px, 10vw, 130px) 28px', background: 'var(--bedrock)', position: 'relative', overflow: 'hidden' }}>
-      <div className="aurora-orb" style={{ width: 500, height: 500, top: '-10%', left: '-5%', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.08), transparent 70%)', '--dur': '18s' }} />
-      <div className="aurora-orb" style={{ width: 400, height: 400, bottom: '-5%', right: '-5%', background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.07), transparent 70%)', '--dur': '22s', '--delay': '-7s' }} />
-      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        <div className="en-whyme-header" style={{ textAlign: 'left', maxWidth: 640, marginBottom: 52, opacity: 0 }}>
-          <div className="section-label">Why Me</div>
-          <h2 style={{ fontSize: 'clamp(2.2rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 18, fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}>
-            Why work with <span className="text-gradient">me?</span>
-          </h2>
-          <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
-            There's no shortage of digital marketers. Here are 4 honest reasons why I might be your best one.
-          </p>
-        </div>
-        <div className="en-whyme-cards bento-grid">
-          {enReasons.map((r, i) => <EnBentoCard key={i} reason={r} index={i} />)}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── Manifesto ──────────────────────────────────────────────────────── */
-
-const enWords = [
-  'Ideas', 'are', 'my', 'fuel.', 'People', 'are', 'the', 'goal.', 'Your', 'businesses', 'are', 'the', 'way', 'there.'
-];
-
-function EnManifesto() {
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const section = ref.current;
-    if (!section) return;
-    const wordEls = section.querySelectorAll('.en-manifesto-word');
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ scrollTrigger: { trigger: section, start: 'top 70%', end: 'bottom 30%', scrub: 0.8 } });
-      wordEls.forEach((el, i) => {
-        tl.fromTo(el, { opacity: 0.08, y: 14, filter: 'blur(3px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.4, ease: 'power2.out' }, i * 0.12);
-      });
-    }, ref);
-    return () => ctx.revert();
-  }, []);
-
-  const highlights = ['Ideas', 'fuel.', 'People', 'goal.'];
-
-  return (
-    <section ref={ref} style={{ padding: 'clamp(80px, 12vw, 140px) 28px', background: 'var(--surface-0)', position: 'relative', overflow: 'hidden' }}>
-      <FluidBlob style={{ width: 600, height: 600, top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.06), transparent 70%)', '--dur': '30s' }} />
-      <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative', zIndex: 1, textAlign: 'center' }}>
-        <div className="section-label" style={{ justifyContent: 'center', marginBottom: 32 }}>The Manifesto</div>
-        <p translate="no" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.3em 0.5em', fontSize: 'clamp(2rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.25, letterSpacing: '-0.02em', fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }} aria-label={enWords.join(' ')}>
-          {enWords.map((word, i) => (
-            <span key={i} className="en-manifesto-word" style={{ display: 'inline-block', opacity: 0.08, color: highlights.includes(word) ? 'var(--brand-prime)' : 'var(--text-primary)', willChange: 'opacity, transform, filter' }}>{word}</span>
-          ))}
-        </p>
-        <div style={{ marginTop: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, opacity: 0.5 }}>
-          <span style={{ height: 1, width: 24, background: 'var(--brand-prime)', display: 'block' }} />
-          <span style={{ fontSize: '0.75rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600 }}>Shmuel Munitz</span>
-          <span style={{ height: 1, width: 24, background: 'var(--brand-prime)', display: 'block' }} />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── About ──────────────────────────────────────────────────────────── */
+/* ─── About (5.10) ───────────────────────────────────────────────────── */
 
 function EnAbout() {
-  const ref    = useRef(null);
-  const imgRef = useRef(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.en-about-header', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: '.en-about-header', start: 'top 80%', once: true } });
-      gsap.fromTo('.en-about-img',    { y: 60, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 1.0, ease: 'expo.out', scrollTrigger: { trigger: '.en-about-img', start: 'top 80%', once: true } });
-      gsap.utils.toArray('.en-about-para').forEach((el, i) => {
-        gsap.fromTo(el, { x: 20, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: 'expo.out', delay: i * 0.08, scrollTrigger: { trigger: el, start: 'top 85%', once: true } });
-      });
-    }, ref);
-
-    const img = imgRef.current;
-    const onMove = (e) => {
-      if (!img) return;
-      const rect = img.getBoundingClientRect();
-      const dx = (e.clientX - rect.left - rect.width  / 2) / rect.width;
-      const dy = (e.clientY - rect.top  - rect.height / 2) / rect.height;
-      gsap.to(img, { rotateY: dx * 6, rotateX: -dy * 6, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
-    };
-    const onLeave = () => gsap.to(img, { rotateY: 0, rotateX: 0, duration: 0.8, ease: 'elastic.out(1,0.6)' });
-    img?.addEventListener('mousemove', onMove);
-    img?.addEventListener('mouseleave', onLeave);
-    return () => { ctx.revert(); img?.removeEventListener('mousemove', onMove); img?.removeEventListener('mouseleave', onLeave); };
-  }, []);
-
+  const paras = [
+    <>Nice to meet you, I'm <strong>Shmuel Munitz</strong>, a marketing strategist</>,
+    <>Before I touch an ad, I sit with the business owner, read his conversations with customers and research the market, and only then write a plan</>,
+    <>I work alone and take on <strong className="c-g">a few clients at a time</strong>, so the person who writes your plan is the person who runs your campaign</>,
+    <>With one client I saw in a session recording that the form rejected phone numbers starting with <bdi>+972</bdi>, and <strong className="c-g">I fixed it that same morning</strong>, before another inquiry was lost</>,
+    <>I'm an entrepreneur, and I know a business needs <strong className="c-g">a return on its investment</strong>, not likes, so with me every shekel is measured, every week is reported, and what isn't working is said out loud</>,
+  ];
   return (
-    <section id="en-about" ref={ref} style={{ padding: 'clamp(80px, 10vw, 130px) 28px', background: 'var(--surface-0)', position: 'relative', overflow: 'hidden' }}>
-      <FluidBlob style={{ width: 500, height: 500, top: '-5%', left: '-5%', background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.09), transparent 70%)', '--dur': '24s' }} />
-      <div className="about-layout" style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-
-        {/* Image */}
-        <div className="en-about-img" style={{ opacity: 0, maxWidth: 320, margin: '0 auto', width: '100%' }}>
-          <div ref={imgRef} style={{ position: 'relative', transformStyle: 'preserve-3d', perspective: 800 }}>
-            <div style={{ position: 'absolute', inset: -20, background: 'radial-gradient(circle at 50% 50%, oklch(0.785 0.173 156.6 / 0.2), oklch(0.508 0.155 292.2 / 0.12) 60%, transparent 80%)', borderRadius: 4, filter: 'blur(24px)', zIndex: 0 }} />
-            <div className="glow-border living-border" style={{ position: 'relative', zIndex: 1, borderRadius: 4, overflow: 'hidden', aspectRatio: '4/5' }}>
-              <img src={profileSrc} alt="Shmuel Munitz" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, oklch(0.08 0.01 240 / 0.4), transparent 55%)' }} />
-            </div>
-            <div style={{ position: 'absolute', top: -14, right: 16, zIndex: 2, background: 'var(--surface-1)',  border: '1px solid var(--surface-2)', borderRadius: 3, padding: '6px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', boxShadow: 'none' }} />
-              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>Shmuel Munitz</span>
-            </div>
-          </div>
+    <section id="en-about" className="c-sec c-dark c-about" aria-labelledby="en-about-h">
+      <div className="c-wrap c-about__grid">
+        <div className="c-about__head">
+          <div className="c-lbl">About</div>
+          <h2 id="en-about-h" className="c-h2">Who's behind <span className="c-g">Shift Up</span></h2>
         </div>
-
-        {/* Text */}
-        <div className="en-about-header" style={{ textAlign: 'left', opacity: 0 }}>
-          <div className="section-label">About Me</div>
-          <h2 style={{ fontSize: 'clamp(2rem, 4.5vw, 3.5rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 36, fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}>
-            Who's behind <span className="text-gradient">Shift Up?</span>
-          </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-            {[
-              <>Nice to meet you. I'm <strong style={{ color: 'var(--text-primary)' }}>Shmuel Munitz</strong>.</>,
-              <>I won't lie, I don't come from a 20-year advertising agency. And that's exactly <strong style={{ color: 'var(--brand-prime)' }}>your advantage</strong>.</>,
-              <>While others rest on their laurels, I research the newest <strong style={{ color: 'var(--brand-prime)' }}>AI</strong> tools and find innovative ways to generate leads. Every client is my flagship project.</>,
-              <>I'm an entrepreneur at heart. I understand a business needs <strong style={{ color: 'var(--text-primary)' }}>real ROI</strong>, not just likes. I'm here to build a marketing system that works, and actually execute it.</>,
-            ].map((para, i) => (
-              <div key={i} className="en-about-para" style={{ opacity: 0, display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-                <div style={{ width: 2, minHeight: 48, background: i === 0 ? 'var(--brand-prime)' : 'oklch(0.22 0.02 240)', borderRadius: 3, flexShrink: 0, marginTop: 4 }} />
-                <p style={{ fontSize: 'clamp(0.92rem, 1.6vw, 1.05rem)', color: 'var(--text-secondary)', lineHeight: 1.78 }}>{para}</p>
-              </div>
-            ))}
-            <div className="en-about-para" style={{ opacity: 0, marginTop: 10, padding: '20px 24px', background: 'var(--surface-1)', borderRadius: 4, borderLeft: '3px solid var(--brand-prime)' }}>
-              <p className="text-gradient" style={{ fontSize: 'clamp(1.1rem, 2vw, 1.35rem)', fontWeight: 800, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", lineHeight: 1.5 }}>People are the goal.</p>
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: 4 }}>Your businesses are the way there.</p>
-            </div>
-          </div>
+        <div className="c-about__body">
+          {paras.map((para, i) => <p key={i}>{para}</p>)}
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── FAQ ────────────────────────────────────────────────────────────── */
+/* ─── FAQ (5.11) ─────────────────────────────────────────────────────── */
 
 const enFaqs = [
-  { q: 'How long does it take to see results?', a: 'The discovery and strategy phase takes about two weeks. Seeing quality leads flow takes between 30 and 60 days, depending on the industry. I build for the long term, not empty promises of "results in a week."' },
-  { q: 'How much does it cost?', a: "A fixed, clear price set in the intro call based on scope: a one-time setup + monthly management (media budget separate). No vague packages, no surprises. You'll know exactly how much before we start." },
-  { q: 'How are you different from other digital marketers?', a: 'Most start with "let\'s run a campaign." I start with research: audience, competitors, message, and only then build the campaign. I also integrate AI tools that save time and money, and take a limited number of clients.' },
-  { q: "I've been burned by a previous provider. Why would this time be different?", a: 'That\'s exactly why there\'s a performance guarantee. To be clear: it\'s not a "free first month". If the first month of management brings no inquiries, I manage the next month for free. The risk is on me, not on you.' },
-  { q: 'What does the discovery process include?', a: 'A complete strategy document: competitor analysis, target audience mapping, a precise value proposition, core messaging, recommended marketing channels, and a 90-day actionable roadmap.' },
-  { q: 'Do you also execute or just advise?', a: 'Both. Once the strategy is locked in, I build and manage your paid campaigns on Meta and Google, and handle the messaging and creative. An execution partner, from the research until the campaign is live.' },
+  { q: 'Why pay for a plan, if I can just launch a campaign?', a: 'Because a campaign without a plan is an experiment on your money, and the plan says up front who we advertise to, what we say and what counts as success, and I build the campaign on it' },
+  { q: 'Can I buy just the plan?', a: 'Yes, you can buy just the plan and decide later, and I only build setup and management on a plan' },
+  { q: "And if the campaign doesn't bring inquiries?", a: "If the first month of management brings no inquiries, I manage another month for free, and if there's still nothing, I tell you so and we stop, and the promise covers management, not the plan" },
+  { q: 'How much does it cost?', a: 'A fixed, closed price for each stage, set in the intro call by the scope of work, and the ad budget is separate, so you know exactly how much before we start' },
+  { q: 'How long does it take?', a: 'The plan is ready about a week after the deep-dive session, and the campaign goes live about two weeks after you approve it' },
+  { q: 'Who owns the plan?', a: 'You do, and even if you decide not to continue with me, it stays with you' },
+  { q: 'What do I need to prepare for the deep-dive session?', a: "Your business numbers, and if you can, screenshots of conversations with customers, because that's where the message comes from" },
+  { q: "I've been burned by a previous provider, why would this time be different?", a: 'Because this time we start with a plan and not a campaign, so you see what every decision rests on before a shekel goes in, and in management the risk of the first month is on me' },
+  { q: 'What happens after I leave my details?', a: 'I call you back for a half-hour intro call, where we figure out what your business needs, work out what one client is worth to you, and you leave with a fixed price' },
 ];
 
-function EnChatItem({ item, isActive, onOpen }) {
-  const [displayed, setDisplayed] = useState('');
-  const [thinking, setThinking]   = useState(false);
-  const timerRef = useRef(null);
-  const thinkRef = useRef(null);
-
-  useEffect(() => {
-    if (!isActive) { setDisplayed(''); setThinking(false); clearInterval(timerRef.current); clearTimeout(thinkRef.current); return; }
-    setDisplayed(''); setThinking(true);
-    thinkRef.current = setTimeout(() => {
-      setThinking(false); let i = 0;
-      timerRef.current = setInterval(() => {
-        i++; setDisplayed(item.a.slice(0, i));
-        if (i >= item.a.length) clearInterval(timerRef.current);
-      }, 16);
-    }, 450);
-    return () => { clearInterval(timerRef.current); clearTimeout(thinkRef.current); };
-  }, [isActive, item.a]);
-
-  return (
-    <div style={{ marginBottom: 14, opacity: 0 }} className="en-faq-item">
-      <button onClick={onOpen} style={{ width: '100%', textAlign: 'left', background: isActive ? 'var(--surface-2)' : 'var(--surface-1)', border: `1px solid ${isActive ? 'oklch(0.785 0.173 156.6 / 0.3)' : 'oklch(0.22 0.02 240)'}`, borderRadius: isActive ? '16px 16px 16px 0' : 16, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, transition: 'background 0.3s, border-color 0.3s, border-radius 0.3s', fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }} aria-expanded={isActive}>
-        <span style={{ fontSize: 'clamp(0.9rem, 1.5vw, 1rem)', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.5, flex: 1 }}>{item.q}</span>
-        <span style={{ flexShrink: 0, width: 28, height: 28, borderRadius: '50%', background: isActive ? 'oklch(0.785 0.173 156.6 / 0.2)' : 'oklch(0.18 0.025 240)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.35s var(--ease-spring), background 0.3s', transform: isActive ? 'rotate(45deg)' : 'rotate(0deg)' }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-prime)" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        </span>
-      </button>
-      {isActive && (
-        <div style={{ background: 'oklch(0.11 0.015 240)', border: '1px solid oklch(0.22 0.02 240)', borderTop: 'none', borderRadius: '0 0 16px 16px', padding: '16px 20px 18px' }}>
-          {thinking ? (
-            <div className="chat-thinking" style={{ display: 'flex', gap: 5, alignItems: 'center', height: 24 }} aria-label="Thinking..."><span /><span /><span /></div>
-          ) : (
-            <p style={{ fontSize: 'clamp(0.88rem, 1.5vw, 0.96rem)', color: 'var(--text-secondary)', lineHeight: 1.78, minHeight: 24 }}>
-              {displayed}
-              {displayed.length < item.a.length && displayed.length > 0 && (
-                <span style={{ display: 'inline-block', width: 2, height: '1em', background: 'var(--brand-prime)', marginLeft: 2, verticalAlign: 'text-bottom', animation: 'breathing 0.8s ease-in-out infinite' }} />
-              )}
-            </p>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
 function EnFAQ() {
-  const ref = useRef(null);
-  const [activeIdx, setActiveIdx] = useState(null);
   const links = useSiteLinks();
   const WA_LINK = links.whatsapp_url.split('?')[0] + '?text=' + WA_TEXT;
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.en-faq-header', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: '.en-faq-header', start: 'top 80%', once: true } });
-      gsap.fromTo('.en-faq-item', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.65, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: '.en-faq-list', start: 'top 78%', once: true } });
-    }, ref);
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section id="en-faq" ref={ref} style={{ padding: 'clamp(80px, 10vw, 130px) 28px', background: 'var(--bedrock)', position: 'relative' }}>
-      <div style={{ maxWidth: 760, margin: '0 auto' }}>
-        <div className="en-faq-header" style={{ textAlign: 'left', marginBottom: 52, opacity: 0 }}>
-          <div className="section-label">FAQ</div>
-          <h2 style={{ fontSize: 'clamp(2rem, 4.5vw, 3.4rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 14, fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}>Frequently Asked Questions</h2>
+    <section id="en-faq" className="c-sec c-light" aria-labelledby="en-faq-h">
+      <div className="c-wrap c-faq">
+        <div className="c-faq__head">
+          <div className="c-lbl">FAQ</div>
+          <h2 id="en-faq-h" className="c-h2">Frequently Asked Questions</h2>
+          <p className="c-faq__note">
+            Have another question?{' '}
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer">Send a message</a>{' '}
+            and I'll get back to you quickly
+          </p>
         </div>
-        <div className="en-faq-list">
-          {enFaqs.map((item, i) => (
-            <EnChatItem key={i} item={item} isActive={activeIdx === i} onOpen={() => setActiveIdx(prev => prev === i ? null : i)} />
+        <div className="c-acc">
+          {enFaqs.map((item) => (
+            <details key={item.q} className="c-acc__item">
+              <summary>{item.q}</summary>
+              <div className="c-acc__a"><p>{nd(item.a)}</p></div>
+            </details>
           ))}
         </div>
-        <div style={{ marginTop: 32, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-          <span style={{ height: 1, width: 20, background: 'var(--surface-2)', display: 'block' }} />
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-            Have another question?{' '}
-            <a href={WA_LINK} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--brand-prime)', fontWeight: 700, textDecoration: 'none' }}>Send a message</a>{' '}
-            and I'll get back to you quickly.
-          </p>
-          <span style={{ height: 1, width: 20, background: 'var(--surface-2)', display: 'block' }} />
-        </div>
       </div>
     </section>
   );
 }
 
-/* ─── WhatsApp Community ─────────────────────────────────────────────── */
-
-const enPerks = [
-  { emoji: '🧠', title: 'Strategy', desc: 'Why customers buy, and how to make them choose you.' },
-  { emoji: '🤖', title: 'AI Tools', desc: 'Prompts and methods to save time and money.' },
-  { emoji: '🔍', title: 'Deep Dives', desc: 'Breaking down marketing moves, adapted for small businesses.' },
-];
-
-function EnWhatsAppGroup() {
-  const ref = useRef(null);
-  const { whatsapp_group: WA_GROUP } = useSiteLinks();
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.en-wag-card', { y: 60, opacity: 0, scale: 0.97 }, { y: 0, opacity: 1, scale: 1, duration: 1.0, ease: 'expo.out', scrollTrigger: { trigger: '.en-wag-card', start: 'top 82%', once: true } });
-      gsap.fromTo('.en-wag-perk', { x: -20, opacity: 0 }, { x: 0, opacity: 1, duration: 0.65, ease: 'expo.out', stagger: 0.1, scrollTrigger: { trigger: '.en-wag-perks', start: 'top 82%', once: true } });
-    }, ref);
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <section ref={ref} style={{ padding: 'clamp(80px, 10vw, 120px) 28px', background: 'var(--surface-0)', position: 'relative', overflow: 'hidden' }}>
-      <div className="aurora-orb" style={{ width: 500, height: 500, bottom: '-10%', left: '-5%', background: 'radial-gradient(circle, oklch(0.55 0.20 145 / 0.10), transparent 70%)', '--dur': '22s' }} />
-
-      <div style={{ maxWidth: 760, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        <div className="en-wag-card animated-border glass-panel" style={{ opacity: 0, border: '1px solid oklch(0.55 0.20 145 / 0.25)', borderRadius: 4, padding: 'clamp(32px, 5vw, 52px)', boxShadow: 'none', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: -60, right: -60, width: 280, height: 280, background: 'radial-gradient(circle, oklch(0.65 0.22 145 / 0.13), transparent 70%)', pointerEvents: 'none' }} />
-
-          {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 18, marginBottom: 28, flexWrap: 'wrap' }}>
-            <div style={{ width: 56, height: 56, borderRadius: 4, flexShrink: 0, background: 'oklch(0.55 0.22 145)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'none' }}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-              </svg>
-            </div>
-            <div style={{ flex: 1 }}>
-              <div className="section-label" style={{ marginBottom: 6 }}>WhatsApp Community</div>
-              <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.6rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.15, fontFamily: "'Space Grotesk', 'Secular One', sans-serif" }}>
-                The marketing{' '}<span className="text-gradient">back room</span>{' '}🚀
-              </h2>
-            </div>
-          </div>
-
-          {/* Description */}
-          <p style={{ fontSize: 'clamp(0.95rem, 1.8vw, 1.08rem)', color: 'var(--text-secondary)', lineHeight: 1.78, marginBottom: 32, maxWidth: 560 }}>
-            For business owners who want to understand how the game really works, no slogans and no theory.
-            Just practical business, sales psychology, and smart use of AI.
-          </p>
-
-          {/* Perks */}
-          <div className="en-wag-perks" style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 36 }}>
-            {enPerks.map((p, i) => (
-              <div key={i} className="en-wag-perk" style={{ opacity: 0, display: 'flex', alignItems: 'flex-start', gap: 14, padding: '14px 18px', background: 'var(--surface-2)', borderRadius: 3, border: '1px solid oklch(0.22 0.02 240)' }}>
-                <span style={{ fontSize: '1.4rem', lineHeight: 1, flexShrink: 0 }}>{p.emoji}</span>
-                <div>
-                  <span style={{ fontWeight: 800, color: 'var(--text-primary)', fontSize: '0.95rem' }}>{p.title}</span>
-                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.92rem' }}>{': '}{p.desc}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Dosage badge + CTA */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'oklch(0.55 0.22 145 / 0.1)', border: '1px solid oklch(0.55 0.22 145 / 0.25)', borderRadius: 3, padding: '8px 16px' }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'oklch(0.65 0.22 145)', display: 'block', boxShadow: 'none' }} />
-              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'oklch(0.75 0.18 145)' }}>2 messages a week · short, sharp, to the point</span>
-            </div>
-
-            <a href={WA_GROUP} target="_blank" rel="noopener noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 28px', background: 'oklch(0.55 0.22 145)', color: 'white', borderRadius: 3, fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", textDecoration: 'none', boxShadow: 'none', transition: 'background 0.25s, box-shadow 0.25s, transform 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'oklch(0.62 0.22 145)'; e.currentTarget.style.boxShadow = '0 0 48px oklch(0.55 0.22 145 / 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'oklch(0.55 0.22 145)'; e.currentTarget.style.boxShadow = '0 0 32px oklch(0.55 0.22 145 / 0.35)'; e.currentTarget.style.transform = 'translateY(0)'; }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-              </svg>
-              Join the group, free
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── Lead Form (section 11) ─────────────────────────────────────────── */
+/* ─── Lead Form ──────────────────────────────────────────────────────── */
 
 const EN_PHONE = '972534673151';
 
@@ -1125,15 +602,7 @@ function enFireLead() {
   if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { method: 'form_en' });
 }
 
-const enWaBtnStyle = {
-  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%',
-  padding: '13px 22px', borderRadius: 3, background: '#25955a', color: '#fff',
-  fontWeight: 800, fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", textDecoration: 'none',
-  boxShadow: '0 6px 20px rgba(37,149,90,0.3)',
-};
-
 function EnLeadForm() {
-  const sectionRef = useRef(null);
   const links = useSiteLinks();
   const waSecondary = (links.whatsapp_url && links.whatsapp_url.split('?')[0] + '?text=' + WA_TEXT)
     || `https://wa.me/${EN_PHONE}?text=${WA_TEXT}`;
@@ -1141,16 +610,6 @@ function EnLeadForm() {
   const [form, setForm] = useState({ name: '', phone: '', business: '', message: '' });
   const [status, setStatus] = useState('idle'); // idle | sending | done | error
   const [touched, setTouched] = useState(false);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.en-lf-inner', { y: 40, opacity: 0 }, {
-        y: 0, opacity: 1, duration: 0.9, ease: 'expo.out',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 78%', once: true },
-      });
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
 
   const valid = form.name.trim().length > 1 && /\d{7,}/.test(form.phone.replace(/\D/g, ''));
 
@@ -1180,125 +639,119 @@ function EnLeadForm() {
     }
   };
 
-  const inputStyle = {
-    width: '100%', padding: '13px 16px', borderRadius: 3,
-    border: '1px solid #cdd7e3', background: '#fff', color: '#0c1118',
-    fontSize: '1rem', fontFamily: "'Space Grotesk', 'Secular One', sans-serif", outline: 'none',
-    transition: 'border-color 0.2s, box-shadow 0.2s',
-  };
-  const labelStyle = { display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#3a4757', marginBottom: 6 };
-  const focusOn = (e) => { e.target.style.borderColor = '#1f9d57'; e.target.style.boxShadow = '0 0 0 3px rgba(52,217,123,0.15)'; };
-  const focusOff = (e) => { e.target.style.borderColor = '#cdd7e3'; e.target.style.boxShadow = 'none'; };
-
   return (
-    <section id="en-contact" ref={sectionRef} style={{ padding: 'clamp(70px, 10vw, 120px) 28px', background: 'linear-gradient(180deg, #eef3f8 0%, #e6edf5 100%)', position: 'relative', overflow: 'hidden' }}>
-      <div className="en-lf-inner" style={{ maxWidth: 920, margin: '0 auto', opacity: 0 }}>
-
-        {/* scarcity pill */}
-        <div style={{ textAlign: 'center', marginBottom: 18 }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(52,217,123,0.12)', border: '1px solid rgba(31,157,87,0.35)', borderRadius: 3, padding: '6px 16px', fontSize: '0.82rem', fontWeight: 700, color: '#117a41' }}>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#1f9d57', display: 'block', boxShadow: 'none', animation: 'pulse-ring 2s ease-out infinite' }} />
-            1 founding case-study spot open · special founding terms
-          </span>
+    <section id="en-contact" className="c-sec c-dark c-lf" aria-labelledby="en-lf-h">
+      <div className="c-wrap">
+        <div className="c-lf__head">
+          <span className="c-lf__pill">I take a few clients at a time</span>
+          <h2 id="en-lf-h" className="c-h2 c-lf__h">Get back to running your business <span className="c-g c-block">Leave the marketing to me</span></h2>
+          <p className="c-lead">{nd("Leave your details and I'll call you back for a half-hour intro call, where we'll figure out what your business needs, and you'll leave with a fixed price")}</p>
+          <p className="c-lf__note">{nd('A fixed price for each stage in the intro call · If the first month of management brings no inquiries, another month of management is free')}</p>
         </div>
 
-        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.15, color: '#0c1118', marginBottom: 12 }}>
-          Let's make a <span style={{ color: '#117a41' }}>Shift Up</span> for your business.
-        </h2>
-        <p style={{ textAlign: 'center', fontSize: 'clamp(1rem, 2.4vw, 1.15rem)', color: '#4a5868', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 8px' }}>
-          Leave your details and I'll get back to you for a short intro call. We'll check together if it's a fit.
-        </p>
-        <p style={{ textAlign: 'center', fontSize: '0.9rem', color: '#6b7d92', fontWeight: 600, marginBottom: 36 }}>
-          A clear, fixed price in the intro call · if the first month of management brings no inquiries, I manage the next month for free.
-        </p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.3fr) minmax(0, 1fr)', gap: 'clamp(20px, 3vw, 36px)', alignItems: 'start' }} className="lf-grid">
-
-          {/* ── Form (primary door) ── */}
-          <div style={{ background: '#fff', borderRadius: 4, padding: 'clamp(24px, 3vw, 36px)', boxShadow: '0 10px 40px rgba(12,17,24,0.08)', border: '1px solid #e1e8f0' }}>
+        <div className="c-lf__grid">
+          <div className="c-lf__panel">
             {status === 'done' ? (
-              <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                <div style={{ width: 60, height: 60, borderRadius: '50%', background: 'rgba(52,217,123,0.15)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#117a41" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                </div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0c1118', marginBottom: 8 }}>Got it! I'll be in touch soon.</h3>
-                <p style={{ color: '#4a5868', lineHeight: 1.6, marginBottom: 20 }}>Want to skip ahead? Message me directly on WhatsApp now.</p>
-                <a href={enBuildWaLink(form)} target="_blank" rel="noopener noreferrer" style={enWaBtnStyle}>
-                  {WA_ICON}Open a WhatsApp chat
-                </a>
+              <div className="c-lf__state">
+                <h3>{nd("Got it, thank you, I'll call you back for a half-hour intro call")}</h3>
+                <p>{nd("Don't want to wait? Message me on WhatsApp now")}</p>
+                <a href={enBuildWaLink(form)} target="_blank" rel="noopener noreferrer" className="c-wa-btn">{WA_ICON}Open a WhatsApp chat</a>
               </div>
             ) : status === 'error' ? (
-              <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                <h3 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0c1118', marginBottom: 8 }}>Almost there 🙂</h3>
-                <p style={{ color: '#4a5868', lineHeight: 1.6, marginBottom: 20 }}>The fastest way to continue is WhatsApp, your details are already filled in.</p>
-                <a href={enBuildWaLink(form)} target="_blank" rel="noopener noreferrer" style={enWaBtnStyle}>
-                  {WA_ICON}Continue on WhatsApp
-                </a>
+              <div className="c-lf__state">
+                <h3>Almost there</h3>
+                <p>{nd('The fastest way to continue is WhatsApp, your details are already filled in.')}</p>
+                <a href={enBuildWaLink(form)} target="_blank" rel="noopener noreferrer" className="c-wa-btn">{WA_ICON}Continue on WhatsApp</a>
               </div>
             ) : (
               <form onSubmit={handleSubmit} noValidate>
-                <div style={{ marginBottom: 16 }}>
-                  <label style={labelStyle} htmlFor="en-lf-name">Full name *</label>
-                  <input id="en-lf-name" type="text" value={form.name} onFocus={focusOn} onBlur={focusOff}
+                <div className="c-field">
+                  <label htmlFor="en-lf-name">Full name *</label>
+                  <input id="en-lf-name" type="text" value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    style={inputStyle} placeholder="What should I call you?" autoComplete="name" />
+                    className={touched && form.name.trim().length <= 1 ? 'is-err' : undefined}
+                    placeholder="What should I call you?" autoComplete="name" />
                 </div>
-                <div style={{ marginBottom: 16 }}>
-                  <label style={labelStyle} htmlFor="en-lf-phone">Phone *</label>
-                  <input id="en-lf-phone" type="tel" value={form.phone} onFocus={focusOn} onBlur={focusOff}
+                <div className="c-field">
+                  <label htmlFor="en-lf-phone">Phone *</label>
+                  <input id="en-lf-phone" type="tel" value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    style={inputStyle} placeholder="050-0000000" autoComplete="tel" />
+                    placeholder="050-0000000" autoComplete="tel" />
                 </div>
-                <div style={{ marginBottom: 16 }}>
-                  <label style={labelStyle} htmlFor="en-lf-business">Business field</label>
-                  <input id="en-lf-business" type="text" value={form.business} onFocus={focusOn} onBlur={focusOff}
+                <div className="c-field">
+                  <label htmlFor="en-lf-business">Business field</label>
+                  <input id="en-lf-business" type="text" value={form.business}
                     onChange={(e) => setForm({ ...form, business: e.target.value })}
-                    style={inputStyle} placeholder="e.g. restaurant, real estate, clinic…" />
+                    placeholder="e.g. restaurant, real estate, clinic…" />
                 </div>
-                <div style={{ marginBottom: 20 }}>
-                  <label style={labelStyle} htmlFor="en-lf-message">What's most urgent? (optional)</label>
-                  <textarea id="en-lf-message" rows={3} value={form.message} onFocus={focusOn} onBlur={focusOff}
+                <div className="c-field">
+                  <label htmlFor="en-lf-message">What's most urgent? (optional)</label>
+                  <textarea id="en-lf-message" rows={3} value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    style={{ ...inputStyle, resize: 'vertical' }} placeholder="A few words about your marketing challenge" />
+                    placeholder="e.g. it's not clear to me what brings me clients" />
                 </div>
 
                 {touched && !valid && (
-                  <p style={{ color: '#c0392b', fontSize: '0.82rem', marginBottom: 12 }}>Please add a name and a valid phone so I can get back to you.</p>
+                  <p className="c-err" style={{ marginBottom: 12 }}>{nd('Please add a name and a valid phone so I can get back to you.')}</p>
                 )}
 
-                <button type="submit" disabled={status === 'sending'} style={{
-                  width: '100%', padding: '15px', borderRadius: 3, border: 'none',
-                  background: status === 'sending' ? '#7fc89e' : '#1f9d57', color: '#fff',
-                  fontSize: '1.08rem', fontWeight: 800, fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-                  cursor: status === 'sending' ? 'default' : 'pointer',
-                  boxShadow: '0 8px 24px rgba(31,157,87,0.35)', transition: 'background 0.2s, transform 0.15s',
-                }}>
-                  {status === 'sending' ? 'Sending…' : 'Get a tailored proposal'}
+                <button type="submit" className="c-btn c-btn--full" disabled={status === 'sending'}>
+                  {status === 'sending' ? 'Sending…' : 'Book my intro call'}
                 </button>
-                <p style={{ textAlign: 'center', fontSize: '0.76rem', color: '#8190a3', marginTop: 12 }}>
-                  Your details stay with me only. No spam, no sharing.
-                </p>
+                <p className="c-form__fine">{nd('Your details stay with me, no spam and no sharing with anyone')}</p>
               </form>
             )}
           </div>
 
-          {/* ── Secondary door (WhatsApp) + soft third door ── */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div style={{ background: '#fff', borderRadius: 4, padding: 'clamp(22px, 3vw, 30px)', border: '1px solid #e1e8f0', boxShadow: '0 10px 40px rgba(12,17,24,0.05)' }}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0c1118', marginBottom: 8 }}>Prefer to talk now?</h3>
-              <p style={{ fontSize: '0.92rem', color: '#4a5868', lineHeight: 1.6, marginBottom: 18 }}>
-                Message me on WhatsApp and I'll get back to you fast.
-              </p>
-              <a href={waSecondary} target="_blank" rel="noopener noreferrer" style={enWaBtnStyle}>
-                {WA_ICON}Talk to me on WhatsApp
-              </a>
+          <div className="c-lf__side">
+            <div className="c-lf__wa">
+              <h3>Prefer to talk now?</h3>
+              <p>{nd("Message me on WhatsApp and I'll get back to you fast.")}</p>
+              <a href={waSecondary} target="_blank" rel="noopener noreferrer" className="c-wa-btn">{WA_ICON}Talk to me on WhatsApp</a>
             </div>
+            <p className="c-lf__soft">
+              {nd("Not the right time? That's fine, you can join my marketing community on WhatsApp, right below")}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-            <div style={{ background: 'rgba(12,17,24,0.04)', borderRadius: 4, padding: '20px 22px', border: '1px dashed #c3cedb' }}>
-              <p style={{ fontSize: '0.92rem', color: '#3a4757', lineHeight: 1.6 }}>
-                Not ready yet? That's fine. You can just follow along and get value. Scroll down to the quiet WhatsApp community. 👇
-              </p>
-            </div>
+/* ─── WhatsApp Community ─────────────────────────────────────────────── */
+
+const enPerks = [
+  { title: 'Strategy', desc: 'Why customers buy, and how to make them choose you.' },
+  { title: 'AI Tools', desc: 'Prompts and methods to save time and money.' },
+  { title: 'Deep Dives', desc: 'Breaking down marketing moves, adapted for business owners' },
+];
+
+function EnWhatsAppGroup() {
+  const { whatsapp_group: WA_GROUP } = useSiteLinks();
+
+  return (
+    <section className="c-sec c-dark c-dark--2 c-wag" aria-labelledby="en-wag-h">
+      <div className="c-wrap c-wag__grid">
+        <div>
+          <div className="c-lbl">WhatsApp Community</div>
+          <h2 id="en-wag-h" className="c-h2">The marketing <span className="c-g">back room</span></h2>
+          <p className="c-lead">
+            {nd('For business owners who want to understand how the game really works, no slogans and no theory, just practical business, sales psychology and smart use of AI')}
+          </p>
+        </div>
+        <div>
+          <ul className="c-wag__perks">
+            {enPerks.map((p) => (
+              <li key={p.title}><strong>{p.title}</strong>: {nd(p.desc)}</li>
+            ))}
+          </ul>
+          <div className="c-wag__row">
+            <a href={WA_GROUP} target="_blank" rel="noopener noreferrer" className="c-btn c-btn--ghost">
+              {WA_ICON}
+              Join the group, free
+            </a>
+            <span className="c-wag__dose">Short, sharp, to the point</span>
           </div>
         </div>
       </div>
@@ -1317,162 +770,105 @@ function onEmailClick(e) {
 }
 
 const EN_SOCIAL_ICONS = {
-  WhatsApp:  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>,
-  Email:     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>,
-  LinkedIn:  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>,
-  Facebook:  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
-  Instagram: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>,
+  WhatsApp:  WA_ICON,
+  Email:     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>,
+  LinkedIn:  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>,
+  Facebook:  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
+  Instagram: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>,
 };
 
 const enNavLinks = [
+  { label: 'The Plan',    id: 'plan'        },
   { label: 'The Process', id: 'en-strategy' },
   { label: 'Why Me',      id: 'en-why'      },
-  { label: 'Work',        id: 'en-work'     },
   { label: 'About',       id: 'en-about'    },
   { label: 'FAQ',         id: 'en-faq'      },
   { label: 'Contact',     id: 'en-contact'  },
 ];
 
 function EnFooter() {
-  const goto = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   const links = useSiteLinks();
   const WA_LINK = links.whatsapp_url.split('?')[0] + '?text=' + WA_TEXT;
   const enSocials = [
-    { label: 'WhatsApp',  href: WA_LINK,                       target: '_blank' },
-    { label: 'Email',     href: `mailto:${links.email}`,       emailBtn: true },
-    { label: 'LinkedIn',  href: links.linkedin,                target: '_blank' },
-    { label: 'Facebook',  href: links.facebook,                target: '_blank' },
-    { label: 'Instagram', href: links.instagram,               target: '_blank' },
+    { label: 'WhatsApp',  href: WA_LINK,                 target: '_blank' },
+    { label: 'Email',     href: `mailto:${links.email}`, emailBtn: true },
+    { label: 'LinkedIn',  href: links.linkedin,          target: '_blank' },
+    { label: 'Facebook',  href: links.facebook,          target: '_blank' },
+    { label: 'Instagram', href: links.instagram,         target: '_blank' },
   ];
 
   return (
-    <footer style={{ background: 'oklch(0.09 0.012 240)', borderTop: 'none', paddingTop: '56px', paddingBottom: '32px', paddingLeft: '28px', paddingRight: '28px', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(to right, transparent, var(--brand-deep) 25%, oklch(0.785 0.173 156.6 / 0.35) 50%, var(--brand-deep) 75%, transparent)' }} />
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-
-        {/* Top row */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 40, marginBottom: 48 }}>
-          {/* Logo + tagline */}
+    <footer className="c-foot">
+      <div className="c-wrap">
+        <div className="c-foot__top">
           <div>
-            <img src={logoSrc} alt="Shift Up" style={{ height: 80, width: 'auto', objectFit: 'contain', animation: 'hue-drift 8s ease-in-out infinite', display: 'block', marginBottom: 14 }} />
-            <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.65, maxWidth: 240 }}>
-              Research-based campaigns.<br />A performance guarantee that puts the risk on me.
+            <img src={logoSrc} alt="Shift Up" className="c-foot__logo" />
+            <p className="c-foot__tl">
+              A written plan first, and the campaign built on it<br />{nd('A performance guarantee that puts the risk on me.')}
             </p>
           </div>
 
-          {/* Quick nav */}
           <nav aria-label="Quick navigation">
-            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 16 }}>Navigation</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div className="c-foot__h">Navigation</div>
+            <div className="c-foot__nav">
               {enNavLinks.map(l => (
-                <button key={l.id} onClick={() => goto(l.id)}
-                  style={{ background: 'none', border: 'none', textAlign: 'left', color: 'var(--text-secondary)', fontSize: '0.88rem', fontWeight: 500, fontFamily: "'Space Grotesk', 'Secular One', sans-serif", cursor: 'pointer', transition: 'color 0.2s', padding: 0 }}
-                  onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
-                >{l.label}</button>
+                <button type="button" key={l.id} onClick={() => goto(l.id)}>{l.label}</button>
               ))}
             </div>
           </nav>
 
-          {/* Contact + socials */}
           <div>
-            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 16 }}>Get in Touch</div>
-            <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
-              style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.88rem', textDecoration: 'none', marginBottom: 8, transition: 'color 0.2s', cursor: 'pointer' }}
-              onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
-              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
-            >{links.phone}</a>
-            <a href={`mailto:${links.email}`}
-              onClick={onEmailClick}
-              style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.88rem', textDecoration: 'none', marginBottom: 20, transition: 'color 0.2s', cursor: 'pointer' }}
-              onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
-              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
-            >{links.email}</a>
-            <div style={{ display: 'flex', gap: 8 }}>
+            <div className="c-foot__h">Get in Touch</div>
+            <a className="c-foot__ln" href={WA_LINK} target="_blank" rel="noopener noreferrer" dir="ltr" style={{ marginBottom: 8 }}>{links.phone}</a>
+            <a className="c-foot__ln" href={`mailto:${links.email}`} onClick={onEmailClick}>{links.email}</a>
+            <div className="c-foot__socials">
               {enSocials.map(s => (
-                <a key={s.label} href={s.href} aria-label={s.label}
+                <a key={s.label} href={s.href} aria-label={s.label} className="c-social"
                   target={s.target || undefined} rel={s.target ? 'noopener noreferrer' : undefined}
                   onClick={s.emailBtn ? onEmailClick : undefined}
-                  style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--surface-1)', border: '1px solid var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', textDecoration: 'none', transition: 'background 0.3s, color 0.3s, border-color 0.3s' }}
-                  onMouseEnter={e => { e.currentTarget.style.background='oklch(0.785 0.173 156.6 / 0.15)'; e.currentTarget.style.color='var(--brand-prime)'; e.currentTarget.style.borderColor='oklch(0.785 0.173 156.6 / 0.35)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background='var(--surface-1)'; e.currentTarget.style.color='var(--text-muted)'; e.currentTarget.style.borderColor='var(--surface-2)'; }}
                 >{EN_SOCIAL_ICONS[s.label]}</a>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Divider */}
-        <div style={{ height: 1, background: 'var(--surface-1)', marginBottom: 24 }} />
-
-        {/* Bottom row */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-          <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-            © {new Date().getFullYear()} Shift Up · Shmuel Munitz. All rights reserved.
-          </p>
-          <a href="/" style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s', cursor: 'pointer' }}
-            onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-prime)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
-          >← גרסה עברית</a>
+        <div className="c-foot__bot">
+          <p>{nd(`© ${new Date().getFullYear()} Shift Up · Shmuel Munitz. All rights reserved.`)}</p>
+          <a href="/" lang="he" dir="rtl">גרסה עברית →</a>
         </div>
       </div>
     </footer>
   );
 }
 
-/* ─── Scroll Progress ────────────────────────────────────────────────── */
-
-function ScrollProgress() {
-  const barRef = useRef(null);
-  useEffect(() => {
-    const update = () => {
-      const docH = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = docH > 0 ? (window.scrollY / docH) * 100 : 0;
-      if (barRef.current) barRef.current.style.setProperty('--scroll-pct', `${pct}%`);
-    };
-    window.addEventListener('scroll', update, { passive: true });
-    return () => window.removeEventListener('scroll', update);
-  }, []);
-  return <div ref={barRef} className="scroll-progress" aria-hidden="true" />;
-}
-
 /* ─── Root ───────────────────────────────────────────────────────────── */
 
 export default function EnglishPage() {
-  const rootRef = useRef(null);
-
   useEffect(() => {
     const lenis = new Lenis({ duration: 1.15, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothTouch: false, touchMultiplier: 1.8 });
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
-    return () => { lenis.destroy(); gsap.ticker.remove((time) => lenis.raf(time * 1000)); };
+    let raf = 0;
+    const loop = (t) => { lenis.raf(t); raf = requestAnimationFrame(loop); };
+    raf = requestAnimationFrame(loop);
+    return () => { cancelAnimationFrame(raf); lenis.destroy(); };
   }, []);
 
-  const scrollToProcess = () => document.getElementById('en-strategy')?.scrollIntoView({ behavior: 'smooth' });
-  const scrollToForm = () => document.getElementById('en-contact')?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToForm = () => goto('en-contact');
 
   return (
-    <div ref={rootRef} dir="ltr" style={{ minHeight: '100vh', background: 'var(--bedrock)', color: 'var(--text-primary)', fontFamily: 'var(--font)', overflowX: 'hidden', position: 'relative' }}>
-      <ScrollProgress />
-      <div className="noise-overlay" aria-hidden="true" />
-      <Cursor />
+    <div dir="ltr" lang="en" className="c-page c-page--en">
       <EnNavbar />
       <main>
-        <EnHero onProcess={scrollToProcess} onForm={scrollToForm} />
+        <EnHero onForm={scrollToForm} />
         <EnTrustStrip />
         <EnPain />
-        <EnManifesto />
-        <div className="section-divider" />
+        <PlanSection {...EN_PLAN} />
         <EnProcess />
-        <EnWhatYouGet />
-        <div className="section-divider" />
-        <EnWhyMe />
-        <div className="section-divider" />
+        <EnTestimonials />
         <EnProof />
-        <div className="section-divider" />
+        <EnGuarantee onForm={scrollToForm} />
+        <EnFit />
+        <EnComparison />
         <EnAbout />
-        <div className="section-divider" />
         <EnFAQ />
         <EnLeadForm />
         <EnWhatsAppGroup />

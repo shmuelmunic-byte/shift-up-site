@@ -1,0 +1,310 @@
+/* ════════════════════════════════════════════════════════════════════
+   כיוון C בדפים הפנימיים (סבב 2, 25.11.2026)
+   /audit · /ig · /freebies · /testimonials · /en
+   הכל תחת .c-page. הטוקנים, הכותרות, הכפתורים (.c-btn) והסקשנים (.c-sec / .c-dark / .c-light)
+   מגיעים מ-c-design.css. כאן רק מה שייחודי לדפים האלה. האדמין ושאר הדפים לא נוגעים ב-.c-page
+   ════════════════════════════════════════════════════════════════════ */
+
+.c-page { position: relative; min-height: 100vh; overflow-x: clip; }
+.c-page img { max-width: 100%; }
+
+/* ── /en: לטינית. Secular One לא נבנה ללטינית, אז הכותרות ב-Space Grotesk 700
+   (הפונט של הלוגו והמספרים בדף המיתוג), והגוף נשאר Heebo כמו בעברית ── */
+.c-page[dir="ltr"] :is(h1, h2, h3),
+.c-page[dir="ltr"] :is(.c-h2, .c-pain__bridge, .c-proc__name, .c-about__quote p, .c-en-man__p) {
+  font-family: 'Space Grotesk', 'Heebo', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.028em;
+}
+
+/* ── פס הניווט של הדפים הפנימיים ── */
+.c-pnav { position: sticky; top: 0; z-index: 900; background: var(--c-night); border-bottom: 1px solid var(--c-line); }
+.c-pnav__row { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 72px; }
+.c-pnav__start { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.c-pnav__logo { display: flex; flex-shrink: 0; }
+.c-pnav__logo img { height: 48px; width: auto; display: block; }
+.c-pnav__tag { font-family: var(--c-ui); font-size: 15px; font-weight: 500; color: var(--c-muted); padding-inline-start: 14px; border-inline-start: 1px solid var(--c-line); white-space: nowrap; }
+.c-pnav__end { display: flex; align-items: center; gap: 18px; }
+.c-pnav__back { display: inline-flex; align-items: center; gap: 10px; color: var(--c-muted); font-family: var(--c-ui); font-size: 15px; font-weight: 500; text-decoration: none; padding: 8px 0; white-space: nowrap; }
+.c-pnav__back:hover { color: var(--c-white); }
+/* חץ חזרה: ב-RTL מצביע ימינה (אחורה בכיוון הקריאה), ב-LTR שמאלה */
+.c-pnav__arrow { width: 8px; height: 8px; border-top: 2px solid var(--c-green); border-inline-start: 2px solid var(--c-green); rotate: 45deg; }
+.c-page[dir="ltr"] .c-pnav__arrow { rotate: -45deg; }
+.c-pnav__slot { display: block; width: 40px; height: 40px; flex-shrink: 0; }
+
+/* כפתור הנגישות יושב במקום השמור בפס (נמדד ב-PageNav), בכל רוחב, עם באנר ובלעדיו */
+body:has(.c-page) .a11y-trigger, body:has(.c-page):has(.cookie-banner) .a11y-trigger {
+  inset-inline-start: auto; inset-inline-end: auto; right: auto; bottom: auto;
+  top: var(--a11y-top, 16px); left: var(--a11y-left, 20px);
+  width: 40px; height: 40px; box-shadow: none;
+}
+
+/* ── כותרת עמוד כהה ── */
+.c-phead { padding: 96px 0 80px; }
+.c-phead__h1 { font-size: clamp(44px, 6vw, 86px); line-height: 1.04; color: var(--c-white); text-wrap: balance; max-width: 980px; }
+.c-phead .c-lead { margin-top: 22px; }
+.c-phead .c-lbl { margin-bottom: 18px; }
+
+/* ── CTA בסוף עמוד ── */
+.c-pcta__grid { display: grid; grid-template-columns: 1fr auto; gap: 40px 64px; align-items: end; }
+.c-pcta p { font-size: 20px; line-height: 1.7; color: var(--c-muted); max-width: 640px; }
+.c-pcta .c-btn { white-space: nowrap; }
+
+/* ════ /testimonials ════ */
+.c-who__tile b { font-family: 'Secular One', sans-serif; font-weight: 400; font-size: 30px; color: var(--c-green); line-height: 1; }
+.c-tg--page { align-items: start; }
+.c-tpage__empty { font-size: 20px; line-height: 1.7; color: var(--c-ink3); max-width: 640px; padding-inline-start: 18px; border-inline-start: 5px solid var(--c-green); }
+
+/* ════ /ig (קישור בביו) ════ */
+.c-ig { background: var(--c-night); min-height: 100dvh; }
+.c-ig__main { max-width: 460px; margin: 0 auto; padding: 44px 20px 72px; }
+.c-ig__top { display: grid; grid-template-columns: 132px 1fr; gap: 0 30px; align-items: end; margin-bottom: 40px; }
+.c-ig__top .c-gface__frame { transform: translate(-10px, 10px); }
+.c-ig__top .c-gface__nm { display: none; }
+.c-ig__name { font-size: 40px; line-height: 1.05; color: var(--c-white); }
+.c-ig__title { margin-top: 10px; font-size: 16px; line-height: 1.55; color: var(--c-muted); }
+.c-ig__chip { display: inline-block; margin-top: 14px; font-family: var(--c-ui); font-size: 14px; font-weight: 600; color: var(--c-night); background: var(--c-mint); padding: 4px 12px; }
+.c-ig__links { display: flex; flex-direction: column; gap: 12px; border-top: 2px solid var(--c-green); padding-top: 28px; }
+.c-ig__btn { width: 100%; min-height: 64px; justify-content: flex-start; padding: 16px 22px; font-size: 18px; text-align: start; }
+.c-ig__btn > span:first-of-type { flex: 1; }
+.c-btn--ghost .c-btn__tag { background: transparent; border: 1px solid var(--c-green); color: var(--c-mint); }
+.c-btn--line { background: transparent; color: var(--c-white); border: 1.5px solid #3A444F; }
+.c-btn--line:hover { border-color: var(--c-green); background: rgba(54,217,138,.08); }
+.c-ig__trust { margin-top: 28px; font-size: 15px; line-height: 1.6; color: var(--c-muted); padding-inline-start: 14px; border-inline-start: 3px solid var(--c-green); }
+.c-ig__handle { display: inline-flex; align-items: center; gap: 8px; margin-top: 36px; color: var(--c-dim); font-family: var(--c-ui); font-size: 15px; text-decoration: none; border-bottom: 1px solid var(--c-line); padding-bottom: 2px; }
+.c-ig__handle:hover { color: var(--c-white); border-color: var(--c-green); }
+
+/* ════ /freebies ════ */
+.c-free__head { padding: 80px 0 64px; }
+.c-free__head .c-phead__h1 { font-size: clamp(40px, 5.4vw, 76px); }
+.c-free__count { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; font-family: var(--c-ui); font-size: 15px; font-weight: 600; color: var(--c-glight); }
+.c-free__count::after { content: ""; flex: 1; height: 2px; background: var(--c-ink); }
+.c-free__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 460px), 1fr)); gap: 48px 48px; align-items: start; }
+.c-prompt { border-top: 3px solid var(--c-green); padding-top: 20px; min-width: 0; }
+.c-prompt__top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.c-prompt__tag { font-family: var(--c-ui); font-size: 14px; font-weight: 500; color: var(--c-ink3); }
+.c-prompt h2 { font-size: 30px; line-height: 1.15; color: var(--c-ink); }
+.c-prompt__sub { margin-top: 6px; font-size: 17px; font-weight: 700; color: var(--c-glight); }
+.c-prompt__box { margin-top: 20px; background: #fff; border: 1px solid var(--c-line-l); border-inline-start: 4px solid var(--c-ink); }
+.c-prompt__bar { padding: 9px 16px; border-bottom: 1px solid var(--c-line-l); font-family: var(--c-ui); font-size: 13px; font-weight: 600; color: var(--c-ink3); }
+.c-prompt__text { padding: 16px; font-size: 15.5px; line-height: 1.8; color: var(--c-ink2); white-space: pre-wrap; max-height: 260px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #B9C2CA transparent; overflow-wrap: anywhere; }
+.c-prompt__ph { color: var(--c-glight); font-weight: 700; background: rgba(14,138,76,.09); padding: 0 3px; }
+.c-prompt__actions { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.c-prompt .c-btn.is-done { background: var(--c-ink); color: var(--c-green); }
+.c-btn--ink { background: transparent; color: var(--c-ink); border: 1.5px solid var(--c-ink); }
+.c-btn--ink:hover { background: var(--c-ink); color: var(--c-white); }
+.c-prompt__skel { height: 300px; border-top: 3px solid var(--c-line-l); background: linear-gradient(var(--c-paper2), var(--c-paper2)) 0 22px / 70% 26px no-repeat, linear-gradient(#fff, #fff) 0 80px / 100% 180px no-repeat; }
+
+.c-free__audit { display: grid; grid-template-columns: 1fr auto; gap: 24px 48px; align-items: end; margin-top: 72px; background: var(--c-night); color: var(--c-white); border-inline-start: 6px solid var(--c-green); padding: 40px 44px; text-decoration: none; }
+.c-free__audit h2 { font-size: clamp(30px, 3.4vw, 46px); line-height: 1.12; color: var(--c-white); }
+.c-free__audit p { margin-top: 12px; font-size: 18px; line-height: 1.65; color: var(--c-muted); max-width: 620px; }
+.c-free__audit .c-tag { margin-bottom: 16px; }
+.c-free__audit:hover .c-btn { background: var(--c-mint); }
+
+.c-free__end { display: grid; grid-template-columns: 5fr 7fr; gap: 56px 80px; align-items: start; }
+.c-free__me { display: flex; gap: 18px; align-items: center; }
+.c-free__me img { width: 76px; height: 76px; object-fit: cover; object-position: 50% 22%; flex-shrink: 0; border-bottom: 3px solid var(--c-green); }
+.c-free__me b { display: block; font-size: 20px; color: var(--c-white); margin-bottom: 4px; }
+.c-free__me p { font-size: 16px; line-height: 1.6; color: var(--c-muted); }
+.c-free__wa p { font-family: var(--c-ui); font-size: 16px; font-weight: 600; color: var(--c-muted); margin-bottom: 12px; }
+.c-free__social-h { margin-top: 44px; margin-bottom: 14px; font-family: var(--c-ui); font-size: 15px; font-weight: 600; color: var(--c-mint); }
+.c-free__social { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; border-top: 1px solid var(--c-line); }
+.c-free__social a { display: flex; align-items: center; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--c-line); text-decoration: none; color: var(--c-muted); min-width: 0; }
+.c-free__social a:hover { color: var(--c-green); }
+.c-free__social b { display: block; font-size: 16px; color: var(--c-white); }
+.c-free__social small { display: block; font-family: var(--c-ui); font-size: 14px; color: var(--c-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.c-free__back { margin-top: 40px; }
+
+/* ════ /audit ════ */
+.dg-root.c-page { background: var(--c-paper) !important; }
+.dg-root.c-page[data-stage="intro"] { background: var(--c-night) !important; }
+
+/* ════ /en ════ */
+.c-page[dir="ltr"] .c-hero__photo::after { background: linear-gradient(to right, var(--c-night), rgba(7,10,14,0)); }
+.c-en-hero .c-hero__h1 { font-size: clamp(30px, min(3vw, 5.2svh), 46px); line-height: 1.12; }
+.c-en-hero .c-hero__guar { margin-top: 16px; font-size: 16px; line-height: 1.6; color: var(--c-muted); padding-inline-start: 14px; border-inline-start: 3px solid var(--c-green); }
+.c-en-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 30px; }
+.c-en-chips li { position: relative; padding-inline-start: 18px; font-family: var(--c-ui); font-size: 15px; color: var(--c-white); }
+.c-en-chips li::before { content: ""; position: absolute; inset-inline-start: 0; top: .45em; width: 9px; height: 9px; background: var(--c-green); transform: skewX(-14deg); }
+.c-en-hero__badges { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.c-en-badge { background: var(--c-night2); border-inline-start: 4px solid var(--c-green); padding: 10px 16px; text-align: start; min-width: 220px; }
+.c-en-badge span { display: block; font-family: var(--c-num); font-size: 12px; font-weight: 700; letter-spacing: .08em; color: var(--c-mint); }
+.c-en-badge b { display: block; margin-top: 2px; font-size: 16px; color: var(--c-white); }
+
+.c-en-man { text-align: start; }
+.c-en-man__p { font-size: clamp(40px, 6vw, 92px); line-height: 1.02; color: var(--c-ink); max-width: 1100px; }
+.c-en-man__p .c-g { color: var(--c-glight); }
+.c-en-man__by { display: flex; align-items: center; gap: 12px; margin-top: 36px; font-family: var(--c-ui); font-size: 15px; font-weight: 600; color: var(--c-ink3); }
+.c-en-man__by::before { content: ""; width: 36px; height: 3px; background: var(--c-glight); }
+
+.c-en-steps { list-style: none; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0 32px; }
+.c-en-steps h3 { font-size: 24px !important; }
+.c-en-steps p { font-size: 16px !important; }
+.c-en-steps li { border-top: 2px solid var(--c-line); padding-top: 26px; position: relative; }
+.c-en-steps li::before { content: ""; position: absolute; top: -2px; inset-inline-start: 0; width: 64px; height: 2px; background: var(--c-green); }
+.c-en-steps .c-proc__big { font-size: clamp(56px, 5vw, 84px); }
+.c-en-steps h3 { margin-top: 18px; font-size: 32px; color: var(--c-white); }
+.c-en-steps .c-proc__n { display: block; margin-top: 4px; }
+.c-en-steps p { margin-top: 16px; font-size: 17px; line-height: 1.75; color: var(--c-muted); }
+.c-en-steps ul { list-style: none; margin-top: 22px; border-top: 1px solid var(--c-line); }
+.c-en-steps ul li { border: 0; padding: 12px 0 0; padding-inline-start: 20px; font-family: var(--c-ui); font-size: 15px; color: var(--c-white); }
+.c-en-steps ul li::before { top: 1.15em; width: 9px; height: 9px; background: var(--c-green); transform: skewX(-14deg); }
+.c-en-line { margin-top: 56px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(24px, 2.4vw, 34px); line-height: 1.3; letter-spacing: -0.02em; color: var(--c-ink); }
+.c-en-line .c-g { color: var(--c-glight); }
+
+.c-en-why { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 56px; border-top: 2px solid var(--c-ink); }
+.c-en-why li { display: grid; grid-template-columns: 56px 1fr; gap: 0 14px; padding: 28px 0; border-bottom: 1px solid var(--c-line-l); }
+.c-en-why .c-num { font-size: 18px; padding-top: 6px; }
+.c-en-why h3 { font-size: 26px; color: var(--c-ink); }
+.c-en-why small { display: block; margin-top: 2px; font-family: var(--c-ui); font-size: 14px; color: var(--c-ink3); }
+.c-en-why p { margin-top: 10px; font-size: 17px; line-height: 1.7; color: var(--c-ink3); }
+
+.c-en-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 32px 20px; }
+.c-en-tile { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; text-align: start; color: inherit; }
+.c-en-tile__img { display: block; aspect-ratio: 4 / 5; overflow: hidden; background: var(--c-night2); border: 1px solid var(--c-line); }
+.c-en-tile__img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s cubic-bezier(.2,.8,.2,1); }
+.c-en-tile:hover .c-en-tile__img img { transform: scale(1.03); }
+.c-en-tile b { display: block; margin-top: 12px; font-size: 16px; color: var(--c-white); }
+.c-en-tile small { display: block; font-family: var(--c-ui); font-size: 14px; color: var(--c-mint); }
+.c-en-lb { position: fixed; inset: 0; z-index: 9999; background: rgba(7,10,14,.94); display: flex; align-items: center; justify-content: center; padding: 24px; }
+.c-en-lb img { max-width: 92vw; max-height: 88vh; object-fit: contain; }
+.c-en-lb button { position: absolute; top: 20px; right: 20px; width: 48px; height: 48px; background: var(--c-night); border: 1.5px solid var(--c-green); color: var(--c-white); font-size: 26px; line-height: 1; cursor: pointer; }
+
+.c-en-about__face { width: min(300px, 100%); margin-top: 44px; }
+.c-en-about__face .c-gface__crop img { transform: none; object-position: 50% 25%; }
+
+/* ב-LTR: החץ בשאלות מצביע ימינה כשסגור */
+.c-page[dir="ltr"] .c-acc__item summary::before { rotate: -45deg; }
+.c-page[dir="ltr"] .c-acc__item[open] > summary::before { rotate: 45deg; }
+.c-en-menu { position: fixed; top: 72px; inset-inline: 0; z-index: 899; }
+.c-page[dir="ltr"] .c-nav__menu button, .c-page[dir="ltr"] .c-nav__menu a { text-align: left; }
+@media (min-width: 901px) {
+  .c-en-hero { min-height: max(calc(100svh - 72px), 640px); }
+  .c-en-hero .c-hero__copy { padding-top: clamp(40px, 7svh, 80px); }
+}
+/* מובייל: הכפתור עולה מעל תת-הכותרת, כדי שיישאר במסך הראשון גם מעל באנר העוגיות */
+@media (max-width: 900px) {
+  .c-en-hero .c-hero__sub { order: 4; margin-top: 22px; }
+  .c-en-hero .c-hero__bullets { order: 5; }
+  .c-en-hero .c-tl { order: 6; }
+  .c-en-hero .c-en-hero__badges { order: 7; }
+}
+
+/* עדויות ב-/en: המקור בעברית בבועה, התרגום מתחת עם תווית */
+.c-bubble--he { text-align: right; font-family: 'Heebo', sans-serif; }
+.c-tr { margin-top: 30px; font-size: 17px; line-height: 1.6; color: var(--c-ink2); padding-inline-start: 14px; border-inline-start: 3px solid var(--c-line-l); }
+.c-tr span { display: block; font-family: var(--c-ui); font-size: 13px; font-weight: 600; color: var(--c-ink3); margin-bottom: 4px; }
+.c-msg .c-tr + .c-who { margin-top: 20px; }
+.c-page[dir="ltr"] .c-tl__s:not(:last-child)::after { background: linear-gradient(to right, var(--c-green), var(--c-teal)); }
+
+/* טופס באנגלית: אותו פאנל של דף הבית */
+.c-lf__pill { display: inline-block; margin-bottom: 20px; font-family: var(--c-ui); font-size: 15px; font-weight: 600; color: var(--c-night); background: var(--c-mint); padding: 5px 14px; }
+
+/* ── פוטר באנגלית: אותו מבנה כמו בעברית ── */
+.c-foot { background: var(--c-night); border-top: 1px solid var(--c-line); padding: 64px 0 32px; }
+.c-foot__top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; margin-bottom: 48px; }
+.c-foot__logo { height: 72px; width: auto; display: block; margin-bottom: 14px; }
+.c-foot__tl { font-size: 15px; line-height: 1.65; color: var(--c-muted); max-width: 280px; }
+.c-foot__h { font-family: var(--c-ui); font-size: 14px; font-weight: 700; color: #8A9097; margin-bottom: 16px; }
+.c-foot__nav { display: flex; flex-direction: column; gap: 10px; }
+.c-foot__nav button, .c-foot a.c-foot__ln { background: none; border: 0; padding: 0; text-align: start; color: var(--c-muted); font-family: var(--c-ui); font-size: 15px; cursor: pointer; text-decoration: none; display: block; }
+.c-foot__nav button:hover, .c-foot a.c-foot__ln:hover { color: var(--c-green); }
+.c-foot__socials { display: flex; gap: 8px; margin-top: 20px; }
+.c-foot__bot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 24px; border-top: 1px solid var(--c-line); font-size: 14px; color: #8A9097; }
+.c-foot__bot a { color: #8A9097; text-decoration: none; }
+.c-foot__bot a:hover { color: var(--c-green); }
+
+/* ════ טאבלט ════ */
+@media (max-width: 1080px) {
+  .c-en-steps { grid-template-columns: 1fr; gap: 0; }
+  .c-en-steps > li + li { margin-top: 48px; }
+}
+
+/* ════ מובייל ════ */
+@media (max-width: 760px) {
+  .c-pnav__row { height: 64px; gap: 12px; }
+  .c-en-menu { top: 64px; }
+  .c-en-badge { min-width: 0; flex: 1 1 150px; }
+  .c-pnav__logo img { height: 40px; }
+  .c-pnav__tag { font-size: 13px; padding-inline-start: 10px; }
+  .c-pnav__back { font-size: 14px; gap: 8px; }
+  .c-pnav__end { gap: 12px; }
+
+  .c-phead { padding: 56px 0 48px; }
+  .c-phead__h1 { font-size: 42px; }
+  .c-pcta__grid { grid-template-columns: 1fr; gap: 24px; }
+  .c-pcta p { font-size: 17px; }
+  .c-pcta .c-btn { width: 100%; white-space: normal; }
+
+  .c-ig__main { padding: 32px 20px 56px; }
+  .c-ig__top { grid-template-columns: 104px 1fr; gap: 0 22px; margin-bottom: 32px; }
+  .c-ig__name { font-size: 32px; }
+  .c-ig__title { font-size: 15px; }
+  .c-ig__btn { font-size: 17px; }
+
+  .c-free__head { padding: 52px 0 44px; }
+  .c-free__head .c-phead__h1 { font-size: 40px; }
+  .c-free__grid { gap: 44px; }
+  .c-prompt h2 { font-size: 26px; }
+  .c-prompt__text { font-size: 15px; }
+  .c-free__audit { grid-template-columns: 1fr; padding: 28px 22px; margin-top: 56px; }
+  .c-free__audit .c-btn { width: 100%; }
+  .c-free__end { grid-template-columns: 1fr; gap: 40px; }
+  .c-free__social { grid-template-columns: 1fr; }
+  .c-free__wa .c-btn { width: 100%; }
+
+  .c-en-hero .c-hero__h1 { font-size: clamp(21px, 5.9vw, 30px); line-height: 1.16; }
+  .c-en-hero .c-hero__guar { font-size: 15px; }
+  .c-en-chips { margin-top: 24px; gap: 8px 18px; }
+  .c-en-chips li { font-size: 14px; }
+  .c-en-man__p { font-size: 40px; }
+  .c-en-steps h3 { font-size: 27px; }
+  .c-en-steps p { font-size: 16px; }
+  .c-en-why { grid-template-columns: 1fr; }
+  .c-en-why li { grid-template-columns: 40px 1fr; padding: 22px 0; }
+  .c-en-why h3 { font-size: 23px; }
+  .c-en-why p { font-size: 16px; }
+  .c-en-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 14px; }
+  .c-en-line { margin-top: 40px; }
+  .c-foot { padding: 48px 0 28px; }
+}
+
+/* /en במובייל: הניווט דביק מעל הצילום, אז בלי ההחשכה העליונה של ההירו (היא נועדה לניווט שקוף בבית) */
+@media (max-width: 900px) {
+  .c-en-hero .c-hero__photo::after { display: none; }
+}
+
+/* ════ תיקוני AD דפים 1 (25.11.2026) ════ */
+
+/* #6 /testimonials: הירו נמוך יותר, הבועות מיושרות לתחתית כך ששורות הדובר באותו גובה, עמודה אחת עד 900 */
+.c-phead--sm { padding: 64px 0 52px; }
+.c-phead--sm .c-phead__h1 { font-size: clamp(40px, 4.6vw, 66px); }
+.c-phead--sm .c-lead { margin-top: 14px; }
+.c-phead--sm + .c-sec { padding-top: 64px; }
+.c-tg--page { align-items: end; }
+@media (max-width: 900px) {
+  .c-tg--page { grid-template-columns: 1fr; gap: 44px; }
+}
+@media (max-width: 760px) {
+  .c-phead--sm { padding: 40px 0 36px; }
+  .c-phead--sm .c-phead__h1 { font-size: 38px; }
+  .c-phead--sm + .c-sec { padding-top: 44px; }
+}
+
+/* #8ג /freebies: שורות בגובה אחיד, חיתוך בין שורות, דהייה כשיש עוד טקסט */
+.c-prompt__text { padding: 0 16px; margin: 14px 0; line-height: 1.8; max-height: calc(1.8em * 10); }
+.c-prompt__text > div { min-height: 1.8em; }
+.c-prompt__text.is-more { -webkit-mask-image: linear-gradient(#000 70%, transparent); mask-image: linear-gradient(#000 70%, transparent); }
+.c-prompt__h { font-weight: 700; color: var(--c-ink); }
+.c-prompt__rule { height: 1.8em; background: linear-gradient(var(--c-line-l), var(--c-line-l)) center / 100% 1px no-repeat; }
+
+/* #7 /en: עמודת טקסט רחבה יותר (כותרת עד 5 שורות ב-1440), והפנים שלמות ב-1024 */
+@media (min-width: 901px) {
+  .c-en-hero { --copyw: clamp(480px, calc(50vw - 40px), 680px); }
+  .c-en-hero .c-hero__photo img { object-position: 60% 30%; }
+}
+
+/* פס הניווט במסכים צרים מאוד: התווית ליד הלוגו יורדת, כדי שלא תידחס לקישור החזרה */
+@media (max-width: 400px) {
+  .c-pnav__tag { display: none; }
+}

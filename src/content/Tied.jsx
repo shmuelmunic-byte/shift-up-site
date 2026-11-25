@@ -28,3 +28,15 @@ export default function Tied({ text }) {
   }
   return <>{out}</>;
 }
+
+/* גמר שורה (סבב 2 דפים, AD #8): בלי מילה יתומה ובלי מקף בקצה שורה, בלי לשנות מילה.
+   - שתי המילים האחרונות נצמדות (~)
+   - המקף נצמד למילה שלפניו ("X~-"), כך שלא יפתח שורה
+   משתמשים ב-<Tied text={fin(...)} /> */
+export function fin(text) {
+  if (typeof text !== 'string') return text;
+  let s = text.replace(/ - /g, '~- ');
+  const i = s.lastIndexOf(' ');
+  if (i > 0 && !s.slice(i + 1).includes('*')) s = s.slice(0, i) + '~' + s.slice(i + 1);
+  return s;
+}

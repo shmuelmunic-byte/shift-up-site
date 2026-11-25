@@ -5,7 +5,7 @@
    הכל תחת .c-site (דף הבית) ו-.c-ty (דף התודה), כדי לא לגעת ב-/en, /admin ושאר הדפים
    ════════════════════════════════════════════════════════════════════ */
 
-.c-site, .c-ty {
+.c-site, .c-ty, .c-page {
   --c-night: #070A0E;
   --c-night2: #0C1117;
   --c-white: #F5F7F8;
@@ -35,16 +35,16 @@
 }
 
 /* Secular One קיים במשקל אחד: בלי bold מזויף. גם הלטינית בכותרות ב-Secular One (AD בנייה 1, #7) */
-.c-site :is(h1, h2, h3), .c-ty :is(h1, h2, h3) {
+.c-site :is(h1, h2, h3), .c-ty :is(h1, h2, h3), .c-page :is(h1, h2, h3) {
   font-family: 'Secular One', sans-serif !important;
   font-weight: 400 !important;
   font-synthesis: none;
   letter-spacing: -0.01em;
 }
-.c-site button, .c-site input, .c-site textarea, .c-ty button { font-family: inherit; }
+.c-site button, .c-site input, .c-site textarea, .c-ty button, .c-page :is(button, input, textarea) { font-family: inherit; }
 
 /* רשת הרקע הקבועה של האתר לא נכנסת לכיוון C (רקע מלא, בלי קווים מאחורי הטקסט) */
-body:has(.c-site) .grid-bg-fixed, body:has(.c-ty) .grid-bg-fixed { display: none; }
+body:has(.c-site) .grid-bg-fixed, body:has(.c-ty) .grid-bg-fixed, body:has(.c-page) .grid-bg-fixed { display: none; }
 
 .c-wrap { max-width: 1320px; margin: 0 auto; padding: 0 64px; position: relative; }
 .c-g { color: var(--c-green); }
@@ -87,7 +87,7 @@ body:has(.c-site) .grid-bg-fixed, body:has(.c-ty) .grid-bg-fixed { display: none
 .c-btn--ghost:hover { background: rgba(54,217,138,.12); }
 .c-q { display: inline-flex; align-items: center; gap: 8px; color: var(--c-white); font-family: var(--c-ui); font-size: 17px; text-decoration: none; border-bottom: 1px solid var(--c-dim); padding-bottom: 2px; }
 .c-q:hover { border-color: var(--c-green); }
-.c-site :focus-visible, .c-ty :focus-visible { outline: 2px solid var(--c-mint); outline-offset: 3px; border-radius: 0; }
+.c-site :focus-visible, .c-ty :focus-visible, .c-page :focus-visible { outline: 2px solid var(--c-mint); outline-offset: 3px; border-radius: 0; }
 .c-light :focus-visible { outline-color: var(--c-glight); }
 
 /* ── ניווט ── */

@@ -11,7 +11,7 @@ export const DEFAULT_LINKS = {
   email:          'shmuelmunic@gmail.com',
   linkedin:       'https://www.linkedin.com/in/shmuel-munitz-marketing',
   facebook:       'https://www.facebook.com/share/1BZ8HrpBeo/',
-  instagram:      'https://www.instagram.com/shiftup.il?igsh=MTZod2E3NTk4dXI5Zg==',
+  instagram:      'https://www.instagram.com/shiftup.marketing',
 };
 
 const KEYS = [

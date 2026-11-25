@@ -1,11 +1,14 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import Cursor from '../components/Cursor';
+import PageNav from '../components/PageNav';
+import Footer from '../components/Footer';
+import { nd } from '../content/heroCopy';
+import Tied, { fin } from '../content/Tied';
 import { supabase } from '../lib/supabase';
 
 const WA_LINK =
   'https://wa.me/972534673151?text=' +
-  encodeURIComponent('היי שמואל, ראיתי את הפרומפטים ואשמח לשמוע על קמפיין מבוסס-מחקר לעסק שלי');
+  encodeURIComponent('היי שמואל, ראיתי את הפרומפטים ואשמח לשמוע איך נראית תוכנית לעסק שלי');
 
 const COMMUNITY_LINK =
   'https://chat.whatsapp.com/BBhSKstQEgg3jZsSo9RvdZ?s=cl&p=a&mlu=3';
@@ -14,8 +17,8 @@ const SOCIAL = [
   {
     id: 'instagram',
     label: 'אינסטגרם',
-    handle: '@shiftup.il',
-    href: 'https://www.instagram.com/shiftup.il',
+    handle: '@shiftup.marketing',
+    href: 'https://www.instagram.com/shiftup.marketing',
     hoverColor: 'oklch(0.72 0.22 340)',
     Icon: IconInstagram,
   },
@@ -52,7 +55,7 @@ const FALLBACK_PROMPTS = [
     title: 'חטיפת מותג · Trigger Marketing',
     subtitle: 'השתלטות על הרגלי הקהל שלך, בחינם',
     tag: 'שיווק פסיכולוגי',
-    text: `אתה פועל כפסיכולוג התנהגותי ואסטרטג שיווקי מוביל.\n\nהעסק שלי: [תאר את העסק שלך — מה אתה עושה ולמי]\nקהל היעד שלי: [תאר בפירוט — גיל, עיסוק, כאב עיקרי, חלום עיקרי]\n\nשלב 1 — מיפוי טריגרים:\nזהה 5 דברים ספציפיים שהקהל שלי נתקל בהם כל יום — הרגלים, חפצים, מקומות, מילים או חוויות שחוזרים ברמה יומיומית.\n\nשלב 2 — השתלטות יצירתית:\nלכל טריגר, הצע שיטה חינמית, מעשית ויצירתית שבה אוכל לקשר אותו למותג שלי.\n\nפורמט הפלט:\nלכל טריגר (1–5):\n🎯 הטריגר: [שם ותיאור קצר]\n💡 ההשתלטות: [הפעולה הספציפית שתעשה]\n🔗 הקשר למותג: [למה זה ייצור אסוציאציה חזקה]\n⚡ קשיי יישום: [מה הכי חשוב לשים לב אליו]`,
+    text: `אתה פועל כפסיכולוג התנהגותי ואסטרטג שיווקי מוביל.\n\nהעסק שלי: [תאר את העסק שלך - מה אתה עושה ולמי]\nקהל היעד שלי: [תאר בפירוט - גיל, עיסוק, כאב עיקרי, חלום עיקרי]\n\nשלב 1 - מיפוי טריגרים:\nזהה 5 דברים ספציפיים שהקהל שלי נתקל בהם כל יום - הרגלים, חפצים, מקומות, מילים או חוויות שחוזרים ברמה יומיומית.\n\nשלב 2 - השתלטות יצירתית:\nלכל טריגר, הצע שיטה חינמית, מעשית ויצירתית שבה אוכל לקשר אותו למותג שלי.\n\nפורמט הפלט:\nלכל טריגר (1–5):\n🎯 הטריגר: [שם ותיאור קצר]\n💡 ההשתלטות: [הפעולה הספציפית שתעשה]\n🔗 הקשר למותג: [למה זה ייצור אסוציאציה חזקה]\n⚡ קשיי יישום: [מה הכי חשוב לשים לב אליו]`,
   },
   {
     id: 'content-multiplier', num: '01',
@@ -114,57 +117,66 @@ function IconCheck({ size = 17 }) {
   );
 }
 
-function IconArrowLeft({ size = 15 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M19 12H5M12 5l-7 7 7 7" />
-    </svg>
-  );
-}
-
-function IconExternalLink({ size = 13 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-      <polyline points="15 3 21 3 21 9" />
-      <line x1="10" y1="14" x2="21" y2="3" />
-    </svg>
-  );
-}
+/* כל הטקסטים של הדף במקום אחד, כדי שיהיה קל להחליף כשהקופי החדש יגיע (סבב 2, 25.11.2026) */
+const COPY = {
+  badge: 'ספרייה חינמית · Shift Up',
+  title: 'הנה הפרומפטים',
+  titleAccent: 'שהבטחתי',
+  sub1: 'כלי AI שאני משתמש בהם כל יום, לך, ממני, בלי עלות.',
+  sub2: 'הספרייה גדלה עם כל פוסט חדש.',
+  promptBar: 'הפרומפט',
+  copy: 'העתק פרומפט',
+  copied: 'הועתק ללוח',
+  auditTag: 'אבחון חינם · 3 דקות',
+  auditTitle: 'רוצה משהו מותאם',
+  auditAccent: 'לך',
+  auditBody: 'הפרומפטים כלליים, והאבחון האישי אומר לך בדיוק איפה השיווק שלך דולף: הציון שלך ו-3 הדברים לתקן קודם, בלי להשאיר פרטים.',
+  auditBtn: 'עשה את האבחון ←',
+  meName: 'שמואל מוניץ',
+  meBody: 'אסטרטג שיווק + מומחה AI, קודם אני כותב לך תוכנית, ועליה אני מקים ומנהל את הקמפיין',
+  waLead: 'רוצה לדעת בדיוק מה יביא לקוחות לעסק שלך?',
+  waBtn: 'לשיחת היכרות חינם',
+  social: 'בואו נתחבר',
+  back: 'לאתר הראשי של Shift Up',
+};
 
 // ─── HIGHLIGHTED TEXT ───────────────────────────────────────────────────────
 // Parses [placeholder] tokens and renders them highlighted in brand green
 
-function HighlightedText({ text }) {
+function Placeholders({ text }) {
   const parts = text.split(/(\[[^\]]+\])/g);
-  return (
-    <>
-      {parts.map((part, i) =>
-        part.startsWith('[') && part.endsWith(']') ? (
-          <span
-            key={i}
-            style={{
-              color: 'var(--brand-prime)',
-              fontWeight: 700,
-              background: 'oklch(0.785 0.173 156.6 / 0.13)',
-              borderRadius: 4,
-              padding: '1px 4px',
-            }}
-          >
-            {part}
-          </span>
-        ) : (
-          <span key={i}>{part}</span>
-        )
-      )}
-    </>
+  return parts.map((part, i) =>
+    part.startsWith('[') && part.endsWith(']')
+      ? <span key={i} className="c-prompt__ph">{part}</span>
+      : <span key={i}>{part}</span>
   );
 }
 
+/* תצוגה בלבד (AD דפים 1, #8ג): "---" הופך לקו דק ו-"##" לשורת כותרת מודגשת, בלי הסימנים.
+   כל שורה בגובה שורה אחד בדיוק, כך שהתיבה נחתכת תמיד בין שורות. מה שמועתק נשאר prompt.text כמו שהוא */
+function HighlightedText({ text }) {
+  return String(text).split('\n').map((line, i) => {
+    const t = line.trim();
+    if (/^-{3,}$/.test(t)) return <div key={i} className="c-prompt__rule" aria-hidden="true" />;
+    const h = t.match(/^#{1,6}\s+(.*)$/);
+    if (h) return <div key={i} className="c-prompt__h"><Placeholders text={h[1]} /></div>;
+    return <div key={i}>{line ? <Placeholders text={line} /> : ' '}</div>;
+  });
+}
+
 // ─── PROMPT CARD ────────────────────────────────────────────────────────────
+/* כיוון C: בלי כרטיס מעוגל ובלי "חלון" עם נקודות צבע. פס ירוק עליון, תיבת טקסט לבנה חדה */
 
 function PromptCard({ prompt }) {
   const [copied, setCopied] = useState(false);
+  // דהייה בתחתית רק כשיש עוד טקסט מתחת (ונעלמת כשמגיעים לסוף)
+  const boxRef = useRef(null);
+  const [more, setMore] = useState(false);
+  const onBoxScroll = () => {
+    const b = boxRef.current;
+    if (b) setMore(b.scrollHeight - b.scrollTop - b.clientHeight > 4);
+  };
+  useEffect(onBoxScroll, [prompt.text]);
 
   const handleCopy = useCallback(() => {
     const doCopy = () => {
@@ -201,229 +213,34 @@ function PromptCard({ prompt }) {
   }, [prompt]);
 
   return (
-    <article
-      style={{
-        width: '100%',
-        borderRadius: 4,
-        background: 'oklch(0.11 0.015 240)',
-        border: '1.5px solid oklch(0.97 0.005 240 / 0.08)',
-        overflow: 'hidden',
-        boxShadow: 'none',
-        position: 'relative',
-      }}
-    >
-      {/* Green top accent bar */}
-      <div style={{
-        height: 3,
-        background: 'linear-gradient(90deg, var(--brand-deep) 0%, var(--brand-prime) 55%, var(--brand-glow) 100%)',
-      }} />
+    <article className="c-prompt">
+      <div className="c-prompt__top">
+        <span className="c-num">#{prompt.num}</span>
+        <span className="c-prompt__tag">{prompt.tag}</span>
+      </div>
+      <h2>{prompt.title}</h2>
+      <p className="c-prompt__sub"><Tied text={fin(nd(prompt.subtitle))} /></p>
 
-      <div style={{ padding: '22px 22px 20px' }}>
-
-        {/* Card header row */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: 16,
-          gap: 10,
-        }}>
-          {/* Number badge */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 36,
-            height: 36,
-            borderRadius: '50%',
-            background: 'oklch(0.785 0.173 156.6 / 0.12)',
-            border: '1.5px solid oklch(0.785 0.173 156.6 / 0.3)',
-            flexShrink: 0,
-          }}>
-            <span style={{
-              fontSize: '0.72rem',
-              fontWeight: 900,
-              color: 'var(--brand-prime)',
-              letterSpacing: '0.02em',
-              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-            }}>
-              #{prompt.num}
-            </span>
-          </div>
-
-          {/* Category chip */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            padding: '5px 12px',
-            borderRadius: 100,
-            background: 'oklch(0.14 0.02 240)',
-            border: '1px solid oklch(0.97 0.005 240 / 0.1)',
-            fontSize: '0.73rem',
-            color: 'var(--text-muted)',
-            fontWeight: 700,
-            letterSpacing: '0.03em',
-            whiteSpace: 'nowrap',
-          }}>
-            <span style={{
-              width: 5, height: 5,
-              borderRadius: '50%',
-              background: 'var(--brand-prime)',
-              boxShadow: 'none',
-              flexShrink: 0,
-              animation: 'breathing 2.5s ease-in-out infinite',
-            }} />
-            {prompt.tag}
-          </div>
+      <div className="c-prompt__box">
+        <div className="c-prompt__bar">{COPY.promptBar}</div>
+        <div className={`c-prompt__text${more ? ' is-more' : ''}`} tabIndex={0} ref={boxRef} onScroll={onBoxScroll}>
+          <HighlightedText text={prompt.text} />
         </div>
+      </div>
 
-        {/* Title */}
-        <h2 style={{
-          fontSize: 'clamp(1.3rem, 5vw, 1.55rem)',
-          fontWeight: 900,
-          color: 'var(--text-primary)',
-          letterSpacing: '-0.025em',
-          lineHeight: 1.1,
-          marginBottom: 5,
-        }}>
-          {prompt.title}
-        </h2>
-
-        {/* Subtitle */}
-        <p style={{
-          fontSize: '0.88rem',
-          fontWeight: 700,
-          color: 'var(--brand-prime)',
-          marginBottom: 20,
-          letterSpacing: '0.01em',
-        }}>
-          {prompt.subtitle}
-        </p>
-
-        {/* Prompt text box */}
-        <div style={{
-          borderRadius: 3,
-          overflow: 'hidden',
-          border: '1px solid oklch(0.97 0.005 240 / 0.07)',
-          marginBottom: 14,
-        }}>
-          {/* Text box header — label bar */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '9px 14px',
-            background: 'oklch(0.09 0.012 240)',
-            borderBottom: '1px solid oklch(0.97 0.005 240 / 0.06)',
-          }}>
-            <span style={{
-              fontSize: '0.7rem',
-              color: 'var(--text-muted)',
-              fontWeight: 600,
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-            }}>
-              הפרומפט
-            </span>
-            <div style={{ display: 'flex', gap: 5 }}>
-              {['oklch(0.65 0.18 25)', 'oklch(0.75 0.18 80)', 'oklch(0.65 0.2 145)'].map((c, i) => (
-                <div key={i} style={{
-                  width: 9, height: 9,
-                  borderRadius: '50%',
-                  background: c,
-                  opacity: 0.7,
-                }} />
-              ))}
-            </div>
-          </div>
-
-          {/* Scrollable text */}
-          <div style={{
-            padding: '16px 16px',
-            background: 'oklch(0.07 0.008 240)',
-            fontSize: '0.83rem',
-            lineHeight: 1.8,
-            color: 'var(--text-secondary)',
-            whiteSpace: 'pre-wrap',
-            fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-            direction: 'rtl',
-            textAlign: 'right',
-            maxHeight: 210,
-            overflowY: 'auto',
-            WebkitOverflowScrolling: 'touch',
-            scrollbarWidth: 'thin',
-            scrollbarColor: 'oklch(0.3 0.015 240) transparent',
-          }}>
-            <HighlightedText text={prompt.text} />
-          </div>
-        </div>
-
-        {/* Copy button */}
+      <div className="c-prompt__actions">
         <button
+          type="button"
           onClick={handleCopy}
           aria-label={copied ? 'הפרומפט הועתק ללוח' : 'העתק את הפרומפט ללוח'}
-          style={{
-            width: '100%',
-            minHeight: 48,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 9,
-            borderRadius: 3,
-            border: `1.5px solid ${copied
-              ? 'oklch(0.785 0.173 156.6 / 0.6)'
-              : 'oklch(0.785 0.173 156.6 / 0.22)'}`,
-            background: copied
-              ? 'oklch(0.785 0.173 156.6 / 0.14)'
-              : 'oklch(0.785 0.173 156.6 / 0.07)',
-            color: copied ? 'var(--brand-prime)' : 'var(--text-primary)',
-            fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-            fontWeight: 700,
-            fontSize: '0.95rem',
-            cursor: 'pointer',
-            transition: 'all 0.22s ease',
-            letterSpacing: '0.01em',
-          }}
-          onMouseEnter={e => {
-            if (copied) return;
-            e.currentTarget.style.background = 'oklch(0.785 0.173 156.6 / 0.13)';
-            e.currentTarget.style.borderColor = 'oklch(0.785 0.173 156.6 / 0.4)';
-            e.currentTarget.style.color = 'var(--brand-prime)';
-          }}
-          onMouseLeave={e => {
-            if (copied) return;
-            e.currentTarget.style.background = 'oklch(0.785 0.173 156.6 / 0.07)';
-            e.currentTarget.style.borderColor = 'oklch(0.785 0.173 156.6 / 0.22)';
-            e.currentTarget.style.color = 'var(--text-primary)';
-          }}
+          className={`c-btn c-btn--full${copied ? ' is-done' : ''}`}
         >
-          {copied
-            ? <><IconCheck size={17} /> הועתק ללוח</>
-            : <><IconCopy size={17} /> העתק פרומפט</>
-          }
+          {copied ? <><IconCheck size={17} /> {COPY.copied}</> : <><IconCopy size={17} /> {COPY.copy}</>}
         </button>
 
         {/* Resource button — file / video / link */}
         {prompt.resource_url && prompt.resource_type && (
-          <a
-            href={prompt.resource_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              marginTop: 8,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-              width: '100%', minHeight: 44,
-              borderRadius: 3, textDecoration: 'none',
-              border: '1.5px solid oklch(0.508 0.155 292.2 / 0.3)',
-              background: 'oklch(0.508 0.155 292.2 / 0.07)',
-              color: 'oklch(0.80 0.18 285)',
-              fontFamily: "'Space Grotesk', 'Secular One', sans-serif", fontWeight: 700, fontSize: '0.88rem',
-              transition: 'all 0.18s ease',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'oklch(0.508 0.155 292.2 / 0.14)'; e.currentTarget.style.borderColor = 'oklch(0.508 0.155 292.2 / 0.5)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'oklch(0.508 0.155 292.2 / 0.07)'; e.currentTarget.style.borderColor = 'oklch(0.508 0.155 292.2 / 0.3)'; }}
-          >
+          <a href={prompt.resource_url} target="_blank" rel="noopener noreferrer" className="c-btn c-btn--full c-btn--ink">
             {prompt.resource_type === 'file'  && '⬇ '}
             {prompt.resource_type === 'video' && '▶ '}
             {prompt.resource_type === 'link'  && '↗ '}
@@ -435,104 +252,10 @@ function PromptCard({ prompt }) {
   );
 }
 
-// ─── SOCIAL CARD ────────────────────────────────────────────────────────────
-
-function SocialCard({ label, handle, href, hoverColor, Icon }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`עקוב ב-${label}`}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        flex: '1 1 calc(50% - 6px)',
-        minWidth: 0,
-        minHeight: 64,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 11,
-        padding: '13px 16px',
-        borderRadius: 4,
-        background: hovered ? 'oklch(0.15 0.02 240)' : 'oklch(0.12 0.015 240)',
-        border: `1.5px solid ${hovered ? 'oklch(0.785 0.173 156.6 / 0.28)' : 'oklch(0.97 0.005 240 / 0.08)'}`,
-        textDecoration: 'none',
-        cursor: 'pointer',
-        transition: 'background 0.2s ease, border-color 0.2s ease',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Icon square */}
-      <div style={{
-        width: 38,
-        height: 38,
-        borderRadius: 3,
-        background: hovered ? 'oklch(0.785 0.173 156.6 / 0.1)' : 'oklch(0.14 0.02 240)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-        color: hovered ? hoverColor : 'var(--text-muted)',
-        transition: 'background 0.2s ease, color 0.2s ease',
-      }}>
-        <Icon size={18} />
-      </div>
-
-      {/* Text */}
-      <div style={{ minWidth: 0 }}>
-        <div style={{
-          fontSize: '0.85rem',
-          fontWeight: 800,
-          color: hovered ? 'var(--text-primary)' : 'var(--text-secondary)',
-          transition: 'color 0.2s ease',
-          lineHeight: 1.2,
-          marginBottom: 2,
-        }}>
-          {label}
-        </div>
-        <div style={{
-          fontSize: '0.72rem',
-          color: hovered ? hoverColor : 'var(--text-muted)',
-          fontWeight: 600,
-          transition: 'color 0.2s ease',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}>
-          {handle}
-        </div>
-      </div>
-
-      {/* Arrow */}
-      <div style={{
-        marginRight: 'auto',
-        marginLeft: 0,
-        color: hovered ? 'var(--text-muted)' : 'transparent',
-        transition: 'color 0.2s ease',
-        flexShrink: 0,
-      }}>
-        <IconExternalLink size={13} />
-      </div>
-    </a>
-  );
-}
-
 // ─── PAGE ────────────────────────────────────────────────────────────────────
 
 function SkeletonCard() {
-  return (
-    <div style={{ width: '100%', borderRadius: 4, background: 'oklch(0.11 0.015 240)', border: '1.5px solid oklch(0.97 0.005 240 / 0.08)', overflow: 'hidden', height: 220, animation: 'breathing 1.5s ease-in-out infinite' }}>
-      <div style={{ height: 3, background: 'oklch(0.785 0.173 156.6 / 0.2)' }} />
-      <div style={{ padding: '22px 22px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <div style={{ height: 14, width: '40%', borderRadius: 7, background: 'oklch(0.97 0.005 240 / 0.06)' }} />
-        <div style={{ height: 22, width: '70%', borderRadius: 7, background: 'oklch(0.97 0.005 240 / 0.09)' }} />
-        <div style={{ height: 14, width: '50%', borderRadius: 7, background: 'oklch(0.785 0.173 156.6 / 0.08)' }} />
-        <div style={{ flex: 1, borderRadius: 3, background: 'oklch(0.07 0.008 240)' }} />
-      </div>
-    </div>
-  );
+  return <div className="c-prompt__skel" aria-hidden="true" />;
 }
 
 export default function FreePage() {
@@ -592,384 +315,94 @@ export default function FreePage() {
     }
   }, []);
 
+  /* כיוון C, קצב: כהה (פתיחה) · בהיר (הספרייה, טקסט לקריאה) · כהה (מי אני, שיחה, רשתות) */
   return (
-    <div
-      dir="rtl"
-      style={{
-        minHeight: '100dvh',
-        background: 'var(--bedrock)',
-        fontFamily: 'var(--font)',
-        position: 'relative',
-        overscrollBehavior: 'contain',
-      }}
-    >
-      <Cursor />
-      {/* ── Background aurora ── */}
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
-        <div className="aurora-orb" style={{
-          width: 560, height: 560,
-          top: '-12%', left: '50%',
-          transform: 'translateX(-50%)',
-          background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.07), transparent 70%)',
-          '--dur': '28s',
-        }} />
-        <div className="aurora-orb" style={{
-          width: 400, height: 400,
-          bottom: '0%', right: '-12%',
-          background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.10), transparent 70%)',
-          '--dur': '35s', '--delay': '-12s',
-        }} />
-        <div className="aurora-orb" style={{
-          width: 300, height: 300,
-          top: '45%', left: '-10%',
-          background: 'radial-gradient(circle, oklch(0.65 0.22 200 / 0.08), transparent 70%)',
-          '--dur': '22s', '--delay': '-7s',
-        }} />
-      </div>
-
-      {/* ── Main scroll container ── */}
-      <div style={{
-        position: 'relative',
-        zIndex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: '44px 18px 80px',
-      }}>
-        <div style={{
-          width: '100%',
-          maxWidth: 480,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          animation: 'ig-fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both',
-        }}>
-
-          {/* ── LOGO ── */}
-          <img
-            src="/logo.png"
-            alt="Shift Up"
-            style={{
-              height: 50,
-              width: 'auto',
-              marginBottom: 36,
-              animation: 'hue-drift 8s ease-in-out infinite',
-            }}
-          />
-
-          {/* ── HERO ── */}
-          <div style={{ textAlign: 'center', marginBottom: 40, width: '100%' }}>
-            {/* Badge */}
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 7,
-              padding: '6px 14px',
-              borderRadius: 100,
-              background: 'oklch(0.785 0.173 156.6 / 0.08)',
-              border: '1px solid oklch(0.785 0.173 156.6 / 0.25)',
-              marginBottom: 18,
-            }}>
-              <span style={{
-                width: 6, height: 6,
-                borderRadius: '50%',
-                background: 'var(--brand-prime)',
-                boxShadow: 'none',
-                display: 'block',
-                animation: 'breathing 2s ease-in-out infinite',
-                flexShrink: 0,
-              }} />
-              <span style={{
-                fontSize: '0.78rem',
-                fontWeight: 700,
-                color: 'var(--brand-prime)',
-                letterSpacing: '0.04em',
-              }}>
-                ספרייה חינמית · Shift Up
-              </span>
-            </div>
-
-            {/* Headline — split for gradient on second word */}
-            <h1
-              translate="no"
-              style={{
-                fontSize: 'clamp(1.9rem, 7vw, 2.5rem)',
-                fontWeight: 900,
-                letterSpacing: '-0.03em',
-                lineHeight: 1.1,
-                color: 'var(--text-primary)',
-                marginBottom: 14,
-              }}
-            >
-              הנה הפרומפטים{' '}
-              <span className="kword-gradient" style={{ '--word-delay': '0.1s' }}>
-                שהבטחתי
-              </span>
+    <div dir="rtl" className="c-page">
+      <PageNav />
+      <main>
+        <section className="c-dark c-free__head" aria-labelledby="free-h">
+          <div className="c-wrap">
+            <span className="c-tag">{COPY.badge}</span>
+            <h1 id="free-h" translate="no" className="c-phead__h1">
+              {COPY.title} <span className="c-g">{COPY.titleAccent}</span>
             </h1>
-
-            {/* Subtitle */}
-            <p style={{
-              fontSize: '0.95rem',
-              color: 'var(--text-secondary)',
-              lineHeight: 1.65,
-              maxWidth: 340,
-              margin: '0 auto',
-            }}>
-              כלי AI שאני משתמש בהם כל יום, לך, ממני, בלי עלות.
+            <p className="c-lead">
+              <Tied text={fin(nd(COPY.sub1))} />
               <br />
-              הספרייה גדלה עם כל פוסט חדש.
+              {nd(COPY.sub2)}
             </p>
           </div>
+        </section>
 
-          {/* ── LIBRARY HEADER ── */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-            width: '100%',
-            marginBottom: 16,
-          }}>
-            <div className="glow-divider" style={{ flex: 1 }} />
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 7,
-              fontSize: '0.73rem',
-              color: 'var(--text-muted)',
-              fontWeight: 700,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              whiteSpace: 'nowrap',
-            }}>
+        <section className="c-sec c-light" aria-label="הספרייה">
+          <div className="c-wrap">
+            <div className="c-free__count">
               <span>{loadingPrompts ? '...' : `${prompts.length} כלי${prompts.length !== 1 ? ' זמינים' : ' זמין'}`}</span>
             </div>
-            <div className="glow-divider" style={{ flex: 1 }} />
-          </div>
-
-          {/* ── PROMPT CARDS ── */}
-          <div style={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 14,
-            marginBottom: 36,
-          }}>
-            {loadingPrompts
-              ? [1, 2, 3].map(i => <SkeletonCard key={i} />)
-              : prompts.map(p => <PromptCard key={p.id} prompt={p} />)
-            }
-          </div>
-
-          {/* ── AUDIT CTA — המדרגה הבאה אחרי הפרומפטים הכלליים ── */}
-          <Link
-            to="/audit"
-            onClick={() => { if (typeof window.fbq === 'function') window.fbq('track', 'ViewContent', { content_name: 'Audit CTA', content_category: 'freebies' }); }}
-            style={{
-              width: '100%',
-              display: 'block',
-              textDecoration: 'none',
-              marginBottom: 36,
-              borderRadius: 4,
-              overflow: 'hidden',
-              border: '1.5px solid oklch(0.785 0.173 156.6 / 0.3)',
-              background: 'oklch(0.11 0.015 240)',
-              boxShadow: 'none',
-            }}
-          >
-            <div style={{ height: 3, background: 'linear-gradient(90deg, var(--brand-deep) 0%, var(--brand-prime) 55%, var(--brand-glow) 100%)' }} />
-            <div style={{ padding: '20px 20px 22px', textAlign: 'right' }}>
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: 7,
-                padding: '5px 12px', borderRadius: 100, marginBottom: 12,
-                background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1px solid oklch(0.785 0.173 156.6 / 0.25)',
-              }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--brand-prime)', boxShadow: 'none', display: 'block', animation: 'breathing 2s ease-in-out infinite' }} />
-                <span style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--brand-prime)', letterSpacing: '0.03em' }}>אבחון חינם · 3 דקות</span>
-              </div>
-              <h2 style={{ fontSize: 'clamp(1.35rem, 5.5vw, 1.6rem)', fontWeight: 900, color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.15, marginBottom: 8 }}>
-                רוצה משהו מותאם <span className="text-gradient">לך</span>?
-              </h2>
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 18 }}>
-                הפרומפטים כלליים, והאבחון האישי אומר לך בדיוק איפה השיווק שלך דולף: הציון שלך ו-3 הדברים לתקן קודם, בלי להשאיר פרטים.
-              </p>
-              <span style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
-                width: '100%', minHeight: 52, borderRadius: 3,
-                background: 'oklch(0.785 0.173 156.6 / 0.1)', border: '1.5px solid oklch(0.785 0.173 156.6 / 0.3)',
-                color: 'var(--brand-prime)', fontWeight: 800, fontSize: '0.98rem',
-              }}>
-                עשה את האבחון ←
-              </span>
+            <div className="c-free__grid">
+              {loadingPrompts
+                ? [1, 2].map(i => <SkeletonCard key={i} />)
+                : prompts.map(p => <PromptCard key={p.id} prompt={p} />)}
             </div>
-          </Link>
 
-          {/* ── SEPARATOR ── */}
-          <div className="glow-divider" style={{ width: '100%', marginBottom: 28 }} />
-
-          {/* ── ABOUT STRIP ── */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 14,
-            width: '100%',
-            marginBottom: 16,
-            padding: '16px 18px',
-            borderRadius: 4,
-            background: 'oklch(0.12 0.015 240 / 0.7)',
-            border: '1px solid oklch(0.97 0.005 240 / 0.07)',
-          }}>
-            <div style={{ position: 'relative', flexShrink: 0 }}>
-              <img
-                src="/shmuel.jpg"
-                alt="שמואל מוניץ"
-                style={{
-                  width: 54,
-                  height: 54,
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                  objectPosition: 'center top',
-                  border: '2px solid oklch(0.785 0.173 156.6 / 0.3)',
-                  display: 'block',
-                }}
-              />
-              {/* Online dot */}
-              <div style={{
-                position: 'absolute',
-                bottom: 2, right: 2,
-                width: 11, height: 11,
-                borderRadius: '50%',
-                background: 'var(--brand-prime)',
-                border: '2px solid oklch(0.12 0.015 240)',
-                boxShadow: 'none',
-              }} />
-            </div>
-            <div style={{ textAlign: 'right', minWidth: 0 }}>
-              <div style={{
-                fontSize: '0.95rem',
-                fontWeight: 800,
-                color: 'var(--text-primary)',
-                marginBottom: 3,
-                letterSpacing: '-0.01em',
-              }}>
-                שמואל מוניץ
-              </div>
-              <div style={{
-                fontSize: '0.8rem',
-                color: 'var(--text-secondary)',
-                lineHeight: 1.5,
-              }}>
-                אסטרטג שיווק + מומחה AI. קמפיינים מבוססי-מחקר,
-                קריאייטיב שמוכר, עם הבטחת ביצוע.
-              </div>
-            </div>
-          </div>
-
-          {/* ── WHATSAPP CTA ── */}
-          <div style={{ width: '100%', marginBottom: 6 }}>
-            <p style={{
-              textAlign: 'center',
-              fontSize: '0.8rem',
-              color: 'var(--text-muted)',
-              marginBottom: 10,
-              fontWeight: 600,
-            }}>
-              רוצה קמפיין שנבנה על מחקר, לא על ניחוש?
-            </p>
-            <a
-              href={WA_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleWhatsApp}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 10,
-                width: '100%',
-                minHeight: 60,
-                background: 'var(--brand-prime)',
-                color: 'oklch(0.07 0.01 240)',
-                borderRadius: 4,
-                fontWeight: 800,
-                fontSize: '1.05rem',
-                fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-                textDecoration: 'none',
-                cursor: 'pointer',
-                boxShadow:
-                  '0 4px 45px oklch(0.785 0.173 156.6 / 0.4), 0 1px 0 oklch(0.876 0.148 155.7 / 0.3) inset',
-                transition: 'transform 0.18s ease, box-shadow 0.18s ease',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 8px 55px oklch(0.785 0.173 156.6 / 0.55), 0 1px 0 oklch(0.876 0.148 155.7 / 0.3) inset';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 45px oklch(0.785 0.173 156.6 / 0.4), 0 1px 0 oklch(0.876 0.148 155.7 / 0.3) inset';
-              }}
+            {/* ── AUDIT CTA — המדרגה הבאה אחרי הפרומפטים הכלליים ── */}
+            <Link
+              to="/audit"
+              className="c-free__audit"
+              onClick={() => { if (typeof window.fbq === 'function') window.fbq('track', 'ViewContent', { content_name: 'Audit CTA', content_category: 'freebies' }); }}
             >
-              <IconWhatsApp size={20} />
-              לשיחת היכרות חינם
-            </a>
+              <div>
+                <span className="c-tag">{COPY.auditTag}</span>
+                <h2>{COPY.auditTitle} <span className="c-g">{COPY.auditAccent}</span>?</h2>
+                <p>{nd(COPY.auditBody)}</p>
+              </div>
+              <span className="c-btn">{COPY.auditBtn}</span>
+            </Link>
           </div>
+        </section>
 
-          {/* ── SOCIAL SECTION ── */}
-          <div style={{ width: '100%', marginTop: 28, marginBottom: 36 }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              marginBottom: 14,
-            }}>
-              <div className="glow-divider" style={{ flex: 1 }} />
-              <span style={{
-                fontSize: '0.73rem',
-                color: 'var(--text-muted)',
-                fontWeight: 700,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                whiteSpace: 'nowrap',
-              }}>
-                בואו נתחבר
-              </span>
-              <div className="glow-divider" style={{ flex: 1 }} />
+        <section className="c-sec c-dark c-dark--2" aria-label="מי אני">
+          <div className="c-wrap c-free__end">
+            <div>
+              <div className="c-free__me">
+                <img src="/shmuel.jpg" alt={COPY.meName} loading="lazy" />
+                <div>
+                  <b>{COPY.meName}</b>
+                  <p>{nd(COPY.meBody)}</p>
+                </div>
+              </div>
             </div>
 
-            <div style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 10,
-            }}>
-              {SOCIAL.map(s => (
-                <SocialCard key={s.id} {...s} />
-              ))}
+            <div>
+              <div className="c-free__wa">
+                <p>{COPY.waLead}</p>
+                <a href={WA_LINK} target="_blank" rel="noopener noreferrer" onClick={handleWhatsApp} className="c-btn">
+                  <IconWhatsApp size={20} />
+                  {COPY.waBtn}
+                </a>
+              </div>
+
+              <div className="c-free__social-h">{COPY.social}</div>
+              <div className="c-free__social">
+                {SOCIAL.map(({ id, label, handle, href, Icon }) => (
+                  <a key={id} href={href} target="_blank" rel="noopener noreferrer" aria-label={`עקוב ב-${label}`}>
+                    <Icon size={20} />
+                    <span style={{ minWidth: 0 }}>
+                      <b>{label}</b>
+                      <small dir="auto">{handle}</small>
+                    </span>
+                  </a>
+                ))}
+              </div>
+
+              <div className="c-free__back">
+                <Link to="/" className="c-q">{COPY.back}</Link>
+              </div>
             </div>
           </div>
-
-          {/* ── BACK TO MAIN SITE ── */}
-          <Link
-            to="/"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 7,
-              color: 'var(--text-muted)',
-              textDecoration: 'none',
-              fontSize: '0.82rem',
-              fontWeight: 600,
-              opacity: 0.5,
-              cursor: 'pointer',
-              transition: 'opacity 0.2s ease',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = '0.9'; }}
-            onMouseLeave={e => { e.currentTarget.style.opacity = '0.5'; }}
-          >
-            <IconArrowLeft size={14} />
-            לאתר הראשי של Shift Up
-          </Link>
-
-        </div>
-      </div>
+        </section>
+      </main>
+      <Footer />
     </div>
   );
 }

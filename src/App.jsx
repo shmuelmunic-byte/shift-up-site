@@ -77,6 +77,14 @@ export default function App() {
     return () => observer.disconnect();
   }, []);
 
+  // הגעה מקישור בפוטר של דף פנימי (/#faq וכו', סבב 2): גלילה לסקשן אחרי הטעינה
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (!id) return;
+    const t = setTimeout(() => document.getElementById(id)?.scrollIntoView(), 350);
+    return () => clearTimeout(t);
+  }, []);
+
   const scrollToContact = () => {
     const el = document.getElementById('contact');
     if (el) el.scrollIntoView({ behavior: 'smooth' });

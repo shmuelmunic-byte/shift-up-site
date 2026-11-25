@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import Cursor from '../components/Cursor';
 import { supabase } from '../lib/supabase';
+import PageNav from '../components/PageNav';
+import Tied, { fin } from '../content/Tied';
 
 const FALLBACK_LINKS = [
   {
     id: 'business',
     label: 'לעשות Shift Up לעסק',
-    href: 'https://wa.me/972534673151?text=' + encodeURIComponent('היי שמואל, ראיתי אותך באינסטגרם ואשמח לשמוע על קמפיין מבוסס-מחקר לעסק שלי'),
+    href: 'https://wa.me/972534673151?text=' + encodeURIComponent('היי שמואל, ראיתי אותך באינסטגרם ואשמח לשמוע איך נראית תוכנית לעסק שלי'),
     style: 'primary',
   },
   {
@@ -17,10 +18,21 @@ const FALLBACK_LINKS = [
   },
 ];
 
-const INSTAGRAM_URL = 'https://www.instagram.com/shiftup.il';
+const INSTAGRAM_URL = 'https://www.instagram.com/shiftup.marketing';
 
 // אבחון /audit — כפתור קבוע בראש הרשימה (דלת רכה מהריל ומהביו)
 const AUDIT_HREF = '/audit';
+
+/* כל הטקסטים של הדף במקום אחד, כדי שיהיה קל להחליף כשהקופי החדש יגיע (סבב 2, 25.11.2026) */
+const COPY = {
+  name: 'שמואל מוניץ',
+  title: 'אסטרטג שיווק · קודם תוכנית, אחר כך קמפיין',
+  chip: 'Shift Up · תוכנית לפני תקציב',
+  audit: 'אבחון שיווק חינם',
+  auditTag: '3 דקות',
+  trust: 'שיחת היכרות בטלפון, בלי עלות · תוכנית כתובה תוך שבוע מפגישת העומק',
+  handle: '@shiftup.marketing',
+};
 
 function IgIcon({ size = 18 }) {
   return (
@@ -38,27 +50,8 @@ function WhatsAppIcon({ size = 20 }) {
   );
 }
 
-function TargetIcon({ size = 20 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="9"/>
-      <circle cx="12" cy="12" r="5"/>
-      <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
-    </svg>
-  );
-}
-
-function PeopleIcon({ size = 20 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-      <circle cx="9" cy="7" r="4"/>
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-    </svg>
-  );
-}
-
+/* כיוון C (סבב 2): רקע לילה מלא, דיוקן חד במסגרת ירוקה בהיסט (כמו בריבוע ההבטחה בעמוד הראשי),
+   כפתורים מרובעים ברוחב מלא. בלי הילות, בלי טבעת מסתובבת ובלי אייקונים גנריים */
 export default function IgPage() {
   const [links, setLinks] = useState(FALLBACK_LINKS);
 
@@ -99,97 +92,26 @@ export default function IgPage() {
   };
 
   return (
-    <div style={{
-      minHeight: '100dvh',
-      background: 'var(--bedrock)',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '48px 24px 72px',
-      position: 'relative',
-      overflow: 'hidden',
-      fontFamily: 'var(--font)',
-    }}>
-      <Cursor />
-      {/* Aurora blobs */}
-      <div className="aurora-orb" style={{ width: 400, height: 400, top: '-8%', left: '50%', transform: 'translateX(-50%)', background: 'radial-gradient(circle, oklch(0.65 0.22 200 / 0.15), transparent 70%)', '--dur': '22s' }} />
-      <div className="aurora-orb" style={{ width: 320, height: 320, bottom: '3%', right: '-8%', background: 'radial-gradient(circle, oklch(0.508 0.155 292.2 / 0.14), transparent 70%)', '--dur': '28s', '--delay': '-9s' }} />
-      <div className="aurora-orb" style={{ width: 240, height: 240, bottom: '8%', left: '-8%', background: 'radial-gradient(circle, oklch(0.785 0.173 156.6 / 0.09), transparent 70%)', '--dur': '20s', '--delay': '-5s' }} />
-
-      {/* Main content */}
-      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: 380, display: 'flex', flexDirection: 'column', alignItems: 'center', animation: 'ig-fade-up 0.65s ease-out both' }}>
-
-        {/* Logo */}
-        <img src="/logo.png" alt="Shift Up" style={{ height: 56, width: 'auto', marginBottom: 32, animation: 'hue-drift 8s ease-in-out infinite' }} />
-
-        {/* Profile photo with spinning ring */}
-        <div style={{ position: 'relative', marginBottom: 22 }}>
-          <div style={{ position: 'absolute', inset: -22, borderRadius: '50%', background: 'radial-gradient(circle at 45% 50%, oklch(0.785 0.173 156.6 / 0.22), transparent 60%)', filter: 'blur(18px)', zIndex: 0 }} />
-          <div style={{ position: 'relative', width: 118, height: 118 }}>
-            <div className="photo-ring" style={{ borderRadius: '50%' }} />
-            <img src="/shmuel.jpg" alt="שמואל מוניץ" style={{ position: 'absolute', top: 3, left: 3, width: 'calc(100% - 6px)', height: 'calc(100% - 6px)', borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', zIndex: 1 }} />
+    <div dir="rtl" className="c-page c-ig">
+      <PageNav />
+      <main className="c-ig__main">
+        <div className="c-ig__top">
+          <div className="c-gface">
+            <div className="c-gface__frame" aria-hidden="true" />
+            <div className="c-gface__crop"><img src="/shmuel.jpg" alt={COPY.name} /></div>
+          </div>
+          <div>
+            <h1 className="c-ig__name">{COPY.name}</h1>
+            <p className="c-ig__title"><Tied text={fin(COPY.title)} /></p>
+            <span className="c-ig__chip">{COPY.chip}</span>
           </div>
         </div>
 
-        {/* Name */}
-        <h1 style={{ fontSize: '1.7rem', fontWeight: 900, letterSpacing: '-0.025em', color: 'var(--text-primary)', marginBottom: 6, textAlign: 'center' }}>
-          שמואל מוניץ
-        </h1>
-
-        {/* Title */}
-        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', textAlign: 'center', marginBottom: 14, lineHeight: 1.5 }}>
-          מבוסס מחקר · קריאייטיב שמוכר · הבטחת ביצוע
-        </p>
-
-        {/* Brand chip */}
-        <div className="chip" style={{ marginBottom: 36 }}>
-          <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--brand-prime)', display: 'block', animation: 'breathing 2s ease-in-out infinite', boxShadow: 'none' }} />
-          Shift Up · שיווק מבוסס-מחקר
-        </div>
-
-        <div className="glow-divider" style={{ width: '100%', marginBottom: 28 }} />
-
-        {/* CTA Buttons */}
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
-
+        <div className="c-ig__links">
           {/* אבחון — כפתור קבוע, ראשון ברשימה */}
-          <a
-            href={AUDIT_HREF}
-            onClick={trackAudit}
-            className="ig-btn-secondary glass-panel"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 10,
-              padding: '0 24px',
-              minHeight: 64,
-              borderRadius: 4,
-              fontWeight: 800,
-              fontSize: '1.05rem',
-              fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-              textDecoration: 'none',
-              color: 'var(--text-primary)',
-              border: '1.5px solid oklch(0.785 0.173 156.6 / 0.45)',
-              boxShadow: 'none',
-              position: 'relative',
-              overflow: 'hidden',
-            }}
-          >
-            <TargetIcon size={20} />
-            <span>אבחון שיווק חינם</span>
-            <span style={{
-              fontSize: '0.72rem',
-              fontWeight: 700,
-              color: 'var(--brand-prime)',
-              border: '1px solid oklch(0.785 0.173 156.6 / 0.35)',
-              borderRadius: 3,
-              padding: '3px 9px',
-              whiteSpace: 'nowrap',
-            }}>
-              3 דקות
-            </span>
+          <a href={AUDIT_HREF} onClick={trackAudit} className="c-btn c-btn--ghost c-ig__btn">
+            <span>{COPY.audit}</span>
+            <span className="c-btn__tag">{COPY.auditTag}</span>
           </a>
 
           {links.map((link) => (
@@ -199,56 +121,21 @@ export default function IgPage() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackClick(link.style)}
-              className={link.style === 'primary' ? 'ig-btn-primary animated-border' : 'ig-btn-secondary glass-panel'}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 10,
-                padding: '0 24px',
-                minHeight: 64,
-                borderRadius: 4,
-                fontWeight: link.style === 'primary' ? 800 : 700,
-                fontSize: '1.05rem',
-                fontFamily: "'Space Grotesk', 'Secular One', sans-serif",
-                textDecoration: 'none',
-                position: 'relative',
-                overflow: 'hidden',
-                ...(link.style === 'primary' ? {
-                  background: 'var(--brand-prime)',
-                  color: 'oklch(0.08 0.01 240)',
-                  boxShadow: '0 4px 40px oklch(0.785 0.173 156.6 / 0.45), 0 1px 0 oklch(0.876 0.148 155.7 / 0.3) inset',
-                } : {
-                  color: 'var(--text-primary)',
-                  border: '1.5px solid oklch(0.785 0.173 156.6 / 0.2)',
-                }),
-              }}
+              className={`c-btn c-ig__btn${link.style === 'primary' ? '' : ' c-btn--line'}`}
             >
-              {link.style === 'primary' ? <WhatsAppIcon size={20} /> : <PeopleIcon size={20} />}
-              {link.label}
+              <span>{link.label}</span>
+              {link.style === 'primary' && <WhatsAppIcon size={20} />}
             </a>
           ))}
         </div>
 
-        {/* Trust line */}
-        <div style={{ marginTop: 28, display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--brand-prime)', boxShadow: 'none', animation: 'pulse-ring 2s ease-out infinite', display: 'block', flexShrink: 0 }} />
-          שיחת היכרות חינם · הבטחת ביצוע על חודש הניהול הראשון
-        </div>
+        <p className="c-ig__trust"><Tied text={fin(COPY.trust)} /></p>
 
-        {/* Footer */}
-        <a
-          href={INSTAGRAM_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ marginTop: 40, display: 'flex', alignItems: 'center', gap: 7, color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.82rem', opacity: 0.55, transition: 'opacity 0.2s' }}
-          onMouseEnter={e => { e.currentTarget.style.opacity = '0.9'; }}
-          onMouseLeave={e => { e.currentTarget.style.opacity = '0.55'; }}
-        >
+        <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="c-ig__handle" dir="ltr">
           <IgIcon size={15} />
-          @shiftup.il
+          {COPY.handle}
         </a>
-      </div>
+      </main>
     </div>
   );
 }
